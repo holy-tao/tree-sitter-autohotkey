@@ -1,0 +1,41 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "autohotkey",
+      "camelcase": "AutoHotkey",
+      "title": "AutoHotkey",
+      "scope": "source.autohotkey",
+      "file-types": [
+        "ahk"
+      ],
+      "injection-regex": "^autohotkey$",
+      "class-name": "TreeSitterAutohotkey"
+    }
+  ],
+  "metadata": {
+    "version": "0.0.0",
+    "license": "Unlicense",
+    "description": "Tree-sitter grammar for AHK v2",
+    "authors": [
+      {
+        "name": "Tao Beloney",
+        "url": ""
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/holy-tao/tree-sitter-autohotkey",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "java": false,
+    "node": false,
+    "python": false,
+    "rust": false,
+    "swift": false,
+    "zig": false
+  }
+}
