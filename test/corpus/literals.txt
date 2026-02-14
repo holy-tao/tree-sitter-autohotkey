@@ -231,3 +231,118 @@ unset
   (single_expression
     (literal
       (unset))))
+
+================================================================================
+Empty array literal
+================================================================================
+
+[]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (array_literal))))
+
+================================================================================
+Array literal with string literals
+================================================================================
+
+["one", "two", "three"]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (array_literal
+        (expression_sequence
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Array literal with expressions
+================================================================================
+
+[
+    one := 1,
+    two := 2,
+    (a := 3 + 3, a + 3)
+]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (array_literal
+        (expression_sequence
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (expression_sequence
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (additive_operation
+                      (single_expression
+                        (literal
+                          (numeric_literal)))
+                      (single_expression
+                        (literal
+                          (numeric_literal)))))))
+              (single_expression
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal))))))))))))
+
+================================================================================
+Array literal with numbers
+================================================================================
+
+[1, 2, 3]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (array_literal
+        (expression_sequence
+          (single_expression
+            (literal
+              (numeric_literal)))
+          (single_expression
+            (literal
+              (numeric_literal)))
+          (single_expression
+            (literal
+              (numeric_literal))))))))

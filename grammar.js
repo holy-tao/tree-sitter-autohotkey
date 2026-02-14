@@ -301,6 +301,7 @@ export default grammar({
       $.numeric_literal,
       $.boolean_literal,
       $.string_literal,
+      $.array_literal,
       $.unset         // Unset is often illegal but when it isn't it's best to treat it as a literal
     ),
 
@@ -319,6 +320,8 @@ export default grammar({
       seq('"', repeat($._double_quote_str_char), '"'),
       seq("'", repeat($._single_quote_str_char), "'")
     ),
+
+    array_literal: $ => seq("[", optional($.expression_sequence), "]"),
 
     //#endregion
 

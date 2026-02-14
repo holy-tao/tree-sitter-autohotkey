@@ -171,17 +171,6 @@ Variable reference quoted
               (identifier))))))))
 
 ================================================================================
-Variable reference constant deref (derefence operator not implemented)
-:skip 
-================================================================================
-
-&%"constant"%
-
---------------------------------------------------------------------------------
-
-
-
-================================================================================
 Nested parenthesized expression
 ================================================================================
 
@@ -209,3 +198,56 @@ result := (a + (b * c))
                         (identifier))
                       (single_expression
                         (identifier)))))))))))))
+
+================================================================================
+Assignment with empty array literal
+================================================================================
+
+arr := []
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (array_literal))))))
+
+================================================================================
+Assignment with nonempty array literal
+================================================================================
+
+arr := [1, "two", (1 + 2)]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (array_literal
+            (expression_sequence
+              (single_expression
+                (literal
+                  (numeric_literal)))
+              (single_expression
+                (literal
+                  (string_literal)))
+              (single_expression
+                (expression_sequence
+                  (single_expression
+                    (additive_operation
+                      (single_expression
+                        (literal
+                          (numeric_literal)))
+                      (single_expression
+                        (literal
+                          (numeric_literal))))))))))))))
