@@ -1,0 +1,25 @@
+name: Test Grammar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Tree-sitter CLI
+        uses: tree-sitter/setup-action@v2
+        with:
+          install-lib: false
+
+      - name: Run tests
+        run: tree-sitter test

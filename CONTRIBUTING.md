@@ -13,12 +13,15 @@ You will need:
 
 ### Running Tests
 
+The tests run in GitHub actions pipelines on push and pull-request. You can also trigger a run manually. To run tests locally:
 ```bash
-# Run all tests
 make test
 # or
 tree-sitter test
+```
 
+Other commands:
+```bash
 # Update expected outputs after grammar changes
 tree-sitter test -u
 
@@ -34,14 +37,16 @@ tree-sitter test -d
 Tests are located in the `test/corpus/` directory, organized by language feature:
 - `directives.txt` - Directive statements (#Requires, #Include, etc.)
 - `assignments.txt` - Assignment operations
-- `literals.txt` - Literal values (numeric, string, boolean, unset)
+- `literals.txt` - Literal values (numeric, string, boolean)
 - `expressions.txt` - Expression sequences and compositions
-- `operators.txt` - All operator types
-- `variables.txt` - Variable declarations and identifiers
+
+... and so forth. Add tests to the appropriate file, add files as needed.
+
+I'm not usually a fan of test-driven development, but it will serve you well as you make changes to the grammar. It's trivial to check what runs and what doesn't, it is much less trivial to debug the parser. AutoHotkey lacks a real specification, so decisions on what is and isn't allowed boil down to what the interpreter will let you do.
 
 ### Test Format
 
-Tests use the standard tree-sitter corpus format:
+Tests use the standard tree-sitter [corpus format](https://tree-sitter.github.io/tree-sitter/creating-parsers/5-writing-tests.html). This validates the parser output against a tree-sitter [s-expression](https://tree-sitter.github.io/tree-sitter/using-parsers/queries/1-syntax.html):
 
 ```
 ================================================================================

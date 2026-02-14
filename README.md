@@ -1,4 +1,5 @@
-# tree-sitter-autohotkey
+# tree-sitter-autohotkey 
+[![Test Grammar](https://github.com/holy-tao/tree-sitter-autohotkey/actions/workflows/test.yml/badge.svg)](https://github.com/holy-tao/tree-sitter-autohotkey/actions/workflows/test.yml)
 
 Tree-sitter grammar for AutoHotkey v2.
 
@@ -22,13 +23,11 @@ Run the test suite:
 make test
 ```
 
-The test suite uses tree-sitter's corpus format with 72+ tests covering:
-- Directives (#Requires, #Include, etc.)
-- Assignment operations (all operators)
-- Literals (numeric, string, boolean, unset)
-- Expression sequences
-- Operators (math, logical, bitwise, prefix/postfix)
-- Variable declarations
+Or via the CLI:
+
+```bash
+tree-sitter test
+```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details on writing tests.
 
