@@ -350,6 +350,62 @@ result := not x && y
             (identifier)))))))
 
 ================================================================================
+Bit shift left before bitwise AND
+================================================================================
+
+result := a << 2 & 0xb
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (bitwise_and_operation
+          (single_expression
+            (bitshift_operation
+              (single_expression
+                (identifier))
+              (bitshift_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+Addition before logical bit shift right
+================================================================================
+
+result := a >> 2 + 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (bitshift_operation
+          (single_expression
+            (identifier))
+          (bitshift_operator)
+          (single_expression
+            (additive_operation
+              (single_expression
+                (literal
+                  (numeric_literal)))
+              (single_expression
+                (literal
+                  (numeric_literal))))))))))
+
+================================================================================
 High-precedence NOT with comparison
 ================================================================================
 

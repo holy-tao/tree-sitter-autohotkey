@@ -251,6 +251,72 @@ result := a ^ b
             (identifier)))))))
 
 ================================================================================
+Bit shift left
+================================================================================
+
+result := a << b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (bitshift_operation
+          (single_expression
+            (identifier))
+          (bitshift_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Arithmetic bit shift right
+================================================================================
+
+result := a >> b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (bitshift_operation
+          (single_expression
+            (identifier))
+          (bitshift_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Logical bit shift right
+================================================================================
+
+result := a >>> b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (bitshift_operation
+          (single_expression
+            (identifier))
+          (bitshift_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
 Prefix increment
 ================================================================================
 

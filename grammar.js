@@ -54,8 +54,8 @@ export default grammar({
 
   conflicts: $ => [
     [$.param, $._primary_expression],
-    [$.byref_param, $.prefix_operation],
-    [$.variadic_param, $.multiplicative_operation],
+    // [$.byref_param, $.prefix_operation],
+    // [$.variadic_param, $.multiplicative_operation],
     [$.variadic_param, $._primary_expression]
   ],
 
@@ -122,7 +122,8 @@ export default grammar({
       $.logical_or_operation,
       $.bitwise_and_operation,
       $.bitwise_xor_operation,
-      $.bitwise_or_operation
+      $.bitwise_or_operation,
+      $.bitshift_operation
     ),
 
     // Postfix increment/decrement
@@ -220,6 +221,12 @@ export default grammar({
       field("right", $.single_expression)
     )),
 
+    bitshift_operation: $ => prec.left(PREC.SHIFT, seq(
+      field("left", $.single_expression),
+      field("operator", $.bitshift_operator),
+      field("right", $.single_expression)
+    )),
+
     assignment_operator: $ => 
       choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>="),
 
@@ -231,6 +238,8 @@ export default grammar({
     math_operator: $ => choice("+", "-", "*", "/", "//"),
 
     bitwise_operator: $ => choice("&", "|", "^"),
+
+    bitshift_operator: $ => choice("<<", ">>", ">>>"),
 
     arrow: $ => "=>",
 
