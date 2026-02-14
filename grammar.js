@@ -51,10 +51,6 @@ const PREC = {
 export default grammar({
   name: "autohotkey",
 
-  conflicts: $ => [
-    [$.single_expression, $.single_expression] // FIXME resolves compiler error re: VarRefs, feels wrong
-  ],
-
   rules: {
     source_file: $ => repeat($._statement),
 
@@ -77,7 +73,6 @@ export default grammar({
       $.variable_declaration,
       $._primary_expression,
       $.assignment_operation,
-      seq("&", $._primary_expression),    // VarRefs get hairy, &(a := fn()) and &%"var"% are legal
       $.prefix_operation,
       $.postfix_operation,
       $.verbal_not_operation,
@@ -132,7 +127,8 @@ export default grammar({
       field("operator", choice(
         "++", "--",     // prefix increment/decrement
         "!", "~",       // logical NOT, bitwise NOT
-        "+", "-"        // unary plus, unary minus
+        "+", "-",       // unary plus, unary minus
+        "&"             // Creates a VarRef
       )),
       field("operand", choice($._primary_expression, $.postfix_operation))
     )),

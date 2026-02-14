@@ -148,7 +148,38 @@ Variable reference simple
 
 (source_file
   (single_expression
-    (identifier)))
+    (prefix_operation
+      (identifier))))
+
+================================================================================
+Variable reference quoted
+================================================================================
+
+&(a * b)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (prefix_operation
+      (expression_sequence
+        (single_expression
+          (multiplicative_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (identifier))))))))
+
+================================================================================
+Variable reference constant deref (derefence operator not implemented)
+:skip 
+================================================================================
+
+&%"constant"%
+
+--------------------------------------------------------------------------------
+
+
 
 ================================================================================
 Nested parenthesized expression
