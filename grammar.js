@@ -33,7 +33,7 @@ const PREC = {
   SHIFT: 140,                // <<, >>, >>> (not yet implemented)
   ADDITIVE: 150,             // +, -
   MULTIPLICATIVE: 160,       // *, /, //
-  EXPONENT: 170,             // ** (not yet implemented)
+  EXPONENT: 170,             // **
   PREFIX: 180,               // ++, --, unary +, -, !, ~, &
   POSTFIX: 190,              // ++, --
   MAYBE: 200,                // ? (not yet implemented))
@@ -124,7 +124,8 @@ export default grammar({
       $.bitwise_xor_operation,
       $.bitwise_or_operation,
       $.bitshift_operation,
-      $.explicit_concat_operation
+      $.explicit_concat_operation,
+      $.exponent_operation
     ),
 
     // Postfix increment/decrement
@@ -231,6 +232,12 @@ export default grammar({
     explicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
       field("left", $.single_expression),
       field("operator", " . "),   // !IMPORTANT: space is required to differentiate from member access
+      field("right", $.single_expression)
+    )),
+
+    exponent_operation: $ => prec.left(PREC.EXPONENT, seq(
+      field("left", $.single_expression),
+      field("operator", "**"),
       field("right", $.single_expression)
     )),
 

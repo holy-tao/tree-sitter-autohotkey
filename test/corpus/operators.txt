@@ -338,6 +338,27 @@ result := a . b
             (identifier)))))))
 
 ================================================================================
+Exponentiation operator
+================================================================================
+
+result := a ** b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (exponent_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
 Prefix increment
 ================================================================================
 
