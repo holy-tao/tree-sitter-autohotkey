@@ -141,10 +141,9 @@ var := (two := 2, two + two)
                 (literal
                   (numeric_literal)))))
           (single_expression
-            (math_operation
+            (additive_operation
               (single_expression
                 (identifier))
-              (math_operator)
               (single_expression
                 (identifier)))))))))
 
@@ -158,11 +157,10 @@ Expression sequence as math operand
 
 (source_file
   (single_expression
-    (math_operation
+    (additive_operation
       (single_expression
         (literal
           (numeric_literal)))
-      (math_operator)
       (single_expression
         (expression_sequence
           (single_expression
@@ -182,9 +180,8 @@ Expression sequence as math operand
                 (literal
                   (numeric_literal)))))
           (single_expression
-            (math_operation
+            (additive_operation
               (single_expression
                 (identifier))
-              (math_operator)
               (single_expression
                 (identifier)))))))))

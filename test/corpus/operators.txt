@@ -8,17 +8,16 @@ result := a + b
 
 (source_file
   (single_expression
-    (math_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (additive_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (math_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Subtraction operator
@@ -30,17 +29,16 @@ result := a - b
 
 (source_file
   (single_expression
-    (math_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (additive_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (math_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Multiplication operator
@@ -52,17 +50,16 @@ result := a * b
 
 (source_file
   (single_expression
-    (math_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (multiplicative_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (math_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Division operator
@@ -74,17 +71,16 @@ result := a / b
 
 (source_file
   (single_expression
-    (math_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (multiplicative_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (math_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Floor division operator
@@ -96,17 +92,16 @@ result := a // b
 
 (source_file
   (single_expression
-    (math_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (multiplicative_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (math_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Is comparison
@@ -123,11 +118,11 @@ result := a is b
         (identifier))
       (assignment_operator)
       (single_expression
-        (identifier))))
-  (single_expression
-    (identifier))
-  (single_expression
-    (identifier)))
+        (case_insensitive_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
 
 ================================================================================
 Logical AND double ampersand
@@ -139,17 +134,16 @@ result := a && b
 
 (source_file
   (single_expression
-    (comparison_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (logical_and_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (boolean_comparison_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Logical AND word
@@ -161,17 +155,16 @@ result := a and b
 
 (source_file
   (single_expression
-    (comparison_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (logical_and_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (boolean_comparison_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Logical OR double pipe
@@ -183,17 +176,16 @@ result := a || b
 
 (source_file
   (single_expression
-    (comparison_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (logical_or_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (boolean_comparison_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Logical OR word
@@ -205,17 +197,16 @@ result := a or b
 
 (source_file
   (single_expression
-    (comparison_operation
+    (assignment_operation
       (single_expression
-        (assignment_operation
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (logical_or_operation
           (single_expression
             (identifier))
-          (assignment_operator)
           (single_expression
-            (identifier))))
-      (boolean_comparison_operator)
-      (single_expression
-        (identifier)))))
+            (identifier)))))))
 
 ================================================================================
 Bitwise AND
@@ -232,9 +223,11 @@ result := a & b
         (identifier))
       (assignment_operator)
       (single_expression
-        (identifier))))
-  (single_expression
-    (identifier)))
+        (bitwise_and_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
 
 ================================================================================
 Bitwise XOR
@@ -244,7 +237,18 @@ result := a ^ b
 
 --------------------------------------------------------------------------------
 
-
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (bitwise_xor_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
 
 ================================================================================
 Prefix increment

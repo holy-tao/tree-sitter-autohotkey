@@ -1,0 +1,437 @@
+================================================================================
+Multiplication before addition
+================================================================================
+
+result := a + b * c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (additive_operation
+          left: (single_expression
+            (identifier))
+          right: (single_expression
+            (multiplicative_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier)))))))))
+
+================================================================================
+Division before subtraction
+================================================================================
+
+result := a - b / c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (additive_operation
+          left: (single_expression
+            (identifier))
+          right: (single_expression
+            (multiplicative_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier)))))))))
+
+================================================================================
+Bitwise AND before comma
+================================================================================
+
+a, b & c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (identifier))
+    (single_expression
+      (bitwise_and_operation
+        left: (single_expression
+          (identifier))
+        right: (single_expression
+          (identifier))))))
+
+================================================================================
+Relational before equality
+================================================================================
+
+result := a > b == c < d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (equality_operation
+          left: (single_expression
+            (relational_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (relational_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier)))))))))
+
+================================================================================
+Equality before inequality
+================================================================================
+
+result := a == b != c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (inequality_operation
+          left: (single_expression
+            (equality_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (identifier)))))))
+
+================================================================================
+Inequality before regex match
+================================================================================
+
+result := a != b ~= c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (regex_match_operation
+          left: (single_expression
+            (inequality_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (identifier)))))))
+
+================================================================================
+Comparison before logical AND
+================================================================================
+
+result := a > b && c < d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (logical_and_operation
+          left: (single_expression
+            (relational_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (relational_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier)))))))))
+
+================================================================================
+Logical AND before logical OR
+================================================================================
+
+result := a && b || c && d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (logical_or_operation
+          left: (single_expression
+            (logical_and_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (logical_and_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier)))))))))
+
+================================================================================
+Logical OR before assignment
+================================================================================
+
+result := a || b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (logical_or_operation
+          left: (single_expression
+            (identifier))
+          right: (single_expression
+            (identifier)))))))
+
+================================================================================
+Assignment before comma
+================================================================================
+
+a := 1, b := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (assignment_operation
+        left: (single_expression
+          (identifier))
+        (assignment_operator)
+        right: (single_expression
+          (literal
+            (numeric_literal)))))
+    (single_expression
+      (assignment_operation
+        left: (single_expression
+          (identifier))
+        (assignment_operator)
+        right: (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Bitwise AND before bitwise XOR
+================================================================================
+
+result := a & b ^ c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (bitwise_xor_operation
+          left: (single_expression
+            (bitwise_and_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (identifier)))))))
+
+================================================================================
+Bitwise XOR before bitwise OR
+================================================================================
+
+result := a ^ b | c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (bitwise_or_operation
+          left: (single_expression
+            (bitwise_xor_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (identifier)))))))
+
+================================================================================
+Verbal NOT with comparison
+================================================================================
+
+result := not x > 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (verbal_not_operation
+          operand: (single_expression
+            (relational_operation
+              left: (single_expression
+                (identifier))
+              right: (single_expression
+                (literal
+                  (numeric_literal))))))))))
+
+================================================================================
+Verbal NOT before logical AND
+================================================================================
+
+result := not x && y
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (logical_and_operation
+          left: (single_expression
+            (verbal_not_operation
+              operand: (single_expression
+                (identifier))))
+          right: (single_expression
+            (identifier)))))))
+
+================================================================================
+High-precedence NOT with comparison
+================================================================================
+
+result := !x > 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (relational_operation
+          left: (single_expression
+            (prefix_operation
+              operand: (identifier)))
+          right: (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+Complex precedence chain
+================================================================================
+
+result := a + b * c > d && e || f
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (logical_or_operation
+          left: (single_expression
+            (logical_and_operation
+              left: (single_expression
+                (relational_operation
+                  left: (single_expression
+                    (additive_operation
+                      left: (single_expression
+                        (identifier))
+                      right: (single_expression
+                        (multiplicative_operation
+                          left: (single_expression
+                            (identifier))
+                          right: (single_expression
+                            (identifier))))))
+                  right: (single_expression
+                    (identifier))))
+              right: (single_expression
+                (identifier))))
+          right: (single_expression
+            (identifier)))))))
+
+================================================================================
+Parentheses override precedence
+================================================================================
+
+result := (a + b) * c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      left: (single_expression
+        (identifier))
+      (assignment_operator)
+      right: (single_expression
+        (multiplicative_operation
+          left: (single_expression
+            (expression_sequence
+              (single_expression
+                (additive_operation
+                  left: (single_expression
+                    (identifier))
+                  right: (single_expression
+                    (identifier))))))
+          right: (single_expression
+            (identifier)))))))

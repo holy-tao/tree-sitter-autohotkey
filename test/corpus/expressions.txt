@@ -139,17 +139,6 @@ var := (
             (identifier)))))))
 
 ================================================================================
-Variable reference with assignment
-:skip
-================================================================================
-
-ref := &(v := fn())
-
---------------------------------------------------------------------------------
-
-
-
-================================================================================
 Variable reference simple
 ================================================================================
 
@@ -178,27 +167,14 @@ result := (a + (b * c))
       (single_expression
         (expression_sequence
           (single_expression
-            (math_operation
+            (additive_operation
               (single_expression
                 (identifier))
-              (math_operator)
               (single_expression
                 (expression_sequence
                   (single_expression
-                    (math_operation
+                    (multiplicative_operation
                       (single_expression
                         (identifier))
-                      (math_operator)
                       (single_expression
                         (identifier)))))))))))))
-
-================================================================================
-Expression with function call
-:skip
-================================================================================
-
-fn() => "Returned by function"
-
---------------------------------------------------------------------------------
-
-
