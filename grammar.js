@@ -14,7 +14,8 @@
 // Precedence levels (from lowest to highest)
 const PREC = {
   COMMA: -20,                // Comma operator (lowest)
-  FAT_ARROW_FUNCTION : -10,  // () => expr (not implemented)
+  FAT_ARROW_FUNCTION: -10,   // () => expr (not implemented)
+  DEFAULT: 0,                // Just for readability
   ASSIGNMENT: 0,             // :=, +=, -=, etc.
   TERNARY: 10,               // ?: (not yet implemented)
   LOGICAL_OR: 20,            // ||, or
@@ -51,6 +52,13 @@ const PREC = {
 export default grammar({
   name: "autohotkey",
 
+  conflicts: $ => [
+    [$.param, $._primary_expression],
+    [$.byref_param, $.prefix_operation],
+    [$.variadic_param, $.multiplicative_operation],
+    [$.variadic_param, $._primary_expression]
+  ],
+
   rules: {
     source_file: $ => repeat($._statement),
 
@@ -76,6 +84,7 @@ export default grammar({
       $.prefix_operation,
       $.postfix_operation,
       $.verbal_not_operation,
+      $.fat_arrow_function
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
@@ -223,10 +232,58 @@ export default grammar({
 
     bitwise_operator: $ => choice("&", "|", "^"),
 
+    arrow: $ => "=>",
+
     boolean_comparison_operator: $ => token(
       prec(PREC.KEYWORD, 
         choice("&&", ci('and'), "||", ci('or')
     ))),
+
+    fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
+      // TODO this fails to match the wildcard (*) and variadic arguments (params*)
+      $.function_head,
+      $.arrow,
+      field("body", $._primary_expression)
+    )),
+
+    //#endregion
+
+    //#region Function parameters
+    function_head: $ => seq(
+      "(", 
+      optional(choice($.wildcard, $.param_sequence)), 
+      ")"
+    ),
+
+    // "formal parameter list"
+    param_sequence: $ => choice(
+      // Just a variadic parameter: (params*)
+      $.variadic_param,
+      // One or more regular params, optionally followed by variadic: (a, b, rest*)
+      seq(
+        choice($.param, $.byref_param),
+        repeat(seq(",", choice($.param, $.byref_param))),
+        optional(seq(",", $.variadic_param))
+      )
+    ),
+
+    param: $ => choice(
+      $.identifier,
+      seq(
+        $.identifier,
+        // only ':=' is valid in parameter lists, argument lists can use all operators
+        alias(":=", $.assignment_operator),
+        $.single_expression),
+      seq($.identifier, $.optional_marker)
+    ),
+
+    optional_marker: $ => "?",
+
+    byref_param: $ => seq("&", $.param),
+
+    variadic_param: $ => seq($.identifier, $.wildcard),
+
+    wildcard: $ => "*",
 
     //#endregion
 

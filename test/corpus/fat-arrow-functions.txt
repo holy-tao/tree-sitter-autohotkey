@@ -1,0 +1,439 @@
+================================================================================
+Fat-arrow function with no arguments
+================================================================================
+
+() => 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head)
+      (arrow)
+      (literal
+        (numeric_literal)))))
+
+================================================================================
+Fat-arrow function with wildcard
+================================================================================
+
+(*) => 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (wildcard))
+      (arrow)
+      (literal
+        (numeric_literal)))))
+
+================================================================================
+Fat-arrow function with named argument
+================================================================================
+
+(arg1) => 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier))))
+      (arrow)
+      (literal
+        (numeric_literal)))))
+
+================================================================================
+Fat-arrow function with named ByRef argument
+================================================================================
+
+(&arg1) => 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (byref_param
+            (param
+              (identifier)))))
+      (arrow)
+      (literal
+        (numeric_literal)))))
+
+================================================================================
+Fat-arrow function with named argument with default
+================================================================================
+
+(arg1 := 42) => arg
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier)
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal))))))
+      (arrow)
+      (identifier))))
+
+================================================================================
+Fat-arrow function with mixed argument types
+================================================================================
+
+(arg1 := 42, arg2, arg3?, &arg4 := 0, &arg5?, rest*) => 
+    "this is a somewhat unrealistic example"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier)
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal))))
+          (param
+            (identifier))
+          (param
+            (identifier)
+            (optional_marker))
+          (byref_param
+            (param
+              (identifier)
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (byref_param
+            (param
+              (identifier)
+              (optional_marker)))
+          (variadic_param
+            (identifier)
+            (wildcard))))
+      (arrow)
+      (literal
+        (string_literal)))))
+
+================================================================================
+Fat-arrow function with ByRef arg with default
+================================================================================
+
+(&arg1 := 0) => arg
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (byref_param
+            (param
+              (identifier)
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))))
+      (arrow)
+      (identifier))))
+
+================================================================================
+Fat-arrow function with optional argument
+================================================================================
+
+(arg?) => false
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier)
+            (optional_marker))))
+      (arrow)
+      (literal
+        (boolean_literal)))))
+
+================================================================================
+Fat-arrow function with optional ByRef argument
+================================================================================
+
+(&arg?) => false
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (byref_param
+            (param
+              (identifier)
+              (optional_marker)))))
+      (arrow)
+      (literal
+        (boolean_literal)))))
+
+================================================================================
+Fat-arrow function with multiple named arguments
+================================================================================
+
+(arg1, arg2, arg3) => arg1 + arg2 + arg3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier))
+          (param
+            (identifier))
+          (param
+            (identifier))))
+      (arrow)
+      (additive_operation
+        (single_expression
+          (additive_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (identifier))))
+        (single_expression
+          (identifier))))))
+
+================================================================================
+Fat-arrow function with with default from expression
+================================================================================
+
+(arg1 := 2 + 2) => arg1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier)
+            (assignment_operator)
+            (single_expression
+              (additive_operation
+                (single_expression
+                  (literal
+                    (numeric_literal)))
+                (single_expression
+                  (literal
+                    (numeric_literal))))))))
+      (arrow)
+      (identifier))))
+
+================================================================================
+Fat-arrow function body on new line
+================================================================================
+
+(arg1) 
+    => "string literal"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier))))
+      (arrow)
+      (literal
+        (string_literal)))))
+
+================================================================================
+Fat-arrow function with named variadic argument
+================================================================================
+
+(params*) => "params"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (variadic_param
+            (identifier)
+            (wildcard))))
+      (arrow)
+      (literal
+        (string_literal)))))
+
+================================================================================
+Fat-arrow function with multiple named arguments with variadic
+================================================================================
+
+(arg1, others*) => "test"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier))
+          (variadic_param
+            (identifier)
+            (wildcard))))
+      (arrow)
+      (literal
+        (string_literal)))))
+
+================================================================================
+Fat-arrow function with parenthesized expression sequence
+================================================================================
+
+(arg1) => (a := 1, b := 2, a + b)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier))))
+      (arrow)
+      (expression_sequence
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))
+        (single_expression
+          (additive_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (identifier))))))))
+
+================================================================================
+Fat-arrow function with multiline parenthesized expression sequence
+================================================================================
+
+(arg1, arg2) => (
+    a := arg1, 
+    b := arg2, 
+    a + b
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier))
+          (param
+            (identifier))))
+      (arrow)
+      (expression_sequence
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (identifier))))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (identifier))))
+        (single_expression
+          (additive_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (identifier))))))))
+
+================================================================================
+Fat-arrow function nested
+================================================================================
+
+(arg1, arg2) => ( 
+    (arg1, arg2) => arg1 + arg2
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (fat_arrow_function
+      (function_head
+        (param_sequence
+          (param
+            (identifier))
+          (param
+            (identifier))))
+      (arrow)
+      (expression_sequence
+        (single_expression
+          (fat_arrow_function
+            (function_head
+              (param_sequence
+                (param
+                  (identifier))
+                (param
+                  (identifier))))
+            (arrow)
+            (additive_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier)))))))))
