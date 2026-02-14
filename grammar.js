@@ -26,7 +26,7 @@ const PREC = {
   INEQUALITY: 70,            // !=, !==
   EQUALITY: 80,              // =, ==
   RELATIONAL: 90,            // <, >, <=, >=
-  CONCAT: 100,               // . (explicit string concatenation, not implemented)
+  CONCAT: 100,               // . (with spaces - a.b is member access, a . b is concatenation)
   BITWISE_OR: 110,           // |
   BITWISE_XOR: 120,          // ^
   BITWISE_AND: 130,          // &
@@ -123,7 +123,8 @@ export default grammar({
       $.bitwise_and_operation,
       $.bitwise_xor_operation,
       $.bitwise_or_operation,
-      $.bitshift_operation
+      $.bitshift_operation,
+      $.explicit_concat_operation
     ),
 
     // Postfix increment/decrement
@@ -224,6 +225,12 @@ export default grammar({
     bitshift_operation: $ => prec.left(PREC.SHIFT, seq(
       field("left", $.single_expression),
       field("operator", $.bitshift_operator),
+      field("right", $.single_expression)
+    )),
+
+    explicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
+      field("left", $.single_expression),
+      field("operator", " . "),   // !IMPORTANT: space is required to differentiate from member access
       field("right", $.single_expression)
     )),
 

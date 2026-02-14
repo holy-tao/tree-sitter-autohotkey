@@ -317,6 +317,27 @@ result := a >>> b
             (identifier)))))))
 
 ================================================================================
+Explicit concatenation
+================================================================================
+
+result := a . b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (explicit_concat_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
 Prefix increment
 ================================================================================
 
