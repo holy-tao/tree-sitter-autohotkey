@@ -1,0 +1,299 @@
+================================================================================
+Addition operator
+================================================================================
+
+result := a + b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (math_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (math_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Subtraction operator
+================================================================================
+
+result := a - b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (math_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (math_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Multiplication operator
+================================================================================
+
+result := a * b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (math_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (math_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Division operator
+================================================================================
+
+result := a / b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (math_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (math_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Floor division operator
+================================================================================
+
+result := a // b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (math_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (math_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Is comparison
+================================================================================
+
+result := a is b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (identifier))))
+  (single_expression
+    (identifier))
+  (single_expression
+    (identifier)))
+
+================================================================================
+Logical AND double ampersand
+================================================================================
+
+result := a && b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (comparison_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (boolean_comparison_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Logical AND word
+================================================================================
+
+result := a and b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (comparison_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (boolean_comparison_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Logical OR double pipe
+================================================================================
+
+result := a || b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (comparison_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (boolean_comparison_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Logical OR word
+================================================================================
+
+result := a or b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (comparison_operation
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier))))
+      (boolean_comparison_operator)
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Bitwise AND
+================================================================================
+
+result := a & b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (identifier))))
+  (single_expression
+    (identifier)))
+
+================================================================================
+Bitwise XOR
+================================================================================
+
+result := a ^ b
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Prefix increment
+================================================================================
+
+++x
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (prefix_operation
+      (identifier))))
+
+================================================================================
+Prefix decrement
+================================================================================
+
+--x
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (prefix_operation
+      (identifier))))
+
+================================================================================
+Postfix increment
+================================================================================
+
+x++
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (postfix_operation
+      (identifier))))
+
+================================================================================
+Postfix decrement
+================================================================================
+
+x--
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (postfix_operation
+      (identifier))))

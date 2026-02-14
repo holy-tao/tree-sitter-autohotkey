@@ -1,0 +1,190 @@
+================================================================================
+Single line expression sequence
+================================================================================
+
+one := 1, two := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Single line expression sequence with scope modifier
+================================================================================
+
+local one := 1, two := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (variable_declaration
+            (scope_identifier)
+            (identifier)))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Parenthesized expression sequence as assignment
+================================================================================
+
+var := (one := 1, one)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Multiline parenthesized expression sequence as assignment
+================================================================================
+
+var := (
+    one := 1, 
+    two += 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal))))))))))
+
+================================================================================
+Parenthesized expression sequence with math
+================================================================================
+
+var := (two := 2, two + two)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (math_operation
+              (single_expression
+                (identifier))
+              (math_operator)
+              (single_expression
+                (identifier)))))))))
+
+================================================================================
+Expression sequence as math operand
+================================================================================
+
+2 + (one := 1, two := 2, one + two)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (math_operation
+      (single_expression
+        (literal
+          (numeric_literal)))
+      (math_operator)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (math_operation
+              (single_expression
+                (identifier))
+              (math_operator)
+              (single_expression
+                (identifier)))))))))

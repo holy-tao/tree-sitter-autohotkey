@@ -1,0 +1,346 @@
+================================================================================
+Simple assignment
+================================================================================
+
+x := 42
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Global variable declaration with assignment
+================================================================================
+
+global oNE := 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (variable_declaration
+          (scope_identifier)
+          (identifier)))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Global variable declaration followed by assignment
+================================================================================
+
+global var
+var := 42
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (variable_declaration
+      (scope_identifier)
+      (identifier)))
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+String literal assignment
+================================================================================
+
+str := "un 'quote' d"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (string_literal))))))
+
+================================================================================
+Assignment with unset
+================================================================================
+
+x := unset
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (unset))))))
+
+================================================================================
+Addition assignment
+================================================================================
+
+x += 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Subtraction assignment
+================================================================================
+
+x -= 5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Multiplication assignment
+================================================================================
+
+x *= 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Division assignment
+================================================================================
+
+x /= 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Floor division assignment
+================================================================================
+
+x //= 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Concatenation assignment
+================================================================================
+
+str .= " more"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (string_literal))))))
+
+================================================================================
+Bitwise OR assignment
+================================================================================
+
+x |= 8
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Bitwise AND assignment
+================================================================================
+
+x &= 8
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Bitwise XOR assignment
+================================================================================
+
+x ^= 8
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Right shift assignment
+================================================================================
+
+x >>= 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Left shift assignment
+================================================================================
+
+x <<= 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Unsigned right shift assignment
+================================================================================
+
+x >>>= 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Local variable declaration
+================================================================================
+
+local myVar
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (variable_declaration
+      (scope_identifier)
+      (identifier))))
+
+================================================================================
+Static variable declaration with assignment
+================================================================================
+
+static counter := 0
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (variable_declaration
+          (scope_identifier)
+          (identifier)))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))

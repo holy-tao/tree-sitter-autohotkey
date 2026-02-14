@@ -1,0 +1,204 @@
+================================================================================
+Simple expression sequence
+================================================================================
+
+x := 1, y := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Expression sequence with three items
+================================================================================
+
+a := 1, b := 2, c := 3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Parenthesized expression sequence
+================================================================================
+
+var := (
+    var2 := 2,
+    var3 := "var3",
+    var2
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (string_literal)))))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Multiline expression sequence
+================================================================================
+
+var := (
+    var2 := 2,
+    var3 := "var3",
+    var2
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (string_literal)))))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Variable reference with assignment
+:skip
+================================================================================
+
+ref := &(v := fn())
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Variable reference simple
+================================================================================
+
+&myVar
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (identifier)))
+
+================================================================================
+Nested parenthesized expression
+================================================================================
+
+result := (a + (b * c))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (math_operation
+              (single_expression
+                (identifier))
+              (math_operator)
+              (single_expression
+                (expression_sequence
+                  (single_expression
+                    (math_operation
+                      (single_expression
+                        (identifier))
+                      (math_operator)
+                      (single_expression
+                        (identifier)))))))))))))
+
+================================================================================
+Expression with function call
+:skip
+================================================================================
+
+fn() => "Returned by function"
+
+--------------------------------------------------------------------------------
+
+
