@@ -302,6 +302,7 @@ export default grammar({
       $.boolean_literal,
       $.string_literal,
       $.array_literal,
+      $.object_literal,
       $.unset         // Unset is often illegal but when it isn't it's best to treat it as a literal
     ),
 
@@ -322,6 +323,15 @@ export default grammar({
     ),
 
     array_literal: $ => seq("[", optional($.expression_sequence), "]"),
+
+    object_literal: $ => seq("{", optional($.object_literal_member_sequence), "}"),
+
+    object_literal_member_sequence: $ => seq(
+      $.object_literal_member,
+      repeat(seq(",", $.object_literal_member))
+    ),
+
+    object_literal_member: $ => seq($.identifier, ":", $.single_expression),
 
     //#endregion
 

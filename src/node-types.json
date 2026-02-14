@@ -40,6 +40,21 @@
     }
   },
   {
+    "type": "array_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "expression_sequence",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "assignment_operation",
     "named": true,
     "fields": {
@@ -510,11 +525,19 @@
       "required": true,
       "types": [
         {
+          "type": "array_literal",
+          "named": true
+        },
+        {
           "type": "boolean_literal",
           "named": true
         },
         {
           "type": "numeric_literal",
+          "named": true
+        },
+        {
+          "type": "object_literal",
           "named": true
         },
         {
@@ -648,6 +671,55 @@
     "type": "numeric_literal",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "object_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "object_literal_member_sequence",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "object_literal_member",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "single_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "object_literal_member_sequence",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "object_literal_member",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "param",
@@ -1291,6 +1363,10 @@
     "named": false
   },
   {
+    "type": ":",
+    "named": false
+  },
+  {
     "type": ":=",
     "named": false
   },
@@ -1343,6 +1419,14 @@
     "named": false
   },
   {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
     "type": "^",
     "named": false
   },
@@ -1383,6 +1467,10 @@
     "named": true
   },
   {
+    "type": "{",
+    "named": false
+  },
+  {
     "type": "|",
     "named": false
   },
@@ -1392,6 +1480,10 @@
   },
   {
     "type": "||",
+    "named": false
+  },
+  {
+    "type": "}",
     "named": false
   },
   {

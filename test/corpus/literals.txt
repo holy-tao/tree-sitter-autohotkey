@@ -346,3 +346,297 @@ Array literal with numbers
           (single_expression
             (literal
               (numeric_literal))))))))
+
+================================================================================
+Array literal with object literals
+================================================================================
+
+[
+  { one: "one" },
+  { two: "two"}
+]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (array_literal
+        (expression_sequence
+          (single_expression
+            (literal
+              (object_literal
+                (object_literal_member_sequence
+                  (object_literal_member
+                    (identifier)
+                    (single_expression
+                      (literal
+                        (string_literal))))))))
+          (single_expression
+            (literal
+              (object_literal
+                (object_literal_member_sequence
+                  (object_literal_member
+                    (identifier)
+                    (single_expression
+                      (literal
+                        (string_literal)))))))))))))
+
+================================================================================
+Empty object literal
+================================================================================
+
+{}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal))))
+
+================================================================================
+Object literal with simple member
+================================================================================
+
+{ one: 1 }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+Object literal with multiple members
+================================================================================
+
+{ 
+  one: 1,
+  two: "two"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (numeric_literal))))
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Object literal with expression member
+================================================================================
+
+{ 
+  one: 1,
+  two: "2",
+  three: (a := 1, b := 2, a + b)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (numeric_literal))))
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (string_literal))))
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (expression_sequence
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))
+                (single_expression
+                  (additive_operation
+                    (single_expression
+                      (identifier))
+                    (single_expression
+                      (identifier))))))))))))
+
+================================================================================
+Object literal with array
+================================================================================
+
+{ emptyArr: [] }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (array_literal)))))))))
+
+================================================================================
+Object literal with fat-arrow function member
+================================================================================
+
+{ Add: (self, left, right) => left + right }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (fat_arrow_function
+                (function_head
+                  (param_sequence
+                    (param
+                      (identifier))
+                    (param
+                      (identifier))
+                    (param
+                      (identifier))))
+                (arrow)
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Object literal multiline with fat-arrow function members
+================================================================================
+
+{ 
+  Add: (self, left, right) => left + right,
+  Subtract: (self, left, right) => left - right
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (fat_arrow_function
+                (function_head
+                  (param_sequence
+                    (param
+                      (identifier))
+                    (param
+                      (identifier))
+                    (param
+                      (identifier))))
+                (arrow)
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier))))))
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (fat_arrow_function
+                (function_head
+                  (param_sequence
+                    (param
+                      (identifier))
+                    (param
+                      (identifier))
+                    (param
+                      (identifier))))
+                (arrow)
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Nested object literals
+================================================================================
+
+{ 
+  __Class: "Object",
+  
+  nested: { 
+    __Class: "Nested",
+    meaningOfLife: 42
+  } 
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (literal
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (string_literal))))
+          (object_literal_member
+            (identifier)
+            (single_expression
+              (literal
+                (object_literal
+                  (object_literal_member_sequence
+                    (object_literal_member
+                      (identifier)
+                      (single_expression
+                        (literal
+                          (string_literal))))
+                    (object_literal_member
+                      (identifier)
+                      (single_expression
+                        (literal
+                          (numeric_literal))))))))))))))

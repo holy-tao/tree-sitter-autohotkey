@@ -251,3 +251,62 @@ arr := [1, "two", (1 + 2)]
                       (single_expression
                         (literal
                           (numeric_literal))))))))))))))
+
+================================================================================
+Assignment with object literal
+================================================================================
+
+obj := {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal))))))
+
+================================================================================
+Assignment with nonempty literal
+================================================================================
+
+obj := { 
+  Add: (self, left, right) => (left + right) 
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (fat_arrow_function
+                    (function_head
+                      (param_sequence
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))))
+                    (arrow)
+                    (expression_sequence
+                      (single_expression
+                        (additive_operation
+                          (single_expression
+                            (identifier))
+                          (single_expression
+                            (identifier)))))))))))))))
