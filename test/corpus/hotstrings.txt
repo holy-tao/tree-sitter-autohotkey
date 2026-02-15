@@ -1,0 +1,717 @@
+================================================================================
+Text replacement simple
+================================================================================
+
+::btw::by the way
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement)))
+
+================================================================================
+No-op with fallthrough
+================================================================================
+
+::BTW::
+::btw::by the way
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement)))
+
+================================================================================
+Text replacement with string literal
+================================================================================
+
+::btw::"by the way"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement)))
+
+================================================================================
+Text replacement with modifier
+================================================================================
+
+:*:j@::jsmith@somedomain.com
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_trigger)
+    (hotstring_replacement)))
+
+================================================================================
+Execution hotstring with code block
+================================================================================
+
+:b0*?:11::
+{
+    Send "xx"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_backspace))
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_modifier
+      (hotstring_question))
+    (hotstring_trigger)
+    (block
+      (single_expression
+        (identifier))
+      (single_expression
+        (literal
+          (string_literal))))))
+
+================================================================================
+Execution hotstring with function declaration
+================================================================================
+
+: :btw::
+    case_conform_btw(hs)
+    {
+        if (hs == ":C:BTW")
+            Send "BY THE WAY"
+        else if (hs == ":C:Btw")
+            Send "By the way"
+        else
+            Send "by the way"
+    }
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement))
+  (block
+    (if_statement
+      (if)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (equality_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (string_literal)))))))
+      (single_expression
+        (identifier)))
+    (single_expression
+      (literal
+        (string_literal)))
+    (single_expression
+      (identifier))
+    (if_statement
+      (if)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (equality_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (string_literal)))))))
+      (single_expression
+        (identifier)))
+    (single_expression
+      (literal
+        (string_literal)))
+    (single_expression
+      (identifier))
+    (single_expression
+      (identifier))
+    (single_expression
+      (literal
+        (string_literal)))))
+
+================================================================================
+Option: asterisk (*)
+================================================================================
+
+:*:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: question mark (?)
+================================================================================
+
+:?:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_question))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: backspace enabled (B)
+================================================================================
+
+:b:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_backspace))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: backspace disabled (B0)
+================================================================================
+
+:b0:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_backspace))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: case sensitive (C)
+================================================================================
+
+:c:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_case_sensitive))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: case insensitive (C0)
+================================================================================
+
+:c0:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_case_sensitive))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: no case conforming (C1)
+================================================================================
+
+:c1:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_case_conform))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: key delay positive (K10)
+================================================================================
+
+:k10:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_key_delay))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: key delay negative (K-1)
+================================================================================
+
+:k-1:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_key_delay))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: key delay with spaces (K 5)
+================================================================================
+
+:k 5:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_key_delay))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: omit ending char (O)
+================================================================================
+
+:o:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_omit_ending))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: priority (P1)
+================================================================================
+
+:p1:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_priority))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: raw mode (R)
+================================================================================
+
+:r:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_raw))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: suspend exempt (S)
+================================================================================
+
+:s:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_suspend))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: SendInput mode (SI)
+================================================================================
+
+:si:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_send_mode))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: SendPlay mode (SP)
+================================================================================
+
+:sp:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_send_mode))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: SendEvent mode (SE)
+================================================================================
+
+:se:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_send_mode))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: text mode (T)
+================================================================================
+
+:t:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_text_mode))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: execute mode (X)
+================================================================================
+
+:x:test::output
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_execute))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Option: reset recognizer (Z)
+================================================================================
+
+:z:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_reset))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Combination: two simple options (*?)
+================================================================================
+
+:*?:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_modifier
+      (hotstring_question))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Combination: three simple options (*?b0)
+================================================================================
+
+:*?b0:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_modifier
+      (hotstring_question))
+    (hotstring_modifier
+      (hotstring_backspace))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Combination: mixed case options (*?B0C)
+================================================================================
+
+:*?B0C:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_modifier
+      (hotstring_question))
+    (hotstring_modifier
+      (hotstring_backspace))
+    (hotstring_modifier
+      (hotstring_case_sensitive))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Combination: many options (*?b0c1k10o)
+================================================================================
+
+:*?b0c1k10o:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_modifier
+      (hotstring_question))
+    (hotstring_modifier
+      (hotstring_backspace))
+    (hotstring_modifier
+      (hotstring_case_conform))
+    (hotstring_modifier
+      (hotstring_key_delay))
+    (hotstring_modifier
+      (hotstring_omit_ending))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Combination: parameterized mix (c1k10p1)
+================================================================================
+
+:c1k10p1:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_case_conform))
+    (hotstring_modifier
+      (hotstring_key_delay))
+    (hotstring_modifier
+      (hotstring_priority))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Combination: send mode with other options (sispk10)
+================================================================================
+
+:sispk10:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_send_mode))
+    (hotstring_modifier
+      (hotstring_send_mode))
+    (hotstring_modifier
+      (hotstring_key_delay))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Edge case: empty body
+================================================================================
+
+::test::
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)))
+
+================================================================================
+Edge case: options with code block
+================================================================================
+
+:*:test::
+{
+    Send "multi"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_trigger)
+    (block
+      (single_expression
+        (identifier))
+      (single_expression
+        (literal
+          (string_literal))))))
+
+================================================================================
+Edge case: options with unbraced statements
+================================================================================
+
+:*:test::
+    MsgBox "test"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_trigger)
+    (hotstring_replacement)))
+
+================================================================================
+Edge case: alphanumeric trigger
+================================================================================
+
+::test123::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Edge case: special character trigger
+================================================================================
+
+::@@@::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Edge case: zero delay with space (k 0)
+================================================================================
+
+:k 0:test::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_key_delay))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Edge case: case sensitive uppercase trigger
+================================================================================
+
+:C:TEST::UPPERCASE
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_case_sensitive))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))
+
+================================================================================
+Edge case: repeated character trigger
+================================================================================
+
+:*:...::replacement
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_modifier
+      (hotstring_asterisk))
+    (hotstring_trigger)
+    (single_expression
+      (identifier))))

@@ -82,7 +82,8 @@ export default grammar({
       $.break_statement,
       $.continue_statement,
       $.goto_statement,
-      $.label
+      $.hotstring,
+      $.label,
     )),
 
     //#region General Expressions
@@ -520,7 +521,7 @@ export default grammar({
       $.single_expression
     ),
 
-    label: $ => prec(-1, seq(
+    label: $ => prec(1, seq(
       $.identifier,
       ":"
     )),
@@ -705,6 +706,90 @@ export default grammar({
       ci("clipboardtimeout"), ci("dllload"), ci("errstdout"), ci("requires"), ci("hotif"), ci("hotiftimeout"),
       ci("hotstring"), ci("include"), ci("includeagain"), ci("inputlevel"), ci("usehook"), ci("maxthreads")
     ))),
+
+    //#endregion
+
+    //#region Hotstrings
+    // See: https://www.autohotkey.com/docs/v2/Hotstrings.htm
+    // See also KeySharp's ANTLR grammmar: https://github.com/Descolada/keysharp/blob/master/Keysharp.Core/Scripting/Parser/Antlr/MainLexer.g4#L60
+    hotstring: $ => prec.right(-2, choice(  // Lower precedence than labels (-1) to avoid conflicts
+      seq(
+        ":",
+        repeat($.hotstring_modifier),
+        ":",
+        $.hotstring_trigger,
+        $._double_colon,
+        optional(choice(
+          $.block,
+          $.hotstring_replacement,
+          $.single_expression,
+          repeat1($._statement)
+        ))
+      )
+    )),
+
+    _double_colon: $ => token("::"),
+
+    hotstring_trigger: $ => /[^\s:]+/,  // Any non-whitespace, non-colon characters
+
+    hotstring_replacement: $ => /[^\n]+/,  // Rest of line as text replacement (one or more, excludes newline)
+
+    hotstring_modifier: $ => choice(
+      $.hotstring_asterisk,
+      $.hotstring_question,
+      $.hotstring_backspace,
+      $.hotstring_case_sensitive,
+      $.hotstring_case_conform,
+      $.hotstring_key_delay,
+      $.hotstring_omit_ending,
+      $.hotstring_priority,
+      $.hotstring_raw,
+      $.hotstring_suspend,
+      $.hotstring_send_mode,
+      $.hotstring_text_mode,
+      $.hotstring_execute,
+      $.hotstring_reset
+      // hotstring_space handled separately as its own hotstring pattern
+    ),
+
+    // Boolean-style options with optional '0' suffix
+    hotstring_asterisk: $ => token(seq('*', optional('0'))),
+    hotstring_question: $ => token(seq('?', optional('0'))),
+    hotstring_backspace: $ => token(seq(ci('b'), optional('0'))),
+    hotstring_case_sensitive: $ => token(seq(ci('c'), optional('0'))),
+    hotstring_omit_ending: $ => token(seq(ci('o'), optional('0'))),
+    hotstring_raw: $ => token(seq(ci('r'), optional('0'))),
+    hotstring_suspend: $ => token(seq(ci('s'), optional('0'))),
+    hotstring_text_mode: $ => token(seq(ci('t'), optional('0'))),
+    hotstring_reset: $ => token(seq(ci('z'), optional('0'))),
+
+    // Options without '0' suffix
+    hotstring_execute: $ => token(ci('x')),
+    hotstring_case_conform: $ => token(seq(ci('c'), '1')),  // C1 only
+    hotstring_space: $ => token(prec(-10, ' ')),  // Very low precedence to avoid conflicts
+
+    // Send mode options (mutually exclusive but grammar accepts all)
+    hotstring_send_mode: $ => token(choice(
+      ci('si'),
+      ci('sp'),
+      ci('se')
+    )),
+
+    // Parameterized options with numeric arguments
+    // Kn - key delay (can be negative with optional spaces)
+    hotstring_key_delay: $ => token(seq(
+      ci('k'),
+      optional(repeat(/[ \t]/)),
+      optional('-'),
+      optional(repeat(/[ \t]/)),
+      /[0-9]+/
+    )),
+
+    // Pn - thread priority
+    hotstring_priority: $ => token(seq(
+      ci('p'),
+      /[0-9]+/
+    )),
 
     //#endregion
 

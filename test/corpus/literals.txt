@@ -386,39 +386,49 @@ Array literal with object literals
 Empty object literal
 ================================================================================
 
-{}
+obj := {}
 
 --------------------------------------------------------------------------------
 
 (source_file
   (single_expression
-    (literal
-      (object_literal))))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal))))))
 
 ================================================================================
 Object literal with simple member
 ================================================================================
 
-{ one: 1 }
+obj := { one: 1 }
 
 --------------------------------------------------------------------------------
 
 (source_file
   (single_expression
-    (literal
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (numeric_literal)))))))))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (literal
+                    (numeric_literal)))))))))))
 
 ================================================================================
 Object literal with multiple members
 ================================================================================
 
-{ 
+obj := { 
   one: 1,
   two: "two"
 }
@@ -427,25 +437,30 @@ Object literal with multiple members
 
 (source_file
   (single_expression
-    (literal
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (numeric_literal))))
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (string_literal)))))))))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (literal
+                    (numeric_literal))))
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (literal
+                    (string_literal)))))))))))
 
 ================================================================================
 Object literal with expression member
 ================================================================================
 
-{ 
+obj := { 
   one: 1,
   two: "2",
   three: (a := 1, b := 2, a + b)
@@ -455,102 +470,117 @@ Object literal with expression member
 
 (source_file
   (single_expression
-    (literal
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (numeric_literal))))
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (string_literal))))
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (expression_sequence
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
                 (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (literal
-                        (numeric_literal)))))
+                  (literal
+                    (numeric_literal))))
+              (object_literal_member
+                (identifier)
                 (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (literal
-                        (numeric_literal)))))
+                  (literal
+                    (string_literal))))
+              (object_literal_member
+                (identifier)
                 (single_expression
-                  (additive_operation
+                  (expression_sequence
                     (single_expression
-                      (identifier))
+                      (assignment_operation
+                        (single_expression
+                          (identifier))
+                        (assignment_operator)
+                        (single_expression
+                          (literal
+                            (numeric_literal)))))
                     (single_expression
-                      (identifier))))))))))))
+                      (assignment_operation
+                        (single_expression
+                          (identifier))
+                        (assignment_operator)
+                        (single_expression
+                          (literal
+                            (numeric_literal)))))
+                    (single_expression
+                      (additive_operation
+                        (single_expression
+                          (identifier))
+                        (single_expression
+                          (identifier))))))))))))))
 
 ================================================================================
 Object literal with array
 ================================================================================
 
-{ emptyArr: [] }
+obj := { emptyArr: [] }
 
 --------------------------------------------------------------------------------
 
 (source_file
   (single_expression
-    (literal
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (array_literal)))))))))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (literal
+                    (array_literal)))))))))))
 
 ================================================================================
 Object literal with fat-arrow function member
 ================================================================================
 
-{ Add: (self, left, right) => left + right }
+obj := { Add: (self, left, right) => left + right }
 
 --------------------------------------------------------------------------------
 
 (source_file
   (single_expression
-    (literal
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (fat_arrow_function
-                (function_head
-                  (param_sequence
-                    (param
-                      (identifier))
-                    (param
-                      (identifier))
-                    (param
-                      (identifier))))
-                (arrow)
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier)))))))))))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (fat_arrow_function
+                    (function_head
+                      (param_sequence
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))))
+                    (arrow)
+                    (additive_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (identifier)))))))))))))
 
 ================================================================================
 Object literal multiline with fat-arrow function members
 ================================================================================
 
-{ 
+obj := { 
   Add: (self, left, right) => left + right,
   Subtract: (self, left, right) => left - right
 }
@@ -559,51 +589,56 @@ Object literal multiline with fat-arrow function members
 
 (source_file
   (single_expression
-    (literal
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (fat_arrow_function
-                (function_head
-                  (param_sequence
-                    (param
-                      (identifier))
-                    (param
-                      (identifier))
-                    (param
-                      (identifier))))
-                (arrow)
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier))))))
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (fat_arrow_function
-                (function_head
-                  (param_sequence
-                    (param
-                      (identifier))
-                    (param
-                      (identifier))
-                    (param
-                      (identifier))))
-                (arrow)
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier)))))))))))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (fat_arrow_function
+                    (function_head
+                      (param_sequence
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))))
+                    (arrow)
+                    (additive_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (identifier))))))
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (fat_arrow_function
+                    (function_head
+                      (param_sequence
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))
+                        (param
+                          (identifier))))
+                    (arrow)
+                    (additive_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (identifier)))))))))))))
 
 ================================================================================
 Nested object literals
 ================================================================================
 
-{ 
+obj := { 
   __Class: "Object",
   
   nested: { 
@@ -616,27 +651,32 @@ Nested object literals
 
 (source_file
   (single_expression
-    (literal
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (string_literal))))
-          (object_literal_member
-            (identifier)
-            (single_expression
-              (literal
-                (object_literal
-                  (object_literal_member_sequence
-                    (object_literal_member
-                      (identifier)
-                      (single_expression
-                        (literal
-                          (string_literal))))
-                    (object_literal_member
-                      (identifier)
-                      (single_expression
-                        (literal
-                          (numeric_literal))))))))))))))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (literal
+                    (string_literal))))
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (literal
+                    (object_literal
+                      (object_literal_member_sequence
+                        (object_literal_member
+                          (identifier)
+                          (single_expression
+                            (literal
+                              (string_literal))))
+                        (object_literal_member
+                          (identifier)
+                          (single_expression
+                            (literal
+                              (numeric_literal))))))))))))))))
