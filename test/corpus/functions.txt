@@ -458,3 +458,35 @@ Function(arg1, arg2) {
           (identifier))))
     (function_body
       (block))))
+
+================================================================================
+Function with return statement
+================================================================================
+
+Function(arg1, arg2) {
+    return(arg1 + arg2)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (identifier))
+        (param
+          (identifier))))
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (single_expression
+            (expression_sequence
+              (single_expression
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier)))))))))))

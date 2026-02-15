@@ -70,7 +70,19 @@ export default grammar({
       $.function_declaration,
       $.single_expression,
       $.expression_sequence,
-      $.block
+      $.block,
+      $.return_statement,
+      $.if_statement,
+      $.while_statement,
+      $.for_statement,
+      $.loop_statement,
+      $.switch_statement,
+      $.try_statement,
+      $.throw_statement,
+      $.break_statement,
+      $.continue_statement,
+      $.goto_statement,
+      $.label
     )),
 
     //#region General Expressions
@@ -101,6 +113,26 @@ export default grammar({
       $.single_expression,
       repeat(seq(",", $.single_expression))
     )),
+
+    // Helper for expressions without top-level parentheses (used in specialized loops)
+    _non_paren_primary: $ => choice(
+      $.literal,
+      $.identifier,
+      $._pairwise_operation
+    ),
+
+    _non_paren_expression: $ => choice(
+      $._non_paren_primary,
+      $.variable_declaration,
+      $.assignment_operation,
+      $.prefix_operation,
+      $.postfix_operation,
+      $.verbal_not_operation,
+      $.fat_arrow_function,
+      $.ternary_expression,
+      $.dereference_operation,
+      $.varref_operation
+    ),
 
     // FIXME some declarations are contextually illegal - you can't delcare local variables in the auto-execute
     // section, for example. We may not be able to detect those with pure grammar rules
@@ -427,14 +459,182 @@ export default grammar({
       "{", repeat($._statement), "}"
     ),
 
+    if_statement: $ => prec.right(PREC.DEFAULT, seq(
+      $.if,
+      $.single_expression,
+      choice($.block, $._statement),  // support brace-less forms
+      repeat($.else_statement)
+    )),
+
+    else_statement: $ => prec.right(PREC.DEFAULT, seq(
+      $.else,
+      choice(
+        seq($.if, $.single_expression, $.block),  // else if (condition) { ... }
+        $.block                                     // else { ... }
+      )
+    )),
+
+    loop_statement: $ => seq(
+      $.loop,
+      optional(choice(
+        // Regular loop count - can be parenthesized
+        prec(2, $.single_expression),
+        // Specialized loops - no top-level parentheses allowed
+        prec(1, seq($.parse, $._non_paren_expression, optional(seq(",", $._non_paren_expression)), optional(seq(",", $._non_paren_expression)))),
+        prec(1, seq($.read, $._non_paren_expression, optional(seq(",", $._non_paren_expression)))),
+        prec(1, seq($.files, $._non_paren_expression, optional(seq(",", $._non_paren_expression)))),
+        prec(1, seq($.reg, $._non_paren_expression, optional(seq(",", $._non_paren_expression))))
+      )),
+      $.block
+    ),
+
+    until_statement: $ => seq($.until, $.single_expression),
+
+    return_statement: $ => prec.right(PREC.DEFAULT,
+      seq($.return, optional($.single_expression))),
+
+    while_statement: $ => seq(
+      $.while,
+      $.single_expression,
+      choice($.block, $._statement)  // support brace-less forms
+    ),
+
+    break_statement: $ => prec.right(seq(
+      $.break,
+      optional($.identifier)  // optional label target
+    )),
+
+    continue_statement: $ => prec.right(seq(
+      $.continue,
+      optional($.identifier)  // optional label target
+    )),
+
+    throw_statement: $ => seq(
+      $.throw,
+      $.single_expression
+    ),
+
+    goto_statement: $ => seq(
+      $.goto,
+      $.single_expression
+    ),
+
+    label: $ => prec(-1, seq(
+      $.identifier,
+      ":"
+    )),
+
+    for_statement: $ => prec.right(PREC.DEFAULT, seq(
+      $.for,
+      choice(
+        // Parenthesized form: for (var in expr) or for (key, val in expr)
+        seq("(", $._for_params, ")"),
+        $._for_params
+      ),
+      choice($.block, $._statement),  // support brace-less forms
+      // FIXME else if is not allowed here
+      optional($.else_statement)
+    )),
+
+    _for_params: $ => choice(
+      seq($.identifier, $.in, $.single_expression),
+      seq($.identifier, ",", $.identifier, $.in, $.single_expression)
+    ),
+
+    try_statement: $ => prec.right(PREC.DEFAULT, seq(
+      $.try,
+      choice(
+        seq(
+          $.block,
+          repeat($.catch_clause),
+          //FIXME else if is not allowed here
+          optional($.else_statement),
+          optional($.finally_clause)
+        ),
+        // try x := 1 / 0
+        $.single_expression
+      )
+    )),
+
+    catch_clause: $ => seq(
+      $.catch,
+      optional(choice(
+        seq("(", $._catch_params, ")"),
+        $._catch_params
+      )),
+      $.block
+    ),
+
+    _catch_params: $ => seq(
+      $.identifier,              // error type
+      optional(seq($.as, $.identifier))    // as variable
+    ),
+
+    finally_clause: $ => seq(
+      $.finally,
+      $.block
+    ),
+
+    switch_statement: $ => seq(
+      $.switch,
+      $.single_expression,
+      $.switch_body
+    ),
+
+    switch_body: $ => seq(
+      "{",
+      repeat(choice(
+        $.case_clause,
+        $.default_clause
+      )),
+      "}"
+    ),
+
+    case_clause: $ => seq(
+      $.case,
+      $.single_expression,
+      repeat(seq(",", $.single_expression)),  // multiple values
+      ":",
+      repeat($._statement)
+    ),
+
+    default_clause: $ => seq(
+      $.default,
+      ":",
+      repeat($._statement)
+    ),
+
     // Control flow keywords
-    _if: $ => token(prec(PREC.KEYWORD, ci('if'))),
-    _else: $ => token(prec(PREC.KEYWORD, ci('else'))),
-    _while: $ => token(prec(PREC.KEYWORD, ci('while'))),
-    _for: $ => token(prec(PREC.KEYWORD, ci('for'))),
-    _in: $ => token(prec(PREC.KEYWORD, ci('in'))),
-    _loop: $ => token(prec(PREC.KEYWORD, ci('loop'))),
-    _until: $ => token(prec(PREC.KEYWORD, ci('until'))),
+    if: $ => token(prec(PREC.KEYWORD, ci('if'))),
+    else: $ => token(prec(PREC.KEYWORD, ci('else'))),
+    while: $ => token(prec(PREC.KEYWORD, ci('while'))),
+    for: $ => token(prec(PREC.KEYWORD, ci('for'))),
+    in: $ => token(prec(PREC.KEYWORD, ci('in'))),
+    loop: $ => token(prec(PREC.KEYWORD, ci('loop'))),
+    until: $ => token(prec(PREC.KEYWORD, ci('until'))),
+    try: $ => token(prec(PREC.KEYWORD, ci('try'))),
+    catch: $ => token(prec(PREC.KEYWORD, ci('catch'))),
+    finally: $ => token(prec(PREC.KEYWORD, ci('finally'))),
+    return: $ => token(prec(PREC.KEYWORD, ci('return'))),
+    throw: $ => token(prec(PREC.KEYWORD, ci('throw'))),
+    goto: $ => token(prec(PREC.KEYWORD, ci('goto'))),
+    break: $ => token(prec(PREC.KEYWORD, ci('break'))),
+    continue: $ => token(prec(PREC.KEYWORD, ci('continue'))),
+    as: $ => token(prec(PREC.KEYWORD, ci('as'))),
+    switch: $ => token(prec(PREC.KEYWORD, ci('switch'))),
+    case: $ => token(prec(PREC.KEYWORD, ci('case'))),
+    default: $ => token(prec(PREC.KEYWORD, ci('default'))),
+    parse: $ => token(prec(PREC.KEYWORD, ci('parse'))),
+    read: $ => token(prec(PREC.KEYWORD, ci('read'))),
+    files: $ => token(prec(PREC.KEYWORD, ci('files'))),
+    reg: $ => token(prec(PREC.KEYWORD, ci('reg'))),
+
+    loop_kind: $ => token(prec(PREC.KEYWORD, choice(
+      ci('read'),   // file reading loop
+      ci('parse'),  // string parsing loop
+      ci('files'),  // file / directory search loop
+      ci('reg')     // registry key reading loop
+    ))),
 
     //#endregion
 

@@ -45,3 +45,1660 @@ Block with object literal
                   (single_expression
                     (literal
                       (numeric_literal))))))))))))
+
+================================================================================
+Empty return statement
+================================================================================
+
+return
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (return_statement
+    (return)))
+
+================================================================================
+Return with literal
+================================================================================
+
+return 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (return_statement
+    (return)
+    (single_expression
+      (literal
+        (numeric_literal)))))
+
+================================================================================
+Return with arithmetic statement
+================================================================================
+
+return 2 + 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (return_statement
+    (return)
+    (single_expression
+      (additive_operation
+        (single_expression
+          (literal
+            (numeric_literal)))
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Parenthesized return with literal
+================================================================================
+
+return("example")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (return_statement
+    (return)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (literal
+            (string_literal)))))))
+
+================================================================================
+If statement with braces
+================================================================================
+
+if (x > 5) {
+    y := 10
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (relational_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+If-else statement
+================================================================================
+
+if (x > 5) {
+    y := 10
+} else {
+    y := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (relational_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (numeric_literal))))))
+    (else_statement
+      (else)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+If-else-if chain
+================================================================================
+
+if (x > 10) {
+    y := 1
+} else if (x > 5) {
+    y := 2
+} else {
+    y := 3
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (relational_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (numeric_literal))))))
+    (else_statement
+      (else)
+      (if)
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (relational_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (numeric_literal)))))))
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (else_statement
+      (else)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+While loop
+================================================================================
+
+while (i < 10) {
+    i++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (relational_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier))))))
+
+================================================================================
+Loop with count
+================================================================================
+
+loop 5 {
+    x++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (single_expression
+      (literal
+        (numeric_literal)))
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier))))))
+
+================================================================================
+Parenthesized loop with count
+================================================================================
+
+loop (5) {
+    x++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (literal
+            (numeric_literal)))))
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier))))))
+
+================================================================================
+Loop with break
+================================================================================
+
+loop {
+    if (x > 10) {
+        break
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (block
+      (if_statement
+        (if)
+        (single_expression
+          (expression_sequence
+            (single_expression
+              (relational_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (literal
+                    (numeric_literal)))))))
+        (block
+          (break_statement
+            (break)))))))
+
+================================================================================
+Loop with continue
+================================================================================
+
+loop 10 {
+    if (i == 5) {
+        continue
+    }
+    x += i
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (single_expression
+      (literal
+        (numeric_literal)))
+    (block
+      (if_statement
+        (if)
+        (single_expression
+          (expression_sequence
+            (single_expression
+              (equality_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (literal
+                    (numeric_literal)))))))
+        (block
+          (continue_statement
+            (continue))))
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Throw statement
+================================================================================
+
+throw Error("Invalid value")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (throw_statement
+    (throw)
+    (single_expression
+      (identifier)))
+  (single_expression
+    (expression_sequence
+      (single_expression
+        (literal
+          (string_literal))))))
+
+================================================================================
+Goto and label
+================================================================================
+
+goto MyLabel
+x := 1
+MyLabel:
+y := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (goto_statement
+    (goto)
+    (single_expression
+      (identifier)))
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal)))))
+  (label
+    (identifier))
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Parenthesized goto and label
+================================================================================
+
+goto(MyLabel)
+x := 1
+MyLabel:
+y := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (goto_statement
+    (goto)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (identifier)))))
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal)))))
+  (label
+    (identifier))
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Parenthesized goto with expression and label
+================================================================================
+
+goto("var")
+x := 1
+MyLabel:
+y := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (goto_statement
+    (goto)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (literal
+            (string_literal))))))
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal)))))
+  (label
+    (identifier))
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Break with label
+================================================================================
+
+outer:
+loop 10 {
+    loop 5 {
+        if (done) {
+            break outer
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (label
+    (identifier))
+  (loop_statement
+    (loop)
+    (single_expression
+      (literal
+        (numeric_literal)))
+    (block
+      (loop_statement
+        (loop)
+        (single_expression
+          (literal
+            (numeric_literal)))
+        (block
+          (if_statement
+            (if)
+            (single_expression
+              (expression_sequence
+                (single_expression
+                  (identifier))))
+            (block
+              (break_statement
+                (break)
+                (identifier)))))))))
+
+================================================================================
+For loop single variable
+================================================================================
+
+for value in collection {
+    total += value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (single_expression
+      (identifier))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+For-else statement
+================================================================================
+
+for value in collection {
+    total += value
+}
+else {
+    empty := true
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (single_expression
+      (identifier))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier)))))
+    (else_statement
+      (else)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (boolean_literal)))))))))
+
+================================================================================
+Parenthesized for loop single variable
+================================================================================
+
+for (value in collection) {
+    total += value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (single_expression
+      (identifier))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+For loop key-value pair
+================================================================================
+
+for key, value in object {
+    result[key] := value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (identifier)
+    (in)
+    (single_expression
+      (identifier))
+    (block
+      (single_expression
+        (identifier))
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (literal
+              (array_literal
+                (expression_sequence
+                  (single_expression
+                    (identifier))))))
+          (assignment_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+For loop key-value pair parenthesized
+================================================================================
+
+for (key, value in object) {
+    result[key] := value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (identifier)
+    (in)
+    (single_expression
+      (identifier))
+    (block
+      (single_expression
+        (identifier))
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (literal
+              (array_literal
+                (expression_sequence
+                  (single_expression
+                    (identifier))))))
+          (assignment_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Try-catch
+================================================================================
+
+try {
+    result := x / y
+} catch Error as err {
+    result := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (multiplicative_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier)))))))
+    (catch_clause
+      (catch)
+      (identifier)
+      (as)
+      (identifier)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+Naked try
+================================================================================
+
+try x := 1 / 0
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (multiplicative_operation
+            (single_expression
+              (literal
+                (numeric_literal)))
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+Try-catch with parenthesized catch
+================================================================================
+
+try {
+    result := x / y
+} catch (Error as err) {
+    result := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (multiplicative_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier)))))))
+    (catch_clause
+      (catch)
+      (identifier)
+      (as)
+      (identifier)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+Try-finally
+================================================================================
+
+try {
+    x := 1
+} finally {
+    y := 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (numeric_literal))))))
+    (finally_clause
+      (finally)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+Try-catch-finally
+================================================================================
+
+try {
+    x := 1 / 0
+} catch {
+    x := 0
+} finally {
+    cleanup := true
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (multiplicative_operation
+              (single_expression
+                (literal
+                  (numeric_literal)))
+              (single_expression
+                (literal
+                  (numeric_literal))))))))
+    (catch_clause
+      (catch)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (finally_clause
+      (finally)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (boolean_literal)))))))))
+
+================================================================================
+Try-catch-else-finally
+================================================================================
+
+try {
+    x := 1/0
+} catch Error as err {
+    x := 0
+} else {
+    cleanup := false
+} finally {
+    cleanup := true
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (multiplicative_operation
+              (single_expression
+                (literal
+                  (numeric_literal)))
+              (single_expression
+                (literal
+                  (numeric_literal))))))))
+    (catch_clause
+      (catch)
+      (identifier)
+      (as)
+      (identifier)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (else_statement
+      (else)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (boolean_literal)))))))
+    (finally_clause
+      (finally)
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (boolean_literal)))))))))
+
+================================================================================
+Switch statement
+================================================================================
+
+switch value {
+    case 1:
+        result := "one"
+    case 2:
+        result := "two"
+    default:
+        result := "other"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (single_expression
+      (identifier))
+    (switch_body
+      (case_clause
+        (case)
+        (single_expression
+          (literal
+            (numeric_literal)))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal))))))
+      (case_clause
+        (case)
+        (single_expression
+          (literal
+            (numeric_literal)))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal))))))
+      (default_clause
+        (default)
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Switch statement with parentheses
+================================================================================
+
+switch (value) {
+    case 1:
+        result := "one"
+    case 2:
+        result := "two"
+    default:
+        result := "other"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (identifier))))
+    (switch_body
+      (case_clause
+        (case)
+        (single_expression
+          (literal
+            (numeric_literal)))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal))))))
+      (case_clause
+        (case)
+        (single_expression
+          (literal
+            (numeric_literal)))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal))))))
+      (default_clause
+        (default)
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Switch with multiple case values
+================================================================================
+
+switch day {
+    case "Mon", "Tue", "Wed":
+        type := "weekday"
+    case "Sat", "Sun":
+        type := "weekend"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (single_expression
+      (identifier))
+    (switch_body
+      (case_clause
+        (case)
+        (single_expression
+          (literal
+            (string_literal)))
+        (single_expression
+          (literal
+            (string_literal)))
+        (single_expression
+          (literal
+            (string_literal)))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal))))))
+      (case_clause
+        (case)
+        (single_expression
+          (literal
+            (string_literal)))
+        (single_expression
+          (literal
+            (string_literal)))
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Switch with expressions
+================================================================================
+
+switch (true) {
+    case (variable < 10):
+        return variable
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (literal
+            (boolean_literal)))))
+    (switch_body
+      (case_clause
+        (case)
+        (single_expression
+          (expression_sequence
+            (single_expression
+              (relational_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (literal
+                    (numeric_literal)))))))
+        (return_statement
+          (return)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Nested if statements
+================================================================================
+
+if (x > 0) {
+    if (y > 0) {
+        quadrant := 1
+    } else {
+        quadrant := 4
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (relational_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (block
+      (if_statement
+        (if)
+        (single_expression
+          (expression_sequence
+            (single_expression
+              (relational_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (literal
+                    (numeric_literal)))))))
+        (block
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal))))))
+        (else_statement
+          (else)
+          (block
+            (single_expression
+              (assignment_operation
+                (single_expression
+                  (identifier))
+                (assignment_operator)
+                (single_expression
+                  (literal
+                    (numeric_literal)))))))))))
+
+================================================================================
+If inside loop
+================================================================================
+
+loop 10 {
+    if (A_Index == 5) {
+        continue
+    }
+    sum += A_Index
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (single_expression
+      (literal
+        (numeric_literal)))
+    (block
+      (if_statement
+        (if)
+        (single_expression
+          (expression_sequence
+            (single_expression
+              (equality_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (literal
+                    (numeric_literal)))))))
+        (block
+          (continue_statement
+            (continue))))
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Loop inside if
+================================================================================
+
+if (processAll) {
+    loop 5 {
+        x++
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (identifier))))
+    (block
+      (loop_statement
+        (loop)
+        (single_expression
+          (literal
+            (numeric_literal)))
+        (block
+          (single_expression
+            (postfix_operation
+              (identifier))))))))
+
+================================================================================
+Three-level nesting
+================================================================================
+
+while (running) {
+    for item in collection {
+        if (item > 0) {
+            sum += item
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (identifier))))
+    (block
+      (for_statement
+        (for)
+        (identifier)
+        (in)
+        (single_expression
+          (identifier))
+        (block
+          (if_statement
+            (if)
+            (single_expression
+              (expression_sequence
+                (single_expression
+                  (relational_operation
+                    (single_expression
+                      (identifier))
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))))
+            (block
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Loop parse
+================================================================================
+
+loop parse content, "`n" {
+    lines++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (parse)
+    (identifier)
+    (literal
+      (string_literal))
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier))))))
+
+================================================================================
+Loop files
+================================================================================
+
+loop files "*.txt" {
+    count++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (files)
+    (literal
+      (string_literal))
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier))))))
+
+================================================================================
+Loop read
+================================================================================
+
+loop read "input.txt" {
+    total++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (read)
+    (literal
+      (string_literal))
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier))))))
+
+================================================================================
+Loop until
+================================================================================
+
+loop {
+    x++
+} until x > 10
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier)))))
+  (single_expression
+    (identifier))
+  (single_expression
+    (relational_operation
+      (single_expression
+        (identifier))
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Loop until with parentheses
+================================================================================
+
+loop {
+    x++
+} 
+until (x > 10)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (block
+      (single_expression
+        (postfix_operation
+          (identifier)))))
+  (single_expression
+    (identifier))
+  (single_expression
+    (expression_sequence
+      (single_expression
+        (relational_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+If without braces (single statement)
+================================================================================
+
+if (x > 5)
+    y := 10
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (relational_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+While without braces
+================================================================================
+
+while (i < 10)
+    i++
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (relational_operation
+            (single_expression
+              (identifier))
+            (single_expression
+              (literal
+                (numeric_literal)))))))
+    (single_expression
+      (postfix_operation
+        (identifier)))))
+
+================================================================================
+For without braces
+================================================================================
+
+for v in arr
+    sum += v
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (single_expression
+      (identifier))
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (identifier))))))
+
+================================================================================
+Empty blocks
+================================================================================
+
+if (x) { }
+while (y) { }
+loop 5 { }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (identifier))))
+    (block))
+  (while_statement
+    (while)
+    (single_expression
+      (expression_sequence
+        (single_expression
+          (identifier))))
+    (block))
+  (loop_statement
+    (loop)
+    (single_expression
+      (literal
+        (numeric_literal)))
+    (block)))
+
+================================================================================
+If without parentheses
+================================================================================
+
+if x > 5 {
+    y := 10
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (single_expression
+      (relational_operation
+        (single_expression
+          (identifier))
+        (single_expression
+          (literal
+            (numeric_literal)))))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+Nested switch
+================================================================================
+
+switch type {
+    case "number":
+        switch value {
+            case 0:
+                result := "zero"
+            default:
+                result := "non-zero"
+        }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (single_expression
+      (identifier))
+    (switch_body
+      (case_clause
+        (case)
+        (single_expression
+          (literal
+            (string_literal)))
+        (switch_statement
+          (switch)
+          (single_expression
+            (identifier))
+          (switch_body
+            (case_clause
+              (case)
+              (single_expression
+                (literal
+                  (numeric_literal)))
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (literal
+                      (string_literal))))))
+            (default_clause
+              (default)
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (literal
+                      (string_literal))))))))))))
