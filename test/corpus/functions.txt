@@ -1,0 +1,460 @@
+================================================================================
+Function declaration with block body
+================================================================================
+
+Function() {
+    var := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (numeric_literal)))))))))
+
+================================================================================
+Function declaration with fat arrow budy
+================================================================================
+
+Function() => 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Static function (Note: only legal in class definitions)
+================================================================================
+
+static Function(arg1, arg2) {
+    var3 := arg1 + arg2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (scope_identifier)
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (identifier))
+        (param
+          (identifier))))
+    (function_body
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (additive_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (identifier))))))))))
+
+================================================================================
+Static function with fat arrow body
+================================================================================
+
+static Function(arg1, arg2) => arg1 - arg2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (scope_identifier)
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (identifier))
+        (param
+          (identifier))))
+    (function_body
+      (single_expression
+        (additive_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Function declaration wildcard parameter
+================================================================================
+
+Function(*) {
+    var := "test"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (wildcard))
+    (function_body
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Function declaration named parameters
+================================================================================
+
+Function(arg1, arg2) {
+    var := arg1 . arg2 . "test"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (identifier))
+        (param
+          (identifier))))
+    (function_body
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (explicit_concat_operation
+                (single_expression
+                  (explicit_concat_operation
+                    (single_expression
+                      (identifier))
+                    (single_expression
+                      (identifier))))
+                (single_expression
+                  (literal
+                    (string_literal)))))))))))
+
+================================================================================
+Function declaration variadic parameters
+================================================================================
+
+Function(params*) {
+    var := arg1 . arg2 . "test"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (variadic_param
+          (identifier)
+          (wildcard))))
+    (function_body
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (identifier))
+            (assignment_operator)
+            (single_expression
+              (explicit_concat_operation
+                (single_expression
+                  (explicit_concat_operation
+                    (single_expression
+                      (identifier))
+                    (single_expression
+                      (identifier))))
+                (single_expression
+                  (literal
+                    (string_literal)))))))))))
+
+================================================================================
+Nested functions
+================================================================================
+
+Function(params*) {
+    Nested(*) {
+        static var2 := "nested function!"
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (variadic_param
+          (identifier)
+          (wildcard))))
+    (function_body
+      (block
+        (function_declaration
+          (identifier)
+          (function_head
+            (wildcard))
+          (function_body
+            (block
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (variable_declaration
+                      (scope_identifier)
+                      (identifier)))
+                  (assignment_operator)
+                  (single_expression
+                    (literal
+                      (string_literal))))))))))))
+
+================================================================================
+Multiple nested functions
+================================================================================
+
+Function(params*) {
+    Nested(*) {
+        static var2 := "nested function!"
+    }
+
+    NestedTwo(arg1, arg2) => arg1 + arg2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (variadic_param
+          (identifier)
+          (wildcard))))
+    (function_body
+      (block
+        (function_declaration
+          (identifier)
+          (function_head
+            (wildcard))
+          (function_body
+            (block
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (variable_declaration
+                      (scope_identifier)
+                      (identifier)))
+                  (assignment_operator)
+                  (single_expression
+                    (literal
+                      (string_literal))))))))
+        (function_declaration
+          (identifier)
+          (function_head
+            (param_sequence
+              (param
+                (identifier))
+              (param
+                (identifier))))
+          (function_body
+            (single_expression
+              (additive_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (identifier))))))))))
+
+================================================================================
+Static nested function
+================================================================================
+
+Function(arg1, arg2) {
+    static Nested() {
+        var := "arg3"
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (identifier))
+        (param
+          (identifier))))
+    (function_body
+      (block
+        (function_declaration
+          (scope_identifier)
+          (identifier)
+          (function_head)
+          (function_body
+            (block
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (literal
+                      (string_literal))))))))))))
+
+================================================================================
+Deeply nested functions
+================================================================================
+
+Function(params*) {
+    LevelOne(*) {
+        LevelTwo() {
+            LevelThree() {
+                LevelFour(val := "test") {
+                    LevelFive() => "an arrow function!"
+                }
+            }
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (variadic_param
+          (identifier)
+          (wildcard))))
+    (function_body
+      (block
+        (function_declaration
+          (identifier)
+          (function_head
+            (wildcard))
+          (function_body
+            (block
+              (function_declaration
+                (identifier)
+                (function_head)
+                (function_body
+                  (block
+                    (function_declaration
+                      (identifier)
+                      (function_head)
+                      (function_body
+                        (block
+                          (function_declaration
+                            (identifier)
+                            (function_head
+                              (param_sequence
+                                (param
+                                  (identifier)
+                                  (assignment_operator)
+                                  (single_expression
+                                    (literal
+                                      (string_literal))))))
+                            (function_body
+                              (block
+                                (function_declaration
+                                  (identifier)
+                                  (function_head)
+                                  (function_body
+                                    (single_expression
+                                      (literal
+                                        (string_literal)))))))))))))))))))))
+
+================================================================================
+Brace on new line
+================================================================================
+
+Function(arg1, arg2, &out) 
+{
+    &out := arg1 + arg2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (identifier))
+        (param
+          (identifier))
+        (byref_param
+          (param
+            (identifier)))))
+    (function_body
+      (block
+        (single_expression
+          (assignment_operation
+            (single_expression
+              (varref_operation
+                (single_expression
+                  (identifier))))
+            (assignment_operator)
+            (single_expression
+              (additive_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (identifier))))))))))
+
+================================================================================
+Function with empty body
+================================================================================
+
+Function(arg1, arg2) {
+
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (identifier))
+        (param
+          (identifier))))
+    (function_body
+      (block))))

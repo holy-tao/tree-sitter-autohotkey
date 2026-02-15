@@ -56,7 +56,10 @@ export default grammar({
     [$.param, $._primary_expression],
     // [$.byref_param, $.prefix_operation],
     // [$.variadic_param, $.multiplicative_operation],
-    [$.variadic_param, $._primary_expression]
+    [$.variadic_param, $._primary_expression],
+    [$.function_declaration, $._primary_expression],
+    [$.function_declaration, $.variable_declaration],
+    [$.object_literal, $.block],
   ],
 
   rules: {
@@ -64,8 +67,10 @@ export default grammar({
 
     _statement: $ => prec(2, choice(
       $.directive,
+      $.function_declaration,
       $.single_expression,
-      $.expression_sequence
+      $.expression_sequence,
+      $.block
     )),
 
     //#region General Expressions
@@ -284,6 +289,9 @@ export default grammar({
         choice("&&", ci('and'), "||", ci('or')
     ))),
 
+    //#endregion
+
+    //#region Functions
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
       // TODO this fails to match the wildcard (*) and variadic arguments (params*)
       $.function_head,
@@ -291,9 +299,23 @@ export default grammar({
       field("body", $._primary_expression)
     )),
 
-    //#endregion
+    // FIXME global functions cannot be static (can't be static to the auto-execute section)
+    // but methods and nested functions (even nested inside global functions) can.
+    // FIXME static is the only valid scope identifier for function declarations, but
+    // using an alias makes tree-sitter fail to resolve the conflict between the 
+    // $scope_identifier $identifier sequence
+    function_declaration: $ => seq(
+      optional($.scope_identifier),
+      field("name", $.identifier),
+      field("head", $.function_head),
+      field("body", $.function_body)
+    ),
 
-    //#region Function parameters
+    function_body: $ => choice(
+      $.block,
+      seq("=>", $.single_expression),
+    ),
+
     function_head: $ => seq(
       "(", 
       optional(choice($.wildcard, $.param_sequence)), 
@@ -316,11 +338,14 @@ export default grammar({
       $.identifier,
       seq(
         $.identifier,
-        // only ':=' is valid in parameter lists, argument lists can use all operators
-        alias(":=", $.assignment_operator),
-        $.single_expression),
+        $._initializer
+      ),
       seq($.identifier, $.optional_marker)
     ),
+
+    _initializer: $ => seq(
+      alias(":=", $.assignment_operator), 
+      $.single_expression),
 
     optional_marker: $ => "?",
 
@@ -396,6 +421,12 @@ export default grammar({
         ci('global')
     ))),
 
+    //#region Control Flow
+
+    block: $ => seq(
+      "{", repeat($._statement), "}"
+    ),
+
     // Control flow keywords
     _if: $ => token(prec(PREC.KEYWORD, ci('if'))),
     _else: $ => token(prec(PREC.KEYWORD, ci('else'))),
@@ -404,6 +435,8 @@ export default grammar({
     _in: $ => token(prec(PREC.KEYWORD, ci('in'))),
     _loop: $ => token(prec(PREC.KEYWORD, ci('loop'))),
     _until: $ => token(prec(PREC.KEYWORD, ci('until'))),
+
+    //#endregion
 
     unset: $ => token(prec(PREC.KEYWORD, ci('unset'))),
 

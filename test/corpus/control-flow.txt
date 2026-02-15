@@ -1,0 +1,47 @@
+================================================================================
+Naked block
+================================================================================
+
+{
+    var := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Block with object literal
+================================================================================
+
+{
+    obj := { a: 1 }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (single_expression
+      (assignment_operation
+        (single_expression
+          (identifier))
+        (assignment_operator)
+        (single_expression
+          (literal
+            (object_literal
+              (object_literal_member_sequence
+                (object_literal_member
+                  (identifier)
+                  (single_expression
+                    (literal
+                      (numeric_literal))))))))))))
