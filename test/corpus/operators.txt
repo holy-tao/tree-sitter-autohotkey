@@ -359,6 +359,68 @@ result := a ** b
             (identifier)))))))
 
 ================================================================================
+Dereference operator
+================================================================================
+
+result := %"var"%
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (dereference_operation
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+VarRef operator
+================================================================================
+
+ref := &var
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (varref_operation
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+VarRef operator with bitwise AND
+================================================================================
+
+ref := & var1 & var2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (bitwise_and_operation
+          (single_expression
+            (varref_operation
+              (single_expression
+                (identifier))))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
 Prefix increment
 ================================================================================
 

@@ -260,6 +260,21 @@
     }
   },
   {
+    "type": "dereference_operation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "single_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "directive",
     "named": true,
     "fields": {},
@@ -1039,10 +1054,6 @@
             "named": false
           },
           {
-            "type": "&",
-            "named": false
-          },
-          {
             "type": "+",
             "named": false
           },
@@ -1183,6 +1194,10 @@
           "named": true
         },
         {
+          "type": "dereference_operation",
+          "named": true
+        },
+        {
           "type": "equality_operation",
           "named": true
         },
@@ -1252,6 +1267,10 @@
         },
         {
           "type": "variable_declaration",
+          "named": true
+        },
+        {
+          "type": "varref_operation",
           "named": true
         },
         {
@@ -1391,6 +1410,21 @@
     }
   },
   {
+    "type": "varref_operation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "single_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "verbal_not_operation",
     "named": true,
     "fields": {
@@ -1433,6 +1467,10 @@
   },
   {
     "type": "#",
+    "named": false
+  },
+  {
+    "type": "%",
     "named": false
   },
   {

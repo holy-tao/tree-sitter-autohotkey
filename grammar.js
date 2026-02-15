@@ -87,7 +87,9 @@ export default grammar({
       $.postfix_operation,
       $.verbal_not_operation,
       $.fat_arrow_function,
-      $.ternary_expression
+      $.ternary_expression,
+      $.dereference_operation,
+      $.varref_operation
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
@@ -122,6 +124,14 @@ export default grammar({
       field("right", $.single_expression)
     )),
 
+    dereference_operation: $ => prec(PREC.DEREFERENCE, seq(
+      "%", $.single_expression, "%"
+    )),
+
+    varref_operation: $ => prec.right(PREC.PREFIX, seq(
+      "&", $.single_expression
+    )),
+
     // Any expression like left <op> right (e.g. 2 + 2, true != false)
     _pairwise_operation: $ => choice(
       $.additive_operation,
@@ -152,8 +162,7 @@ export default grammar({
       field("operator", choice(
         "++", "--",     // prefix increment/decrement
         "!", "~",       // logical NOT, bitwise NOT
-        "+", "-",       // unary plus, unary minus
-        "&"             // Creates a VarRef
+        "+", "-"        // unary plus, unary minus
       )),
       field("operand", choice($._primary_expression, $.postfix_operation))
     )),

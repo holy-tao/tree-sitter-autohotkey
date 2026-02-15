@@ -148,8 +148,9 @@ Variable reference simple
 
 (source_file
   (single_expression
-    (prefix_operation
-      (identifier))))
+    (varref_operation
+      (single_expression
+        (identifier)))))
 
 ================================================================================
 Variable reference quoted
@@ -161,14 +162,15 @@ Variable reference quoted
 
 (source_file
   (single_expression
-    (prefix_operation
-      (expression_sequence
-        (single_expression
-          (multiplicative_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (identifier))))))))
+    (varref_operation
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (multiplicative_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier)))))))))
 
 ================================================================================
 Nested parenthesized expression
@@ -310,3 +312,89 @@ obj := {
                             (identifier))
                           (single_expression
                             (identifier)))))))))))))))
+
+================================================================================
+Dereference expression sequence
+================================================================================
+
+result := %(a := "part", b := "part", a . b)%
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (dereference_operation
+          (single_expression
+            (expression_sequence
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (literal
+                      (string_literal)))))
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (literal
+                      (string_literal)))))
+              (single_expression
+                (explicit_concat_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Dereference expression as operand
+================================================================================
+
+result := a + %ref%
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (additive_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (dereference_operation
+              (single_expression
+                (identifier)))))))))
+
+================================================================================
+VarRef and dereference combination
+================================================================================
+
+result := &%"ref"%
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (varref_operation
+          (single_expression
+            (dereference_operation
+              (single_expression
+                (literal
+                  (string_literal))))))))))

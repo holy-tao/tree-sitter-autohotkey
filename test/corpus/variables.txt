@@ -157,3 +157,23 @@ var123
 (source_file
   (single_expression
     (identifier)))
+
+================================================================================
+VarRef with initializer
+================================================================================
+
+&ref := 123
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (varref_operation
+          (single_expression
+            (identifier))))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))

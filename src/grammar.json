@@ -102,6 +102,14 @@
         {
           "type": "SYMBOL",
           "name": "ternary_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dereference_operation"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "varref_operation"
         }
       ]
     },
@@ -209,6 +217,44 @@
               "type": "SYMBOL",
               "name": "single_expression"
             }
+          }
+        ]
+      }
+    },
+    "dereference_operation": {
+      "type": "PREC",
+      "value": 220,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "%"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "single_expression"
+          },
+          {
+            "type": "STRING",
+            "value": "%"
+          }
+        ]
+      }
+    },
+    "varref_operation": {
+      "type": "PREC_RIGHT",
+      "value": 180,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "&"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "single_expression"
           }
         ]
       }
@@ -347,10 +393,6 @@
                 {
                   "type": "STRING",
                   "value": "-"
-                },
-                {
-                  "type": "STRING",
-                  "value": "&"
                 }
               ]
             }
