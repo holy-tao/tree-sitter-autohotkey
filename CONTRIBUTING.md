@@ -9,6 +9,42 @@ You will need:
 - NodeJS
 - The C compiler of your choice
 
+## Development
+
+### Building
+
+```bash
+# Generate parser
+tree-sitter generate
+
+# or use make
+make
+```
+
+### Packaging
+
+Package using tree sitter. It can also generate a .wasm binary, but why would you want that
+```bash
+tree-sitter generate
+tree-sitter build -o ./tree-sitter-autohotkey.dll
+```
+
+### Testing
+
+Run the test suite:
+
+```bash
+make test
+```
+
+Or via the CLI:
+
+```bash
+tree-sitter test
+```
+
+See [testing](#testing-1) for details on this process
+
 ## Testing
 
 ### Running Tests
