@@ -98,6 +98,10 @@
         {
           "type": "SYMBOL",
           "name": "fat_arrow_function"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ternary_expression"
         }
       ]
     },
@@ -142,6 +146,43 @@
           "name": "identifier"
         }
       ]
+    },
+    "ternary_expression": {
+      "type": "PREC_RIGHT",
+      "value": 10,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "single_expression"
+          },
+          {
+            "type": "STRING",
+            "value": "?"
+          },
+          {
+            "type": "FIELD",
+            "name": "true_branch",
+            "content": {
+              "type": "SYMBOL",
+              "name": "single_expression"
+            }
+          },
+          {
+            "type": "STRING",
+            "value": ":"
+          },
+          {
+            "type": "FIELD",
+            "name": "false_branch",
+            "content": {
+              "type": "SYMBOL",
+              "name": "single_expression"
+            }
+          }
+        ]
+      }
     },
     "assignment_operation": {
       "type": "PREC_RIGHT",
@@ -201,7 +242,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "case_insensitive_operation"
+          "name": "type_check_operation"
         },
         {
           "type": "SYMBOL",
@@ -226,6 +267,14 @@
         {
           "type": "SYMBOL",
           "name": "bitshift_operation"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "explicit_concat_operation"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "exponent_operation"
         }
       ]
     },
@@ -613,7 +662,7 @@
         ]
       }
     },
-    "case_insensitive_operation": {
+    "type_check_operation": {
       "type": "PREC_LEFT",
       "value": 50,
       "content": {
@@ -870,6 +919,72 @@
             "content": {
               "type": "SYMBOL",
               "name": "bitshift_operator"
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "right",
+            "content": {
+              "type": "SYMBOL",
+              "name": "single_expression"
+            }
+          }
+        ]
+      }
+    },
+    "explicit_concat_operation": {
+      "type": "PREC_LEFT",
+      "value": 100,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "left",
+            "content": {
+              "type": "SYMBOL",
+              "name": "single_expression"
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "operator",
+            "content": {
+              "type": "STRING",
+              "value": " . "
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "right",
+            "content": {
+              "type": "SYMBOL",
+              "name": "single_expression"
+            }
+          }
+        ]
+      }
+    },
+    "exponent_operation": {
+      "type": "PREC_LEFT",
+      "value": 170,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "left",
+            "content": {
+              "type": "SYMBOL",
+              "name": "single_expression"
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "operator",
+            "content": {
+              "type": "STRING",
+              "value": "**"
             }
           },
           {

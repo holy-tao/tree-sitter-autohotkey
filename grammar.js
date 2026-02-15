@@ -17,7 +17,7 @@ const PREC = {
   FAT_ARROW_FUNCTION: -10,   // () => expr (not implemented)
   DEFAULT: 0,                // Just for readability
   ASSIGNMENT: 0,             // :=, +=, -=, etc.
-  TERNARY: 10,               // ?: (not yet implemented)
+  TERNARY: 10,               // ?:
   LOGICAL_OR: 20,            // ||, or
   LOGICAL_AND: 30,           // &&, and
   LOGICAL_NOT: 40,           // not (verbal NOT operator)
@@ -68,6 +68,8 @@ export default grammar({
       $.expression_sequence
     )),
 
+    //#region General Expressions
+
     // conceptually, something you could put in an otherwise empty .ahk file and run without errors
     _primary_expression: $ => choice(
       $.literal,
@@ -84,7 +86,8 @@ export default grammar({
       $.prefix_operation,
       $.postfix_operation,
       $.verbal_not_operation,
-      $.fat_arrow_function
+      $.fat_arrow_function,
+      $.ternary_expression
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
@@ -98,6 +101,16 @@ export default grammar({
       $.scope_identifier,
       $.identifier
     ),
+
+    ternary_expression: $ => prec.right(PREC.TERNARY, seq(
+      $.single_expression,
+      "?",
+      field("true_branch", $.single_expression),
+      ":",
+      field("false_branch", $.single_expression)
+    )),
+
+    //#endregion
 
     //#region Operators
     // TODO left-hand-side can be an accessor like outer.inner but scope identifier can't precede accessor
@@ -117,7 +130,7 @@ export default grammar({
       $.equality_operation,
       $.inequality_operation,
       $.regex_match_operation,
-      $.case_insensitive_operation,
+      $.type_check_operation,
       $.logical_and_operation,
       $.logical_or_operation,
       $.bitwise_and_operation,
@@ -187,7 +200,7 @@ export default grammar({
       field("right", $.single_expression)
     )),
 
-    case_insensitive_operation: $ => prec.left(PREC.CASE_INSENSITIVE, seq(
+    type_check_operation: $ => prec.left(PREC.CASE_INSENSITIVE, seq(
       field("left", $.single_expression),
       field("operator", token(prec(PREC.KEYWORD, ci(' is ')))),
       field("right", $.single_expression)

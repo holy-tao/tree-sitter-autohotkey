@@ -118,7 +118,7 @@ result := a is b
         (identifier))
       (assignment_operator)
       (single_expression
-        (case_insensitive_operation
+        (type_check_operation
           (single_expression
             (identifier))
           (single_expression

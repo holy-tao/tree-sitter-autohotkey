@@ -1,0 +1,971 @@
+================================================================================
+Simple ternary expression
+================================================================================
+
+str := true? "true" : "false"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (literal
+              (boolean_literal)))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Nested ternary expression
+================================================================================
+
+(a == 1? "one" : a == 2? "two" : "> two")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (expression_sequence
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (equality_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (ternary_expression
+              (single_expression
+                (equality_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal)))))
+              (single_expression
+                (literal
+                  (string_literal)))
+              (single_expression
+                (literal
+                  (string_literal))))))))))
+
+================================================================================
+Simple multiline ternary expression
+================================================================================
+
+str := val == 1?
+    "true" :
+    "false"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (equality_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Ternary with no spaces
+================================================================================
+
+result:=a?b:c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Ternary with arithmetic in condition
+================================================================================
+
+result := x + y > 10? "big" : "small"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (relational_operation
+              (single_expression
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier))))
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Ternary with arithmetic in branches
+================================================================================
+
+result := flag? 1 + 2 : 3 * 4
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (additive_operation
+              (single_expression
+                (literal
+                  (numeric_literal)))
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (multiplicative_operation
+              (single_expression
+                (literal
+                  (numeric_literal)))
+              (single_expression
+                (literal
+                  (numeric_literal))))))))))
+
+================================================================================
+Ternary with logical operators in condition
+================================================================================
+
+result := x > 5 && y < 10? "valid" : "invalid"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (logical_and_operation
+              (single_expression
+                (relational_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal)))))
+              (single_expression
+                (relational_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal)))))))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Ternary with logical OR in condition
+================================================================================
+
+result := x || y? "truthy" : "falsy"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (logical_or_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Ternary with assignments in branches
+================================================================================
+
+z > 0? x := 2 : y := 3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (relational_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (identifier))))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
+
+================================================================================
+Nested ternary in true branch
+================================================================================
+
+a? (b? c : d) : e
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (ternary_expression
+      (single_expression
+        (identifier))
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (ternary_expression
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))))))
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Multiple nested ternaries
+================================================================================
+
+a? b? c : d : e? f : g
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (ternary_expression
+      (single_expression
+        (identifier))
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier))))
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Ternary in array literal
+================================================================================
+
+arr := [x > 5? "big" : "small", other]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (array_literal
+            (expression_sequence
+              (single_expression
+                (ternary_expression
+                  (single_expression
+                    (relational_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (literal
+                          (numeric_literal)))))
+                  (single_expression
+                    (literal
+                      (string_literal)))
+                  (single_expression
+                    (literal
+                      (string_literal)))))
+              (single_expression
+                (identifier)))))))))
+
+================================================================================
+Ternary in object literal
+================================================================================
+
+obj := {value: x > 0? x : 0}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (single_expression
+                  (ternary_expression
+                    (single_expression
+                      (relational_operation
+                        (single_expression
+                          (identifier))
+                        (single_expression
+                          (literal
+                            (numeric_literal)))))
+                    (single_expression
+                      (identifier))
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))))))))))
+
+================================================================================
+Ternary with prefix operators
+================================================================================
+
+result := !flag? ++x : --y
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (prefix_operation
+              (identifier)))
+          (single_expression
+            (prefix_operation
+              (identifier)))
+          (single_expression
+            (prefix_operation
+              (identifier))))))))
+
+================================================================================
+Ternary with postfix operators
+================================================================================
+
+result := flag? x++ : y--
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (postfix_operation
+              (identifier)))
+          (single_expression
+            (postfix_operation
+              (identifier))))))))
+
+================================================================================
+Ternary with unary operators in branches
+================================================================================
+
+result := condition? -value : +value
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (prefix_operation
+              (identifier)))
+          (single_expression
+            (prefix_operation
+              (identifier))))))))
+
+================================================================================
+Ternary with bitwise operators
+================================================================================
+
+result := flag? a & b : c | d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (bitwise_and_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))))
+          (single_expression
+            (bitwise_or_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier)))))))))
+
+================================================================================
+Ternary result used in arithmetic
+================================================================================
+
+result := 10 + (x? 5 : 3)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (additive_operation
+          (single_expression
+            (literal
+              (numeric_literal)))
+          (single_expression
+            (expression_sequence
+              (single_expression
+                (ternary_expression
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal)))
+                  (single_expression
+                    (literal
+                      (numeric_literal))))))))))))
+
+================================================================================
+Parenthesized ternary as condition
+================================================================================
+
+(a? b : c)? d : e
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (ternary_expression
+      (single_expression
+        (expression_sequence
+          (single_expression
+            (ternary_expression
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))))))
+      (single_expression
+        (identifier))
+      (single_expression
+        (identifier)))))
+
+================================================================================
+Ternary with comma operator
+================================================================================
+
+a? b : c, d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (ternary_expression
+        (single_expression
+          (identifier))
+        (single_expression
+          (identifier))
+        (single_expression
+          (identifier))))
+    (single_expression
+      (identifier))))
+
+================================================================================
+Multiple ternaries with comma
+================================================================================
+
+a? b : c, x? y : z
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (single_expression
+      (ternary_expression
+        (single_expression
+          (identifier))
+        (single_expression
+          (identifier))
+        (single_expression
+          (identifier))))
+    (single_expression
+      (ternary_expression
+        (single_expression
+          (identifier))
+        (single_expression
+          (identifier))
+        (single_expression
+          (identifier))))))
+
+================================================================================
+Ternary with verbal NOT operator
+================================================================================
+
+result := not condition? "A" : "B"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (verbal_not_operation
+              (single_expression
+                (identifier))))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Ternary with array literals in branches
+================================================================================
+
+result := flag? [1, 2, 3] : [4, 5, 6]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (literal
+              (array_literal
+                (expression_sequence
+                  (single_expression
+                    (literal
+                      (numeric_literal)))
+                  (single_expression
+                    (literal
+                      (numeric_literal)))
+                  (single_expression
+                    (literal
+                      (numeric_literal)))))))
+          (single_expression
+            (literal
+              (array_literal
+                (expression_sequence
+                  (single_expression
+                    (literal
+                      (numeric_literal)))
+                  (single_expression
+                    (literal
+                      (numeric_literal)))
+                  (single_expression
+                    (literal
+                      (numeric_literal))))))))))))
+
+================================================================================
+Ternary with object literals in branches
+================================================================================
+
+result := flag? {x: 1} : {y: 2}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (literal
+              (object_literal
+                (object_literal_member_sequence
+                  (object_literal_member
+                    (identifier)
+                    (single_expression
+                      (literal
+                        (numeric_literal))))))))
+          (single_expression
+            (literal
+              (object_literal
+                (object_literal_member_sequence
+                  (object_literal_member
+                    (identifier)
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))))))))))
+
+================================================================================
+Complex nested ternary with mixed operators
+================================================================================
+
+result := (x > 5 && y < 10)? (z := a + b) : (w := c * d)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (expression_sequence
+              (single_expression
+                (logical_and_operation
+                  (single_expression
+                    (relational_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (literal
+                          (numeric_literal)))))
+                  (single_expression
+                    (relational_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (literal
+                          (numeric_literal)))))))))
+          (single_expression
+            (expression_sequence
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (additive_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (identifier))))))))
+          (single_expression
+            (expression_sequence
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (multiplicative_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (identifier)))))))))))))
+
+================================================================================
+Ternary with bitshift operators
+================================================================================
+
+result := flag? value << 2 : value >> 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (bitshift_operation
+              (single_expression
+                (identifier))
+              (bitshift_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (bitshift_operation
+              (single_expression
+                (identifier))
+              (bitshift_operator)
+              (single_expression
+                (literal
+                  (numeric_literal))))))))))
+
+================================================================================
+Ternary with exponent operator
+================================================================================
+
+result := flag? x ** 2 : y ** 3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (exponent_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (exponent_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (numeric_literal))))))))))
+
+================================================================================
+Ternary with explicit concatenation
+================================================================================
+
+result := flag? "Hello" . " World" : "Goodbye"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (explicit_concat_operation
+              (single_expression
+                (literal
+                  (string_literal)))
+              (single_expression
+                (literal
+                  (string_literal)))))
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Deeply nested ternary (4 levels)
+================================================================================
+
+a? b? c? d : e : f? g : h : i? j : k
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (ternary_expression
+      (single_expression
+        (identifier))
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (ternary_expression
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))))
+          (single_expression
+            (ternary_expression
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))))))
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Ternary with compound assignment in branches
+================================================================================
+
+flag? x += 1 : y -= 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (identifier))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (single_expression
+            (identifier))))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (numeric_literal))))))
