@@ -22,6 +22,8 @@ No-op with fallthrough
 
 (source_file
   (hotstring
+    (hotstring_trigger))
+  (hotstring
     (hotstring_trigger)
     (hotstring_replacement)))
 
@@ -84,7 +86,7 @@ Execution hotstring with code block
 Execution hotstring with function declaration
 ================================================================================
 
-: :btw::
+:x:btw::
     case_conform_btw(hs)
     {
         if (hs == ":C:BTW")
@@ -98,50 +100,58 @@ Execution hotstring with function declaration
 
 (source_file
   (hotstring
+    (hotstring_modifier
+      (hotstring_execute))
     (hotstring_trigger)
-    (hotstring_replacement))
-  (block
-    (if_statement
-      (if)
-      (single_expression
-        (expression_sequence
+    (function_declaration
+      (identifier)
+      (function_head
+        (param_sequence
+          (param
+            (identifier))))
+      (function_body
+        (block
+          (if_statement
+            (if)
+            (single_expression
+              (expression_sequence
+                (single_expression
+                  (equality_operation
+                    (single_expression
+                      (identifier))
+                    (single_expression
+                      (literal
+                        (string_literal)))))))
+            (single_expression
+              (identifier)))
           (single_expression
-            (equality_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (string_literal)))))))
-      (single_expression
-        (identifier)))
-    (single_expression
-      (literal
-        (string_literal)))
-    (single_expression
-      (identifier))
-    (if_statement
-      (if)
-      (single_expression
-        (expression_sequence
+            (literal
+              (string_literal)))
           (single_expression
-            (equality_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (string_literal)))))))
-      (single_expression
-        (identifier)))
-    (single_expression
-      (literal
-        (string_literal)))
-    (single_expression
-      (identifier))
-    (single_expression
-      (identifier))
-    (single_expression
-      (literal
-        (string_literal)))))
+            (identifier))
+          (if_statement
+            (if)
+            (single_expression
+              (expression_sequence
+                (single_expression
+                  (equality_operation
+                    (single_expression
+                      (identifier))
+                    (single_expression
+                      (literal
+                        (string_literal)))))))
+            (single_expression
+              (identifier)))
+          (single_expression
+            (literal
+              (string_literal)))
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier))
+          (single_expression
+            (literal
+              (string_literal))))))))
 
 ================================================================================
 Option: asterisk (*)
@@ -156,8 +166,7 @@ Option: asterisk (*)
     (hotstring_modifier
       (hotstring_asterisk))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: question mark (?)
@@ -172,8 +181,7 @@ Option: question mark (?)
     (hotstring_modifier
       (hotstring_question))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: backspace enabled (B)
@@ -188,8 +196,7 @@ Option: backspace enabled (B)
     (hotstring_modifier
       (hotstring_backspace))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: backspace disabled (B0)
@@ -204,8 +211,7 @@ Option: backspace disabled (B0)
     (hotstring_modifier
       (hotstring_backspace))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: case sensitive (C)
@@ -220,8 +226,7 @@ Option: case sensitive (C)
     (hotstring_modifier
       (hotstring_case_sensitive))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: case insensitive (C0)
@@ -236,8 +241,7 @@ Option: case insensitive (C0)
     (hotstring_modifier
       (hotstring_case_sensitive))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: no case conforming (C1)
@@ -252,8 +256,7 @@ Option: no case conforming (C1)
     (hotstring_modifier
       (hotstring_case_conform))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: key delay positive (K10)
@@ -268,8 +271,7 @@ Option: key delay positive (K10)
     (hotstring_modifier
       (hotstring_key_delay))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: key delay negative (K-1)
@@ -284,8 +286,7 @@ Option: key delay negative (K-1)
     (hotstring_modifier
       (hotstring_key_delay))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: key delay with spaces (K 5)
@@ -300,8 +301,7 @@ Option: key delay with spaces (K 5)
     (hotstring_modifier
       (hotstring_key_delay))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: omit ending char (O)
@@ -316,8 +316,7 @@ Option: omit ending char (O)
     (hotstring_modifier
       (hotstring_omit_ending))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: priority (P1)
@@ -332,8 +331,7 @@ Option: priority (P1)
     (hotstring_modifier
       (hotstring_priority))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: raw mode (R)
@@ -348,8 +346,7 @@ Option: raw mode (R)
     (hotstring_modifier
       (hotstring_raw))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: suspend exempt (S)
@@ -364,8 +361,7 @@ Option: suspend exempt (S)
     (hotstring_modifier
       (hotstring_suspend))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: SendInput mode (SI)
@@ -380,8 +376,7 @@ Option: SendInput mode (SI)
     (hotstring_modifier
       (hotstring_send_mode))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: SendPlay mode (SP)
@@ -396,8 +391,7 @@ Option: SendPlay mode (SP)
     (hotstring_modifier
       (hotstring_send_mode))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: SendEvent mode (SE)
@@ -412,8 +406,7 @@ Option: SendEvent mode (SE)
     (hotstring_modifier
       (hotstring_send_mode))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: text mode (T)
@@ -428,8 +421,7 @@ Option: text mode (T)
     (hotstring_modifier
       (hotstring_text_mode))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: execute mode (X)
@@ -444,8 +436,7 @@ Option: execute mode (X)
     (hotstring_modifier
       (hotstring_execute))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Option: reset recognizer (Z)
@@ -460,8 +451,7 @@ Option: reset recognizer (Z)
     (hotstring_modifier
       (hotstring_reset))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Combination: two simple options (*?)
@@ -478,8 +468,7 @@ Combination: two simple options (*?)
     (hotstring_modifier
       (hotstring_question))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Combination: three simple options (*?b0)
@@ -498,8 +487,7 @@ Combination: three simple options (*?b0)
     (hotstring_modifier
       (hotstring_backspace))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Combination: mixed case options (*?B0C)
@@ -520,8 +508,7 @@ Combination: mixed case options (*?B0C)
     (hotstring_modifier
       (hotstring_case_sensitive))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Combination: many options (*?b0c1k10o)
@@ -546,8 +533,7 @@ Combination: many options (*?b0c1k10o)
     (hotstring_modifier
       (hotstring_omit_ending))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Combination: parameterized mix (c1k10p1)
@@ -566,8 +552,7 @@ Combination: parameterized mix (c1k10p1)
     (hotstring_modifier
       (hotstring_priority))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Combination: send mode with other options (sispk10)
@@ -586,8 +571,7 @@ Combination: send mode with other options (sispk10)
     (hotstring_modifier
       (hotstring_key_delay))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Edge case: empty body
@@ -638,7 +622,11 @@ Edge case: options with unbraced statements
     (hotstring_modifier
       (hotstring_asterisk))
     (hotstring_trigger)
-    (hotstring_replacement)))
+    (single_expression
+      (identifier))
+    (single_expression
+      (literal
+        (string_literal)))))
 
 ================================================================================
 Edge case: alphanumeric trigger
@@ -651,8 +639,7 @@ Edge case: alphanumeric trigger
 (source_file
   (hotstring
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Edge case: special character trigger
@@ -665,8 +652,7 @@ Edge case: special character trigger
 (source_file
   (hotstring
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Edge case: zero delay with space (k 0)
@@ -681,8 +667,7 @@ Edge case: zero delay with space (k 0)
     (hotstring_modifier
       (hotstring_key_delay))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Edge case: case sensitive uppercase trigger
@@ -697,8 +682,7 @@ Edge case: case sensitive uppercase trigger
     (hotstring_modifier
       (hotstring_case_sensitive))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))
 
 ================================================================================
 Edge case: repeated character trigger
@@ -713,5 +697,4 @@ Edge case: repeated character trigger
     (hotstring_modifier
       (hotstring_asterisk))
     (hotstring_trigger)
-    (single_expression
-      (identifier))))
+    (hotstring_replacement)))

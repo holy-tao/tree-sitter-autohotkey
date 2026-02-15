@@ -21,6 +21,7 @@ The grammar chooses simplicity over correctness in a few places, mostly to avoid
 - The grammar doesn't currently filter identifiers for keywords - `local := 1` will be parsed as a valid assignment operation, though `local` is reserved.
 - The grammer permits `else if` clauses in `try` and `for` statements
 - The grammar permits `continue` and `break` statements outside of loops
+- The grammar generally doesn't handle AutoHotkey's whitespace requirements. This mostly means that it'll allow some invalid line continuations. Places where whitespace is required should work fine, since it's easy to put explicit whitespace in a token.
 
 There is no official AutoHotkey grammar - the source of truth is whatever the interpreter will let you get away with. If you find that the interpreter lets you do something the grammar doesn't, please open an issue. If you find that the *grammar* permits something that the interpreter doesn't, I might not fix it.
 

@@ -471,3 +471,19 @@ x--
   (single_expression
     (postfix_operation
       (identifier))))
+
+================================================================================
+Regex match
+================================================================================
+
+a ~= b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (regex_match_operation
+      (single_expression
+        (identifier))
+      (single_expression
+        (identifier)))))

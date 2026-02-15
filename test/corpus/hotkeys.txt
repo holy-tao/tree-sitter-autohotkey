@@ -1,0 +1,453 @@
+================================================================================
+Hotkey with modifier symbols
+================================================================================
+
+#n::
+{
+    a := "before"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_win)
+      (identifier))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Hotkey with no modifier symbols
+================================================================================
+
+n::
+{
+    a := "before"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+No-op hotkey with fallthrough
+================================================================================
+
+a::
+#n::
+{
+    a := "fallthrough"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier)))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_win)
+      (identifier))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Hotkey with only modifier symbols
+================================================================================
+
+<^>+::"no-op"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_left)
+      (hotkey_ctrl)
+      (hotkey_right)
+      (hotkey_shift))
+    (single_expression
+      (literal
+        (string_literal)))))
+
+================================================================================
+Hotkey after directive (check '#' is parsed correctly)
+================================================================================
+
+#Hotif true
+<^>+::"no-op"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (directive_identifier)
+    (anything))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_left)
+      (hotkey_ctrl)
+      (hotkey_right)
+      (hotkey_shift))
+    (single_expression
+      (literal
+        (string_literal)))))
+
+================================================================================
+Hotkey with combinator modifier
+================================================================================
+
+LCtrl & CapsLock::"no-op"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier)
+      (hotkey_and)
+      (hotkey_trigger
+        (identifier)))
+    (single_expression
+      (literal
+        (string_literal)))))
+
+================================================================================
+Hotkey with verbal up modifier
+================================================================================
+
+LCtrl up::"no-op"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier)
+      (hotkey_up))
+    (single_expression
+      (literal
+        (string_literal)))))
+
+================================================================================
+Alt-tab hotkey: AltTab
+================================================================================
+
+MButton::AltTab
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (hotkey_alttab)))
+
+================================================================================
+Alt-tab hotkey: ShiftAltTab
+================================================================================
+
+MButton::ShiftAltTab
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (hotkey_shiftalttab)))
+
+================================================================================
+Alt-tab hotkey: AltTabMenu
+================================================================================
+
+MButton::AltTabMenu
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (hotkey_alttabmenu)))
+
+================================================================================
+Alt-tab hotkey: AltTabAndMenu
+================================================================================
+
+MButton::AltTabAndMenu
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (hotkey_alttabandmenu)))
+
+================================================================================
+Alt-tab hotkey: AltTabMenuDismiss
+================================================================================
+
+MButton::AltTabMenuDismiss
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (hotkey_alttabmenudismiss)))
+
+================================================================================
+Hotkey followed by hotstring
+================================================================================
+
+MButton::AltTabMenuDismiss
+::ttyl::Talk To You Later
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (hotkey_alttabmenudismiss))
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement)))
+
+================================================================================
+Hotstring followed by hotkey
+================================================================================
+
+::ttyl::Talk To You Later
+MButton::AltTabMenuDismiss
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement))
+  (hotkey
+    (hotkey_trigger
+      (identifier))
+    (hotkey_alttabmenudismiss)))
+
+================================================================================
+Named function hotkeys
+================================================================================
+
+^+o::
+^+e::
+    editor_open_folder(hk)
+    {
+        stuff := "done"
+        key := hk == "&+e" ? "e" : "o"
+    }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (identifier)))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (identifier))
+    (function_declaration
+      (identifier)
+      (function_head
+        (param_sequence
+          (param
+            (identifier))))
+      (function_body
+        (block
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (literal
+                  (string_literal)))))
+          (single_expression
+            (assignment_operation
+              (single_expression
+                (identifier))
+              (assignment_operator)
+              (single_expression
+                (ternary_expression
+                  (single_expression
+                    (equality_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (literal
+                          (string_literal)))))
+                  (single_expression
+                    (literal
+                      (string_literal)))
+                  (single_expression
+                    (literal
+                      (string_literal))))))))))))
+
+================================================================================
+Hotkey with combinator and modifier on left side
+================================================================================
+
+~RButton & LButton::MsgBox "You pressed the left mouse button while holding down the right."
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_nonblocking)
+      (identifier)
+      (hotkey_and)
+      (hotkey_trigger
+        (identifier)))
+    (single_expression
+      (identifier)))
+  (single_expression
+    (literal
+      (string_literal))))
+
+================================================================================
+Hotkey with combinator and modifier on right side
+================================================================================
+
+RButton & ~LButton::MsgBox "You pressed the left mouse button while holding down the right."
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (identifier)
+      (hotkey_and)
+      (hotkey_trigger
+        (hotkey_nonblocking)
+        (identifier)))
+    (single_expression
+      (identifier)))
+  (single_expression
+    (literal
+      (string_literal))))
+
+================================================================================
+Hotkey with combinator and modifiers on both sides
+================================================================================
+
+~RButton & ^!a::
+{
+    val := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_nonblocking)
+      (identifier)
+      (hotkey_and)
+      (hotkey_trigger
+        (hotkey_ctrl)
+        (hotkey_alt)
+        (identifier)))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+Hotkey with modifier and identifier-like name
+================================================================================
+
+~RButton::MsgBox "You pressed the left mouse button while holding down the right."
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_nonblocking)
+      (identifier))
+    (single_expression
+      (identifier)))
+  (single_expression
+    (literal
+      (string_literal))))
+
+================================================================================
+Hotkey with many modifiers
+================================================================================
+~$<^>+ & ^!a::
+{
+    val := 1
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_nonblocking)
+      (hotkey_usehook)
+      (hotkey_left)
+      (hotkey_ctrl)
+      (hotkey_right)
+      (hotkey_shift)
+      (hotkey_and)
+      (hotkey_trigger
+        (hotkey_ctrl)
+        (hotkey_alt)
+        (identifier)))
+    (block
+      (single_expression
+        (assignment_operation
+          (single_expression
+            (identifier))
+          (assignment_operator)
+          (single_expression
+            (literal
+              (numeric_literal))))))))

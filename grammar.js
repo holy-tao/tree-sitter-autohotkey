@@ -59,18 +59,33 @@ export default grammar({
     [$.function_declaration, $._primary_expression],
     [$.function_declaration, $.variable_declaration],
     [$.object_literal, $.block],
+    [$._primary_expression, $.hotkey_trigger],
   ],
 
   rules: {
-    source_file: $ => repeat($._statement),
+    source_file: $ => repeat($._top_level_statement),
+
+    _top_level_statement: $ => choice(
+      $._statement,
+      $.hotstring,
+      $.hotkey,
+    ),
 
     _statement: $ => prec(2, choice(
-      $.directive,
+      $.directive,        // Directives are allowed anywhere but executed unconditionally
       $.function_declaration,
       $.class_declaration,
       $.single_expression,
       $.expression_sequence,
       $.block,
+      $.label,
+      $._control_flow_statement,
+      $._loop_flow_statement
+    )),
+
+    //#region General Expressions
+
+    _control_flow_statement: $ => choice(
       $.return_statement,
       $.if_statement,
       $.while_statement,
@@ -79,14 +94,14 @@ export default grammar({
       $.switch_statement,
       $.try_statement,
       $.throw_statement,
-      $.break_statement,
-      $.continue_statement,
-      $.goto_statement,
-      $.hotstring,
-      $.label,
-    )),
+      $.goto_statement
+    ),
 
-    //#region General Expressions
+    // TODO restrict to loop blocks only
+    _loop_flow_statement: $ => choice(
+      $.break_statement,
+      $.continue_statement
+    ),
 
     // conceptually, something you could put in an otherwise empty .ahk file and run without errors
     _primary_expression: $ => choice(
@@ -166,7 +181,7 @@ export default grammar({
       "%", $.single_expression, "%"
     )),
 
-    varref_operation: $ => prec.right(PREC.PREFIX, seq(
+    varref_operation: $ => prec.right(PREC.PREFIX + 5, seq(
       "&", $.single_expression
     )),
 
@@ -243,7 +258,7 @@ export default grammar({
 
     regex_match_operation: $ => prec.left(PREC.REGEX_MATCH, seq(
       field("left", $.single_expression),
-      field("operator", "~="),
+      field("operator", token(prec(200, "~="))),
       field("right", $.single_expression)
     )),
 
@@ -700,11 +715,22 @@ export default grammar({
     // care about their contents, except for HotIf
 
     // #Include, #HotIf, etc
-    directive: $ => seq("#", $.directive_identifier, $.anything),
+    directive: $ => seq($.directive_identifier, $.anything),
 
-    directive_identifier: $ => token(prec(PREC.KEYWORD, choice(
-      ci("clipboardtimeout"), ci("dllload"), ci("errstdout"), ci("requires"), ci("hotif"), ci("hotiftimeout"),
-      ci("hotstring"), ci("include"), ci("includeagain"), ci("inputlevel"), ci("usehook"), ci("maxthreads")
+    directive_identifier: $ => token(prec(PREC.KEYWORD, 
+      choice(
+        ci("#clipboardtimeout"), 
+        ci("#dllload"), 
+        ci("#errstdout"), 
+        ci("#requires"), 
+        ci("#hotif"), 
+        ci("#hotiftimeout"),
+        ci("#hotstring"), 
+        ci("#include"), 
+        ci("#includeagain"), 
+        ci("#inputlevel"), 
+        ci("#usehook"), 
+        ci("#maxthreads")
     ))),
 
     //#endregion
@@ -712,11 +738,11 @@ export default grammar({
     //#region Hotstrings
     // See: https://www.autohotkey.com/docs/v2/Hotstrings.htm
     // See also KeySharp's ANTLR grammmar: https://github.com/Descolada/keysharp/blob/master/Keysharp.Core/Scripting/Parser/Antlr/MainLexer.g4#L60
-    hotstring: $ => prec.right(-2, choice(  // Lower precedence than labels (-1) to avoid conflicts
+    hotstring: $ => prec.right(-2,
       seq(
         ":",
         repeat($.hotstring_modifier),
-        ":",
+        token.immediate(":"),
         $.hotstring_trigger,
         $._double_colon,
         optional(choice(
@@ -725,14 +751,14 @@ export default grammar({
           $.single_expression,
           repeat1($._statement)
         ))
-      )
     )),
 
     _double_colon: $ => token("::"),
 
-    hotstring_trigger: $ => /[^\s:]+/,  // Any non-whitespace, non-colon characters
+    // Used in hotstrings - can match any non-whitespace, non-colon characters
+    hotstring_trigger: $ => token(/[^\s:]+/),
 
-    hotstring_replacement: $ => /[^\n]+/,  // Rest of line as text replacement (one or more, excludes newline)
+    hotstring_replacement: $ => token.immediate(/[^\n]+/),  // Rest of line as text replacement (one or more, excludes newline)
 
     hotstring_modifier: $ => choice(
       $.hotstring_asterisk,
@@ -790,6 +816,83 @@ export default grammar({
       ci('p'),
       /[0-9]+/
     )),
+
+    //#endregion
+
+    //#region Hotkeys
+    // See https://www.autohotkey.com/docs/v2/Hotkeys.htm
+
+    // Higher precedence than label to ensure :: is recognized before :
+    // Using identifier here allows tree-sitter to resolve conflicts automatically
+    hotkey: $ => prec.right(3, seq(
+      $.hotkey_trigger,
+      token.immediate("::"),
+      optional(choice(
+        $.single_expression,
+        $.function_declaration,
+        $.block,
+        $._hotkey_alttabcommand
+      ))
+    )),
+
+    hotkey_trigger: $ => prec.right(PREC.KEYWORD, seq(
+      seq(
+        repeat($._hotkey_modifier),
+        $._hotkey_trigger_char_sequence,
+        optional($.hotkey_up)
+      ),
+      optional(repeat(seq(
+        $.hotkey_and,
+        $.hotkey_trigger
+      )))
+    )),
+
+    // hotkey modifiers
+    _hotkey_modifier: $ => choice(
+      $.hotkey_nonblocking,
+      $.hotkey_usehook,
+    ),
+
+    _hotkey_trigger_char_sequence: $ => repeat1(choice(
+      // Special characters for "modifier" keys
+      $.hotkey_win,
+      $.hotkey_alt,
+      $.hotkey_ctrl,
+      $.hotkey_shift,
+      $.hotkey_left,
+      $.hotkey_right,
+      $.identifier
+    )),
+
+    hotkey_win: $ => token('#'),
+    hotkey_alt: $ => token('!'),
+    hotkey_ctrl: $ => token('^'),
+    hotkey_shift: $ => token('+'),
+    // Requires space - match before "&" operator
+    hotkey_and: $ => token.immediate(' & '),
+    hotkey_left: $ => token('<'),
+    hotkey_right: $ => token('>'),
+    // Match before bitwise NOT operator ("~")
+    hotkey_nonblocking: $ => token(prec.right(PREC.PREFIX, '~')),
+    hotkey_usehook: $ => token('$'),
+    // Requires preceding space
+    hotkey_up: $ => token.immediate(prec(PREC.KEYWORD, ci(' up'))),
+
+    // These are only valid as hotkey operations and must immediately follow the double-colon
+    //See: https://www.autohotkey.com/docs/v2/Hotkeys.htm#alttab
+    _hotkey_alttabcommand: $ => choice(
+        $.hotkey_alttab,
+        $.hotkey_shiftalttab,
+        $.hotkey_alttabmenu,
+        $.hotkey_alttabandmenu,
+        $.hotkey_alttabmenudismiss
+    ),
+
+    hotkey_alttab: $ => token.immediate(prec(PREC.KEYWORD, ci('alttab'))),
+    hotkey_shiftalttab: $ => token.immediate(prec(PREC.KEYWORD, ci('shiftalttab'))),
+    hotkey_alttabmenu: $ => token.immediate(prec(PREC.KEYWORD, ci('alttabmenu'))),
+    hotkey_alttabandmenu: $ => token.immediate(prec(PREC.KEYWORD, ci('alttabandmenu'))),
+    hotkey_alttabmenudismiss: $ => token.immediate(prec(PREC.KEYWORD, ci('alttabmenudismiss'))),
 
     //#endregion
 
