@@ -49,6 +49,8 @@ const PREC = {
 export default grammar({
   name: "autohotkey",
 
+  word: $ => $.identifier,
+
   conflicts: $ => [
     [$.param, $._primary_expression],
     // [$.byref_param, $.prefix_operation],
@@ -65,6 +67,7 @@ export default grammar({
     _statement: $ => prec(2, choice(
       $.directive,
       $.function_declaration,
+      $.class_declaration,
       $.single_expression,
       $.expression_sequence,
       $.block,
@@ -626,6 +629,62 @@ export default grammar({
     read: $ => token(prec(PREC.KEYWORD, ci('read'))),
     files: $ => token(prec(PREC.KEYWORD, ci('files'))),
     reg: $ => token(prec(PREC.KEYWORD, ci('reg'))),
+
+    //#endregion
+
+    //#region Classes
+
+    class_declaration: $ => seq(
+      $.class,
+      field("name", $.identifier),
+      optional(seq(
+        $.extends,
+        field("superclass", $.identifier)
+      )),
+      $.class_body
+    ),
+
+    class_body: $ => seq(
+      "{",
+      repeat(choice(
+        $.function_declaration,
+        $.class_declaration,
+        $.property_declaration
+      )),
+      "}"
+    ),
+
+    property_declaration: $ => seq(
+      //FIXME global and static aren't valid scope identifiers here
+      optional($.scope_identifier),
+      $.identifier,
+      optional(seq("[", $.param_sequence, "]")),
+      choice(
+        // Property initializer: prop := value
+        $._initializer,
+        // getter-only shorthand: prop => 42
+        seq("=>", alias($.single_expression, $.getter)),
+        $.property_declaration_block
+      )
+    ),
+
+    //Interestingly, property bodies are allowed to be empty, the interpreter just skips them
+    property_declaration_block: $ => seq(
+      "{",
+      optional($.getter),
+      optional($.setter),
+      "}"
+    ),
+
+    getter: $ => seq($.get, $.function_body),
+    setter: $ => seq($.set, $.function_body),
+
+    // class-related keywords
+    class: $ => token(prec(PREC.KEYWORD, ci('class'))),
+    extends: $ => token(prec(PREC.KEYWORD, ci('extends'))),
+    get: $ => token(prec(PREC.KEYWORD, ci('get'))),
+    set: $ => token(prec(PREC.KEYWORD, ci('set'))),
+    static: $ => token(prec(PREC.KEYWORD, ci('static'))),
 
     //#endregion
 

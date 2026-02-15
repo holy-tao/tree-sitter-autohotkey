@@ -1,0 +1,1081 @@
+================================================================================
+Empty class declaration
+================================================================================
+
+class Example { 
+
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body)))
+
+================================================================================
+Empty class declaration with superclass
+================================================================================
+
+class Example extends Object { 
+
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (extends)
+    (identifier)
+    (class_body)))
+
+================================================================================
+Class with method
+================================================================================
+
+class Example { 
+
+    ClassMethod(arg1) {
+        return arg1 * 2
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (function_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (param
+              (identifier))))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (single_expression
+                (multiplicative_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal))))))))))))
+
+================================================================================
+Class with static method
+================================================================================
+
+class Example { 
+
+    static ClassMethod(arg1) {
+        return arg1 * 2
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (function_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head
+          (param_sequence
+            (param
+              (identifier))))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (single_expression
+                (multiplicative_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal))))))))))))
+
+================================================================================
+Class with static and instance methods
+================================================================================
+
+class Example { 
+
+    InstanceMethod() {
+        return 42
+    }
+
+    static ClassMethod(arg1) {
+        return arg1 * 2
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (function_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (single_expression
+                (literal
+                  (numeric_literal)))))))
+      (function_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head
+          (param_sequence
+            (param
+              (identifier))))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (single_expression
+                (multiplicative_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (literal
+                      (numeric_literal))))))))))))
+
+================================================================================
+Class with fat-arrow method
+================================================================================
+
+class Example 
+{ 
+    InstanceMethod() => 42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (function_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+Class with static fat-arrow method
+================================================================================
+
+class Example 
+{ 
+    static InstanceMethod() => 42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (function_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head)
+        (function_body
+          (single_expression
+            (literal
+              (numeric_literal))))))))
+
+================================================================================
+Class with nested methods
+================================================================================
+
+class Example 
+{ 
+    OuterMethod(*) 
+    {
+        InnerMethod() {
+            return 1
+        }
+
+        return InnerMethod
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (function_declaration
+        (identifier)
+        (function_head
+          (wildcard))
+        (function_body
+          (block
+            (function_declaration
+              (identifier)
+              (function_head)
+              (function_body
+                (block
+                  (return_statement
+                    (return)
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))))
+            (return_statement
+              (return)
+              (single_expression
+                (identifier)))))))))
+
+================================================================================
+Class with property initializer
+================================================================================
+
+class Example { 
+    prop := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Class with static property initializer
+================================================================================
+
+class Example { 
+    static prop := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (assignment_operator)
+        (single_expression
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Class with getter-only shorthand property
+================================================================================
+
+class Example { 
+    prop => 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (getter
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Class with static getter-only shorthand property
+================================================================================
+
+class Example { 
+    static prop => 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (getter
+          (literal
+            (numeric_literal)))))))
+
+================================================================================
+Class property with getter
+================================================================================
+
+class Example { 
+    prop {
+        get {
+            return "one"
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (block
+                (return_statement
+                  (return)
+                  (single_expression
+                    (literal
+                      (string_literal))))))))))))
+
+================================================================================
+Static class property with getter
+================================================================================
+
+class Example { 
+    static prop {
+        get {
+            return "one"
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (block
+                (return_statement
+                  (return)
+                  (single_expression
+                    (literal
+                      (string_literal))))))))))))
+
+================================================================================
+Class property with setter
+================================================================================
+
+class Example { 
+    prop {
+        set {
+            x := value
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (setter
+            (set)
+            (function_body
+              (block
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (identifier))))))))))))
+
+================================================================================
+Static Class property with setter
+================================================================================
+
+class Example { 
+    static prop {
+        set {
+            x := value
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (property_declaration_block
+          (setter
+            (set)
+            (function_body
+              (block
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (identifier))))))))))))
+
+================================================================================
+Class property with getter and setter
+================================================================================
+
+class Example { 
+    prop {
+        get {
+            return x
+        }
+        set {
+            x := value
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (block
+                (return_statement
+                  (return)
+                  (single_expression
+                    (identifier))))))
+          (setter
+            (set)
+            (function_body
+              (block
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (identifier))))))))))))
+
+================================================================================
+Static class property with getter and setter
+================================================================================
+
+class Example { 
+    static prop {
+        get {
+            return x
+        }
+        set {
+            x := value
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (block
+                (return_statement
+                  (return)
+                  (single_expression
+                    (identifier))))))
+          (setter
+            (set)
+            (function_body
+              (block
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (identifier))))))))))))
+
+================================================================================
+Class property with fat-arrow getter
+================================================================================
+
+class Example { 
+    prop {
+        get => x
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (single_expression
+                (identifier)))))))))
+
+================================================================================
+Class property with fat-arrow setter
+================================================================================
+
+class Example { 
+    prop {
+        set => x := value
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (setter
+            (set)
+            (function_body
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Class property with fat-arrow getter and setter
+================================================================================
+
+class Example { 
+    prop {
+        get => x
+        set => x := value
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (single_expression
+                (identifier))))
+          (setter
+            (set)
+            (function_body
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (identifier))
+                  (assignment_operator)
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Class property with argument
+================================================================================
+
+class Example { 
+    __Item[index] {
+        get => x + index
+        set => x + index := value
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (param
+            (identifier)))
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (single_expression
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier))))))
+          (setter
+            (set)
+            (function_body
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (additive_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (identifier))))
+                  (assignment_operator)
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Static class property with argument
+================================================================================
+
+class Example { 
+    static __Item[index] {
+        get => x + index
+        set => x + index := value
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (param_sequence
+          (param
+            (identifier)))
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (single_expression
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (identifier))))))
+          (setter
+            (set)
+            (function_body
+              (single_expression
+                (assignment_operation
+                  (single_expression
+                    (additive_operation
+                      (single_expression
+                        (identifier))
+                      (single_expression
+                        (identifier))))
+                  (assignment_operator)
+                  (single_expression
+                    (identifier)))))))))))
+
+================================================================================
+Class property with multiple arguments
+================================================================================
+
+class Example { 
+    __Item[a, b] {
+        get => x + (a * b)
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (param
+            (identifier))
+          (param
+            (identifier)))
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (single_expression
+                (additive_operation
+                  (single_expression
+                    (identifier))
+                  (single_expression
+                    (expression_sequence
+                      (single_expression
+                        (multiplicative_operation
+                          (single_expression
+                            (identifier))
+                          (single_expression
+                            (identifier)))))))))))))))
+
+================================================================================
+Class property with arguments using getter-only shorthand
+================================================================================
+
+class Example { 
+    __Item[a, b] => (a * b)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (param
+            (identifier))
+          (param
+            (identifier)))
+        (getter
+          (expression_sequence
+            (single_expression
+              (multiplicative_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (identifier))))))))))
+
+================================================================================
+Property declaration with mixed getter and setter styles
+================================================================================
+
+class Example
+{
+    explcitGetterSetter {
+        get => 4
+        set {
+            val := 10
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (setter
+            (set)
+            (function_body
+              (block
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))))))))))
+
+================================================================================
+Class with mixed property declaration styles
+================================================================================
+
+class Example { 
+    prop := unset
+
+    getterOnlyShorthand => "getter only"
+
+    explcitGetterSetter {
+        get => 4
+        set {
+            val := 10
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (single_expression
+          (literal
+            (unset))))
+      (property_declaration
+        (identifier)
+        (getter
+          (literal
+            (string_literal))))
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (single_expression
+                (literal
+                  (numeric_literal)))))
+          (setter
+            (set)
+            (function_body
+              (block
+                (single_expression
+                  (assignment_operation
+                    (single_expression
+                      (identifier))
+                    (assignment_operator)
+                    (single_expression
+                      (literal
+                        (numeric_literal)))))))))))))
+
+================================================================================
+Class with property and method
+================================================================================
+
+class Example { 
+    prop := unset
+
+    __New(arg) 
+    {
+        var := arg
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (single_expression
+          (literal
+            (unset))))
+      (function_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (param
+              (identifier))))
+        (function_body
+          (block
+            (single_expression
+              (assignment_operation
+                (single_expression
+                  (identifier))
+                (assignment_operator)
+                (single_expression
+                  (identifier))))))))))
+
+================================================================================
+Nested classes
+================================================================================
+
+class Example { 
+    class Nested {
+        
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (class_declaration
+        (class)
+        (identifier)
+        (class_body)))))
+
+================================================================================
+Nested classes with superclass
+================================================================================
+
+class Outer extends Object { 
+    class Inner extends Outer {
+        
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (extends)
+    (identifier)
+    (class_body
+      (class_declaration
+        (class)
+        (identifier)
+        (extends)
+        (identifier)
+        (class_body)))))
+
+================================================================================
+Deeply nested classes with properties
+================================================================================
+
+class Outer extends Object 
+{ 
+    class Inner extends Outer 
+    {
+        class Inner2 
+        {
+            class Inner3 
+            {
+                class Inner4 
+                {
+                    prop[arg] => %arg%
+                }
+            }
+        }
+
+        className => "Inner2"
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (extends)
+    (identifier)
+    (class_body
+      (class_declaration
+        (class)
+        (identifier)
+        (extends)
+        (identifier)
+        (class_body
+          (class_declaration
+            (class)
+            (identifier)
+            (class_body
+              (class_declaration
+                (class)
+                (identifier)
+                (class_body
+                  (class_declaration
+                    (class)
+                    (identifier)
+                    (class_body
+                      (property_declaration
+                        (identifier)
+                        (param_sequence
+                          (param
+                            (identifier)))
+                        (getter
+                          (dereference_operation
+                            (single_expression
+                              (identifier)))))))))))
+          (property_declaration
+            (identifier)
+            (getter
+              (literal
+                (string_literal)))))))))
