@@ -7,11 +7,8 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-
-// precedence constants - default when unset is 0, higher number = higher precedence.
-// Based on https://www.autohotkey.com/docs/v2/Variables.htm#operators
-
 // Precedence levels (from lowest to highest)
+// Based on https://www.autohotkey.com/docs/v2/Variables.htm#operators
 const PREC = {
   COMMA: -20,                // Comma operator (lowest)
   FAT_ARROW_FUNCTION: -10,   // () => expr (not implemented)
@@ -30,7 +27,7 @@ const PREC = {
   BITWISE_OR: 110,           // |
   BITWISE_XOR: 120,          // ^
   BITWISE_AND: 130,          // &
-  SHIFT: 140,                // <<, >>, >>> (not yet implemented)
+  SHIFT: 140,                // <<, >>, >>>
   ADDITIVE: 150,             // +, -
   MULTIPLICATIVE: 160,       // *, /, //
   EXPONENT: 170,             // **
@@ -38,7 +35,7 @@ const PREC = {
   POSTFIX: 190,              // ++, --
   MAYBE: 200,                // ? (not yet implemented))
   MEMBER_ACCESS: 210,        // a.b (not yet implemented)
-  DEREFERENCE: 220,          // %expr% (not yet implemented)
+  DEREFERENCE: 220,          // %expr%
   KEYWORD: 9999,             // Keywords should match before other identifiers
 };
 
@@ -396,7 +393,8 @@ export default grammar({
       $.string_literal,
       $.array_literal,
       $.object_literal,
-      $.unset         // Unset is often illegal but when it isn't it's best to treat it as a literal
+      // Unset legality is contextual but where it is legal we should treat it as a literal
+      $.unset
     ),
 
     numeric_literal: $ => choice(
@@ -629,19 +627,14 @@ export default grammar({
     files: $ => token(prec(PREC.KEYWORD, ci('files'))),
     reg: $ => token(prec(PREC.KEYWORD, ci('reg'))),
 
-    loop_kind: $ => token(prec(PREC.KEYWORD, choice(
-      ci('read'),   // file reading loop
-      ci('parse'),  // string parsing loop
-      ci('files'),  // file / directory search loop
-      ci('reg')     // registry key reading loop
-    ))),
-
     //#endregion
 
     unset: $ => token(prec(PREC.KEYWORD, ci('unset'))),
 
     // Reserved keyword (not currently used as operator in v2, but reserved)
     _contains: $ => token(prec(PREC.KEYWORD, ci('contains'))),
+
+    //#region Directives
 
     // Directives - we should match these to prevent errors, but for our purposes we don't actually
     // care about their contents, except for HotIf
@@ -653,6 +646,8 @@ export default grammar({
       ci("clipboardtimeout"), ci("dllload"), ci("errstdout"), ci("requires"), ci("hotif"), ci("hotiftimeout"),
       ci("hotstring"), ci("include"), ci("includeagain"), ci("inputlevel"), ci("usehook"), ci("maxthreads")
     ))),
+
+    //#endregion
 
     // Matches anything (up to a newline)
     anything: $ => /.*/,
