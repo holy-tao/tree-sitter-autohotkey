@@ -15,7 +15,7 @@ x := 1, y := 2
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))
+            (integer_literal)))))
     (single_expression
       (assignment_operation
         (single_expression
@@ -23,7 +23,7 @@ x := 1, y := 2
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))))
+            (integer_literal)))))))
 
 ================================================================================
 Expression sequence with three items
@@ -42,7 +42,7 @@ a := 1, b := 2, c := 3
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))
+            (integer_literal)))))
     (single_expression
       (assignment_operation
         (single_expression
@@ -50,7 +50,7 @@ a := 1, b := 2, c := 3
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))
+            (integer_literal)))))
     (single_expression
       (assignment_operation
         (single_expression
@@ -58,7 +58,7 @@ a := 1, b := 2, c := 3
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))))
+            (integer_literal)))))))
 
 ================================================================================
 Parenthesized expression sequence
@@ -87,7 +87,7 @@ var := (
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (assignment_operation
               (single_expression
@@ -126,7 +126,7 @@ var := (
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (assignment_operation
               (single_expression
@@ -239,7 +239,7 @@ arr := [1, "two", (1 + 2)]
             (expression_sequence
               (single_expression
                 (literal
-                  (numeric_literal)))
+                  (integer_literal)))
               (single_expression
                 (literal
                   (string_literal)))
@@ -249,10 +249,10 @@ arr := [1, "two", (1 + 2)]
                     (additive_operation
                       (single_expression
                         (literal
-                          (numeric_literal)))
+                          (integer_literal)))
                       (single_expression
                         (literal
-                          (numeric_literal))))))))))))))
+                          (integer_literal))))))))))))))
 
 ================================================================================
 Assignment with object literal

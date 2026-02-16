@@ -15,7 +15,7 @@ one := 1, two := 2
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))
+            (integer_literal)))))
     (single_expression
       (assignment_operation
         (single_expression
@@ -23,7 +23,7 @@ one := 1, two := 2
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))))
+            (integer_literal)))))))
 
 ================================================================================
 Single line expression sequence with scope modifier
@@ -44,7 +44,7 @@ local one := 1, two := 2
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))
+            (integer_literal)))))
     (single_expression
       (assignment_operation
         (single_expression
@@ -52,7 +52,7 @@ local one := 1, two := 2
         (assignment_operator)
         (single_expression
           (literal
-            (numeric_literal)))))))
+            (integer_literal)))))))
 
 ================================================================================
 Parenthesized expression sequence as assignment
@@ -77,7 +77,7 @@ var := (one := 1, one)
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (identifier)))))))
 
@@ -106,7 +106,7 @@ var := (
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (assignment_operation
               (single_expression
@@ -114,7 +114,7 @@ var := (
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 Parenthesized expression sequence with math
@@ -139,7 +139,7 @@ var := (two := 2, two + two)
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (additive_operation
               (single_expression
@@ -160,7 +160,7 @@ Expression sequence as math operand
     (additive_operation
       (single_expression
         (literal
-          (numeric_literal)))
+          (integer_literal)))
       (single_expression
         (expression_sequence
           (single_expression
@@ -170,7 +170,7 @@ Expression sequence as math operand
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (assignment_operation
               (single_expression
@@ -178,7 +178,7 @@ Expression sequence as math operand
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (additive_operation
               (single_expression

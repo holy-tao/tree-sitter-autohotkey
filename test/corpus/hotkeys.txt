@@ -398,7 +398,7 @@ Hotkey with combinator and modifiers on both sides
           (assignment_operator)
           (single_expression
             (literal
-              (numeric_literal))))))))
+              (integer_literal))))))))
 
 ================================================================================
 Hotkey with modifier and identifier-like name
@@ -450,4 +450,4 @@ Hotkey with many modifiers
           (assignment_operator)
           (single_expression
             (literal
-              (numeric_literal))))))))
+              (integer_literal))))))))

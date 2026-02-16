@@ -28,7 +28,7 @@ global ONE := 1
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Case insensitive identifier mixed case
@@ -48,7 +48,7 @@ global oNE := 1
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Global variable declaration
@@ -176,4 +176,4 @@ VarRef with initializer
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (float_literal))))))

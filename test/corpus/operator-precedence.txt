@@ -242,7 +242,7 @@ a := 1, b := 2
         (assignment_operator)
         right: (single_expression
           (literal
-            (numeric_literal)))))
+            (integer_literal)))))
     (single_expression
       (assignment_operation
         left: (single_expression
@@ -250,7 +250,7 @@ a := 1, b := 2
         (assignment_operator)
         right: (single_expression
           (literal
-            (numeric_literal)))))))
+            (integer_literal)))))))
 
 ================================================================================
 Bitwise AND before bitwise XOR
@@ -324,7 +324,7 @@ result := not x > 5
                 (identifier))
               right: (single_expression
                 (literal
-                  (numeric_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 Verbal NOT before logical AND
@@ -372,10 +372,10 @@ result := a << 2 & 0xb
               (bitshift_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (literal
-              (numeric_literal))))))))
+              (hex_literal))))))))
 
 ================================================================================
 Addition before logical bit shift right
@@ -400,10 +400,10 @@ result := a >> 2 + 2
             (additive_operation
               (single_expression
                 (literal
-                  (numeric_literal)))
+                  (integer_literal)))
               (single_expression
                 (literal
-                  (numeric_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 High-precedence NOT with comparison
@@ -426,7 +426,7 @@ result := !x > 5
               operand: (identifier)))
           right: (single_expression
             (literal
-              (numeric_literal))))))))
+              (integer_literal))))))))
 
 ================================================================================
 Complex precedence chain

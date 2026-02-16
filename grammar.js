@@ -407,7 +407,7 @@ export default grammar({
 
     //#region Literals
     literal: $ => choice(
-      $.numeric_literal,
+      $._numeric_literal,
       $.boolean_literal,
       $.string_literal,
       $.array_literal,
@@ -416,11 +416,17 @@ export default grammar({
       $.unset
     ),
 
-    numeric_literal: $ => choice(
-      /[+-]?([0-9])/,             // ints
-      /[+-]?([0-9]*[.])?[0-9]+/,  // floats
-      /0[xX][0-9a-fA-F]+/         // hex numbers
+    _numeric_literal: $ => choice(
+      $.integer_literal,      // ints
+      $.float_literal,        // floats
+      $.hex_literal,          // hex numbers
     ),
+
+    integer_literal: $ => token(/[+-]?([0-9])/),
+
+    float_literal: $ => token(/[+-]?([0-9]*[.])?[0-9]+/),
+
+    hex_literal: $ => token(/0[xX][0-9a-fA-F]+/),
 
     boolean_literal: $ => token(
       prec(PREC.KEYWORD, choice(/true/i, /false/i))

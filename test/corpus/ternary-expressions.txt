@@ -43,7 +43,7 @@ Nested ternary expression
                 (identifier))
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (literal
               (string_literal)))
@@ -55,7 +55,7 @@ Nested ternary expression
                     (identifier))
                   (single_expression
                     (literal
-                      (numeric_literal)))))
+                      (integer_literal)))))
               (single_expression
                 (literal
                   (string_literal)))
@@ -87,7 +87,7 @@ str := val == 1?
                 (identifier))
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (literal
               (string_literal)))
@@ -144,7 +144,7 @@ result := x + y > 10? "big" : "small"
                     (identifier))))
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (float_literal)))))
           (single_expression
             (literal
               (string_literal)))
@@ -174,18 +174,18 @@ result := flag? 1 + 2 : 3 * 4
             (additive_operation
               (single_expression
                 (literal
-                  (numeric_literal)))
+                  (integer_literal)))
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (multiplicative_operation
               (single_expression
                 (literal
-                  (numeric_literal)))
+                  (integer_literal)))
               (single_expression
                 (literal
-                  (numeric_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 Ternary with logical operators in condition
@@ -211,14 +211,14 @@ result := x > 5 && y < 10? "valid" : "invalid"
                     (identifier))
                   (single_expression
                     (literal
-                      (numeric_literal)))))
+                      (integer_literal)))))
               (single_expression
                 (relational_operation
                   (single_expression
                     (identifier))
                   (single_expression
                     (literal
-                      (numeric_literal)))))))
+                      (float_literal)))))))
           (single_expression
             (literal
               (string_literal)))
@@ -274,7 +274,7 @@ z > 0? x := 2 : y := 3
                 (identifier))
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (assignment_operation
               (single_expression
@@ -282,13 +282,13 @@ z > 0? x := 2 : y := 3
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (identifier))))
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Nested ternary in true branch
@@ -372,7 +372,7 @@ arr := [x > 5? "big" : "small", other]
                         (identifier))
                       (single_expression
                         (literal
-                          (numeric_literal)))))
+                          (integer_literal)))))
                   (single_expression
                     (literal
                       (string_literal)))
@@ -410,12 +410,12 @@ obj := {value: x > 0? x : 0}
                           (identifier))
                         (single_expression
                           (literal
-                            (numeric_literal)))))
+                            (integer_literal)))))
                     (single_expression
                       (identifier))
                     (single_expression
                       (literal
-                        (numeric_literal)))))))))))))
+                        (integer_literal)))))))))))))
 
 ================================================================================
 Ternary with prefix operators
@@ -542,7 +542,7 @@ result := 10 + (x? 5 : 3)
         (additive_operation
           (single_expression
             (literal
-              (numeric_literal)))
+              (float_literal)))
           (single_expression
             (expression_sequence
               (single_expression
@@ -551,10 +551,10 @@ result := 10 + (x? 5 : 3)
                     (identifier))
                   (single_expression
                     (literal
-                      (numeric_literal)))
+                      (integer_literal)))
                   (single_expression
                     (literal
-                      (numeric_literal))))))))))))
+                      (integer_literal))))))))))))
 
 ================================================================================
 Parenthesized ternary as condition
@@ -681,26 +681,26 @@ result := flag? [1, 2, 3] : [4, 5, 6]
                 (expression_sequence
                   (single_expression
                     (literal
-                      (numeric_literal)))
+                      (integer_literal)))
                   (single_expression
                     (literal
-                      (numeric_literal)))
+                      (integer_literal)))
                   (single_expression
                     (literal
-                      (numeric_literal)))))))
+                      (integer_literal)))))))
           (single_expression
             (literal
               (array_literal
                 (expression_sequence
                   (single_expression
                     (literal
-                      (numeric_literal)))
+                      (integer_literal)))
                   (single_expression
                     (literal
-                      (numeric_literal)))
+                      (integer_literal)))
                   (single_expression
                     (literal
-                      (numeric_literal))))))))))))
+                      (integer_literal))))))))))))
 
 ================================================================================
 Ternary with object literals in branches
@@ -728,7 +728,7 @@ result := flag? {x: 1} : {y: 2}
                     (identifier)
                     (single_expression
                       (literal
-                        (numeric_literal))))))))
+                        (integer_literal))))))))
           (single_expression
             (literal
               (object_literal
@@ -737,7 +737,7 @@ result := flag? {x: 1} : {y: 2}
                     (identifier)
                     (single_expression
                       (literal
-                        (numeric_literal)))))))))))))
+                        (integer_literal)))))))))))))
 
 ================================================================================
 Complex nested ternary with mixed operators
@@ -765,14 +765,14 @@ result := (x > 5 && y < 10)? (z := a + b) : (w := c * d)
                         (identifier))
                       (single_expression
                         (literal
-                          (numeric_literal)))))
+                          (integer_literal)))))
                   (single_expression
                     (relational_operation
                       (single_expression
                         (identifier))
                       (single_expression
                         (literal
-                          (numeric_literal)))))))))
+                          (float_literal)))))))))
           (single_expression
             (expression_sequence
               (single_expression
@@ -825,7 +825,7 @@ result := flag? value << 2 : value >> 1
               (bitshift_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (bitshift_operation
               (single_expression
@@ -833,7 +833,7 @@ result := flag? value << 2 : value >> 1
               (bitshift_operator)
               (single_expression
                 (literal
-                  (numeric_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 Ternary with exponent operator
@@ -859,14 +859,14 @@ result := flag? x ** 2 : y ** 3
                 (identifier))
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (exponent_operation
               (single_expression
                 (identifier))
               (single_expression
                 (literal
-                  (numeric_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 Ternary with explicit concatenation
@@ -962,10 +962,10 @@ flag? x += 1 : y -= 1
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (single_expression
             (identifier))))
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))

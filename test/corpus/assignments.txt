@@ -14,7 +14,7 @@ x := 42
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (float_literal))))))
 
 ================================================================================
 Global variable declaration with assignment
@@ -34,7 +34,7 @@ global oNE := 1
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Global variable declaration followed by assignment
@@ -57,7 +57,7 @@ var := 42
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (float_literal))))))
 
 ================================================================================
 String literal assignment
@@ -111,7 +111,7 @@ x += 5
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Subtraction assignment
@@ -129,7 +129,7 @@ x -= 5
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Multiplication assignment
@@ -147,7 +147,7 @@ x *= 2
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Division assignment
@@ -165,7 +165,7 @@ x /= 2
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Floor division assignment
@@ -183,7 +183,7 @@ x //= 2
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Concatenation assignment
@@ -219,7 +219,7 @@ x |= 8
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Bitwise AND assignment
@@ -237,7 +237,7 @@ x &= 8
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Bitwise XOR assignment
@@ -255,7 +255,7 @@ x ^= 8
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Right shift assignment
@@ -273,7 +273,7 @@ x >>= 2
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Left shift assignment
@@ -291,7 +291,7 @@ x <<= 2
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Unsigned right shift assignment
@@ -309,7 +309,7 @@ x >>>= 2
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Local variable declaration
@@ -343,4 +343,4 @@ static counter := 0
       (assignment_operator)
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))

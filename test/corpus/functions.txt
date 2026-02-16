@@ -21,7 +21,7 @@ Function() {
             (assignment_operator)
             (single_expression
               (literal
-                (numeric_literal)))))))))
+                (integer_literal)))))))))
 
 ================================================================================
 Function declaration with fat arrow budy
@@ -38,7 +38,7 @@ Function() => 1
     (function_body
       (single_expression
         (literal
-          (numeric_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Static function (Note: only legal in class definitions)

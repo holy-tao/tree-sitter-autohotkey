@@ -12,7 +12,7 @@ Fat-arrow function with no arguments
       (function_head)
       (arrow)
       (literal
-        (numeric_literal)))))
+        (integer_literal)))))
 
 ================================================================================
 Fat-arrow function with wildcard
@@ -29,7 +29,7 @@ Fat-arrow function with wildcard
         (wildcard))
       (arrow)
       (literal
-        (numeric_literal)))))
+        (integer_literal)))))
 
 ================================================================================
 Fat-arrow function with named argument
@@ -48,7 +48,7 @@ Fat-arrow function with named argument
             (identifier))))
       (arrow)
       (literal
-        (numeric_literal)))))
+        (integer_literal)))))
 
 ================================================================================
 Fat-arrow function with named ByRef argument
@@ -68,7 +68,7 @@ Fat-arrow function with named ByRef argument
               (identifier)))))
       (arrow)
       (literal
-        (numeric_literal)))))
+        (integer_literal)))))
 
 ================================================================================
 Fat-arrow function with named argument with default
@@ -88,7 +88,7 @@ Fat-arrow function with named argument with default
             (assignment_operator)
             (single_expression
               (literal
-                (numeric_literal))))))
+                (float_literal))))))
       (arrow)
       (identifier))))
 
@@ -111,7 +111,7 @@ Fat-arrow function with mixed argument types
             (assignment_operator)
             (single_expression
               (literal
-                (numeric_literal))))
+                (float_literal))))
           (param
             (identifier))
           (param
@@ -123,7 +123,7 @@ Fat-arrow function with mixed argument types
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))
+                  (integer_literal)))))
           (byref_param
             (param
               (identifier)
@@ -154,7 +154,7 @@ Fat-arrow function with ByRef arg with default
               (assignment_operator)
               (single_expression
                 (literal
-                  (numeric_literal)))))))
+                  (integer_literal)))))))
       (arrow)
       (identifier))))
 
@@ -249,10 +249,10 @@ Fat-arrow function with with default from expression
               (additive_operation
                 (single_expression
                   (literal
-                    (numeric_literal)))
+                    (integer_literal)))
                 (single_expression
                   (literal
-                    (numeric_literal))))))))
+                    (integer_literal))))))))
       (arrow)
       (identifier))))
 
@@ -342,7 +342,7 @@ Fat-arrow function with parenthesized expression sequence
             (assignment_operator)
             (single_expression
               (literal
-                (numeric_literal)))))
+                (integer_literal)))))
         (single_expression
           (assignment_operation
             (single_expression
@@ -350,7 +350,7 @@ Fat-arrow function with parenthesized expression sequence
             (assignment_operator)
             (single_expression
               (literal
-                (numeric_literal)))))
+                (integer_literal)))))
         (single_expression
           (additive_operation
             (single_expression
