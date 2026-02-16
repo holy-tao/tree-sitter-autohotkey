@@ -222,7 +222,7 @@ export default grammar({
 
     // Verbal NOT operator (lower precedence than !)
     verbal_not_operation: $ => prec.right(PREC.LOGICAL_NOT, seq(
-      field("operator", token(prec(PREC.KEYWORD, ci('not')))),
+      field("operator", token(prec(PREC.KEYWORD, /not/i))),
       field("operand", $.single_expression)
     )),
 
@@ -264,19 +264,19 @@ export default grammar({
 
     type_check_operation: $ => prec.left(PREC.CASE_INSENSITIVE, seq(
       field("left", $.single_expression),
-      field("operator", token(prec(PREC.KEYWORD, ci(' is ')))),
+      field("operator", token(prec(PREC.KEYWORD, / is /i))),
       field("right", $.single_expression)
     )),
 
     logical_and_operation: $ => prec.left(PREC.LOGICAL_AND, seq(
       field("left", $.single_expression),
-      field("operator", choice("&&", token(prec(PREC.KEYWORD, ci('and'))))),
+      field("operator", choice("&&", token(prec(PREC.KEYWORD, /and/i)))),
       field("right", $.single_expression)
     )),
 
     logical_or_operation: $ => prec.left(PREC.LOGICAL_OR, seq(
       field("left", $.single_expression),
-      field("operator", choice("||", token(prec(PREC.KEYWORD, ci('or'))))),
+      field("operator", choice("||", token(prec(PREC.KEYWORD, /or/i)))),
       field("right", $.single_expression)
     )),
 
@@ -320,7 +320,7 @@ export default grammar({
       choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>="),
 
     // "is must have whitespace, others are optional"
-    comparison_operator: $ => choice(">", "<", ">=", "<=", "=", "==", "!=", "!==", "~=", ci(' is ')),
+    comparison_operator: $ => choice(">", "<", ">=", "<=", "=", "==", "!=", "!==", "~=", / is /i),
 
     unary_operator: $ => choice("~", "+", "-", "!"),
 
@@ -334,7 +334,7 @@ export default grammar({
 
     boolean_comparison_operator: $ => token(
       prec(PREC.KEYWORD, 
-        choice("&&", ci('and'), "||", ci('or')
+        choice("&&", /and/i, "||", /or/i
     ))),
 
     //#endregion
@@ -423,7 +423,7 @@ export default grammar({
     ),
 
     boolean_literal: $ => token(
-      prec(PREC.KEYWORD, choice(ci('true'), ci('false')))
+      prec(PREC.KEYWORD, choice(/true/i, /false/i))
     ),
 
     // TODO multiline string literals - https://www.autohotkey.com/docs/v2/Scripts.htm#continuation
@@ -465,9 +465,9 @@ export default grammar({
     // Note: not strictly "modifiers" because declaring one can switch a function into assume-local/global mode
     scope_identifier: $ => token(
       prec(PREC.KEYWORD, choice(
-        ci('static'),
-        ci('local'),
-        ci('global')
+        /static/i,
+        /local/i,
+        /global/i
     ))),
 
     //#region Control Flow
@@ -622,29 +622,29 @@ export default grammar({
     ),
 
     // Control flow keywords
-    if: $ => token(prec(PREC.KEYWORD, ci('if'))),
-    else: $ => token(prec(PREC.KEYWORD, ci('else'))),
-    while: $ => token(prec(PREC.KEYWORD, ci('while'))),
-    for: $ => token(prec(PREC.KEYWORD, ci('for'))),
-    in: $ => token(prec(PREC.KEYWORD, ci('in'))),
-    loop: $ => token(prec(PREC.KEYWORD, ci('loop'))),
-    until: $ => token(prec(PREC.KEYWORD, ci('until'))),
-    try: $ => token(prec(PREC.KEYWORD, ci('try'))),
-    catch: $ => token(prec(PREC.KEYWORD, ci('catch'))),
-    finally: $ => token(prec(PREC.KEYWORD, ci('finally'))),
-    return: $ => token(prec(PREC.KEYWORD, ci('return'))),
-    throw: $ => token(prec(PREC.KEYWORD, ci('throw'))),
-    goto: $ => token(prec(PREC.KEYWORD, ci('goto'))),
-    break: $ => token(prec(PREC.KEYWORD, ci('break'))),
-    continue: $ => token(prec(PREC.KEYWORD, ci('continue'))),
-    as: $ => token(prec(PREC.KEYWORD, ci('as'))),
-    switch: $ => token(prec(PREC.KEYWORD, ci('switch'))),
-    case: $ => token(prec(PREC.KEYWORD, ci('case'))),
-    default: $ => token(prec(PREC.KEYWORD, ci('default'))),
-    parse: $ => token(prec(PREC.KEYWORD, ci('parse'))),
-    read: $ => token(prec(PREC.KEYWORD, ci('read'))),
-    files: $ => token(prec(PREC.KEYWORD, ci('files'))),
-    reg: $ => token(prec(PREC.KEYWORD, ci('reg'))),
+    if: $ => token(prec(PREC.KEYWORD, /if/i)),
+    else: $ => token(prec(PREC.KEYWORD, /else/i)),
+    while: $ => token(prec(PREC.KEYWORD, /while/i)),
+    for: $ => token(prec(PREC.KEYWORD, /for/i)),
+    in: $ => token(prec(PREC.KEYWORD, /in/i)),
+    loop: $ => token(prec(PREC.KEYWORD, /loop/i)),
+    until: $ => token(prec(PREC.KEYWORD, /until/i)),
+    try: $ => token(prec(PREC.KEYWORD, /try/i)),
+    catch: $ => token(prec(PREC.KEYWORD, /catch/i)),
+    finally: $ => token(prec(PREC.KEYWORD, /finally/i)),
+    return: $ => token(prec(PREC.KEYWORD, /return/i)),
+    throw: $ => token(prec(PREC.KEYWORD, /throw/i)),
+    goto: $ => token(prec(PREC.KEYWORD, /goto/i)),
+    break: $ => token(prec(PREC.KEYWORD, /break/i)),
+    continue: $ => token(prec(PREC.KEYWORD, /continue/i)),
+    as: $ => token(prec(PREC.KEYWORD, /as/i)),
+    switch: $ => token(prec(PREC.KEYWORD, /switch/i)),
+    case: $ => token(prec(PREC.KEYWORD, /case/i)),
+    default: $ => token(prec(PREC.KEYWORD, /default/i)),
+    parse: $ => token(prec(PREC.KEYWORD, /parse/i)),
+    read: $ => token(prec(PREC.KEYWORD, /read/i)),
+    files: $ => token(prec(PREC.KEYWORD, /files/i)),
+    reg: $ => token(prec(PREC.KEYWORD, /reg/i)),
 
     //#endregion
 
@@ -696,18 +696,18 @@ export default grammar({
     setter: $ => seq($.set, $.function_body),
 
     // class-related keywords
-    class: $ => token(prec(PREC.KEYWORD, ci('class'))),
-    extends: $ => token(prec(PREC.KEYWORD, ci('extends'))),
-    get: $ => token(prec(PREC.KEYWORD, ci('get'))),
-    set: $ => token(prec(PREC.KEYWORD, ci('set'))),
-    static: $ => token(prec(PREC.KEYWORD, ci('static'))),
+    class: $ => token(prec(PREC.KEYWORD, /class/i)),
+    extends: $ => token(prec(PREC.KEYWORD, /extends/i)),
+    get: $ => token(prec(PREC.KEYWORD, /get/i)),
+    set: $ => token(prec(PREC.KEYWORD, /set/i)),
+    static: $ => token(prec(PREC.KEYWORD, /static/i)),
 
     //#endregion
 
-    unset: $ => token(prec(PREC.KEYWORD, ci('unset'))),
+    unset: $ => token(prec(PREC.KEYWORD, /unset/i)),
 
     // Reserved keyword (not currently used as operator in v2, but reserved)
-    _contains: $ => token(prec(PREC.KEYWORD, ci('contains'))),
+    _contains: $ => token(prec(PREC.KEYWORD, /contains/i)),
 
     //#region Directives
 
@@ -719,18 +719,18 @@ export default grammar({
 
     directive_identifier: $ => token(prec(PREC.KEYWORD, 
       choice(
-        ci("#clipboardtimeout"), 
-        ci("#dllload"), 
-        ci("#errstdout"), 
-        ci("#requires"), 
-        ci("#hotif"), 
-        ci("#hotiftimeout"),
-        ci("#hotstring"), 
-        ci("#include"), 
-        ci("#includeagain"), 
-        ci("#inputlevel"), 
-        ci("#usehook"), 
-        ci("#maxthreads")
+        /#ClipboardTimeout/i,
+        /#DllLoad/i, 
+        /#ErrStdOut/i, 
+        /#Requires/i, 
+        /#Hotif/i, 
+        /#HotifTimeout/i,
+        /#Hotstring/i, 
+        /#Include/i, 
+        /#IncludeAgain/i, 
+        /#InputLevel/i, 
+        /#UseHook/i, 
+        /#MaxThreads/i
     ))),
 
     //#endregion
@@ -781,30 +781,30 @@ export default grammar({
     // Boolean-style options with optional '0' suffix
     hotstring_asterisk: $ => token(seq('*', optional('0'))),
     hotstring_question: $ => token(seq('?', optional('0'))),
-    hotstring_backspace: $ => token(seq(ci('b'), optional('0'))),
-    hotstring_case_sensitive: $ => token(seq(ci('c'), optional('0'))),
-    hotstring_omit_ending: $ => token(seq(ci('o'), optional('0'))),
-    hotstring_raw: $ => token(seq(ci('r'), optional('0'))),
-    hotstring_suspend: $ => token(seq(ci('s'), optional('0'))),
-    hotstring_text_mode: $ => token(seq(ci('t'), optional('0'))),
-    hotstring_reset: $ => token(seq(ci('z'), optional('0'))),
+    hotstring_backspace: $ => token(seq(/b/i, optional('0'))),
+    hotstring_case_sensitive: $ => token(seq(/c/i, optional('0'))),
+    hotstring_omit_ending: $ => token(seq(/o/i, optional('0'))),
+    hotstring_raw: $ => token(seq(/r/i, optional('0'))),
+    hotstring_suspend: $ => token(seq(/s/i, optional('0'))),
+    hotstring_text_mode: $ => token(seq(/t/i, optional('0'))),
+    hotstring_reset: $ => token(seq(/z/i, optional('0'))),
 
     // Options without '0' suffix
-    hotstring_execute: $ => token(ci('x')),
-    hotstring_case_conform: $ => token(seq(ci('c'), '1')),  // C1 only
+    hotstring_execute: $ => token(/x/i),
+    hotstring_case_conform: $ => token(seq(/c/i, '1')),  // C1 only
     hotstring_space: $ => token(prec(-10, ' ')),  // Very low precedence to avoid conflicts
 
     // Send mode options (mutually exclusive but grammar accepts all)
     hotstring_send_mode: $ => token(choice(
-      ci('si'),
-      ci('sp'),
-      ci('se')
+      /si/i,
+      /sp/i,
+      /se/i,
     )),
 
     // Parameterized options with numeric arguments
     // Kn - key delay (can be negative with optional spaces)
     hotstring_key_delay: $ => token(seq(
-      ci('k'),
+      /[kK]/,
       optional(repeat(/[ \t]/)),
       optional('-'),
       optional(repeat(/[ \t]/)),
@@ -812,10 +812,7 @@ export default grammar({
     )),
 
     // Pn - thread priority
-    hotstring_priority: $ => token(seq(
-      ci('p'),
-      /[0-9]+/
-    )),
+    hotstring_priority: $ => token(/[pP][0-9]+/),
 
     //#endregion
 
@@ -876,7 +873,7 @@ export default grammar({
     hotkey_nonblocking: $ => token(prec.right(PREC.PREFIX, '~')),
     hotkey_usehook: $ => token('$'),
     // Requires preceding space
-    hotkey_up: $ => token.immediate(prec(PREC.KEYWORD, ci(' up'))),
+    hotkey_up: $ => token.immediate(prec(PREC.KEYWORD, / [uU][pP]/)),
 
     // These are only valid as hotkey operations and must immediately follow the double-colon
     //See: https://www.autohotkey.com/docs/v2/Hotkeys.htm#alttab
@@ -888,11 +885,11 @@ export default grammar({
         $.hotkey_alttabmenudismiss
     ),
 
-    hotkey_alttab: $ => token.immediate(prec(PREC.KEYWORD, ci('alttab'))),
-    hotkey_shiftalttab: $ => token.immediate(prec(PREC.KEYWORD, ci('shiftalttab'))),
-    hotkey_alttabmenu: $ => token.immediate(prec(PREC.KEYWORD, ci('alttabmenu'))),
-    hotkey_alttabandmenu: $ => token.immediate(prec(PREC.KEYWORD, ci('alttabandmenu'))),
-    hotkey_alttabmenudismiss: $ => token.immediate(prec(PREC.KEYWORD, ci('alttabmenudismiss'))),
+    hotkey_alttab: $ => token.immediate(prec(PREC.KEYWORD, /AltTab/i)),
+    hotkey_shiftalttab: $ => token.immediate(prec(PREC.KEYWORD, /ShiftAltTab/i)),
+    hotkey_alttabmenu: $ => token.immediate(prec(PREC.KEYWORD, /AltTabMenu/i)),
+    hotkey_alttabandmenu: $ => token.immediate(prec(PREC.KEYWORD, /AltTabAndMenu/i)),
+    hotkey_alttabmenudismiss: $ => token.immediate(prec(PREC.KEYWORD, /AltTabMenuDismiss/i)),
 
     //#endregion
 
@@ -902,16 +899,3 @@ export default grammar({
     _newline: $ => "\n"
   }
 });
-
-/**
- * Creates a case-insensitive regex pattern for a word
- * @param {string} word word - must be lowercase
- */
-function ci(word) {
-  return new RegExp(
-    word
-      .split('')
-      .map(c => /[a-z]/i.test(c) ? `[${c.toLowerCase()}${c.toUpperCase()}]` : c)
-      .join('')
-  );
-}
