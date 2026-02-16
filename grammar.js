@@ -33,9 +33,10 @@ const PREC = {
   EXPONENT: 170,             // **
   PREFIX: 180,               // ++, --, unary +, -, !, ~, &
   POSTFIX: 190,              // ++, --
-  MAYBE: 200,                // ? (not yet implemented))
+  MAYBE: 200,                // ?
   MEMBER_ACCESS: 210,        // a.b (not yet implemented)
   DEREFERENCE: 220,          // %expr%
+  OVERRIDE: 250,             // item access, call access, etc. override other operator precedences
   KEYWORD: 9999,             // Keywords should match before other identifiers
 };
 
@@ -50,6 +51,10 @@ export default grammar({
   name: "autohotkey",
 
   word: $ => $.identifier,
+
+  externals: $ => [
+    $.optional_marker
+  ],
 
   conflicts: $ => [
     [$._primary_expression, $.param],
@@ -74,6 +79,7 @@ export default grammar({
       $.hotkey,
     ),
 
+    // TODO refactor this, refer here: https://www.autohotkey.com/docs/v2/Language.htm#expression-statements
     _statement: $ => prec(2, choice(
       $.directive,        // Directives are allowed anywhere but executed unconditionally
       $.function_declaration,
@@ -113,7 +119,8 @@ export default grammar({
       $.dynamic_identifier,
       seq("(", $.expression_sequence, ")"),
       $._pairwise_operation,
-      $.member_access
+      $.member_access,
+      $.index_access
     ),
 
     // broader than _primary_expression, can compose other expressions (and themselves)
@@ -177,10 +184,10 @@ export default grammar({
     // TODO left-hand-side can be an accessor like outer.inner but scope identifier can't precede accessor
     // TODO rhs can be literal or statement - probably primary expression
     // TODO make these fields
-    assignment_operation: $ => prec.right(PREC.ASSIGNMENT, seq(
+    assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
       field("left", $.single_expression),
       $.assignment_operator,
-      field("right", $.single_expression)
+      field("right", choice($.single_expression, $.optional_identifier))
     )),
 
     dereference_operation: $ => prec.left(PREC.DEREFERENCE, seq(
@@ -329,6 +336,43 @@ export default grammar({
       field("member", $.member_identifier)
     )),
 
+    // Maybe "subscript access", the docs call it index access
+    // See https://www.autohotkey.com/docs/v2/Variables.htm#square-brackets
+    index_access: $ => prec(PREC.OVERRIDE, seq(
+      field("object", $.single_expression),
+      "[",
+      optional($.arg_sequence), 
+      "]"
+    )),
+
+    arg_sequence: $ => choice(
+      // Args without expansion
+      seq(
+        $.arg,
+        repeat(seq(",", $.arg))
+      ),
+      // Single arg with expansion
+      seq(
+        $.single_expression,
+        $.array_expansion_marker
+      ),
+      // Multiple args with last one having expansion
+      seq(
+        $.arg,
+        repeat(seq(",", $.arg)),
+        ",",
+        $.single_expression,
+        $.array_expansion_marker
+      )
+    ),
+
+    array_expansion_marker: $ => token.immediate("*"),
+
+    arg: $ => prec.right(choice(
+      $.expression_sequence,
+      $.optional_identifier,
+    )),
+
     // Precedence should be lower than dynamic_identifier and _dynamic_identifier_chain so the chain in particular
     // can consume tokens greedily
     member_identifier: $ => prec(-1, choice(
@@ -352,6 +396,8 @@ export default grammar({
       optional($._dynamic_identifier_chain)
     )),
 
+    optional_identifier: $ => prec.right(PREC.MAYBE, seq($.identifier, $.optional_marker)),
+
     assignment_operator: $ => 
       choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>="),
 
@@ -367,6 +413,8 @@ export default grammar({
     bitshift_operator: $ => choice("<<", ">>", ">>>"),
 
     arrow: $ => "=>",
+
+    maybe_operator: $ => token.immediate("?"),
 
     boolean_comparison_operator: $ => token(
       prec(PREC.KEYWORD, 
@@ -420,18 +468,18 @@ export default grammar({
 
     param: $ => choice(
       $.identifier,
+      $.optional_identifier,
       seq(
         $.identifier,
         $._initializer
       ),
-      seq($.identifier, $.optional_marker)
     ),
 
     _initializer: $ => seq(
       alias(":=", $.assignment_operator), 
       $.single_expression),
 
-    optional_marker: $ => "?",
+    // Handled by external scanner - matches "?" only when followed by )]},: or EOF
 
     byref_param: $ => seq("&", $.param),
 
@@ -483,7 +531,13 @@ export default grammar({
       repeat(seq(",", $.object_literal_member))
     ),
 
-    object_literal_member: $ => seq($.identifier, ":", $.single_expression),
+    object_literal_member: $ => seq(
+      $.identifier, 
+      ":", 
+      choice(
+        $.single_expression, 
+        $.optional_identifier
+      )),
 
     //#endregion
 

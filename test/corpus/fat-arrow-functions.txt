@@ -115,8 +115,9 @@ Fat-arrow function with mixed argument types
           (param
             (identifier))
           (param
-            (identifier)
-            (optional_marker))
+            (optional_identifier
+              (identifier)
+              (optional_marker)))
           (byref_param
             (param
               (identifier)
@@ -126,8 +127,9 @@ Fat-arrow function with mixed argument types
                   (integer_literal)))))
           (byref_param
             (param
-              (identifier)
-              (optional_marker)))
+              (optional_identifier
+                (identifier)
+                (optional_marker))))
           (variadic_param
             (identifier)
             (wildcard))))
@@ -172,8 +174,9 @@ Fat-arrow function with optional argument
       (function_head
         (param_sequence
           (param
-            (identifier)
-            (optional_marker))))
+            (optional_identifier
+              (identifier)
+              (optional_marker)))))
       (arrow)
       (literal
         (boolean_literal)))))
@@ -193,8 +196,9 @@ Fat-arrow function with optional ByRef argument
         (param_sequence
           (byref_param
             (param
-              (identifier)
-              (optional_marker)))))
+              (optional_identifier
+                (identifier)
+                (optional_marker))))))
       (arrow)
       (literal
         (boolean_literal)))))

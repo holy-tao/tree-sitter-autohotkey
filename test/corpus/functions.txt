@@ -490,3 +490,30 @@ Function(arg1, arg2) {
                     (identifier))
                   (single_expression
                     (identifier)))))))))))
+
+================================================================================
+Function with optional argument
+================================================================================
+
+Function(arg1?) {
+    return 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (param
+          (optional_identifier
+            (identifier)
+            (optional_marker)))))
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (single_expression
+            (literal
+              (integer_literal))))))))

@@ -344,3 +344,21 @@ static counter := 0
       (single_expression
         (literal
           (integer_literal))))))
+
+================================================================================
+Simple assignment with optional variable
+================================================================================
+
+x := var?
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (optional_identifier
+        (identifier)
+        (optional_marker)))))

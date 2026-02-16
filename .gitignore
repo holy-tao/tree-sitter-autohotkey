@@ -48,4 +48,5 @@ zig-out/
 *.jar
 
 # Tree sitter build artifacts
-src/
+src/*
+!src/scanner.c

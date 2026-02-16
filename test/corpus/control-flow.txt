@@ -681,15 +681,16 @@ for key, value in object {
       (identifier))
     (block
       (single_expression
-        (identifier))
-      (single_expression
         (assignment_operation
           (single_expression
-            (literal
-              (array_literal
-                (expression_sequence
-                  (single_expression
-                    (identifier))))))
+            (index_access
+              (single_expression
+                (identifier))
+              (arg_sequence
+                (arg
+                  (expression_sequence
+                    (single_expression
+                      (identifier)))))))
           (assignment_operator)
           (single_expression
             (identifier)))))))
@@ -714,15 +715,16 @@ for (key, value in object) {
       (identifier))
     (block
       (single_expression
-        (identifier))
-      (single_expression
         (assignment_operation
           (single_expression
-            (literal
-              (array_literal
-                (expression_sequence
-                  (single_expression
-                    (identifier))))))
+            (index_access
+              (single_expression
+                (identifier))
+              (arg_sequence
+                (arg
+                  (expression_sequence
+                    (single_expression
+                      (identifier)))))))
           (assignment_operator)
           (single_expression
             (identifier)))))))
@@ -1465,16 +1467,16 @@ loop {
     (block
       (single_expression
         (postfix_operation
-          (identifier)))))
-  (single_expression
-    (identifier))
-  (single_expression
-    (relational_operation
+          (identifier))))
+    (until_statement
+      (until)
       (single_expression
-        (identifier))
-      (single_expression
-        (literal
-          (float_literal))))))
+        (relational_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (literal
+              (float_literal))))))))
 
 ================================================================================
 Loop until with parentheses
@@ -1493,18 +1495,18 @@ until (x > 10)
     (block
       (single_expression
         (postfix_operation
-          (identifier)))))
-  (single_expression
-    (identifier))
-  (single_expression
-    (expression_sequence
+          (identifier))))
+    (until_statement
+      (until)
       (single_expression
-        (relational_operation
+        (expression_sequence
           (single_expression
-            (identifier))
-          (single_expression
-            (literal
-              (float_literal))))))))
+            (relational_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (literal
+                  (float_literal))))))))))
 
 ================================================================================
 If without braces (single statement)
