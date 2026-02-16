@@ -52,14 +52,17 @@ export default grammar({
   word: $ => $.identifier,
 
   conflicts: $ => [
-    [$.param, $._primary_expression],
-    // [$.byref_param, $.prefix_operation],
-    // [$.variadic_param, $.multiplicative_operation],
-    [$.variadic_param, $._primary_expression],
-    [$.function_declaration, $._primary_expression],
-    [$.function_declaration, $.variable_declaration],
-    [$.object_literal, $.block],
+    [$._primary_expression, $.param],
+    [$._primary_expression, $.variadic_param],
     [$._primary_expression, $.hotkey_trigger],
+    [$.object_literal, $.block],
+    [$._primary_expression, $.dynamic_identifier],
+    //[$._primary_expression, $.dynamic_identifier, $.param],
+    //[$._primary_expression, $.dynamic_identifier, $.variadic_param],
+    //[$._primary_expression, $.dynamic_identifier, $.hotkey_trigger],
+    //[$.single_expression, $.dynamic_identifier],
+    [$.single_expression, $._dynamic_identifier_chain],
+    [$._dynamic_identifier_chain]
   ],
 
   rules: {
@@ -107,8 +110,10 @@ export default grammar({
     _primary_expression: $ => choice(
       $.literal,
       $.identifier,
-      prec(3, seq("(", $.expression_sequence, ")")),
-      $._pairwise_operation
+      $.dynamic_identifier,
+      seq("(", $.expression_sequence, ")"),
+      $._pairwise_operation,
+      $.member_access
     ),
 
     // broader than _primary_expression, can compose other expressions (and themselves)
@@ -134,7 +139,8 @@ export default grammar({
     _non_paren_primary: $ => choice(
       $.literal,
       $.identifier,
-      $._pairwise_operation
+      $._pairwise_operation,
+      $.member_access
     ),
 
     _non_paren_expression: $ => choice(
@@ -147,7 +153,7 @@ export default grammar({
       $.fat_arrow_function,
       $.ternary_expression,
       $.dereference_operation,
-      $.varref_operation
+      $.varref_operation,
     ),
 
     // FIXME some declarations are contextually illegal - you can't delcare local variables in the auto-execute
@@ -177,7 +183,7 @@ export default grammar({
       field("right", $.single_expression)
     )),
 
-    dereference_operation: $ => prec(PREC.DEREFERENCE, seq(
+    dereference_operation: $ => prec.left(PREC.DEREFERENCE, seq(
       "%", $.single_expression, "%"
     )),
 
@@ -316,6 +322,36 @@ export default grammar({
       field("right", $.single_expression)
     )),
 
+    member_access: $ => prec(PREC.MEMBER_ACCESS, seq(
+      field("object", $.single_expression),
+      // TODO I think this is gonna cause problems with implicit concatenation
+      ".",
+      field("member", $.member_identifier)
+    )),
+
+    // Precedence should be lower than dynamic_identifier and _dynamic_identifier_chain so the chain in particular
+    // can consume tokens greedily
+    member_identifier: $ => prec(-1, choice(
+      $.identifier,
+      repeat1($.dereference_operation),
+      $.dynamic_identifier,
+    )),
+
+    // A combination of identifiers and derefs, such as `a%b%`
+    // Derefs can follow other derefs, like obj.%a%%b% - but the rules won't allow identifiers to follow other
+    // identifiers; that's just a longer single identifier.
+    // Adapted from: https://github.com/Descolada/keysharp/blob/master/Keysharp.Core/Scripting/Parser/Antlr/MainParser.g4#L480
+    dynamic_identifier: $ => prec.left(choice(
+      seq($.identifier, $._dynamic_identifier_chain),
+      $._dynamic_identifier_chain
+    )),
+
+    _dynamic_identifier_chain: $ => prec.right(seq(
+      repeat1($.dereference_operation), 
+      optional($.identifier), 
+      optional($._dynamic_identifier_chain)
+    )),
+
     assignment_operator: $ => 
       choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>="),
 
@@ -352,12 +388,12 @@ export default grammar({
     // FIXME static is the only valid scope identifier for function declarations, but
     // using an alias makes tree-sitter fail to resolve the conflict between the 
     // $scope_identifier $identifier sequence
-    function_declaration: $ => seq(
+    function_declaration: $ => prec(1, seq(
       optional($.scope_identifier),
       field("name", $.identifier),
       field("head", $.function_head),
       field("body", $.function_body)
-    ),
+    )),
 
     function_body: $ => choice(
       $.block,
@@ -508,7 +544,9 @@ export default grammar({
         prec(1, seq($.files, $._non_paren_expression, optional(seq(",", $._non_paren_expression)))),
         prec(1, seq($.reg, $._non_paren_expression, optional(seq(",", $._non_paren_expression))))
       )),
-      $.block
+      // TODO make a special loop_block that allows break and continue, remove them from generic block
+      $.block,
+      optional($.until_statement)
     ),
 
     until_statement: $ => seq($.until, $.single_expression),
