@@ -224,36 +224,37 @@ if (x > 10) {
               (integer_literal))))))
     (else_statement
       (else)
-      (if)
-      (single_expression
-        (expression_sequence
+      (if_statement
+        (if)
+        (single_expression
+          (expression_sequence
+            (single_expression
+              (relational_operation
+                (single_expression
+                  (identifier))
+                (single_expression
+                  (literal
+                    (integer_literal)))))))
+        (block
           (single_expression
-            (relational_operation
+            (assignment_operation
               (single_expression
                 (identifier))
+              (assignment_operator)
               (single_expression
                 (literal
-                  (integer_literal)))))))
-      (block
-        (single_expression
-          (assignment_operation
+                  (integer_literal))))))
+        (else_statement
+          (else)
+          (block
             (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))
-    (else_statement
-      (else)
-      (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))))
+              (assignment_operation
+                (single_expression
+                  (identifier))
+                (assignment_operator)
+                (single_expression
+                  (literal
+                    (integer_literal)))))))))))
 
 ================================================================================
 While loop
@@ -411,12 +412,15 @@ throw Error("Invalid value")
   (throw_statement
     (throw)
     (single_expression
-      (identifier)))
-  (single_expression
-    (expression_sequence
-      (single_expression
-        (literal
-          (string_literal))))))
+      (function_call
+        (single_expression
+          (identifier))
+        (arg_sequence
+          (arg
+            (expression_sequence
+              (single_expression
+                (literal
+                  (string_literal))))))))))
 
 ================================================================================
 Goto and label

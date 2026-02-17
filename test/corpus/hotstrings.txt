@@ -76,11 +76,14 @@ Execution hotstring with code block
       (hotstring_question))
     (hotstring_trigger)
     (block
-      (single_expression
-        (identifier))
-      (single_expression
-        (literal
-          (string_literal))))))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (arg
+            (expression_sequence
+              (single_expression
+                (literal
+                  (string_literal))))))))))
 
 ================================================================================
 Execution hotstring with function declaration
@@ -122,36 +125,45 @@ Execution hotstring with function declaration
                     (single_expression
                       (literal
                         (string_literal)))))))
-            (single_expression
-              (identifier)))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (identifier))
-          (if_statement
-            (if)
-            (single_expression
-              (expression_sequence
-                (single_expression
-                  (equality_operation
-                    (single_expression
-                      (identifier))
+            (call_statement
+              (identifier)
+              (arg_sequence
+                (arg
+                  (expression_sequence
                     (single_expression
                       (literal
                         (string_literal)))))))
-            (single_expression
-              (identifier)))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier))
-          (single_expression
-            (literal
-              (string_literal))))))))
+            (else_statement
+              (else)
+              (if_statement
+                (if)
+                (single_expression
+                  (expression_sequence
+                    (single_expression
+                      (equality_operation
+                        (single_expression
+                          (identifier))
+                        (single_expression
+                          (literal
+                            (string_literal)))))))
+                (call_statement
+                  (identifier)
+                  (arg_sequence
+                    (arg
+                      (expression_sequence
+                        (single_expression
+                          (literal
+                            (string_literal)))))))
+                (else_statement
+                  (else)
+                  (call_statement
+                    (identifier)
+                    (arg_sequence
+                      (arg
+                        (expression_sequence
+                          (single_expression
+                            (literal
+                              (string_literal))))))))))))))))
 
 ================================================================================
 Option: asterisk (*)
@@ -602,11 +614,14 @@ Edge case: options with code block
       (hotstring_asterisk))
     (hotstring_trigger)
     (block
-      (single_expression
-        (identifier))
-      (single_expression
-        (literal
-          (string_literal))))))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (arg
+            (expression_sequence
+              (single_expression
+                (literal
+                  (string_literal))))))))))
 
 ================================================================================
 Edge case: options with unbraced statements
@@ -622,11 +637,14 @@ Edge case: options with unbraced statements
     (hotstring_modifier
       (hotstring_asterisk))
     (hotstring_trigger)
-    (single_expression
-      (identifier))
-    (single_expression
-      (literal
-        (string_literal)))))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))))))
 
 ================================================================================
 Edge case: alphanumeric trigger

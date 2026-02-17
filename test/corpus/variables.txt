@@ -1,16 +1,4 @@
 ================================================================================
-Simple identifier
-================================================================================
-
-myVar
-
---------------------------------------------------------------------------------
-
-(source_file
-  (single_expression
-    (identifier)))
-
-================================================================================
 Case insensitive identifier uppercase
 ================================================================================
 
@@ -138,25 +126,37 @@ STATIC myStatic
 Identifier with underscore
 ================================================================================
 
-_privateVar
+_privateVar := 0
 
 --------------------------------------------------------------------------------
 
 (source_file
   (single_expression
-    (identifier)))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (integer_literal))))))
 
 ================================================================================
 Identifier with numbers
 ================================================================================
 
-var123
+var123 := 321
 
 --------------------------------------------------------------------------------
 
 (source_file
   (single_expression
-    (identifier)))
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (float_literal))))))
 
 ================================================================================
 VarRef with initializer

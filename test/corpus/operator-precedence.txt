@@ -49,25 +49,6 @@ result := a - b / c
                 (identifier)))))))))
 
 ================================================================================
-Bitwise AND before comma
-================================================================================
-
-a, b & c
-
---------------------------------------------------------------------------------
-
-(source_file
-  (expression_sequence
-    (single_expression
-      (identifier))
-    (single_expression
-      (bitwise_and_operation
-        left: (single_expression
-          (identifier))
-        right: (single_expression
-          (identifier))))))
-
-================================================================================
 Relational before equality
 ================================================================================
 

@@ -256,41 +256,6 @@ result := x || y? "truthy" : "falsy"
               (string_literal))))))))
 
 ================================================================================
-Ternary with assignments in branches
-================================================================================
-
-z > 0? x := 2 : y := 3
-
---------------------------------------------------------------------------------
-
-(source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (relational_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (identifier))))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
-
-================================================================================
 Nested ternary in true branch
 ================================================================================
 

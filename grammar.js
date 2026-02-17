@@ -54,7 +54,9 @@ export default grammar({
   word: $ => $.identifier,
 
   externals: $ => [
-    $.optional_marker
+    $.optional_marker,
+    $._function_def_marker,
+    $.empty_arg
   ],
 
   conflicts: $ => [
@@ -63,12 +65,18 @@ export default grammar({
     [$._primary_expression, $.hotkey_trigger],
     [$.object_literal, $.block],
     [$._primary_expression, $.dynamic_identifier],
+    //[$._primary_expression, $.dynamic_identifier, $.call_statement],
+    //[$._primary_expression, $.call_statement],
+    //[$._primary_expression, $.call_statement, $.hotkey_trigger],
+    [$.dynamic_identifier],
+    [$.arrow, $.function_body],
     //[$._primary_expression, $.dynamic_identifier, $.param],
     //[$._primary_expression, $.dynamic_identifier, $.variadic_param],
     //[$._primary_expression, $.dynamic_identifier, $.hotkey_trigger],
     //[$.single_expression, $.dynamic_identifier],
     [$.single_expression, $._dynamic_identifier_chain],
-    [$._dynamic_identifier_chain]
+    [$._dynamic_identifier_chain],
+    [$.if_statement, $.else_statement]
   ],
 
   rules: {
@@ -82,12 +90,15 @@ export default grammar({
 
     // TODO refactor this, refer here: https://www.autohotkey.com/docs/v2/Language.htm#expression-statements
     _statement: $ => prec(2, choice(
-      $.directive,        // Directives are allowed anywhere but executed unconditionally
+      // Directives are allowed anywhere but executed unconditionally
+      $.directive,
       $.function_declaration,
       $.class_declaration,
+      $.call_statement,  // call_statements only at statement level
       $.single_expression,
       $.expression_sequence,
-      $.block,
+      // blocks are allowed at the top level, though they don't do anything
+      $.block,  
       $.label,
       $._control_flow_statement,
       $._loop_flow_statement
@@ -121,7 +132,8 @@ export default grammar({
       seq("(", $.expression_sequence, ")"),
       $._pairwise_operation,
       $.member_access,
-      $.index_access
+      $.index_access,
+      $.function_call  // Only parenthesized calls allowed in expressions
     ),
 
     // broader than _primary_expression, can compose other expressions (and themselves)
@@ -222,7 +234,10 @@ export default grammar({
     // Postfix increment/decrement
     postfix_operation: $ => prec.left(PREC.POSTFIX, seq(
       field("operand", $._primary_expression),
-      field("operator", choice("++", "--"))
+      field("operator", choice(
+        token.immediate("++"), 
+        token.immediate("--")
+      ))
     )),
 
     // Prefix increment/decrement and high-precedence unary operators
@@ -345,43 +360,6 @@ export default grammar({
       field("member", $.member_identifier)
     )),
 
-    // Maybe "subscript access", the docs call it index access
-    // See https://www.autohotkey.com/docs/v2/Variables.htm#square-brackets
-    index_access: $ => prec(PREC.OVERRIDE, seq(
-      field("object", $.single_expression),
-      "[",
-      optional($.arg_sequence), 
-      "]"
-    )),
-
-    arg_sequence: $ => choice(
-      // Args without expansion
-      seq(
-        $.arg,
-        repeat(seq(",", $.arg))
-      ),
-      // Single arg with expansion
-      seq(
-        $.single_expression,
-        $.array_expansion_marker
-      ),
-      // Multiple args with last one having expansion
-      seq(
-        $.arg,
-        repeat(seq(",", $.arg)),
-        ",",
-        $.single_expression,
-        $.array_expansion_marker
-      )
-    ),
-
-    array_expansion_marker: $ => token.immediate("*"),
-
-    arg: $ => prec.right(choice(
-      $.expression_sequence,
-      $.optional_identifier,
-    )),
-
     // Precedence should be lower than dynamic_identifier and _dynamic_identifier_chain so the chain in particular
     // can consume tokens greedily
     member_identifier: $ => prec(-1, choice(
@@ -432,9 +410,74 @@ export default grammar({
 
     //#endregion
 
-    //#region Functions
+    //#region Function-like
+
+    // Maybe "subscript access", the docs call it index access
+    // See https://www.autohotkey.com/docs/v2/Variables.htm#square-brackets
+    index_access: $ => prec(PREC.OVERRIDE, seq(
+      field("object", $.single_expression),
+      token.immediate("["),
+      optional($.arg_sequence), 
+      "]"
+    )),
+
+    // MsgBox("Hello", "Example", "IconI OK")
+    // Can be used in expressions
+    function_call: $ => prec(PREC.OVERRIDE, seq(
+      field("function", $.single_expression),
+      token.immediate("("),
+      optional($.arg_sequence),
+      ")"
+    )),
+
+    // MsgBox "Hello", "Example", "IconI OK"
+    // Can only be used as a statement (not in expressions)
+    call_statement: $ => prec.right(PREC.OVERRIDE, seq(
+      // Only simple identifiers and object members for command-style
+      field("function", choice(
+        $.identifier, 
+        $.member_access
+      )),
+      optional($.arg_sequence)
+    )),
+
+    arg: $ => choice(
+      $.expression_sequence,
+      $.optional_identifier,
+      $.empty_arg
+    ),
+
+    arg_sequence: $ => prec.right(choice(
+      // Args without expansion
+      seq(
+        $.arg,
+        repeat(seq(",", $.arg)),
+        /**
+         * A trailing comma is allowed but ignored - you can test this
+         *    Function(params*) => MsgBox(params.length)
+         *    Function(1,) ; "1"
+         */
+        optional(",")
+      ),
+      // Single arg with expansion
+      seq(
+        $.single_expression,
+        $.array_expansion_marker
+      ),
+      // Multiple args with last one having expansion
+      seq(
+        $.arg,
+        repeat(seq(",", $.arg)),
+        ",",
+        $.single_expression,
+        $.array_expansion_marker
+      )
+    )),
+
+    array_expansion_marker: $ => token.immediate("*"),
+
+    //#region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
-      // TODO this fails to match the wildcard (*) and variadic arguments (params*)
       $.function_head,
       $.arrow,
       field("body", $._primary_expression)
@@ -445,12 +488,13 @@ export default grammar({
     // FIXME static is the only valid scope identifier for function declarations, but
     // using an alias makes tree-sitter fail to resolve the conflict between the 
     // $scope_identifier $identifier sequence
-    function_declaration: $ => prec(1, seq(
+    function_declaration: $ => seq(
+      $._function_def_marker,
       optional($.scope_identifier),
       field("name", $.identifier),
       field("head", $.function_head),
       field("body", $.function_body)
-    )),
+    ),
 
     function_body: $ => choice(
       $.block,
@@ -591,8 +635,8 @@ export default grammar({
     else_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.else,
       choice(
-        seq($.if, $.single_expression, $.block),  // else if (condition) { ... }
-        $.block                                     // else { ... }
+        seq($.if, $.single_expression, choice($.block, $._statement)),  // else if (condition) ... (with or without braces)
+        choice($.block, $._statement)                                    // else ... (with or without braces)
       )
     )),
 
@@ -645,7 +689,7 @@ export default grammar({
 
     label: $ => prec(1, seq(
       $.identifier,
-      ":"
+      token.immediate(":")
     )),
 
     for_statement: $ => prec.right(PREC.DEFAULT, seq(
@@ -845,8 +889,7 @@ export default grammar({
     //#region Hotstrings
     // See: https://www.autohotkey.com/docs/v2/Hotstrings.htm
     // See also KeySharp's ANTLR grammmar: https://github.com/Descolada/keysharp/blob/master/Keysharp.Core/Scripting/Parser/Antlr/MainLexer.g4#L60
-    hotstring: $ => prec.right(-2,
-      seq(
+    hotstring: $ => prec.right(seq(
         ":",
         repeat($.hotstring_modifier),
         token.immediate(":"),

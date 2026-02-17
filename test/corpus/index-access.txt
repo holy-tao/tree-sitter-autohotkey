@@ -610,3 +610,51 @@ val := arr[1] + arr[2]
                     (single_expression
                       (literal
                         (integer_literal)))))))))))))
+
+================================================================================
+Index access with empty argument
+================================================================================
+
+val := arr[, arg2]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (index_access
+          (single_expression
+            (identifier))
+          (arg_sequence
+            (arg
+              (empty_arg))
+            (arg
+              (expression_sequence
+                (single_expression
+                  (identifier))))))))))
+
+================================================================================
+Index access with empty arg and trailing comma
+================================================================================
+
+val := arr[,]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (index_access
+          (single_expression
+            (identifier))
+          (arg_sequence
+            (arg
+              (empty_arg))))))))

@@ -1,0 +1,346 @@
+================================================================================
+Simple call
+================================================================================
+
+MsgBox("Hello, World!")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (identifier))
+      (arg_sequence
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Simple call statement
+================================================================================
+
+MsgBox "Hello, World!"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (arg
+        (expression_sequence
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Function call with multiple arguments
+================================================================================
+
+MsgBox("Hello, World!", A_ScriptName, "Iconi OK")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (identifier))
+      (arg_sequence
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))
+        (arg
+          (expression_sequence
+            (single_expression
+              (identifier))))
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Function call empty argument
+================================================================================
+
+Function(, "Second argument")
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (identifier))
+      (arg_sequence
+        (arg
+          (empty_arg))
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Call statement with empty argument
+================================================================================
+
+Function , "Second argument"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (arg
+        (empty_arg))
+      (arg
+        (expression_sequence
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Function call with trailing comma
+================================================================================
+
+Function(,)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (identifier))
+      (arg_sequence
+        (arg
+          (empty_arg))))))
+
+================================================================================
+Call statement with trailing comma
+================================================================================
+
+Function , 
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (arg
+        (empty_arg)))))
+
+================================================================================
+Call statement with multiple arguments
+================================================================================
+
+MsgBox "Hello, World!", A_ScriptName, "Iconi OK"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (arg
+        (expression_sequence
+          (single_expression
+            (literal
+              (string_literal)))))
+      (arg
+        (expression_sequence
+          (single_expression
+            (identifier))))
+      (arg
+        (expression_sequence
+          (single_expression
+            (literal
+              (string_literal))))))))
+
+================================================================================
+Function call with arguments accross multiple lines
+================================================================================
+
+MsgBox(
+    "Hello, World!", 
+    A_ScriptName, 
+    "Iconi OK"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (identifier))
+      (arg_sequence
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))
+        (arg
+          (expression_sequence
+            (single_expression
+              (identifier))))
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))))))
+
+================================================================================
+Chained function calls
+================================================================================
+
+First().Second().Third()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (member_access
+          (single_expression
+            (function_call
+              (single_expression
+                (member_access
+                  (single_expression
+                    (function_call
+                      (single_expression
+                        (identifier))))
+                  (member_identifier
+                    (identifier))))))
+          (member_identifier
+            (identifier)))))))
+
+================================================================================
+Chained function calls multiline
+================================================================================
+
+First().Second().Third()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (member_access
+          (single_expression
+            (function_call
+              (single_expression
+                (member_access
+                  (single_expression
+                    (function_call
+                      (single_expression
+                        (identifier))))
+                  (member_identifier
+                    (identifier))))))
+          (member_identifier
+            (identifier)))))))
+
+================================================================================
+Method call
+================================================================================
+
+obj.Method(1, 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (member_access
+          (single_expression
+            (identifier))
+          (member_identifier
+            (identifier))))
+      (arg_sequence
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (integer_literal)))))
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (integer_literal)))))))))
+
+================================================================================
+Method call statement
+================================================================================
+
+obj.Method 1, 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (member_access
+      (single_expression
+        (identifier))
+      (member_identifier
+        (identifier)))
+    (arg_sequence
+      (arg
+        (expression_sequence
+          (single_expression
+            (literal
+              (integer_literal)))))
+      (arg
+        (expression_sequence
+          (single_expression
+            (literal
+              (integer_literal))))))))
+
+================================================================================
+Call with dynamic identifier
+================================================================================
+
+%object%(1, 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (dereference_operation
+          (single_expression
+            (identifier))))
+      (arg_sequence
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (integer_literal)))))
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (integer_literal)))))))))
+
+================================================================================
+Call statement with no arguments
+================================================================================
+
+Critical
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)))
