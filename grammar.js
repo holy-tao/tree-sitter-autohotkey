@@ -15,28 +15,29 @@ const PREC = {
   DEFAULT: 0,                // Just for readability
   ASSIGNMENT: 0,             // :=, +=, -=, etc.
   TERNARY: 10,               // ?:
-  LOGICAL_OR: 20,            // ||, or
-  LOGICAL_AND: 30,           // &&, and
-  LOGICAL_NOT: 40,           // not (verbal NOT operator)
-  CASE_INSENSITIVE: 50,      // is (type comparison)
-  REGEX_MATCH: 60,           // ~= (regex match)
-  INEQUALITY: 70,            // !=, !==
-  EQUALITY: 80,              // =, ==
-  RELATIONAL: 90,            // <, >, <=, >=
-  CONCAT: 100,               // . (with spaces - a.b is member access, a . b is concatenation)
-  BITWISE_OR: 110,           // |
-  BITWISE_XOR: 120,          // ^
-  BITWISE_AND: 130,          // &
-  SHIFT: 140,                // <<, >>, >>>
-  ADDITIVE: 150,             // +, -
-  MULTIPLICATIVE: 160,       // *, /, //
-  EXPONENT: 170,             // **
-  PREFIX: 180,               // ++, --, unary +, -, !, ~, &
-  POSTFIX: 190,              // ++, --
-  MAYBE: 200,                // ?
-  MEMBER_ACCESS: 210,        // a.b (not yet implemented)
-  DEREFERENCE: 220,          // %expr%
-  OVERRIDE: 250,             // item access, call access, etc. override other operator precedences
+  OR_MAYBE: 20,              // var ?? default
+  LOGICAL_OR: 30,            // ||, or
+  LOGICAL_AND: 40,           // &&, and
+  LOGICAL_NOT: 50,           // not (verbal NOT operator)
+  CASE_INSENSITIVE: 60,      // is (type comparison)
+  REGEX_MATCH: 70,           // ~= (regex match)
+  INEQUALITY: 80,            // !=, !==
+  EQUALITY: 90,              // =, ==
+  RELATIONAL: 100,           // <, >, <=, >=
+  CONCAT: 110,               // . (with spaces - a.b is member access, a . b is concatenation)
+  BITWISE_OR: 120,           // |
+  BITWISE_XOR: 130,          // ^
+  BITWISE_AND: 140,          // &
+  SHIFT: 150,                // <<, >>, >>>
+  ADDITIVE: 160,             // +, -
+  MULTIPLICATIVE: 170,       // *, /, //
+  EXPONENT: 180,             // **
+  PREFIX: 190,               // ++, --, unary +, -, !, ~, &
+  POSTFIX: 200,              // ++, --
+  MAYBE: 210,                // ?
+  MEMBER_ACCESS: 220,        // a.b (not yet implemented)
+  DEREFERENCE: 230,          // %expr%
+  OVERRIDE: 500,             // item access, call access, etc. override other operator precedences
   KEYWORD: 9999,             // Keywords should match before other identifiers
 };
 
@@ -214,7 +215,8 @@ export default grammar({
       $.bitwise_or_operation,
       $.bitshift_operation,
       $.explicit_concat_operation,
-      $.exponent_operation
+      $.exponent_operation,
+      $.or_maybe_operation
     ),
 
     // Postfix increment/decrement
@@ -326,6 +328,13 @@ export default grammar({
     exponent_operation: $ => prec.left(PREC.EXPONENT, seq(
       field("left", $.single_expression),
       field("operator", "**"),
+      field("right", $.single_expression)
+    )),
+
+    // "unset-coalescing"; the docs call this the or-maybe operator so I'm going with that
+    or_maybe_operation: $ => prec.left(PREC.OR_MAYBE, seq(
+      field("left", $.single_expression),
+      field("operator", "??"),
       field("right", $.single_expression)
     )),
 

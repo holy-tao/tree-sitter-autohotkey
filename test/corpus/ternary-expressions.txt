@@ -969,3 +969,78 @@ flag? x += 1 : y -= 1
       (single_expression
         (literal
           (integer_literal))))))
+
+================================================================================
+Ternary with or-maybe on one side
+================================================================================
+
+flag? a : b ?? c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (ternary_expression
+      (single_expression
+        (identifier))
+      (single_expression
+        (identifier))
+      (single_expression
+        (or_maybe_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Ternary with or-maybe on both sides
+================================================================================
+
+flag? a ?? b : c ?? d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (ternary_expression
+      (single_expression
+        (identifier))
+      (single_expression
+        (or_maybe_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier))))
+      (single_expression
+        (or_maybe_operation
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))
+
+================================================================================
+Or-maybe with ternary expression
+================================================================================
+
+var := a ?? b ? c : d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (ternary_expression
+          (single_expression
+            (or_maybe_operation
+              (single_expression
+                (identifier))
+              (single_expression
+                (identifier))))
+          (single_expression
+            (identifier))
+          (single_expression
+            (identifier)))))))

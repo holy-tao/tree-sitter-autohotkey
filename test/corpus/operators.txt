@@ -487,3 +487,19 @@ a ~= b
         (identifier))
       (single_expression
         (identifier)))))
+
+================================================================================
+Or-maybe operation
+================================================================================
+
+a ?? b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (or_maybe_operation
+      (single_expression
+        (identifier))
+      (single_expression
+        (identifier)))))
