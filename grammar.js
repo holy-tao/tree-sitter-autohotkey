@@ -12,7 +12,7 @@
 const PREC = {
   COMMENT: -30,              // Must be lower than string literals, should be pretty low in general
   COMMA: -20,                // Comma operator (lowest)
-  FAT_ARROW_FUNCTION: -10,   // () => expr (not implemented)
+  FAT_ARROW_FUNCTION: -10,   // () => expr
   DEFAULT: 0,                // Just for readability
   ASSIGNMENT: 0,             // :=, +=, -=, etc.
   TERNARY: 10,               // ?:
@@ -36,7 +36,7 @@ const PREC = {
   PREFIX: 190,               // ++, --, unary +, -, !, ~, &
   POSTFIX: 200,              // ++, --
   MAYBE: 210,                // ?
-  MEMBER_ACCESS: 220,        // a.b (not yet implemented)
+  MEMBER_ACCESS: 220,        // a.b
   DEREFERENCE: 230,          // %expr%
   OVERRIDE: 500,             // item access, call access, etc. override other operator precedences
   KEYWORD: 9999,             // Keywords should match before other identifiers
@@ -63,18 +63,9 @@ export default grammar({
   conflicts: $ => [
     [$._primary_expression, $.param],
     [$._primary_expression, $.variadic_param],
-    [$._primary_expression, $.hotkey_trigger],
     [$.object_literal, $.block],
     [$._primary_expression, $.dynamic_identifier],
-    //[$._primary_expression, $.dynamic_identifier, $.call_statement],
-    //[$._primary_expression, $.call_statement],
-    //[$._primary_expression, $.call_statement, $.hotkey_trigger],
     [$.dynamic_identifier],
-    [$.arrow, $.function_body],
-    //[$._primary_expression, $.dynamic_identifier, $.param],
-    //[$._primary_expression, $.dynamic_identifier, $.variadic_param],
-    //[$._primary_expression, $.dynamic_identifier, $.hotkey_trigger],
-    //[$.single_expression, $.dynamic_identifier],
     [$.single_expression, $._dynamic_identifier_chain],
     [$._dynamic_identifier_chain],
     [$.if_statement, $.else_statement]
@@ -139,7 +130,6 @@ export default grammar({
       $.continue_statement
     ),
 
-    // conceptually, something you could put in an otherwise empty .ahk file and run without errors
     _primary_expression: $ => choice(
       $.literal,
       $.identifier,
@@ -151,7 +141,6 @@ export default grammar({
       $.function_call  // Only parenthesized calls allowed in expressions
     ),
 
-    // broader than _primary_expression, can compose other expressions (and themselves)
     single_expression: $ => choice(
       $.variable_declaration,
       $._primary_expression,
@@ -209,9 +198,6 @@ export default grammar({
     //#endregion
 
     //#region Operators
-    // TODO left-hand-side can be an accessor like outer.inner but scope identifier can't precede accessor
-    // TODO rhs can be literal or statement - probably primary expression
-    // TODO make these fields
     assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
       field("left", $.single_expression),
       $.assignment_operator,
@@ -546,8 +532,6 @@ export default grammar({
     _initializer: $ => seq(
       alias(":=", $.assignment_operator), 
       $.single_expression),
-
-    // Handled by external scanner - matches "?" only when followed by )]},: or EOF
 
     byref_param: $ => seq("&", $.param),
 
