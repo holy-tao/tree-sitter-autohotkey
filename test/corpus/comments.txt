@@ -1,0 +1,246 @@
+================================================================================
+Basic line comment
+================================================================================
+
+; line comment
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment))
+
+================================================================================
+Basic "directive" comment
+================================================================================
+
+;@region Example
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment))
+
+================================================================================
+Line comment after statement
+================================================================================
+
+a := 1 ; line comment
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (integer_literal)))))
+  (line_comment))
+
+================================================================================
+String literal with escaped semicolon
+================================================================================
+
+str := "string `; not a comment"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (string_literal))))))
+
+================================================================================
+String literal with unescaped semicolon
+:error
+================================================================================
+
+str := "string ; not a comment"
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Several line comments in a row
+================================================================================
+
+; line comment 1
+; line comment 2
+; line comment 3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (line_comment)
+  (line_comment))
+
+================================================================================
+Basic block comment
+================================================================================
+
+/*
+ * A block comment
+ */
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (block_comment))
+
+================================================================================
+Single-line block comment
+================================================================================
+
+/* A block comment */
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (block_comment))
+
+================================================================================
+String with block comment
+================================================================================
+
+str := "/* not a block comment */"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (literal
+          (string_literal
+            (block_comment)))))))
+
+================================================================================
+Line comments in code block
+================================================================================
+
+MyFirstScript() {
+    ; TODO make this cooler
+    MsgBox("Hello, World!")
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (line_comment)
+        (single_expression
+          (function_call
+            (single_expression
+              (identifier))
+            (arg_sequence
+              (arg
+                (expression_sequence
+                  (single_expression
+                    (literal
+                      (string_literal))))))))))))
+
+================================================================================
+Block comment with line comment in it
+================================================================================
+
+/**
+ * ; Still a block comment
+ */
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (block_comment))
+
+================================================================================
+Line comment in an expression sequence
+================================================================================
+
+vals := Map(
+    "one", 1,   ; The number 1
+    "two", 2    ; The number 2
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (assignment_operation
+      (single_expression
+        (identifier))
+      (assignment_operator)
+      (single_expression
+        (function_call
+          (single_expression
+            (identifier))
+          (arg_sequence
+            (arg
+              (expression_sequence
+                (single_expression
+                  (literal
+                    (string_literal)))))
+            (arg
+              (expression_sequence
+                (single_expression
+                  (literal
+                    (integer_literal)))))
+            (line_comment)
+            (arg
+              (expression_sequence
+                (single_expression
+                  (literal
+                    (string_literal)))))
+            (arg
+              (expression_sequence
+                (single_expression
+                  (literal
+                    (integer_literal))))))
+          (line_comment))))))
+
+================================================================================
+Line comment in a method call
+================================================================================
+
+obj.Function(
+    0xFF,       ; Everything
+    "Some super important argument"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (single_expression
+    (function_call
+      (single_expression
+        (member_access
+          (single_expression
+            (identifier))
+          (member_identifier
+            (identifier))))
+      (arg_sequence
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (hex_literal)))))
+        (line_comment)
+        (arg
+          (expression_sequence
+            (single_expression
+              (literal
+                (string_literal)))))))))

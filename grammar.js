@@ -10,6 +10,7 @@
 // Precedence levels (from lowest to highest)
 // Based on https://www.autohotkey.com/docs/v2/Variables.htm#operators
 const PREC = {
+  COMMENT: -30,              // Must be lower than string literals, should be pretty low in general
   COMMA: -20,                // Comma operator (lowest)
   FAT_ARROW_FUNCTION: -10,   // () => expr (not implemented)
   DEFAULT: 0,                // Just for readability
@@ -79,6 +80,12 @@ export default grammar({
     [$.if_statement, $.else_statement]
   ],
 
+  extras: $ => [
+    /\s/,
+    $.line_comment,
+    $.block_comment
+  ],
+
   rules: {
     source_file: $ => repeat($._top_level_statement),
 
@@ -101,8 +108,16 @@ export default grammar({
       $.block,  
       $.label,
       $._control_flow_statement,
-      $._loop_flow_statement
+      $._loop_flow_statement    
     )),
+
+    // NOTE: this is actually more permissive than the AHK interpreter, which doesn't allow block comments inline
+    // and requires a space before the ';' to start a line comment. For analysis purposes, this is fine. Feed your
+    // script through /validate beforehand to check for overt syntax errors.
+    // Precedence must be lower than string literals
+    // TODO we could probably parse JSDoc comments and compiler directives like ;@ahk2exe-ignorebegin
+    line_comment: $ => prec(PREC.COMMENT, token(/;[^\r\n]*/)),
+    block_comment: $ => prec(PREC.COMMENT, token(/\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\//)),
 
     //#region General Expressions
 

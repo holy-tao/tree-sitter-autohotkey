@@ -11,19 +11,23 @@ You can grab a compiled binary and the c source files from the latest successful
 
 ### Known Differences From the AHK Interpreter
 
-The grammar chooses simplicity over correctness in a few places, mostly to avoid contextual lexing and parsing. Not anywhere that will cause it to parse totally incorrect AutoHotkey scripts, but those trying to use the grammar should be aware of the following notes:
+The grammar is, by design, ***more permissive*** than the AutoHotkey interpreter. This is partly for reasons of laziness, partly because the AHK interpreter is extremely inconsistent and tree-sitter trades simplicity for some of the tools that would be required to handle it's inconsistencies with any reasonable amount of accuracy. It should produce an accurate parse tree for any valid AutoHotkey, but it is not intended to validate syntax and indeed will not do that. I recommmend running your script through the interpreter you intend to use with it with the [/Validate](https://www.autohotkey.com/docs/v2/Scripts.htm#cmd) flag to ensure that it does not contain syntax errors.
+
+
+A reasonably complete list of known differences from the AutoHotkey interpreter follows:
+
 - The grammar allows the [scope modifiers](https://www.autohotkey.com/docs/v2/Functions.htm#Locals) `local` and `global` in a few places where they're actually illegal. These are contextual and trivial to filter for in situations where that context is available (when walking the tree, for example):
   - Class property declarations
   - Variable declarations in the [auto-execute](https://www.autohotkey.com/docs/v2/Scripts.htm#auto) section
   - Function (including method, see below) declarations
-    - Related, the grammar permits [static function](https://www.autohotkey.com/docs/v2/Functions.htm#static-functions) declarations in the auto-execute section 
+- Related, the grammar permits [static function](https://www.autohotkey.com/docs/v2/Functions.htm#static-functions) declarations in the auto-execute section 
 - The grammar makes no distinction between method and function declarations. A method is simply a function attached to an object, therefore a method *declaration* is simply a function declaration inside the body of a class declaration
-- The grammar doesn't currently filter identifiers for keywords - `local := 1` will be parsed as a valid assignment operation, though `local` is reserved.
-- The grammer permits `else if` clauses in `try` and `for` statements
-- The grammar permits `continue` and `break` statements outside of loops
-- The grammar generally doesn't handle AutoHotkey's whitespace requirements. This mostly means that it'll allow some invalid line continuations. Places where whitespace is required should work fine, since it's easy to put explicit whitespace in a token.
-
-There is no official AutoHotkey grammar - the source of truth is whatever the interpreter will let you get away with. If you find that the interpreter lets you do something the grammar doesn't, please open an issue. If you find that the *grammar* permits something that the interpreter doesn't, I might not fix it.
+- It really doesn't know anything about keywords (or, for that matter, built-in functions)
+  - The grammar doesn't currently filter identifiers for keywords - `local := 1` will be parsed as a valid assignment operation, though `local` is reserved.
+  - The grammer permits `else if` clauses in `try` and `for` statements
+  - The grammar permits `continue` and `break` statements outside of loops
+- The grammar will allow illegal line continuations in a variety of places.
+- The grammar allows comments in illegal places - for example, block comments inline with code.
 
 ## Contributing
 
