@@ -7,21 +7,13 @@ val := arr[1]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (integer_literal)))))
 
 ================================================================================
 Index access without arguments
@@ -32,15 +24,11 @@ val := arr[]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier))))
 
 ================================================================================
 Index access with two arguments
@@ -51,24 +39,14 @@ val := arr[arg1, arg2]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (identifier))))
-            (arg
-              (expression_sequence
-                (single_expression
-                  (identifier))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Index access with two arguments
@@ -79,24 +57,14 @@ val := arr[arg1, arg2]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (identifier))))
-            (arg
-              (expression_sequence
-                (single_expression
-                  (identifier))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Index access with array expansion
@@ -107,19 +75,14 @@ val := arr[arg1*]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (single_expression
-              (identifier))
-            (array_expansion_marker)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (identifier)
+        (array_expansion_marker)))))
 
 ================================================================================
 Index access with multiple arguments and array expansion
@@ -130,23 +93,15 @@ val := arr[arg1, arg2*]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (identifier))))
-            (single_expression
-              (identifier))
-            (array_expansion_marker)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (identifier)
+        (identifier)
+        (array_expansion_marker)))))
 
 ================================================================================
 Index access with arg with assignment
@@ -157,30 +112,18 @@ val := arr[arg1 := a + 2]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (additive_operation
-                        (single_expression
-                          (identifier))
-                        (single_expression
-                          (literal
-                            (integer_literal)))))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (additive_operation
+            (identifier)
+            (integer_literal)))))))
 
 ================================================================================
 Index access split over multiple lines
@@ -194,42 +137,22 @@ val := arr[
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (additive_operation
-                        (single_expression
-                          (identifier))
-                        (single_expression
-                          (literal
-                            (integer_literal)))))))))
-            (arg
-              (expression_sequence
-                (single_expression
-                  (ternary_expression
-                    (single_expression
-                      (identifier))
-                    (single_expression
-                      (literal
-                        (boolean_literal)))
-                    (single_expression
-                      (literal
-                        (boolean_literal)))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (additive_operation
+            (identifier)
+            (integer_literal)))
+        (ternary_expression
+          (identifier)
+          (boolean_literal)
+          (boolean_literal))))))
 
 ================================================================================
 Index access to object member
@@ -240,25 +163,16 @@ val := obj.property[1]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (member_access
-              (single_expression
-                (identifier))
-              (member_identifier
-                (identifier))))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (member_access
+        (identifier)
+        (member_identifier
+          (identifier)))
+      (arg_sequence
+        (integer_literal)))))
 
 ================================================================================
 Index access to dynamic reference
@@ -269,23 +183,14 @@ val := %array%[1]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (dereference_operation
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (dereference_operation
-              (single_expression
-                (identifier))))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+      (arg_sequence
+        (integer_literal)))))
 
 ================================================================================
 Index access to dynamic object member
@@ -296,28 +201,18 @@ val := obj.%array%[1]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (member_access
-              (single_expression
-                (identifier))
-              (member_identifier
-                (dynamic_identifier
-                  (dereference_operation
-                    (single_expression
-                      (identifier)))))))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (member_access
+        (identifier)
+        (member_identifier
+          (dynamic_identifier
+            (dereference_operation
+              (identifier)))))
+      (arg_sequence
+        (integer_literal)))))
 
 ================================================================================
 Chained index access
@@ -328,29 +223,16 @@ val := arr[1][1]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (index_access
-              (single_expression
-                (identifier))
-              (arg_sequence
-                (arg
-                  (expression_sequence
-                    (single_expression
-                      (literal
-                        (integer_literal))))))))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (index_access
+        (identifier)
+        (arg_sequence
+          (integer_literal)))
+      (arg_sequence
+        (integer_literal)))))
 
 ================================================================================
 Index access with array literal
@@ -361,32 +243,17 @@ val := ["first", "second", "third"][2]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (literal
-              (array_literal
-                (expression_sequence
-                  (single_expression
-                    (literal
-                      (string_literal)))
-                  (single_expression
-                    (literal
-                      (string_literal)))
-                  (single_expression
-                    (literal
-                      (string_literal)))))))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (array_literal
+        (expression_sequence
+          (string_literal)
+          (string_literal)
+          (string_literal)))
+      (arg_sequence
+        (integer_literal)))))
 
 ================================================================================
 Index access with array literal as argument
@@ -397,31 +264,17 @@ val := obj[[1, 2, 3]]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (array_literal
-                      (expression_sequence
-                        (single_expression
-                          (literal
-                            (integer_literal)))
-                        (single_expression
-                          (literal
-                            (integer_literal)))
-                        (single_expression
-                          (literal
-                            (integer_literal)))))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (array_literal
+          (expression_sequence
+            (integer_literal)
+            (integer_literal)
+            (integer_literal)))))))
 
 ================================================================================
 Index access with array literal and other expression as argument
@@ -432,36 +285,18 @@ val := obj["str", [1, 2, 3]]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (string_literal)))))
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (array_literal
-                      (expression_sequence
-                        (single_expression
-                          (literal
-                            (integer_literal)))
-                        (single_expression
-                          (literal
-                            (integer_literal)))
-                        (single_expression
-                          (literal
-                            (integer_literal)))))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (string_literal)
+        (array_literal
+          (expression_sequence
+            (integer_literal)
+            (integer_literal)
+            (integer_literal)))))))
 
 ================================================================================
 Index followed by member access
@@ -472,25 +307,16 @@ val := arr[1].property
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (member_access
-          (single_expression
-            (index_access
-              (single_expression
-                (identifier))
-              (arg_sequence
-                (arg
-                  (expression_sequence
-                    (single_expression
-                      (literal
-                        (integer_literal))))))))
-          (member_identifier
-            (identifier)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (index_access
+        (identifier)
+        (arg_sequence
+          (integer_literal)))
+      (member_identifier
+        (identifier)))))
 
 ================================================================================
 Index access with optional argument
@@ -501,20 +327,15 @@ val := arr[a?]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (optional_identifier
-                (identifier)
-                (optional_marker)))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (optional_arg
+          (identifier)
+          (optional_marker))))))
 
 ================================================================================
 Index access with mixed required and optional arguments
@@ -525,24 +346,16 @@ val := arr[a, b?]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (identifier))))
-            (arg
-              (optional_identifier
-                (identifier)
-                (optional_marker)))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (identifier)
+        (optional_arg
+          (identifier)
+          (optional_marker))))))
 
 ================================================================================
 Index access with arugment with default value
@@ -553,26 +366,16 @@ val := arr[index := 1]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (literal
-                        (integer_literal)))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Index in arithmetic
@@ -583,33 +386,18 @@ val := arr[1] + arr[2]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (additive_operation
-          (single_expression
-            (index_access
-              (single_expression
-                (identifier))
-              (arg_sequence
-                (arg
-                  (expression_sequence
-                    (single_expression
-                      (literal
-                        (integer_literal))))))))
-          (single_expression
-            (index_access
-              (single_expression
-                (identifier))
-              (arg_sequence
-                (arg
-                  (expression_sequence
-                    (single_expression
-                      (literal
-                        (integer_literal)))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (index_access
+        (identifier)
+        (arg_sequence
+          (integer_literal)))
+      (index_access
+        (identifier)
+        (arg_sequence
+          (integer_literal))))))
 
 ================================================================================
 Index access with empty argument
@@ -620,22 +408,14 @@ val := arr[, arg2]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (empty_arg))
-            (arg
-              (expression_sequence
-                (single_expression
-                  (identifier))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (empty_arg)
+        (identifier)))))
 
 ================================================================================
 Index access with empty arg and trailing comma
@@ -646,15 +426,10 @@ val := arr[,]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (index_access
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (empty_arg))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (index_access
+      (identifier)
+      (arg_sequence
+        (empty_arg)))))

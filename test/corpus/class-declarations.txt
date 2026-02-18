@@ -54,19 +54,14 @@ class Example {
         (identifier)
         (function_head
           (param_sequence
-            (param
-              (identifier))))
+            (identifier)))
         (function_body
           (block
             (return_statement
               (return)
-              (single_expression
-                (multiplicative_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (integer_literal))))))))))))
+              (multiplicative_operation
+                (identifier)
+                (integer_literal)))))))))
 
 ================================================================================
 Class with static method
@@ -91,19 +86,14 @@ class Example {
         (identifier)
         (function_head
           (param_sequence
-            (param
-              (identifier))))
+            (identifier)))
         (function_body
           (block
             (return_statement
               (return)
-              (single_expression
-                (multiplicative_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (integer_literal))))))))))))
+              (multiplicative_operation
+                (identifier)
+                (integer_literal)))))))))
 
 ================================================================================
 Class with static and instance methods
@@ -134,27 +124,20 @@ class Example {
           (block
             (return_statement
               (return)
-              (single_expression
-                (literal
-                  (float_literal)))))))
+              (float_literal)))))
       (function_declaration
         (scope_identifier)
         (identifier)
         (function_head
           (param_sequence
-            (param
-              (identifier))))
+            (identifier)))
         (function_body
           (block
             (return_statement
               (return)
-              (single_expression
-                (multiplicative_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (integer_literal))))))))))))
+              (multiplicative_operation
+                (identifier)
+                (integer_literal)))))))))
 
 ================================================================================
 Class with fat-arrow method
@@ -176,9 +159,7 @@ class Example
         (identifier)
         (function_head)
         (function_body
-          (single_expression
-            (literal
-              (float_literal))))))))
+          (float_literal))))))
 
 ================================================================================
 Class with static fat-arrow method
@@ -201,9 +182,7 @@ class Example
         (identifier)
         (function_head)
         (function_body
-          (single_expression
-            (literal
-              (float_literal))))))))
+          (float_literal))))))
 
 ================================================================================
 Class with nested methods
@@ -241,13 +220,10 @@ class Example
                 (block
                   (return_statement
                     (return)
-                    (single_expression
-                      (literal
-                        (integer_literal)))))))
+                    (integer_literal)))))
             (return_statement
               (return)
-              (single_expression
-                (identifier)))))))))
+              (identifier))))))))
 
 ================================================================================
 Class with property initializer
@@ -267,9 +243,7 @@ class Example {
       (property_declaration
         (identifier)
         (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))))
+        (integer_literal)))))
 
 ================================================================================
 Class with static property initializer
@@ -290,9 +264,7 @@ class Example {
         (scope_identifier)
         (identifier)
         (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))))
+        (integer_literal)))))
 
 ================================================================================
 Class with getter-only shorthand property
@@ -312,8 +284,7 @@ class Example {
       (property_declaration
         (identifier)
         (getter
-          (literal
-            (integer_literal)))))))
+          (integer_literal))))))
 
 ================================================================================
 Class with static getter-only shorthand property
@@ -334,8 +305,7 @@ class Example {
         (scope_identifier)
         (identifier)
         (getter
-          (literal
-            (integer_literal)))))))
+          (integer_literal))))))
 
 ================================================================================
 Class property with getter
@@ -365,9 +335,7 @@ class Example {
               (block
                 (return_statement
                   (return)
-                  (single_expression
-                    (literal
-                      (string_literal))))))))))))
+                  (string_literal))))))))))
 
 ================================================================================
 Static class property with getter
@@ -398,9 +366,7 @@ class Example {
               (block
                 (return_statement
                   (return)
-                  (single_expression
-                    (literal
-                      (string_literal))))))))))))
+                  (string_literal))))))))))
 
 ================================================================================
 Class property with setter
@@ -428,13 +394,10 @@ class Example {
             (set)
             (function_body
               (block
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (identifier))))))))))))
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (identifier))))))))))
 
 ================================================================================
 Static Class property with setter
@@ -463,13 +426,10 @@ class Example {
             (set)
             (function_body
               (block
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (identifier))))))))))))
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (identifier))))))))))
 
 ================================================================================
 Class property with getter and setter
@@ -502,19 +462,15 @@ class Example {
               (block
                 (return_statement
                   (return)
-                  (single_expression
-                    (identifier))))))
+                  (identifier)))))
           (setter
             (set)
             (function_body
               (block
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (identifier))))))))))))
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (identifier))))))))))
 
 ================================================================================
 Static class property with getter and setter
@@ -548,19 +504,15 @@ class Example {
               (block
                 (return_statement
                   (return)
-                  (single_expression
-                    (identifier))))))
+                  (identifier)))))
           (setter
             (set)
             (function_body
               (block
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (identifier))))))))))))
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (identifier))))))))))
 
 ================================================================================
 Class property with fat-arrow getter
@@ -585,8 +537,7 @@ class Example {
           (getter
             (get)
             (function_body
-              (single_expression
-                (identifier)))))))))
+              (identifier))))))))
 
 ================================================================================
 Class property with fat-arrow setter
@@ -611,13 +562,10 @@ class Example {
           (setter
             (set)
             (function_body
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (identifier)))))))))))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (identifier)))))))))
 
 ================================================================================
 Class property with fat-arrow getter and setter
@@ -643,18 +591,14 @@ class Example {
           (getter
             (get)
             (function_body
-              (single_expression
-                (identifier))))
+              (identifier)))
           (setter
             (set)
             (function_body
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (identifier)))))))))))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (identifier)))))))))
 
 ================================================================================
 Class property with argument
@@ -677,32 +621,23 @@ class Example {
       (property_declaration
         (identifier)
         (param_sequence
-          (param
-            (identifier)))
+          (identifier))
         (property_declaration_block
           (getter
             (get)
             (function_body
-              (single_expression
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier))))))
+              (additive_operation
+                (identifier)
+                (identifier))))
           (setter
             (set)
             (function_body
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (additive_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier))))
-                  (assignment_operator)
-                  (single_expression
-                    (identifier)))))))))))
+              (assignment_operation
+                (additive_operation
+                  (identifier)
+                  (identifier))
+                (assignment_operator)
+                (identifier)))))))))
 
 ================================================================================
 Static class property with argument
@@ -726,32 +661,23 @@ class Example {
         (scope_identifier)
         (identifier)
         (param_sequence
-          (param
-            (identifier)))
+          (identifier))
         (property_declaration_block
           (getter
             (get)
             (function_body
-              (single_expression
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier))))))
+              (additive_operation
+                (identifier)
+                (identifier))))
           (setter
             (set)
             (function_body
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (additive_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier))))
-                  (assignment_operator)
-                  (single_expression
-                    (identifier)))))))))))
+              (assignment_operation
+                (additive_operation
+                  (identifier)
+                  (identifier))
+                (assignment_operator)
+                (identifier)))))))))
 
 ================================================================================
 Class property with multiple arguments
@@ -773,26 +699,18 @@ class Example {
       (property_declaration
         (identifier)
         (param_sequence
-          (param
-            (identifier))
-          (param
-            (identifier)))
+          (identifier)
+          (identifier))
         (property_declaration_block
           (getter
             (get)
             (function_body
-              (single_expression
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (expression_sequence
-                      (single_expression
-                        (multiplicative_operation
-                          (single_expression
-                            (identifier))
-                          (single_expression
-                            (identifier)))))))))))))))
+              (additive_operation
+                (identifier)
+                (expression_sequence
+                  (multiplicative_operation
+                    (identifier)
+                    (identifier)))))))))))
 
 ================================================================================
 Class property with arguments using getter-only shorthand
@@ -812,18 +730,13 @@ class Example {
       (property_declaration
         (identifier)
         (param_sequence
-          (param
-            (identifier))
-          (param
-            (identifier)))
+          (identifier)
+          (identifier))
         (getter
           (expression_sequence
-            (single_expression
-              (multiplicative_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (identifier))))))))))
+            (multiplicative_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Property declaration with mixed getter and setter styles
@@ -852,21 +765,15 @@ class Example
           (getter
             (get)
             (function_body
-              (single_expression
-                (literal
-                  (integer_literal)))))
+              (integer_literal)))
           (setter
             (set)
             (function_body
               (block
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (literal
-                        (float_literal)))))))))))))
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (float_literal))))))))))
 
 ================================================================================
 Class with mixed property declaration styles
@@ -895,35 +802,26 @@ class Example {
       (property_declaration
         (identifier)
         (assignment_operator)
-        (single_expression
-          (literal
-            (unset))))
+        (unset))
       (property_declaration
         (identifier)
         (getter
-          (literal
-            (string_literal))))
+          (string_literal)))
       (property_declaration
         (identifier)
         (property_declaration_block
           (getter
             (get)
             (function_body
-              (single_expression
-                (literal
-                  (integer_literal)))))
+              (integer_literal)))
           (setter
             (set)
             (function_body
               (block
-                (single_expression
-                  (assignment_operation
-                    (single_expression
-                      (identifier))
-                    (assignment_operator)
-                    (single_expression
-                      (literal
-                        (float_literal)))))))))))))
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (float_literal))))))))))
 
 ================================================================================
 Class with property and method
@@ -948,24 +846,18 @@ class Example {
       (property_declaration
         (identifier)
         (assignment_operator)
-        (single_expression
-          (literal
-            (unset))))
+        (unset))
       (function_declaration
         (identifier)
         (function_head
           (param_sequence
-            (param
-              (identifier))))
+            (identifier)))
         (function_body
           (block
-            (single_expression
-              (assignment_operation
-                (single_expression
-                  (identifier))
-                (assignment_operator)
-                (single_expression
-                  (identifier))))))))))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (identifier))))))))
 
 ================================================================================
 Nested classes
@@ -1068,14 +960,11 @@ class Outer extends Object
                       (property_declaration
                         (identifier)
                         (param_sequence
-                          (param
-                            (identifier)))
+                          (identifier))
                         (getter
                           (dereference_operation
-                            (single_expression
-                              (identifier)))))))))))
+                            (identifier))))))))))
           (property_declaration
             (identifier)
             (getter
-              (literal
-                (string_literal)))))))))
+              (string_literal))))))))

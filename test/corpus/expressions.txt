@@ -8,22 +8,14 @@ x := 1, y := 2
 
 (source_file
   (expression_sequence
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Expression sequence with three items
@@ -35,30 +27,18 @@ a := 1, b := 2, c := 3
 
 (source_file
   (expression_sequence
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Parenthesized expression sequence
@@ -73,31 +53,19 @@ var := (
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (string_literal)))))
-          (single_expression
-            (identifier)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (string_literal))
+      (identifier))))
 
 ================================================================================
 Multiline expression sequence
@@ -112,31 +80,19 @@ var := (
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (string_literal)))))
-          (single_expression
-            (identifier)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (string_literal))
+      (identifier))))
 
 ================================================================================
 Variable reference simple
@@ -147,10 +103,8 @@ Variable reference simple
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (varref_operation
-      (single_expression
-        (identifier)))))
+  (varref_operation
+    (identifier)))
 
 ================================================================================
 Variable reference quoted
@@ -161,16 +115,11 @@ Variable reference quoted
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (varref_operation
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (multiplicative_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier)))))))))
+  (varref_operation
+    (expression_sequence
+      (multiplicative_operation
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Nested parenthesized expression
@@ -181,25 +130,16 @@ result := (a + (b * c))
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (expression_sequence
+      (additive_operation
+        (identifier)
         (expression_sequence
-          (single_expression
-            (additive_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (expression_sequence
-                  (single_expression
-                    (multiplicative_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier)))))))))))))
+          (multiplicative_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Assignment with empty array literal
@@ -210,14 +150,10 @@ arr := []
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (array_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal)))
 
 ================================================================================
 Assignment with nonempty array literal
@@ -228,31 +164,17 @@ arr := [1, "two", (1 + 2)]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (array_literal
-            (expression_sequence
-              (single_expression
-                (literal
-                  (integer_literal)))
-              (single_expression
-                (literal
-                  (string_literal)))
-              (single_expression
-                (expression_sequence
-                  (single_expression
-                    (additive_operation
-                      (single_expression
-                        (literal
-                          (integer_literal)))
-                      (single_expression
-                        (literal
-                          (integer_literal))))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (integer_literal)
+        (string_literal)
+        (expression_sequence
+          (additive_operation
+            (integer_literal)
+            (integer_literal)))))))
 
 ================================================================================
 Assignment with object literal
@@ -263,14 +185,10 @@ obj := {}
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal)))
 
 ================================================================================
 Assignment with nonempty literal
@@ -283,35 +201,24 @@ obj := {
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (fat_arrow_function
+            (function_head
+              (param_sequence
                 (identifier)
-                (single_expression
-                  (fat_arrow_function
-                    (function_head
-                      (param_sequence
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))))
-                    (arrow)
-                    (expression_sequence
-                      (single_expression
-                        (additive_operation
-                          (single_expression
-                            (identifier))
-                          (single_expression
-                            (identifier)))))))))))))))
+                (identifier)
+                (identifier)))
+            (arrow)
+            (expression_sequence
+              (additive_operation
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Dereference expression sequence
@@ -322,37 +229,22 @@ result := %(a := "part", b := "part", a . b)%
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (dereference_operation
-          (single_expression
-            (expression_sequence
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (literal
-                      (string_literal)))))
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (literal
-                      (string_literal)))))
-              (single_expression
-                (explicit_concat_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (dereference_operation
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))
+        (explicit_concat_operation
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Dereference expression as operand
@@ -363,19 +255,13 @@ result := a + %ref%
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (additive_operation
-          (single_expression
-            (identifier))
-          (single_expression
-            (dereference_operation
-              (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (identifier)
+      (dereference_operation
+        (identifier)))))
 
 ================================================================================
 VarRef and dereference combination
@@ -386,15 +272,9 @@ result := &%"ref"%
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (varref_operation
-          (single_expression
-            (dereference_operation
-              (single_expression
-                (literal
-                  (string_literal))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (varref_operation
+      (dereference_operation
+        (string_literal)))))

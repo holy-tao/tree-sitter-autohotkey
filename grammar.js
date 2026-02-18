@@ -61,12 +61,13 @@ export default grammar({
   ],
 
   conflicts: $ => [
-    [$._primary_expression, $.param],
+    [$._primary_expression, $._param],
+    [$._primary_expression, $.default_param],
     [$._primary_expression, $.variadic_param],
     [$.object_literal, $.block],
     [$._primary_expression, $.dynamic_identifier],
     [$.dynamic_identifier],
-    [$.single_expression, $._dynamic_identifier_chain],
+    [$._single_expression, $._dynamic_identifier_chain],
     [$._dynamic_identifier_chain],
     [$.if_statement, $.else_statement]
   ],
@@ -93,7 +94,7 @@ export default grammar({
       $.function_declaration,
       $.class_declaration,
       $.call_statement,  // call_statements only at statement level
-      $.single_expression,
+      $._single_expression,
       $.expression_sequence,
       // blocks are allowed at the top level, though they don't do anything
       $.block,  
@@ -131,7 +132,7 @@ export default grammar({
     ),
 
     _primary_expression: $ => choice(
-      $.literal,
+      $._literal,
       $.identifier,
       $.dynamic_identifier,
       seq("(", $.expression_sequence, ")"),
@@ -141,7 +142,7 @@ export default grammar({
       $.function_call  // Only parenthesized calls allowed in expressions
     ),
 
-    single_expression: $ => choice(
+    _single_expression: $ => choice(
       $.variable_declaration,
       $._primary_expression,
       $.assignment_operation,
@@ -155,13 +156,13 @@ export default grammar({
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
-      $.single_expression,
-      repeat(seq(",", $.single_expression))
+      $._single_expression,
+      repeat(seq(",", $._single_expression))
     )),
 
     // Helper for expressions without top-level parentheses (used in specialized loops)
     _non_paren_primary: $ => choice(
-      $.literal,
+      $._literal,
       $.identifier,
       $._pairwise_operation,
       $.member_access
@@ -188,28 +189,28 @@ export default grammar({
     ),
 
     ternary_expression: $ => prec.right(PREC.TERNARY, seq(
-      $.single_expression,
+      $._single_expression,
       "?",
-      field("true_branch", $.single_expression),
+      field("true_branch", $._single_expression),
       ":",
-      field("false_branch", $.single_expression)
+      field("false_branch", $._single_expression)
     )),
 
     //#endregion
 
     //#region Operators
     assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       $.assignment_operator,
-      field("right", choice($.single_expression, $.optional_identifier))
+      field("right", choice($._single_expression, $.optional_identifier))
     )),
 
     dereference_operation: $ => prec.left(PREC.DEREFERENCE, seq(
-      "%", $.single_expression, "%"
+      "%", $._single_expression, "%"
     )),
 
     varref_operation: $ => prec.right(PREC.PREFIX + 5, seq(
-      "&", $.single_expression
+      "&", $._single_expression
     )),
 
     // Any expression like left <op> right (e.g. 2 + 2, true != false)
@@ -254,108 +255,108 @@ export default grammar({
     // Verbal NOT operator (lower precedence than !)
     verbal_not_operation: $ => prec.right(PREC.LOGICAL_NOT, seq(
       field("operator", token(prec(PREC.KEYWORD, /not/i))),
-      field("operand", $.single_expression)
+      field("operand", $._single_expression)
     )),
 
     additive_operation: $ => prec.left(PREC.ADDITIVE, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", choice("+", "-")),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     multiplicative_operation: $ => prec.left(PREC.MULTIPLICATIVE, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", choice("*", "/", "//")),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     relational_operation: $ => prec.left(PREC.RELATIONAL, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", choice("<", ">", "<=", ">=")),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     equality_operation: $ => prec.left(PREC.EQUALITY, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", choice("=", "==")),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     inequality_operation: $ => prec.left(PREC.INEQUALITY, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", choice("!=", "!==")),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     regex_match_operation: $ => prec.left(PREC.REGEX_MATCH, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", token(prec(200, "~="))),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     type_check_operation: $ => prec.left(PREC.CASE_INSENSITIVE, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", token(prec(PREC.KEYWORD, / is /i))),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     logical_and_operation: $ => prec.left(PREC.LOGICAL_AND, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", choice("&&", token(prec(PREC.KEYWORD, /and/i)))),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     logical_or_operation: $ => prec.left(PREC.LOGICAL_OR, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", choice("||", token(prec(PREC.KEYWORD, /or/i)))),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     bitwise_and_operation: $ => prec.left(PREC.BITWISE_AND, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", "&"),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     bitwise_xor_operation: $ => prec.left(PREC.BITWISE_XOR, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", "^"),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     bitwise_or_operation: $ => prec.left(PREC.BITWISE_OR, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", "|"),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     bitshift_operation: $ => prec.left(PREC.SHIFT, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", $.bitshift_operator),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     explicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", " . "),   // !IMPORTANT: space is required to differentiate from member access
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     exponent_operation: $ => prec.left(PREC.EXPONENT, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", "**"),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     // "unset-coalescing"; the docs call this the or-maybe operator so I'm going with that
     or_maybe_operation: $ => prec.left(PREC.OR_MAYBE, seq(
-      field("left", $.single_expression),
+      field("left", $._single_expression),
       field("operator", "??"),
-      field("right", $.single_expression)
+      field("right", $._single_expression)
     )),
 
     member_access: $ => prec(PREC.MEMBER_ACCESS, seq(
-      field("object", $.single_expression),
+      field("object", $._single_expression),
       // TODO I think this is gonna cause problems with implicit concatenation
       ".",
       field("member", $.member_identifier)
@@ -416,7 +417,7 @@ export default grammar({
     // Maybe "subscript access", the docs call it index access
     // See https://www.autohotkey.com/docs/v2/Variables.htm#square-brackets
     index_access: $ => prec(PREC.OVERRIDE, seq(
-      field("object", $.single_expression),
+      field("object", $._single_expression),
       token.immediate("["),
       optional($.arg_sequence), 
       "]"
@@ -425,7 +426,7 @@ export default grammar({
     // MsgBox("Hello", "Example", "IconI OK")
     // Can be used in expressions
     function_call: $ => prec(PREC.OVERRIDE, seq(
-      field("function", $.single_expression),
+      field("function", $._single_expression),
       token.immediate("("),
       optional($.arg_sequence),
       ")"
@@ -442,17 +443,17 @@ export default grammar({
       optional($.arg_sequence)
     )),
 
-    arg: $ => choice(
-      $.expression_sequence,
-      $.optional_identifier,
+    _arg: $ => choice(
+      $._single_expression,
+      alias($.optional_identifier, $.optional_arg),
       $.empty_arg
     ),
 
     arg_sequence: $ => prec.right(choice(
       // Args without expansion
       seq(
-        $.arg,
-        repeat(seq(",", $.arg)),
+        $._arg,
+        repeat(seq(",", $._arg)),
         /**
          * A trailing comma is allowed but ignored - you can test this
          *    Function(params*) => MsgBox(params.length)
@@ -462,15 +463,15 @@ export default grammar({
       ),
       // Single arg with expansion
       seq(
-        $.single_expression,
+        $._single_expression,
         $.array_expansion_marker
       ),
       // Multiple args with last one having expansion
       seq(
-        $.arg,
-        repeat(seq(",", $.arg)),
+        $._arg,
+        repeat(seq(",", $._arg)),
         ",",
-        $.single_expression,
+        $._single_expression,
         $.array_expansion_marker
       )
     )),
@@ -499,7 +500,7 @@ export default grammar({
 
     function_body: $ => choice(
       $.block,
-      seq("=>", $.single_expression),
+      seq("=>", $._single_expression),
     ),
 
     function_head: $ => seq(
@@ -514,26 +515,25 @@ export default grammar({
       $.variadic_param,
       // One or more regular params, optionally followed by variadic: (a, b, rest*)
       seq(
-        choice($.param, $.byref_param),
-        repeat(seq(",", choice($.param, $.byref_param))),
+        choice($._param, $.byref_param),
+        repeat(seq(",", choice($._param, $.byref_param))),
         optional(seq(",", $.variadic_param))
       )
     ),
 
-    param: $ => choice(
+    _param: $ => choice(
       $.identifier,
-      $.optional_identifier,
-      seq(
-        $.identifier,
-        $._initializer
-      ),
+      alias($.optional_identifier, $.optional_param),
+      $.default_param
     ),
 
+    default_param: $ => seq($.identifier, $._initializer),
+      
     _initializer: $ => seq(
       alias(":=", $.assignment_operator), 
-      $.single_expression),
+      $._single_expression),
 
-    byref_param: $ => seq("&", $.param),
+    byref_param: $ => seq("&", $._param),
 
     variadic_param: $ => seq($.identifier, $.wildcard),
 
@@ -542,7 +542,7 @@ export default grammar({
     //#endregion
 
     //#region Literals
-    literal: $ => choice(
+    _literal: $ => choice(
       $._numeric_literal,
       $.boolean_literal,
       $.string_literal,
@@ -587,7 +587,7 @@ export default grammar({
       $.identifier, 
       ":", 
       choice(
-        $.single_expression, 
+        $._single_expression, 
         $.optional_identifier
       )),
 
@@ -626,7 +626,7 @@ export default grammar({
 
     if_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.if,
-      $.single_expression,
+      $._single_expression,
       choice($.block, $._statement),  // support brace-less forms
       repeat($.else_statement)
     )),
@@ -634,7 +634,7 @@ export default grammar({
     else_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.else,
       choice(
-        seq($.if, $.single_expression, choice($.block, $._statement)),  // else if (condition) ... (with or without braces)
+        seq($.if, $._single_expression, choice($.block, $._statement)),  // else if (condition) ... (with or without braces)
         choice($.block, $._statement)                                    // else ... (with or without braces)
       )
     )),
@@ -643,7 +643,7 @@ export default grammar({
       $.loop,
       optional(choice(
         // Regular loop count - can be parenthesized
-        prec(2, $.single_expression),
+        prec(2, $._single_expression),
         // Specialized loops - no top-level parentheses allowed
         prec(1, seq($.parse, $._non_paren_expression, optional(seq(",", $._non_paren_expression)), optional(seq(",", $._non_paren_expression)))),
         prec(1, seq($.read, $._non_paren_expression, optional(seq(",", $._non_paren_expression)))),
@@ -655,14 +655,14 @@ export default grammar({
       optional($.until_statement)
     ),
 
-    until_statement: $ => seq($.until, $.single_expression),
+    until_statement: $ => seq($.until, $._single_expression),
 
     return_statement: $ => prec.right(PREC.DEFAULT,
-      seq($.return, optional($.single_expression))),
+      seq($.return, optional($._single_expression))),
 
     while_statement: $ => seq(
       $.while,
-      $.single_expression,
+      $._single_expression,
       choice($.block, $._statement)  // support brace-less forms
     ),
 
@@ -678,12 +678,12 @@ export default grammar({
 
     throw_statement: $ => seq(
       $.throw,
-      $.single_expression
+      $._single_expression
     ),
 
     goto_statement: $ => seq(
       $.goto,
-      $.single_expression
+      $._single_expression
     ),
 
     label: $ => prec(1, seq(
@@ -704,8 +704,8 @@ export default grammar({
     )),
 
     _for_params: $ => choice(
-      seq($.identifier, $.in, $.single_expression),
-      seq($.identifier, ",", $.identifier, $.in, $.single_expression)
+      seq($.identifier, $.in, $._single_expression),
+      seq($.identifier, ",", $.identifier, $.in, $._single_expression)
     ),
 
     try_statement: $ => prec.right(PREC.DEFAULT, seq(
@@ -719,7 +719,7 @@ export default grammar({
           optional($.finally_clause)
         ),
         // try x := 1 / 0
-        $.single_expression
+        $._single_expression
       )
     )),
 
@@ -744,7 +744,7 @@ export default grammar({
 
     switch_statement: $ => seq(
       $.switch,
-      $.single_expression,
+      $._single_expression,
       $.switch_body
     ),
 
@@ -759,8 +759,8 @@ export default grammar({
 
     case_clause: $ => seq(
       $.case,
-      $.single_expression,
-      repeat(seq(",", $.single_expression)),  // multiple values
+      $._single_expression,
+      repeat(seq(",", $._single_expression)),  // multiple values
       ":",
       repeat($._statement)
     ),
@@ -829,7 +829,7 @@ export default grammar({
         // Property initializer: prop := value
         $._initializer,
         // getter-only shorthand: prop => 42
-        seq("=>", alias($.single_expression, $.getter)),
+        seq("=>", alias($._single_expression, $.getter)),
         $.property_declaration_block
       )
     ),
@@ -897,7 +897,7 @@ export default grammar({
         optional(choice(
           $.block,
           $.hotstring_replacement,
-          $.single_expression,
+          $._single_expression,
           repeat1($._statement)
         ))
     )),
@@ -974,7 +974,7 @@ export default grammar({
       $.hotkey_trigger,
       token.immediate("::"),
       optional(choice(
-        $.single_expression,
+        $._single_expression,
         $.function_declaration,
         $.block,
         $._hotkey_alttabcommand

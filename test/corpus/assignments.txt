@@ -7,14 +7,10 @@ x := 42
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (float_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (float_literal)))
 
 ================================================================================
 Global variable declaration with assignment
@@ -25,16 +21,12 @@ global oNE := 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (variable_declaration
-          (scope_identifier)
-          (identifier)))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (variable_declaration
+      (scope_identifier)
+      (identifier))
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Global variable declaration followed by assignment
@@ -46,18 +38,13 @@ var := 42
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier)))
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (float_literal))))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (float_literal)))
 
 ================================================================================
 String literal assignment
@@ -68,14 +55,10 @@ str := "un 'quote' d"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (string_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 Assignment with unset
@@ -86,14 +69,10 @@ x := unset
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (unset))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (unset)))
 
 ================================================================================
 Addition assignment
@@ -104,14 +83,10 @@ x += 5
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Subtraction assignment
@@ -122,14 +97,10 @@ x -= 5
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Multiplication assignment
@@ -140,14 +111,10 @@ x *= 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Division assignment
@@ -158,14 +125,10 @@ x /= 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Floor division assignment
@@ -176,14 +139,10 @@ x //= 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Concatenation assignment
@@ -194,14 +153,10 @@ str .= " more"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (string_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 Bitwise OR assignment
@@ -212,14 +167,10 @@ x |= 8
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Bitwise AND assignment
@@ -230,14 +181,10 @@ x &= 8
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Bitwise XOR assignment
@@ -248,14 +195,10 @@ x ^= 8
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Right shift assignment
@@ -266,14 +209,10 @@ x >>= 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Left shift assignment
@@ -284,14 +223,10 @@ x <<= 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Unsigned right shift assignment
@@ -302,14 +237,10 @@ x >>>= 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Local variable declaration
@@ -320,10 +251,9 @@ local myVar
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier)))
 
 ================================================================================
 Static variable declaration with assignment
@@ -334,16 +264,12 @@ static counter := 0
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (variable_declaration
-          (scope_identifier)
-          (identifier)))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (variable_declaration
+      (scope_identifier)
+      (identifier))
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Simple assignment with optional variable
@@ -354,11 +280,9 @@ x := var?
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (optional_identifier
-        (identifier)
-        (optional_marker)))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (optional_identifier
+      (identifier)
+      (optional_marker))))

@@ -7,21 +7,14 @@ result := a + b * c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (additive_operation
-          left: (single_expression
-            (identifier))
-          right: (single_expression
-            (multiplicative_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (additive_operation
+      left: (identifier)
+      right: (multiplicative_operation
+        left: (identifier)
+        right: (identifier)))))
 
 ================================================================================
 Division before subtraction
@@ -32,21 +25,14 @@ result := a - b / c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (additive_operation
-          left: (single_expression
-            (identifier))
-          right: (single_expression
-            (multiplicative_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (additive_operation
+      left: (identifier)
+      right: (multiplicative_operation
+        left: (identifier)
+        right: (identifier)))))
 
 ================================================================================
 Relational before equality
@@ -57,25 +43,16 @@ result := a > b == c < d
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (equality_operation
-          left: (single_expression
-            (relational_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (relational_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (equality_operation
+      left: (relational_operation
+        left: (identifier)
+        right: (identifier))
+      right: (relational_operation
+        left: (identifier)
+        right: (identifier)))))
 
 ================================================================================
 Equality before inequality
@@ -86,21 +63,14 @@ result := a == b != c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (inequality_operation
-          left: (single_expression
-            (equality_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (inequality_operation
+      left: (equality_operation
+        left: (identifier)
+        right: (identifier))
+      right: (identifier))))
 
 ================================================================================
 Inequality before regex match
@@ -111,21 +81,14 @@ result := a != b ~= c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (regex_match_operation
-          left: (single_expression
-            (inequality_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (regex_match_operation
+      left: (inequality_operation
+        left: (identifier)
+        right: (identifier))
+      right: (identifier))))
 
 ================================================================================
 Comparison before logical AND
@@ -136,25 +99,16 @@ result := a > b && c < d
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (logical_and_operation
-          left: (single_expression
-            (relational_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (relational_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (logical_and_operation
+      left: (relational_operation
+        left: (identifier)
+        right: (identifier))
+      right: (relational_operation
+        left: (identifier)
+        right: (identifier)))))
 
 ================================================================================
 Logical AND before logical OR
@@ -165,25 +119,16 @@ result := a && b || c && d
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (logical_or_operation
-          left: (single_expression
-            (logical_and_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (logical_and_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (logical_or_operation
+      left: (logical_and_operation
+        left: (identifier)
+        right: (identifier))
+      right: (logical_and_operation
+        left: (identifier)
+        right: (identifier)))))
 
 ================================================================================
 Logical OR before assignment
@@ -194,17 +139,12 @@ result := a || b
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (logical_or_operation
-          left: (single_expression
-            (identifier))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (logical_or_operation
+      left: (identifier)
+      right: (identifier))))
 
 ================================================================================
 Assignment before comma
@@ -216,22 +156,14 @@ a := 1, b := 2
 
 (source_file
   (expression_sequence
-    (single_expression
-      (assignment_operation
-        left: (single_expression
-          (identifier))
-        (assignment_operator)
-        right: (single_expression
-          (literal
-            (integer_literal)))))
-    (single_expression
-      (assignment_operation
-        left: (single_expression
-          (identifier))
-        (assignment_operator)
-        right: (single_expression
-          (literal
-            (integer_literal)))))))
+    (assignment_operation
+      left: (identifier)
+      (assignment_operator)
+      right: (integer_literal))
+    (assignment_operation
+      left: (identifier)
+      (assignment_operator)
+      right: (integer_literal))))
 
 ================================================================================
 Bitwise AND before bitwise XOR
@@ -242,21 +174,14 @@ result := a & b ^ c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (bitwise_xor_operation
-          left: (single_expression
-            (bitwise_and_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (bitwise_xor_operation
+      left: (bitwise_and_operation
+        left: (identifier)
+        right: (identifier))
+      right: (identifier))))
 
 ================================================================================
 Bitwise XOR before bitwise OR
@@ -267,21 +192,14 @@ result := a ^ b | c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (bitwise_or_operation
-          left: (single_expression
-            (bitwise_xor_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (bitwise_or_operation
+      left: (bitwise_xor_operation
+        left: (identifier)
+        right: (identifier))
+      right: (identifier))))
 
 ================================================================================
 Verbal NOT with comparison
@@ -292,20 +210,13 @@ result := not x > 5
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (verbal_not_operation
-          operand: (single_expression
-            (relational_operation
-              left: (single_expression
-                (identifier))
-              right: (single_expression
-                (literal
-                  (integer_literal))))))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (verbal_not_operation
+      operand: (relational_operation
+        left: (identifier)
+        right: (integer_literal)))))
 
 ================================================================================
 Verbal NOT before logical AND
@@ -316,19 +227,13 @@ result := not x && y
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (logical_and_operation
-          left: (single_expression
-            (verbal_not_operation
-              operand: (single_expression
-                (identifier))))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (logical_and_operation
+      left: (verbal_not_operation
+        operand: (identifier))
+      right: (identifier))))
 
 ================================================================================
 Bit shift left before bitwise AND
@@ -339,24 +244,15 @@ result := a << 2 & 0xb
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (bitwise_and_operation
-          (single_expression
-            (bitshift_operation
-              (single_expression
-                (identifier))
-              (bitshift_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (literal
-              (hex_literal))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (bitwise_and_operation
+      (bitshift_operation
+        (identifier)
+        (bitshift_operator)
+        (integer_literal))
+      (hex_literal))))
 
 ================================================================================
 Addition before logical bit shift right
@@ -367,24 +263,15 @@ result := a >> 2 + 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (bitshift_operation
-          (single_expression
-            (identifier))
-          (bitshift_operator)
-          (single_expression
-            (additive_operation
-              (single_expression
-                (literal
-                  (integer_literal)))
-              (single_expression
-                (literal
-                  (integer_literal))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (bitshift_operation
+      (identifier)
+      (bitshift_operator)
+      (additive_operation
+        (integer_literal)
+        (integer_literal)))))
 
 ================================================================================
 High-precedence NOT with comparison
@@ -395,19 +282,13 @@ result := !x > 5
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (relational_operation
-          left: (single_expression
-            (prefix_operation
-              operand: (identifier)))
-          right: (single_expression
-            (literal
-              (integer_literal))))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (relational_operation
+      left: (prefix_operation
+        operand: (identifier))
+      right: (integer_literal))))
 
 ================================================================================
 Complex precedence chain
@@ -418,33 +299,20 @@ result := a + b * c > d && e || f
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (logical_or_operation
-          left: (single_expression
-            (logical_and_operation
-              left: (single_expression
-                (relational_operation
-                  left: (single_expression
-                    (additive_operation
-                      left: (single_expression
-                        (identifier))
-                      right: (single_expression
-                        (multiplicative_operation
-                          left: (single_expression
-                            (identifier))
-                          right: (single_expression
-                            (identifier))))))
-                  right: (single_expression
-                    (identifier))))
-              right: (single_expression
-                (identifier))))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (logical_or_operation
+      left: (logical_and_operation
+        left: (relational_operation
+          left: (additive_operation
+            left: (identifier)
+            right: (multiplicative_operation
+              left: (identifier)
+              right: (identifier)))
+          right: (identifier))
+        right: (identifier))
+      right: (identifier))))
 
 ================================================================================
 Parentheses override precedence
@@ -455,20 +323,12 @@ result := (a + b) * c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      left: (single_expression
-        (identifier))
-      (assignment_operator)
-      right: (single_expression
-        (multiplicative_operation
-          left: (single_expression
-            (expression_sequence
-              (single_expression
-                (additive_operation
-                  left: (single_expression
-                    (identifier))
-                  right: (single_expression
-                    (identifier))))))
-          right: (single_expression
-            (identifier)))))))
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (multiplicative_operation
+      left: (expression_sequence
+        (additive_operation
+          left: (identifier)
+          right: (identifier)))
+      right: (identifier))))

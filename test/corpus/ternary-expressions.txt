@@ -7,22 +7,13 @@ str := true? "true" : "false"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (literal
-              (boolean_literal)))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (boolean_literal)
+      (string_literal)
+      (string_literal))))
 
 ================================================================================
 Nested ternary expression
@@ -33,35 +24,18 @@ Nested ternary expression
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (expression_sequence
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (equality_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (ternary_expression
-              (single_expression
-                (equality_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (integer_literal)))))
-              (single_expression
-                (literal
-                  (string_literal)))
-              (single_expression
-                (literal
-                  (string_literal))))))))))
+  (expression_sequence
+    (ternary_expression
+      (equality_operation
+        (identifier)
+        (integer_literal))
+      (string_literal)
+      (ternary_expression
+        (equality_operation
+          (identifier)
+          (integer_literal))
+        (string_literal)
+        (string_literal)))))
 
 ================================================================================
 Simple multiline ternary expression
@@ -74,26 +48,15 @@ str := val == 1?
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (equality_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (equality_operation
+        (identifier)
+        (integer_literal))
+      (string_literal)
+      (string_literal))))
 
 ================================================================================
 Ternary with no spaces
@@ -104,19 +67,13 @@ result:=a?b:c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Ternary with arithmetic in condition
@@ -127,30 +84,17 @@ result := x + y > 10? "big" : "small"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (relational_operation
-              (single_expression
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier))))
-              (single_expression
-                (literal
-                  (float_literal)))))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (relational_operation
+        (additive_operation
+          (identifier)
+          (identifier))
+        (float_literal))
+      (string_literal)
+      (string_literal))))
 
 ================================================================================
 Ternary with arithmetic in branches
@@ -161,31 +105,17 @@ result := flag? 1 + 2 : 3 * 4
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (additive_operation
-              (single_expression
-                (literal
-                  (integer_literal)))
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (multiplicative_operation
-              (single_expression
-                (literal
-                  (integer_literal)))
-              (single_expression
-                (literal
-                  (integer_literal))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (additive_operation
+        (integer_literal)
+        (integer_literal))
+      (multiplicative_operation
+        (integer_literal)
+        (integer_literal)))))
 
 ================================================================================
 Ternary with logical operators in condition
@@ -196,35 +126,19 @@ result := x > 5 && y < 10? "valid" : "invalid"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (logical_and_operation
-              (single_expression
-                (relational_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (integer_literal)))))
-              (single_expression
-                (relational_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (float_literal)))))))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (logical_and_operation
+        (relational_operation
+          (identifier)
+          (integer_literal))
+        (relational_operation
+          (identifier)
+          (float_literal)))
+      (string_literal)
+      (string_literal))))
 
 ================================================================================
 Ternary with logical OR in condition
@@ -235,25 +149,15 @@ result := x || y? "truthy" : "falsy"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (logical_or_operation
+        (identifier)
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (logical_or_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal))))))))
+      (string_literal)
+      (string_literal))))
 
 ================================================================================
 Nested ternary in true branch
@@ -264,22 +168,14 @@ a? (b? c : d) : e
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (ternary_expression
-      (single_expression
-        (identifier))
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (ternary_expression
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))))))
-      (single_expression
-        (identifier)))))
+  (ternary_expression
+    (identifier)
+    (expression_sequence
+      (ternary_expression
+        (identifier)
+        (identifier)
+        (identifier)))
+    (identifier)))
 
 ================================================================================
 Multiple nested ternaries
@@ -290,26 +186,16 @@ a? b? c : d : e? f : g
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
+  (ternary_expression
+    (identifier)
     (ternary_expression
-      (single_expression
-        (identifier))
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier))))
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier)))))))
+      (identifier)
+      (identifier)
+      (identifier))
+    (ternary_expression
+      (identifier)
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Ternary in array literal
@@ -320,32 +206,18 @@ arr := [x > 5? "big" : "small", other]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (array_literal
-            (expression_sequence
-              (single_expression
-                (ternary_expression
-                  (single_expression
-                    (relational_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (literal
-                          (integer_literal)))))
-                  (single_expression
-                    (literal
-                      (string_literal)))
-                  (single_expression
-                    (literal
-                      (string_literal)))))
-              (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (ternary_expression
+          (relational_operation
+            (identifier)
+            (integer_literal))
+          (string_literal)
+          (string_literal))
+        (identifier)))))
 
 ================================================================================
 Ternary in object literal
@@ -356,31 +228,19 @@ obj := {value: x > 0? x : 0}
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (ternary_expression
-                    (single_expression
-                      (relational_operation
-                        (single_expression
-                          (identifier))
-                        (single_expression
-                          (literal
-                            (integer_literal)))))
-                    (single_expression
-                      (identifier))
-                    (single_expression
-                      (literal
-                        (integer_literal)))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (ternary_expression
+            (relational_operation
+              (identifier)
+              (integer_literal))
+            (identifier)
+            (integer_literal)))))))
 
 ================================================================================
 Ternary with prefix operators
@@ -391,22 +251,16 @@ result := !flag? ++x : --y
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (prefix_operation
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (prefix_operation
-              (identifier)))
-          (single_expression
-            (prefix_operation
-              (identifier)))
-          (single_expression
-            (prefix_operation
-              (identifier))))))))
+      (prefix_operation
+        (identifier))
+      (prefix_operation
+        (identifier)))))
 
 ================================================================================
 Ternary with postfix operators
@@ -417,21 +271,15 @@ result := flag? x++ : y--
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (postfix_operation
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (postfix_operation
-              (identifier)))
-          (single_expression
-            (postfix_operation
-              (identifier))))))))
+      (postfix_operation
+        (identifier)))))
 
 ================================================================================
 Ternary with unary operators in branches
@@ -442,21 +290,15 @@ result := condition? -value : +value
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (prefix_operation
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (prefix_operation
-              (identifier)))
-          (single_expression
-            (prefix_operation
-              (identifier))))))))
+      (prefix_operation
+        (identifier)))))
 
 ================================================================================
 Ternary with bitwise operators
@@ -467,27 +309,17 @@ result := flag? a & b : c | d
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (bitwise_and_operation
+        (identifier)
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (bitwise_and_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))))
-          (single_expression
-            (bitwise_or_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier)))))))))
+      (bitwise_or_operation
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Ternary result used in arithmetic
@@ -498,28 +330,16 @@ result := 10 + (x? 5 : 3)
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (additive_operation
-          (single_expression
-            (literal
-              (float_literal)))
-          (single_expression
-            (expression_sequence
-              (single_expression
-                (ternary_expression
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (integer_literal)))
-                  (single_expression
-                    (literal
-                      (integer_literal))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (float_literal)
+      (expression_sequence
+        (ternary_expression
+          (identifier)
+          (integer_literal)
+          (integer_literal))))))
 
 ================================================================================
 Parenthesized ternary as condition
@@ -530,22 +350,14 @@ Parenthesized ternary as condition
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (ternary_expression
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (ternary_expression
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))))))
-      (single_expression
-        (identifier))
-      (single_expression
-        (identifier)))))
+  (ternary_expression
+    (expression_sequence
+      (ternary_expression
+        (identifier)
+        (identifier)
+        (identifier)))
+    (identifier)
+    (identifier)))
 
 ================================================================================
 Ternary with comma operator
@@ -557,16 +369,11 @@ a? b : c, d
 
 (source_file
   (expression_sequence
-    (single_expression
-      (ternary_expression
-        (single_expression
-          (identifier))
-        (single_expression
-          (identifier))
-        (single_expression
-          (identifier))))
-    (single_expression
-      (identifier))))
+    (ternary_expression
+      (identifier)
+      (identifier)
+      (identifier))
+    (identifier)))
 
 ================================================================================
 Multiple ternaries with comma
@@ -578,22 +385,14 @@ a? b : c, x? y : z
 
 (source_file
   (expression_sequence
-    (single_expression
-      (ternary_expression
-        (single_expression
-          (identifier))
-        (single_expression
-          (identifier))
-        (single_expression
-          (identifier))))
-    (single_expression
-      (ternary_expression
-        (single_expression
-          (identifier))
-        (single_expression
-          (identifier))
-        (single_expression
-          (identifier))))))
+    (ternary_expression
+      (identifier)
+      (identifier)
+      (identifier))
+    (ternary_expression
+      (identifier)
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Ternary with verbal NOT operator
@@ -604,23 +403,14 @@ result := not condition? "A" : "B"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (verbal_not_operation
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (verbal_not_operation
-              (single_expression
-                (identifier))))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal))))))))
+      (string_literal)
+      (string_literal))))
 
 ================================================================================
 Ternary with array literals in branches
@@ -631,41 +421,21 @@ result := flag? [1, 2, 3] : [4, 5, 6]
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (literal
-              (array_literal
-                (expression_sequence
-                  (single_expression
-                    (literal
-                      (integer_literal)))
-                  (single_expression
-                    (literal
-                      (integer_literal)))
-                  (single_expression
-                    (literal
-                      (integer_literal)))))))
-          (single_expression
-            (literal
-              (array_literal
-                (expression_sequence
-                  (single_expression
-                    (literal
-                      (integer_literal)))
-                  (single_expression
-                    (literal
-                      (integer_literal)))
-                  (single_expression
-                    (literal
-                      (integer_literal))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (array_literal
+        (expression_sequence
+          (integer_literal)
+          (integer_literal)
+          (integer_literal)))
+      (array_literal
+        (expression_sequence
+          (integer_literal)
+          (integer_literal)
+          (integer_literal))))))
 
 ================================================================================
 Ternary with object literals in branches
@@ -676,33 +446,21 @@ result := flag? {x: 1} : {y: 2}
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (literal
-              (object_literal
-                (object_literal_member_sequence
-                  (object_literal_member
-                    (identifier)
-                    (single_expression
-                      (literal
-                        (integer_literal))))))))
-          (single_expression
-            (literal
-              (object_literal
-                (object_literal_member_sequence
-                  (object_literal_member
-                    (identifier)
-                    (single_expression
-                      (literal
-                        (integer_literal)))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (integer_literal))))
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (integer_literal)))))))
 
 ================================================================================
 Complex nested ternary with mixed operators
@@ -713,57 +471,32 @@ result := (x > 5 && y < 10)? (z := a + b) : (w := c * d)
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (expression_sequence
-              (single_expression
-                (logical_and_operation
-                  (single_expression
-                    (relational_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (literal
-                          (integer_literal)))))
-                  (single_expression
-                    (relational_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (literal
-                          (float_literal)))))))))
-          (single_expression
-            (expression_sequence
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (additive_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier))))))))
-          (single_expression
-            (expression_sequence
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (multiplicative_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier)))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (expression_sequence
+        (logical_and_operation
+          (relational_operation
+            (identifier)
+            (integer_literal))
+          (relational_operation
+            (identifier)
+            (float_literal))))
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (additive_operation
+            (identifier)
+            (identifier))))
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (multiplicative_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Ternary with bitshift operators
@@ -774,31 +507,19 @@ result := flag? value << 2 : value >> 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (bitshift_operation
-              (single_expression
-                (identifier))
-              (bitshift_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (bitshift_operation
-              (single_expression
-                (identifier))
-              (bitshift_operator)
-              (single_expression
-                (literal
-                  (integer_literal))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (bitshift_operation
+        (identifier)
+        (bitshift_operator)
+        (integer_literal))
+      (bitshift_operation
+        (identifier)
+        (bitshift_operator)
+        (integer_literal)))))
 
 ================================================================================
 Ternary with exponent operator
@@ -809,29 +530,17 @@ result := flag? x ** 2 : y ** 3
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (exponent_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (exponent_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (integer_literal))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (exponent_operation
+        (identifier)
+        (integer_literal))
+      (exponent_operation
+        (identifier)
+        (integer_literal)))))
 
 ================================================================================
 Ternary with explicit concatenation
@@ -842,26 +551,15 @@ result := flag? "Hello" . " World" : "Goodbye"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (explicit_concat_operation
-              (single_expression
-                (literal
-                  (string_literal)))
-              (single_expression
-                (literal
-                  (string_literal)))))
-          (single_expression
-            (literal
-              (string_literal))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (identifier)
+      (explicit_concat_operation
+        (string_literal)
+        (string_literal))
+      (string_literal))))
 
 ================================================================================
 Deeply nested ternary (4 levels)
@@ -872,38 +570,22 @@ a? b? c? d : e : f? g : h : i? j : k
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
+  (ternary_expression
+    (identifier)
     (ternary_expression
-      (single_expression
+      (identifier)
+      (ternary_expression
+        (identifier)
+        (identifier)
         (identifier))
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (ternary_expression
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))))
-          (single_expression
-            (ternary_expression
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))))))
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier)))))))
+      (ternary_expression
+        (identifier)
+        (identifier)
+        (identifier)))
+    (ternary_expression
+      (identifier)
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Ternary with compound assignment in branches
@@ -914,26 +596,16 @@ flag? x += 1 : y -= 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (identifier))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (identifier))))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (ternary_expression
+      (identifier)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (identifier))
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Ternary with or-maybe on one side
@@ -944,18 +616,12 @@ flag? a : b ?? c
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (ternary_expression
-      (single_expression
-        (identifier))
-      (single_expression
-        (identifier))
-      (single_expression
-        (or_maybe_operation
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier)))))))
+  (ternary_expression
+    (identifier)
+    (identifier)
+    (or_maybe_operation
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Ternary with or-maybe on both sides
@@ -966,22 +632,14 @@ flag? a ?? b : c ?? d
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (ternary_expression
-      (single_expression
-        (identifier))
-      (single_expression
-        (or_maybe_operation
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier))))
-      (single_expression
-        (or_maybe_operation
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier)))))))
+  (ternary_expression
+    (identifier)
+    (or_maybe_operation
+      (identifier)
+      (identifier))
+    (or_maybe_operation
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Or-maybe with ternary expression
@@ -992,20 +650,12 @@ var := a ?? b ? c : d
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (or_maybe_operation
+        (identifier)
         (identifier))
-      (assignment_operator)
-      (single_expression
-        (ternary_expression
-          (single_expression
-            (or_maybe_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier))))
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier)))))))
+      (identifier)
+      (identifier))))

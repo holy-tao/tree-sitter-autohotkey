@@ -10,14 +10,10 @@ Naked block
 
 (source_file
   (block
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Block with object literal
@@ -31,20 +27,14 @@ Block with object literal
 
 (source_file
   (block
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (object_literal
-              (object_literal_member_sequence
-                (object_literal_member
-                  (identifier)
-                  (single_expression
-                    (literal
-                      (integer_literal))))))))))))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (integer_literal)))))))
 
 ================================================================================
 Empty return statement
@@ -69,9 +59,7 @@ return 1
 (source_file
   (return_statement
     (return)
-    (single_expression
-      (literal
-        (integer_literal)))))
+    (integer_literal)))
 
 ================================================================================
 Return with arithmetic statement
@@ -84,14 +72,9 @@ return 2 + 2
 (source_file
   (return_statement
     (return)
-    (single_expression
-      (additive_operation
-        (single_expression
-          (literal
-            (integer_literal)))
-        (single_expression
-          (literal
-            (integer_literal)))))))
+    (additive_operation
+      (integer_literal)
+      (integer_literal))))
 
 ================================================================================
 Parenthesized return with literal
@@ -104,11 +87,8 @@ return("example")
 (source_file
   (return_statement
     (return)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (literal
-            (string_literal)))))))
+    (expression_sequence
+      (string_literal))))
 
 ================================================================================
 If statement with braces
@@ -123,24 +103,15 @@ if (x > 5) {
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (relational_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (literal
-                (integer_literal)))))))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (integer_literal)))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (float_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (float_literal)))))
 
 ================================================================================
 If-else statement
@@ -157,35 +128,22 @@ if (x > 5) {
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (relational_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (literal
-                (integer_literal)))))))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (integer_literal)))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (float_literal))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (float_literal)))
     (else_statement
       (else)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 If-else-if chain
@@ -204,57 +162,35 @@ if (x > 10) {
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (relational_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (literal
-                (float_literal)))))))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (float_literal)))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (integer_literal))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))
     (else_statement
       (else)
       (if_statement
         (if)
-        (single_expression
-          (expression_sequence
-            (single_expression
-              (relational_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (literal
-                    (integer_literal)))))))
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (integer_literal)))
         (block
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal))))))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal)))
         (else_statement
           (else)
           (block
-            (single_expression
-              (assignment_operation
-                (single_expression
-                  (identifier))
-                (assignment_operator)
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))))))))
 
 ================================================================================
 While loop
@@ -269,19 +205,13 @@ while (i < 10) {
 (source_file
   (while_statement
     (while)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (relational_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (literal
-                (float_literal)))))))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (float_literal)))
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))))
+      (postfix_operation
+        (identifier)))))
 
 ================================================================================
 Loop with count
@@ -296,13 +226,10 @@ loop 5 {
 (source_file
   (loop_statement
     (loop)
-    (single_expression
-      (literal
-        (integer_literal)))
+    (integer_literal)
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))))
+      (postfix_operation
+        (identifier)))))
 
 ================================================================================
 Parenthesized loop with count
@@ -317,15 +244,11 @@ loop (5) {
 (source_file
   (loop_statement
     (loop)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (literal
-            (integer_literal)))))
+    (expression_sequence
+      (integer_literal))
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))))
+      (postfix_operation
+        (identifier)))))
 
 ================================================================================
 Loop with break
@@ -345,15 +268,10 @@ loop {
     (block
       (if_statement
         (if)
-        (single_expression
-          (expression_sequence
-            (single_expression
-              (relational_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (literal
-                    (float_literal)))))))
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (float_literal)))
         (block
           (break_statement
             (break)))))))
@@ -374,31 +292,21 @@ loop 10 {
 (source_file
   (loop_statement
     (loop)
-    (single_expression
-      (literal
-        (float_literal)))
+    (float_literal)
     (block
       (if_statement
         (if)
-        (single_expression
-          (expression_sequence
-            (single_expression
-              (equality_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (literal
-                    (integer_literal)))))))
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (integer_literal)))
         (block
           (continue_statement
             (continue))))
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (identifier)))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))))
 
 ================================================================================
 Throw statement
@@ -411,16 +319,10 @@ throw Error("Invalid value")
 (source_file
   (throw_statement
     (throw)
-    (single_expression
-      (function_call
-        (single_expression
-          (identifier))
-        (arg_sequence
-          (arg
-            (expression_sequence
-              (single_expression
-                (literal
-                  (string_literal))))))))))
+    (function_call
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
 
 ================================================================================
 Goto and label
@@ -436,26 +338,17 @@ y := 2
 (source_file
   (goto_statement
     (goto)
-    (single_expression
-      (identifier)))
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal)))))
+    (identifier))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
   (label
     (identifier))
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Parenthesized goto and label
@@ -471,28 +364,18 @@ y := 2
 (source_file
   (goto_statement
     (goto)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (identifier)))))
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal)))))
+    (expression_sequence
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
   (label
     (identifier))
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Parenthesized goto with expression and label
@@ -508,29 +391,18 @@ y := 2
 (source_file
   (goto_statement
     (goto)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (literal
-            (string_literal))))))
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal)))))
+    (expression_sequence
+      (string_literal)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
   (label
     (identifier))
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Break with label
@@ -552,22 +424,16 @@ loop 10 {
     (identifier))
   (loop_statement
     (loop)
-    (single_expression
-      (literal
-        (float_literal)))
+    (float_literal)
     (block
       (loop_statement
         (loop)
-        (single_expression
-          (literal
-            (integer_literal)))
+        (integer_literal)
         (block
           (if_statement
             (if)
-            (single_expression
-              (expression_sequence
-                (single_expression
-                  (identifier))))
+            (expression_sequence
+              (identifier))
             (block
               (break_statement
                 (break)
@@ -588,16 +454,12 @@ for value in collection {
     (for)
     (identifier)
     (in)
-    (single_expression
-      (identifier))
+    (identifier)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (identifier)))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))))
 
 ================================================================================
 For-else statement
@@ -617,27 +479,19 @@ else {
     (for)
     (identifier)
     (in)
-    (single_expression
-      (identifier))
+    (identifier)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (identifier)))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))
     (else_statement
       (else)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (boolean_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (boolean_literal))))))
 
 ================================================================================
 Parenthesized for loop single variable
@@ -654,16 +508,12 @@ for (value in collection) {
     (for)
     (identifier)
     (in)
-    (single_expression
-      (identifier))
+    (identifier)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (identifier)))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))))
 
 ================================================================================
 For loop key-value pair
@@ -681,23 +531,15 @@ for key, value in object {
     (identifier)
     (identifier)
     (in)
-    (single_expression
-      (identifier))
+    (identifier)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (index_access
-              (single_expression
-                (identifier))
-              (arg_sequence
-                (arg
-                  (expression_sequence
-                    (single_expression
-                      (identifier)))))))
-          (assignment_operator)
-          (single_expression
-            (identifier)))))))
+      (assignment_operation
+        (index_access
+          (identifier)
+          (arg_sequence
+            (identifier)))
+        (assignment_operator)
+        (identifier)))))
 
 ================================================================================
 For loop key-value pair parenthesized
@@ -715,23 +557,15 @@ for (key, value in object) {
     (identifier)
     (identifier)
     (in)
-    (single_expression
-      (identifier))
+    (identifier)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (index_access
-              (single_expression
-                (identifier))
-              (arg_sequence
-                (arg
-                  (expression_sequence
-                    (single_expression
-                      (identifier)))))))
-          (assignment_operator)
-          (single_expression
-            (identifier)))))))
+      (assignment_operation
+        (index_access
+          (identifier)
+          (arg_sequence
+            (identifier)))
+        (assignment_operator)
+        (identifier)))))
 
 ================================================================================
 Try-catch
@@ -749,31 +583,22 @@ try {
   (try_statement
     (try)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (multiplicative_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier)))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (multiplicative_operation
+          (identifier)
+          (identifier))))
     (catch_clause
       (catch)
       (identifier)
       (as)
       (identifier)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Naked try
@@ -786,19 +611,12 @@ try x := 1 / 0
 (source_file
   (try_statement
     (try)
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (multiplicative_operation
-            (single_expression
-              (literal
-                (integer_literal)))
-            (single_expression
-              (literal
-                (integer_literal)))))))))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (multiplicative_operation
+        (integer_literal)
+        (integer_literal)))))
 
 ================================================================================
 Try-catch with parenthesized catch
@@ -816,31 +634,22 @@ try {
   (try_statement
     (try)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (multiplicative_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier)))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (multiplicative_operation
+          (identifier)
+          (identifier))))
     (catch_clause
       (catch)
       (identifier)
       (as)
       (identifier)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Try-finally
@@ -858,25 +667,17 @@ try {
   (try_statement
     (try)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (integer_literal))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))
     (finally_clause
       (finally)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Try-catch-finally
@@ -896,41 +697,26 @@ try {
   (try_statement
     (try)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (multiplicative_operation
-              (single_expression
-                (literal
-                  (integer_literal)))
-              (single_expression
-                (literal
-                  (integer_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (multiplicative_operation
+          (integer_literal)
+          (integer_literal))))
     (catch_clause
       (catch)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))
     (finally_clause
       (finally)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (boolean_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (boolean_literal))))))
 
 ================================================================================
 Try-catch-else-finally
@@ -952,55 +738,36 @@ try {
   (try_statement
     (try)
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (multiplicative_operation
-              (single_expression
-                (literal
-                  (integer_literal)))
-              (single_expression
-                (literal
-                  (integer_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (multiplicative_operation
+          (integer_literal)
+          (integer_literal))))
     (catch_clause
       (catch)
       (identifier)
       (as)
       (identifier)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))
     (else_statement
       (else)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (boolean_literal)))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (boolean_literal))))
     (finally_clause
       (finally)
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (boolean_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (boolean_literal))))))
 
 ================================================================================
 Switch statement
@@ -1020,45 +787,28 @@ switch value {
 (source_file
   (switch_statement
     (switch)
-    (single_expression
-      (identifier))
+    (identifier)
     (switch_body
       (case_clause
         (case)
-        (single_expression
-          (literal
-            (integer_literal)))
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal))))))
+        (integer_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
       (case_clause
         (case)
-        (single_expression
-          (literal
-            (integer_literal)))
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal))))))
+        (integer_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
       (default_clause
         (default)
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))))))
 
 ================================================================================
 Switch statement with parentheses
@@ -1078,47 +828,29 @@ switch (value) {
 (source_file
   (switch_statement
     (switch)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (identifier))))
+    (expression_sequence
+      (identifier))
     (switch_body
       (case_clause
         (case)
-        (single_expression
-          (literal
-            (integer_literal)))
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal))))))
+        (integer_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
       (case_clause
         (case)
-        (single_expression
-          (literal
-            (integer_literal)))
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal))))))
+        (integer_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
       (default_clause
         (default)
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))))))
 
 ================================================================================
 Switch with multiple case values
@@ -1136,44 +868,25 @@ switch day {
 (source_file
   (switch_statement
     (switch)
-    (single_expression
-      (identifier))
+    (identifier)
     (switch_body
       (case_clause
         (case)
-        (single_expression
-          (literal
-            (string_literal)))
-        (single_expression
-          (literal
-            (string_literal)))
-        (single_expression
-          (literal
-            (string_literal)))
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal))))))
+        (string_literal)
+        (string_literal)
+        (string_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
       (case_clause
         (case)
-        (single_expression
-          (literal
-            (string_literal)))
-        (single_expression
-          (literal
-            (string_literal)))
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal)))))))))
+        (string_literal)
+        (string_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))))))
 
 ================================================================================
 Switch with expressions
@@ -1189,27 +902,18 @@ switch (true) {
 (source_file
   (switch_statement
     (switch)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (literal
-            (boolean_literal)))))
+    (expression_sequence
+      (boolean_literal))
     (switch_body
       (case_clause
         (case)
-        (single_expression
-          (expression_sequence
-            (single_expression
-              (relational_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (literal
-                    (float_literal)))))))
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (float_literal)))
         (return_statement
           (return)
-          (single_expression
-            (identifier)))))))
+          (identifier))))))
 
 ================================================================================
 Nested if statements
@@ -1228,47 +932,29 @@ if (x > 0) {
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (relational_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (literal
-                (integer_literal)))))))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (integer_literal)))
     (block
       (if_statement
         (if)
-        (single_expression
-          (expression_sequence
-            (single_expression
-              (relational_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (literal
-                    (integer_literal)))))))
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (integer_literal)))
         (block
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal))))))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal)))
         (else_statement
           (else)
           (block
-            (single_expression
-              (assignment_operation
-                (single_expression
-                  (identifier))
-                (assignment_operator)
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))))))))
 
 ================================================================================
 If inside loop
@@ -1286,31 +972,21 @@ loop 10 {
 (source_file
   (loop_statement
     (loop)
-    (single_expression
-      (literal
-        (float_literal)))
+    (float_literal)
     (block
       (if_statement
         (if)
-        (single_expression
-          (expression_sequence
-            (single_expression
-              (equality_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (literal
-                    (integer_literal)))))))
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (integer_literal)))
         (block
           (continue_statement
             (continue))))
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (identifier)))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))))
 
 ================================================================================
 Loop inside if
@@ -1327,20 +1003,15 @@ if (processAll) {
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (identifier))))
+    (expression_sequence
+      (identifier))
     (block
       (loop_statement
         (loop)
-        (single_expression
-          (literal
-            (integer_literal)))
+        (integer_literal)
         (block
-          (single_expression
-            (postfix_operation
-              (identifier))))))))
+          (postfix_operation
+            (identifier)))))))
 
 ================================================================================
 Three-level nesting
@@ -1359,37 +1030,26 @@ while (running) {
 (source_file
   (while_statement
     (while)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (identifier))))
+    (expression_sequence
+      (identifier))
     (block
       (for_statement
         (for)
         (identifier)
         (in)
-        (single_expression
-          (identifier))
+        (identifier)
         (block
           (if_statement
             (if)
-            (single_expression
-              (expression_sequence
-                (single_expression
-                  (relational_operation
-                    (single_expression
-                      (identifier))
-                    (single_expression
-                      (literal
-                        (integer_literal)))))))
+            (expression_sequence
+              (relational_operation
+                (identifier)
+                (integer_literal)))
             (block
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (identifier)))))))))))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (identifier)))))))))
 
 ================================================================================
 Loop parse
@@ -1406,12 +1066,10 @@ loop parse content, "`n" {
     (loop)
     (parse)
     (identifier)
-    (literal
-      (string_literal))
+    (string_literal)
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))))
+      (postfix_operation
+        (identifier)))))
 
 ================================================================================
 Loop files
@@ -1427,12 +1085,10 @@ loop files "*.txt" {
   (loop_statement
     (loop)
     (files)
-    (literal
-      (string_literal))
+    (string_literal)
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))))
+      (postfix_operation
+        (identifier)))))
 
 ================================================================================
 Loop read
@@ -1448,12 +1104,10 @@ loop read "input.txt" {
   (loop_statement
     (loop)
     (read)
-    (literal
-      (string_literal))
+    (string_literal)
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))))
+      (postfix_operation
+        (identifier)))))
 
 ================================================================================
 Loop until
@@ -1469,18 +1123,13 @@ loop {
   (loop_statement
     (loop)
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))
+      (postfix_operation
+        (identifier)))
     (until_statement
       (until)
-      (single_expression
-        (relational_operation
-          (single_expression
-            (identifier))
-          (single_expression
-            (literal
-              (float_literal))))))))
+      (relational_operation
+        (identifier)
+        (float_literal)))))
 
 ================================================================================
 Loop until with parentheses
@@ -1497,20 +1146,14 @@ until (x > 10)
   (loop_statement
     (loop)
     (block
-      (single_expression
-        (postfix_operation
-          (identifier))))
+      (postfix_operation
+        (identifier)))
     (until_statement
       (until)
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (relational_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (literal
-                  (float_literal))))))))))
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (float_literal))))))
 
 ================================================================================
 If without braces (single statement)
@@ -1524,23 +1167,14 @@ if (x > 5)
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (relational_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (literal
-                (integer_literal)))))))
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (float_literal)))))))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (integer_literal)))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (float_literal))))
 
 ================================================================================
 While without braces
@@ -1554,18 +1188,12 @@ while (i < 10)
 (source_file
   (while_statement
     (while)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (relational_operation
-            (single_expression
-              (identifier))
-            (single_expression
-              (literal
-                (float_literal)))))))
-    (single_expression
-      (postfix_operation
-        (identifier)))))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (float_literal)))
+    (postfix_operation
+      (identifier))))
 
 ================================================================================
 For without braces
@@ -1581,15 +1209,11 @@ for v in arr
     (for)
     (identifier)
     (in)
-    (single_expression
-      (identifier))
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (identifier))))))
+    (identifier)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (identifier))))
 
 ================================================================================
 Empty blocks
@@ -1604,23 +1228,17 @@ loop 5 { }
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (identifier))))
+    (expression_sequence
+      (identifier))
     (block))
   (while_statement
     (while)
-    (single_expression
-      (expression_sequence
-        (single_expression
-          (identifier))))
+    (expression_sequence
+      (identifier))
     (block))
   (loop_statement
     (loop)
-    (single_expression
-      (literal
-        (integer_literal)))
+    (integer_literal)
     (block)))
 
 ================================================================================
@@ -1636,22 +1254,14 @@ if x > 5 {
 (source_file
   (if_statement
     (if)
-    (single_expression
-      (relational_operation
-        (single_expression
-          (identifier))
-        (single_expression
-          (literal
-            (integer_literal)))))
+    (relational_operation
+      (identifier)
+      (integer_literal))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (float_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (float_literal)))))
 
 ================================================================================
 Nested switch
@@ -1672,39 +1282,25 @@ switch type {
 (source_file
   (switch_statement
     (switch)
-    (single_expression
-      (identifier))
+    (identifier)
     (switch_body
       (case_clause
         (case)
-        (single_expression
-          (literal
-            (string_literal)))
+        (string_literal)
         (switch_statement
           (switch)
-          (single_expression
-            (identifier))
+          (identifier)
           (switch_body
             (case_clause
               (case)
-              (single_expression
-                (literal
-                  (integer_literal)))
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (literal
-                      (string_literal))))))
+              (integer_literal)
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (string_literal)))
             (default_clause
               (default)
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (literal
-                      (string_literal))))))))))))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (string_literal)))))))))

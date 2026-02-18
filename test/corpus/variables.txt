@@ -7,16 +7,12 @@ global ONE := 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (variable_declaration
-          (scope_identifier)
-          (identifier)))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (variable_declaration
+      (scope_identifier)
+      (identifier))
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Case insensitive identifier mixed case
@@ -27,16 +23,12 @@ global oNE := 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (variable_declaration
-          (scope_identifier)
-          (identifier)))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (variable_declaration
+      (scope_identifier)
+      (identifier))
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Global variable declaration
@@ -47,10 +39,9 @@ global myGlobal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier)))
 
 ================================================================================
 Global declaration uppercase
@@ -61,10 +52,9 @@ GLOBAL myGlobal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier)))
 
 ================================================================================
 Local variable declaration
@@ -75,10 +65,9 @@ local myLocal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier)))
 
 ================================================================================
 Local declaration mixed case
@@ -89,10 +78,9 @@ LocAL myLocal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier)))
 
 ================================================================================
 Static variable declaration
@@ -103,10 +91,9 @@ static myStatic
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier)))
 
 ================================================================================
 Static declaration uppercase
@@ -117,10 +104,9 @@ STATIC myStatic
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (variable_declaration
-      (scope_identifier)
-      (identifier))))
+  (variable_declaration
+    (scope_identifier)
+    (identifier)))
 
 ================================================================================
 Identifier with underscore
@@ -131,14 +117,10 @@ _privateVar := 0
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Identifier with numbers
@@ -149,14 +131,10 @@ var123 := 321
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (float_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (float_literal)))
 
 ================================================================================
 VarRef with initializer
@@ -167,13 +145,8 @@ VarRef with initializer
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (varref_operation
-          (single_expression
-            (identifier))))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (float_literal))))))
+  (assignment_operation
+    (varref_operation
+      (identifier))
+    (assignment_operator)
+    (float_literal)))

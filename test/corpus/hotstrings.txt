@@ -79,11 +79,7 @@ Execution hotstring with code block
       (call_statement
         (identifier)
         (arg_sequence
-          (arg
-            (expression_sequence
-              (single_expression
-                (literal
-                  (string_literal))))))))))
+          (string_literal))))))
 
 ================================================================================
 Execution hotstring with function declaration
@@ -110,60 +106,37 @@ Execution hotstring with function declaration
       (identifier)
       (function_head
         (param_sequence
-          (param
-            (identifier))))
+          (identifier)))
       (function_body
         (block
           (if_statement
             (if)
-            (single_expression
-              (expression_sequence
-                (single_expression
-                  (equality_operation
-                    (single_expression
-                      (identifier))
-                    (single_expression
-                      (literal
-                        (string_literal)))))))
+            (expression_sequence
+              (equality_operation
+                (identifier)
+                (string_literal)))
             (call_statement
               (identifier)
               (arg_sequence
-                (arg
-                  (expression_sequence
-                    (single_expression
-                      (literal
-                        (string_literal)))))))
+                (string_literal)))
             (else_statement
               (else)
               (if_statement
                 (if)
-                (single_expression
-                  (expression_sequence
-                    (single_expression
-                      (equality_operation
-                        (single_expression
-                          (identifier))
-                        (single_expression
-                          (literal
-                            (string_literal)))))))
+                (expression_sequence
+                  (equality_operation
+                    (identifier)
+                    (string_literal)))
                 (call_statement
                   (identifier)
                   (arg_sequence
-                    (arg
-                      (expression_sequence
-                        (single_expression
-                          (literal
-                            (string_literal)))))))
+                    (string_literal)))
                 (else_statement
                   (else)
                   (call_statement
                     (identifier)
                     (arg_sequence
-                      (arg
-                        (expression_sequence
-                          (single_expression
-                            (literal
-                              (string_literal))))))))))))))))
+                      (string_literal))))))))))))
 
 ================================================================================
 Option: asterisk (*)
@@ -617,11 +590,7 @@ Edge case: options with code block
       (call_statement
         (identifier)
         (arg_sequence
-          (arg
-            (expression_sequence
-              (single_expression
-                (literal
-                  (string_literal))))))))))
+          (string_literal))))))
 
 ================================================================================
 Edge case: options with unbraced statements
@@ -640,11 +609,7 @@ Edge case: options with unbraced statements
     (call_statement
       (identifier)
       (arg_sequence
-        (arg
-          (expression_sequence
-            (single_expression
-              (literal
-                (string_literal)))))))))
+        (string_literal)))))
 
 ================================================================================
 Edge case: alphanumeric trigger

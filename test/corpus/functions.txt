@@ -14,14 +14,10 @@ Function() {
     (function_head)
     (function_body
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (integer_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Function declaration with fat arrow budy
@@ -36,9 +32,7 @@ Function() => 1
     (identifier)
     (function_head)
     (function_body
-      (single_expression
-        (literal
-          (integer_literal))))))
+      (integer_literal))))
 
 ================================================================================
 Static function (Note: only legal in class definitions)
@@ -56,23 +50,16 @@ static Function(arg1, arg2) {
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (identifier))
-        (param
-          (identifier))))
+        (identifier)
+        (identifier)))
     (function_body
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (additive_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (identifier))))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (additive_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Static function with fat arrow body
@@ -88,17 +75,12 @@ static Function(arg1, arg2) => arg1 - arg2
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (identifier))
-        (param
-          (identifier))))
+        (identifier)
+        (identifier)))
     (function_body
-      (single_expression
-        (additive_operation
-          (single_expression
-            (identifier))
-          (single_expression
-            (identifier)))))))
+      (additive_operation
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Function declaration wildcard parameter
@@ -117,14 +99,10 @@ Function(*) {
       (wildcard))
     (function_body
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (identifier))
-            (assignment_operator)
-            (single_expression
-              (literal
-                (string_literal)))))))))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))))))
 
 ================================================================================
 Function declaration named parameters
@@ -141,28 +119,18 @@ Function(arg1, arg2) {
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (identifier))
-        (param
-          (identifier))))
+        (identifier)
+        (identifier)))
     (function_body
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (explicit_concat_operation
+            (explicit_concat_operation
+              (identifier)
               (identifier))
-            (assignment_operator)
-            (single_expression
-              (explicit_concat_operation
-                (single_expression
-                  (explicit_concat_operation
-                    (single_expression
-                      (identifier))
-                    (single_expression
-                      (identifier))))
-                (single_expression
-                  (literal
-                    (string_literal)))))))))))
+            (string_literal)))))))
 
 ================================================================================
 Function declaration variadic parameters
@@ -184,22 +152,14 @@ Function(params*) {
           (wildcard))))
     (function_body
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (explicit_concat_operation
+            (explicit_concat_operation
+              (identifier)
               (identifier))
-            (assignment_operator)
-            (single_expression
-              (explicit_concat_operation
-                (single_expression
-                  (explicit_concat_operation
-                    (single_expression
-                      (identifier))
-                    (single_expression
-                      (identifier))))
-                (single_expression
-                  (literal
-                    (string_literal)))))))))))
+            (string_literal)))))))
 
 ================================================================================
 Nested functions
@@ -229,16 +189,12 @@ Function(params*) {
             (wildcard))
           (function_body
             (block
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (variable_declaration
-                      (scope_identifier)
-                      (identifier)))
-                  (assignment_operator)
-                  (single_expression
-                    (literal
-                      (string_literal))))))))))))
+              (assignment_operation
+                (variable_declaration
+                  (scope_identifier)
+                  (identifier))
+                (assignment_operator)
+                (string_literal)))))))))
 
 ================================================================================
 Multiple nested functions
@@ -270,31 +226,22 @@ Function(params*) {
             (wildcard))
           (function_body
             (block
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (variable_declaration
-                      (scope_identifier)
-                      (identifier)))
-                  (assignment_operator)
-                  (single_expression
-                    (literal
-                      (string_literal))))))))
+              (assignment_operation
+                (variable_declaration
+                  (scope_identifier)
+                  (identifier))
+                (assignment_operator)
+                (string_literal)))))
         (function_declaration
           (identifier)
           (function_head
             (param_sequence
-              (param
-                (identifier))
-              (param
-                (identifier))))
+              (identifier)
+              (identifier)))
           (function_body
-            (single_expression
-              (additive_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (identifier))))))))))
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Static nested function
@@ -313,10 +260,8 @@ Function(arg1, arg2) {
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (identifier))
-        (param
-          (identifier))))
+        (identifier)
+        (identifier)))
     (function_body
       (block
         (function_declaration
@@ -325,14 +270,10 @@ Function(arg1, arg2) {
           (function_head)
           (function_body
             (block
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (literal
-                      (string_literal))))))))))))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (string_literal)))))))))
 
 ================================================================================
 Deeply nested functions
@@ -382,21 +323,17 @@ Function(params*) {
                             (identifier)
                             (function_head
                               (param_sequence
-                                (param
+                                (default_param
                                   (identifier)
                                   (assignment_operator)
-                                  (single_expression
-                                    (literal
-                                      (string_literal))))))
+                                  (string_literal))))
                             (function_body
                               (block
                                 (function_declaration
                                   (identifier)
                                   (function_head)
                                   (function_body
-                                    (single_expression
-                                      (literal
-                                        (string_literal)))))))))))))))))))))
+                                    (string_literal)))))))))))))))))))
 
 ================================================================================
 Brace on new line
@@ -414,28 +351,19 @@ Function(arg1, arg2, &out)
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (identifier))
-        (param
-          (identifier))
+        (identifier)
+        (identifier)
         (byref_param
-          (param
-            (identifier)))))
+          (identifier))))
     (function_body
       (block
-        (single_expression
-          (assignment_operation
-            (single_expression
-              (varref_operation
-                (single_expression
-                  (identifier))))
-            (assignment_operator)
-            (single_expression
-              (additive_operation
-                (single_expression
-                  (identifier))
-                (single_expression
-                  (identifier))))))))))
+        (assignment_operation
+          (varref_operation
+            (identifier))
+          (assignment_operator)
+          (additive_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Function with empty body
@@ -452,10 +380,8 @@ Function(arg1, arg2) {
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (identifier))
-        (param
-          (identifier))))
+        (identifier)
+        (identifier)))
     (function_body
       (block))))
 
@@ -474,22 +400,16 @@ Function(arg1, arg2) {
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (identifier))
-        (param
-          (identifier))))
+        (identifier)
+        (identifier)))
     (function_body
       (block
         (return_statement
           (return)
-          (single_expression
-            (expression_sequence
-              (single_expression
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (identifier)))))))))))
+          (expression_sequence
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Function with optional argument
@@ -506,14 +426,11 @@ Function(arg1?) {
     (identifier)
     (function_head
       (param_sequence
-        (param
-          (optional_identifier
-            (identifier)
-            (optional_marker)))))
+        (optional_param
+          (identifier)
+          (optional_marker))))
     (function_body
       (block
         (return_statement
           (return)
-          (single_expression
-            (literal
-              (integer_literal))))))))
+          (integer_literal))))))

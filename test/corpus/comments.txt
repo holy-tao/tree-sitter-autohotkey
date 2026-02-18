@@ -29,14 +29,10 @@ a := 1 ; line comment
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (integer_literal)))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
   (line_comment))
 
 ================================================================================
@@ -48,14 +44,10 @@ str := "string `; not a comment"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (string_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 String literal with unescaped semicolon
@@ -116,15 +108,11 @@ str := "/* not a block comment */"
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (string_literal
-            (block_comment)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal
+      (block_comment))))
 
 ================================================================================
 Line comments in code block
@@ -143,16 +131,10 @@ MyFirstScript() {
     (function_body
       (block
         (line_comment)
-        (single_expression
-          (function_call
-            (single_expression
-              (identifier))
-            (arg_sequence
-              (arg
-                (expression_sequence
-                  (single_expression
-                    (literal
-                      (string_literal))))))))))))
+        (function_call
+          (identifier)
+          (arg_sequence
+            (string_literal)))))))
 
 ================================================================================
 Block comment with line comment in it
@@ -179,38 +161,18 @@ vals := Map(
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (function_call
-          (single_expression
-            (identifier))
-          (arg_sequence
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (string_literal)))))
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal)))))
-            (line_comment)
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (string_literal)))))
-            (arg
-              (expression_sequence
-                (single_expression
-                  (literal
-                    (integer_literal))))))
-          (line_comment))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (identifier)
+      (arg_sequence
+        (string_literal)
+        (integer_literal)
+        (line_comment)
+        (string_literal)
+        (integer_literal))
+      (line_comment))))
 
 ================================================================================
 Line comment in a method call
@@ -224,23 +186,12 @@ obj.Function(
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (function_call
-      (single_expression
-        (member_access
-          (single_expression
-            (identifier))
-          (member_identifier
-            (identifier))))
-      (arg_sequence
-        (arg
-          (expression_sequence
-            (single_expression
-              (literal
-                (hex_literal)))))
-        (line_comment)
-        (arg
-          (expression_sequence
-            (single_expression
-              (literal
-                (string_literal)))))))))
+  (function_call
+    (member_access
+      (identifier)
+      (member_identifier
+        (identifier)))
+    (arg_sequence
+      (hex_literal)
+      (line_comment)
+      (string_literal))))

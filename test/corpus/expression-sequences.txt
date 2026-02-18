@@ -8,22 +8,14 @@ one := 1, two := 2
 
 (source_file
   (expression_sequence
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Single line expression sequence with scope modifier
@@ -35,24 +27,16 @@ local one := 1, two := 2
 
 (source_file
   (expression_sequence
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (variable_declaration
-            (scope_identifier)
-            (identifier)))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))
-    (single_expression
-      (assignment_operation
-        (single_expression
-          (identifier))
-        (assignment_operator)
-        (single_expression
-          (literal
-            (integer_literal)))))))
+    (assignment_operation
+      (variable_declaration
+        (scope_identifier)
+        (identifier))
+      (assignment_operator)
+      (integer_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Parenthesized expression sequence as assignment
@@ -63,23 +47,15 @@ var := (one := 1, one)
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (identifier)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (identifier))))
 
 ================================================================================
 Multiline parenthesized expression sequence as assignment
@@ -92,29 +68,18 @@ var := (
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
 
 ================================================================================
 Parenthesized expression sequence with math
@@ -125,27 +90,17 @@ var := (two := 2, two + two)
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (additive_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier)))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (additive_operation
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Expression sequence as math operand
@@ -156,32 +111,17 @@ Expression sequence as math operand
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (additive_operation
-      (single_expression
-        (literal
-          (integer_literal)))
-      (single_expression
-        (expression_sequence
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (additive_operation
-              (single_expression
-                (identifier))
-              (single_expression
-                (identifier)))))))))
+  (additive_operation
+    (integer_literal)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (additive_operation
+        (identifier)
+        (identifier)))))

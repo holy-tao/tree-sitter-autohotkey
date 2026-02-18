@@ -7,9 +7,7 @@ Integer literal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (float_literal))))
+  (float_literal))
 
 ================================================================================
 Negative integer
@@ -20,9 +18,7 @@ Negative integer
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (float_literal))))
+  (float_literal))
 
 ================================================================================
 Float literal
@@ -33,9 +29,7 @@ Float literal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (float_literal))))
+  (float_literal))
 
 ================================================================================
 Hex literal
@@ -46,9 +40,7 @@ Hex literal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (hex_literal))))
+  (hex_literal))
 
 ================================================================================
 Double-quoted string
@@ -59,9 +51,7 @@ Double-quoted string
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 Single-quoted string
@@ -72,9 +62,7 @@ Single-quoted string
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 String with single quotes inside double quotes
@@ -85,9 +73,7 @@ String with single quotes inside double quotes
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 String with double quotes inside single quotes
@@ -98,9 +84,7 @@ String with double quotes inside single quotes
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 String with nested single quotes
@@ -111,9 +95,7 @@ String with nested single quotes
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 String with escape sequence
@@ -124,9 +106,7 @@ String with escape sequence
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 String with unused escape sequence
@@ -137,9 +117,7 @@ String with unused escape sequence
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 String with escaped backtick
@@ -150,9 +128,7 @@ String with escaped backtick
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 Empty double-quoted string
@@ -163,9 +139,7 @@ Empty double-quoted string
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 Empty single-quoted string
@@ -176,9 +150,7 @@ Empty single-quoted string
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (string_literal))))
+  (string_literal))
 
 ================================================================================
 Boolean true lowercase
@@ -189,9 +161,7 @@ true
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (boolean_literal))))
+  (boolean_literal))
 
 ================================================================================
 Boolean true uppercase
@@ -202,9 +172,7 @@ TRUE
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (boolean_literal))))
+  (boolean_literal))
 
 ================================================================================
 Boolean false mixed case
@@ -215,9 +183,7 @@ False
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (boolean_literal))))
+  (boolean_literal))
 
 ================================================================================
 Unset literal
@@ -228,9 +194,7 @@ unset
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (unset))))
+  (unset))
 
 ================================================================================
 Empty array literal
@@ -241,9 +205,7 @@ Empty array literal
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (array_literal))))
+  (array_literal))
 
 ================================================================================
 Array literal with string literals
@@ -254,19 +216,11 @@ Array literal with string literals
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (array_literal
-        (expression_sequence
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal)))
-          (single_expression
-            (literal
-              (string_literal))))))))
+  (array_literal
+    (expression_sequence
+      (string_literal)
+      (string_literal)
+      (string_literal))))
 
 ================================================================================
 Array literal with expressions
@@ -281,48 +235,26 @@ Array literal with expressions
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (array_literal
-        (expression_sequence
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (integer_literal)))))
-          (single_expression
-            (expression_sequence
-              (single_expression
-                (assignment_operation
-                  (single_expression
-                    (identifier))
-                  (assignment_operator)
-                  (single_expression
-                    (additive_operation
-                      (single_expression
-                        (literal
-                          (integer_literal)))
-                      (single_expression
-                        (literal
-                          (integer_literal)))))))
-              (single_expression
-                (additive_operation
-                  (single_expression
-                    (identifier))
-                  (single_expression
-                    (literal
-                      (integer_literal))))))))))))
+  (array_literal
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (additive_operation
+            (integer_literal)
+            (integer_literal)))
+        (additive_operation
+          (identifier)
+          (integer_literal))))))
 
 ================================================================================
 Array literal with numbers
@@ -333,19 +265,11 @@ Array literal with numbers
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (array_literal
-        (expression_sequence
-          (single_expression
-            (literal
-              (integer_literal)))
-          (single_expression
-            (literal
-              (integer_literal)))
-          (single_expression
-            (literal
-              (integer_literal))))))))
+  (array_literal
+    (expression_sequence
+      (integer_literal)
+      (integer_literal)
+      (integer_literal))))
 
 ================================================================================
 Array literal with object literals
@@ -359,28 +283,18 @@ Array literal with object literals
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (literal
-      (array_literal
-        (expression_sequence
-          (single_expression
-            (literal
-              (object_literal
-                (object_literal_member_sequence
-                  (object_literal_member
-                    (identifier)
-                    (single_expression
-                      (literal
-                        (string_literal))))))))
-          (single_expression
-            (literal
-              (object_literal
-                (object_literal_member_sequence
-                  (object_literal_member
-                    (identifier)
-                    (single_expression
-                      (literal
-                        (string_literal)))))))))))))
+  (array_literal
+    (expression_sequence
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (string_literal))))
+      (object_literal
+        (object_literal_member_sequence
+          (object_literal_member
+            (identifier)
+            (string_literal)))))))
 
 ================================================================================
 Empty object literal
@@ -391,14 +305,10 @@ obj := {}
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal)))
 
 ================================================================================
 Object literal with simple member
@@ -409,20 +319,14 @@ obj := { one: 1 }
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (literal
-                    (integer_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (integer_literal))))))
 
 ================================================================================
 Object literal with multiple members
@@ -436,25 +340,17 @@ obj := {
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (literal
-                    (integer_literal))))
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (literal
-                    (string_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (integer_literal))
+        (object_literal_member
+          (identifier)
+          (string_literal))))))
 
 ================================================================================
 Object literal with expression member
@@ -469,51 +365,31 @@ obj := {
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (literal
-                    (integer_literal))))
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (literal
-                    (string_literal))))
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (expression_sequence
-                    (single_expression
-                      (assignment_operation
-                        (single_expression
-                          (identifier))
-                        (assignment_operator)
-                        (single_expression
-                          (literal
-                            (integer_literal)))))
-                    (single_expression
-                      (assignment_operation
-                        (single_expression
-                          (identifier))
-                        (assignment_operator)
-                        (single_expression
-                          (literal
-                            (integer_literal)))))
-                    (single_expression
-                      (additive_operation
-                        (single_expression
-                          (identifier))
-                        (single_expression
-                          (identifier))))))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (integer_literal))
+        (object_literal_member
+          (identifier)
+          (string_literal))
+        (object_literal_member
+          (identifier)
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Object literal with array
@@ -524,20 +400,14 @@ obj := { emptyArr: [] }
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
-                (identifier)
-                (single_expression
-                  (literal
-                    (array_literal)))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (array_literal))))))
 
 ================================================================================
 Object literal with fat-arrow function member
@@ -548,33 +418,23 @@ obj := { Add: (self, left, right) => left + right }
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (fat_arrow_function
+            (function_head
+              (param_sequence
                 (identifier)
-                (single_expression
-                  (fat_arrow_function
-                    (function_head
-                      (param_sequence
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))))
-                    (arrow)
-                    (additive_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier)))))))))))))
+                (identifier)
+                (identifier)))
+            (arrow)
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Object literal multiline with fat-arrow function members
@@ -588,51 +448,35 @@ obj := {
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (fat_arrow_function
+            (function_head
+              (param_sequence
                 (identifier)
-                (single_expression
-                  (fat_arrow_function
-                    (function_head
-                      (param_sequence
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))))
-                    (arrow)
-                    (additive_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier))))))
-              (object_literal_member
                 (identifier)
-                (single_expression
-                  (fat_arrow_function
-                    (function_head
-                      (param_sequence
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))
-                        (param
-                          (identifier))))
-                    (arrow)
-                    (additive_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (identifier)))))))))))))
+                (identifier)))
+            (arrow)
+            (additive_operation
+              (identifier)
+              (identifier))))
+        (object_literal_member
+          (identifier)
+          (fat_arrow_function
+            (function_head
+              (param_sequence
+                (identifier)
+                (identifier)
+                (identifier)))
+            (arrow)
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Nested object literals
@@ -650,33 +494,21 @@ obj := {
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_expression
-    (assignment_operation
-      (single_expression
-        (identifier))
-      (assignment_operator)
-      (single_expression
-        (literal
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (string_literal))
+        (object_literal_member
+          (identifier)
           (object_literal
             (object_literal_member_sequence
               (object_literal_member
                 (identifier)
-                (single_expression
-                  (literal
-                    (string_literal))))
+                (string_literal))
               (object_literal_member
                 (identifier)
-                (single_expression
-                  (literal
-                    (object_literal
-                      (object_literal_member_sequence
-                        (object_literal_member
-                          (identifier)
-                          (single_expression
-                            (literal
-                              (string_literal))))
-                        (object_literal_member
-                          (identifier)
-                          (single_expression
-                            (literal
-                              (float_literal))))))))))))))))
+                (float_literal)))))))))

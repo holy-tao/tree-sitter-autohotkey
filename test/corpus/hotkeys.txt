@@ -15,14 +15,10 @@ Hotkey with modifier symbols
       (hotkey_win)
       (identifier))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (string_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (string_literal)))))
 
 ================================================================================
 Hotkey with no modifier symbols
@@ -40,14 +36,10 @@ n::
     (hotkey_trigger
       (identifier))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (string_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (string_literal)))))
 
 ================================================================================
 No-op hotkey with fallthrough
@@ -70,14 +62,10 @@ a::
       (hotkey_win)
       (identifier))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (string_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (string_literal)))))
 
 ================================================================================
 Hotkey with only modifier symbols
@@ -94,9 +82,7 @@ Hotkey with only modifier symbols
       (hotkey_ctrl)
       (hotkey_right)
       (hotkey_shift))
-    (single_expression
-      (literal
-        (string_literal)))))
+    (string_literal)))
 
 ================================================================================
 Hotkey after directive (check '#' is parsed correctly)
@@ -117,9 +103,7 @@ Hotkey after directive (check '#' is parsed correctly)
       (hotkey_ctrl)
       (hotkey_right)
       (hotkey_shift))
-    (single_expression
-      (literal
-        (string_literal)))))
+    (string_literal)))
 
 ================================================================================
 Hotkey with combinator modifier
@@ -136,9 +120,7 @@ LCtrl & CapsLock::"no-op"
       (hotkey_and)
       (hotkey_trigger
         (identifier)))
-    (single_expression
-      (literal
-        (string_literal)))))
+    (string_literal)))
 
 ================================================================================
 Hotkey with verbal up modifier
@@ -153,9 +135,7 @@ LCtrl up::"no-op"
     (hotkey_trigger
       (identifier)
       (hotkey_up))
-    (single_expression
-      (literal
-        (string_literal)))))
+    (string_literal)))
 
 ================================================================================
 Alt-tab hotkey: AltTab
@@ -292,38 +272,22 @@ Named function hotkeys
       (identifier)
       (function_head
         (param_sequence
-          (param
-            (identifier))))
+          (identifier)))
       (function_body
         (block
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (literal
-                  (string_literal)))))
-          (single_expression
-            (assignment_operation
-              (single_expression
-                (identifier))
-              (assignment_operator)
-              (single_expression
-                (ternary_expression
-                  (single_expression
-                    (equality_operation
-                      (single_expression
-                        (identifier))
-                      (single_expression
-                        (literal
-                          (string_literal)))))
-                  (single_expression
-                    (literal
-                      (string_literal)))
-                  (single_expression
-                    (literal
-                      (string_literal))))))))))))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (string_literal))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (ternary_expression
+              (equality_operation
+                (identifier)
+                (string_literal))
+              (string_literal)
+              (string_literal))))))))
 
 ================================================================================
 Hotkey with combinator and modifier on left side
@@ -341,11 +305,8 @@ Hotkey with combinator and modifier on left side
       (hotkey_and)
       (hotkey_trigger
         (identifier)))
-    (single_expression
-      (identifier)))
-  (single_expression
-    (literal
-      (string_literal))))
+    (identifier))
+  (string_literal))
 
 ================================================================================
 Hotkey with combinator and modifier on right side
@@ -363,11 +324,8 @@ RButton & ~LButton::MsgBox "You pressed the left mouse button while holding down
       (hotkey_trigger
         (hotkey_nonblocking)
         (identifier)))
-    (single_expression
-      (identifier)))
-  (single_expression
-    (literal
-      (string_literal))))
+    (identifier))
+  (string_literal))
 
 ================================================================================
 Hotkey with combinator and modifiers on both sides
@@ -391,14 +349,10 @@ Hotkey with combinator and modifiers on both sides
         (hotkey_alt)
         (identifier)))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (integer_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
 
 ================================================================================
 Hotkey with modifier and identifier-like name
@@ -413,11 +367,8 @@ Hotkey with modifier and identifier-like name
     (hotkey_trigger
       (hotkey_nonblocking)
       (identifier))
-    (single_expression
-      (identifier)))
-  (single_expression
-    (literal
-      (string_literal))))
+    (identifier))
+  (string_literal))
 
 ================================================================================
 Hotkey with many modifiers
@@ -443,11 +394,7 @@ Hotkey with many modifiers
         (hotkey_alt)
         (identifier)))
     (block
-      (single_expression
-        (assignment_operation
-          (single_expression
-            (identifier))
-          (assignment_operator)
-          (single_expression
-            (literal
-              (integer_literal))))))))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
