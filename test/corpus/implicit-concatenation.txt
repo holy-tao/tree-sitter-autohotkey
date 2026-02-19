@@ -1,0 +1,178 @@
+================================================================================
+Simple implicit concatenation
+================================================================================
+
+var := "Hello" "World"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (implicit_concat_operation
+      (string_literal)
+      (string_literal))))
+
+================================================================================
+Implicit concatenation with call statement
+================================================================================
+
+MsgBox "Hello" "World"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (string_literal)
+        (string_literal)))))
+
+================================================================================
+Long implicit concatenation
+================================================================================
+
+var := "Hello" "World" "!" "from" "AutoHotkey" "!"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (implicit_concat_operation
+      (implicit_concat_operation
+        (implicit_concat_operation
+          (implicit_concat_operation
+            (implicit_concat_operation
+              (string_literal)
+              (string_literal))
+            (string_literal))
+          (string_literal))
+        (string_literal))
+      (string_literal))))
+
+================================================================================
+Implicit concatenation with expression on right
+================================================================================
+
+MsgBox("Pi is approximately " 22/7)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (string_literal)
+        (multiplicative_operation
+          (float_literal)
+          (integer_literal))))))
+
+================================================================================
+Implicit concatenation with numbers
+================================================================================
+
+MsgBox(4 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (integer_literal)
+        (integer_literal)))))
+
+================================================================================
+Implicit concatenation with number with sign
+================================================================================
+
+MsgBox("Test" -5)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (string_literal)
+        (integer_literal)))))
+
+================================================================================
+Implicit concatenation with variables
+================================================================================
+
+MsgBox(A_AhkPath A_AhkVersion)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Implicit concatenation in expression sequence
+================================================================================
+
+MsgBox(A_AhkPath A_AhkVersion, "Version info")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (identifier)
+        (identifier))
+      (string_literal))))
+
+================================================================================
+Implicit concatenation with expression on left
+================================================================================
+
+MsgBox(22/7 "is approximately pi")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (multiplicative_operation
+          (float_literal)
+          (integer_literal))
+        (string_literal)))))
+
+================================================================================
+Implicit concatenation with two expressions
+================================================================================
+
+; "48" - disgusting
+MsgBox(2 + 2 4 + 4)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (additive_operation
+          (integer_literal)
+          (integer_literal))
+        (additive_operation
+          (integer_literal)
+          (integer_literal))))))

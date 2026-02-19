@@ -57,7 +57,8 @@ export default grammar({
   externals: $ => [
     $.optional_marker,
     $._function_def_marker,
-    $.empty_arg
+    $.empty_arg,
+    $._implicit_concat_marker
   ],
 
   conflicts: $ => [
@@ -229,9 +230,16 @@ export default grammar({
       $.bitwise_or_operation,
       $.bitshift_operation,
       $.explicit_concat_operation,
+      $.implicit_concat_operation,
       $.exponent_operation,
       $.or_maybe_operation
     ),
+
+    implicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
+      field("left", $._single_expression),
+      $._implicit_concat_marker,
+      field("right", $._single_expression)
+    )),
 
     // Postfix increment/decrement
     postfix_operation: $ => prec.left(PREC.POSTFIX, seq(
@@ -907,6 +915,8 @@ export default grammar({
     // Used in hotstrings - can match any non-whitespace, non-colon characters
     hotstring_trigger: $ => token(/[^\s:]+/),
 
+    // !FIXME: all statements on the same line as the hotstring are parsed as hotstring replacements
+    // !e.g. :x:hi::MsgBox "Hello, World!" should have the body parsed as a call statement
     hotstring_replacement: $ => token.immediate(/[^\n]+/),  // Rest of line as text replacement (one or more, excludes newline)
 
     hotstring_modifier: $ => choice(
@@ -977,7 +987,8 @@ export default grammar({
         $._single_expression,
         $.function_declaration,
         $.block,
-        $._hotkey_alttabcommand
+        $._hotkey_alttabcommand,
+        $.call_statement
       ))
     )),
 

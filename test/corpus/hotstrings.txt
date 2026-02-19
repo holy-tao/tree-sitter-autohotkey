@@ -681,3 +681,11 @@ Edge case: repeated character trigger
       (hotstring_asterisk))
     (hotstring_trigger)
     (hotstring_replacement)))
+
+================================================================================
+Hotstring with simple call statement
+================================================================================
+
+:x:hi::MsgBox "Hello, World!"
+
+--------------------------------------------------------------------------------

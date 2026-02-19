@@ -10,6 +10,7 @@
 #define is_alpha(c) ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 #define is_alnum(c) (is_alpha(c) || (c >= '0' && c <= '9'))
 #define is_identifier_char(c) (is_alnum(c) || (c == '_'))
+#define is_eol(c) (c == '\r' || c == '\n' || c == '\0')
 #define is_whitespace(c) (c == ' ' || c == '\t' || c == '\n' || c == '\r')
 
 /// Skips all whitespace, including newlines
@@ -17,10 +18,26 @@
                                   lexer->advance(lexer, true);            \
                                 }
 
+#define is_eof(lexer) (lexer->eof(lexer))
+
+/// Check to see if ident is an operator keyword like "and" or "is". Get `ident` from skip_identifier
+#define is_operator_keyword(ident) (strcaseeq(ident, "and") || \
+                                    strcaseeq(ident, "not") || \
+                                    strcaseeq(ident, "is")  || \
+                                    strcaseeq(ident, "or")  || \
+                                    strcaseeq(ident, "contains"))
+
+/// Check to see if a character could start an operator keyword
+#define starts_operator_keyword(c) (c == 'a' || c == 'A' || c == 'n' || c == 'N' || \
+                                    c == 'i' || c == 'I' || c == 'o' || c == 'O' || \
+                                    c == 'c' || c == 'C')
+
+
 enum TokenType {
   OPTIONAL_MARKER,
   FUNCTION_DEF_MARKER,
-  EMPTY_ARG
+  EMPTY_ARG,
+  IMPLICIT_CONCAT_MARKER
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -178,6 +195,90 @@ static bool is_empty_arg(TSLexer *lexer) {
   return (lexer->lookahead == ',');
 }
 
+static inline bool is_operator_start(int32_t c) {
+  return c == '?' || c == '*' || c == '/' || c == '<' || c == '>' || 
+         c == '=' || c == '^' || c == '|' || c == '&' || c == '!' ||
+         c == '~' || c == ':' || c == '.' || c == ',';
+  // Note: +, - excluded (could be unary in concat context)
+}
+
+static inline bool is_expression_start(int32_t c) {
+  // Things that can start a _single_expression
+  return is_identifier_char(c) ||
+         c == '_' || c == '"' || c == '\'' || c == '(' ||
+         c == '+' || c == '-' ||  // unary plus/minus
+         c == '%';                // deref
+}
+
+/// @brief Determines whether this is implicit concatenation. As a side effect, may call `lexer->mark_end`. Definitely
+///        calls it if it returns true. 
+/// @param lexer the lexer
+/// @return true if implicit concatenation, false otherwise
+static bool is_implicit_concatenation(TSLexer *lexer) {
+
+  // Must be followed by whitespace
+  if(!skip_horizontal_ws(lexer)) {
+    return false;
+  }
+
+  // Cannot hit EOL (or EOF)
+  if(is_eol(lexer->lookahead) || is_eof(lexer)) {
+    return false;
+  }
+
+  // Can't be an operator
+  if(is_operator_start(lexer->lookahead)) {
+    return false;
+  }
+
+  if(is_expression_start(lexer->lookahead)) {
+    // Prefix addition/subtraction can't start implicit concatenation for some reason
+    if(lexer->lookahead == '+') {
+      // mark end here so we don't consume the operator
+      lexer->mark_end(lexer);
+
+      lexer->advance(lexer, false);
+      // if ++ or we skipped any space, return false
+      if(skip_horizontal_ws(lexer) || lexer->lookahead == '+' || is_eof(lexer)) {
+        return false;
+      }
+
+      skip_horizontal_ws(lexer);
+      return !is_eof(lexer) && is_expression_start(lexer->lookahead);
+    }
+    else if(lexer->lookahead == '-') {
+      // mark end here so we don't consume the operator
+      lexer->mark_end(lexer);
+
+      lexer->advance(lexer, false);
+      // if -- or we skipped any space, return false
+      if(skip_horizontal_ws(lexer) || lexer->lookahead == '-' || is_eof(lexer)) {
+        return false;
+      }
+
+      skip_horizontal_ws(lexer);
+      return !is_eof(lexer) && is_expression_start(lexer->lookahead);
+    }
+
+    // consume the whitespace we skipped and prevent consumption of the identifier below
+    lexer->mark_end(lexer);
+
+    // Check to see if this is an operator keyword
+    if(starts_operator_keyword(lexer->lookahead)) {
+      char ident[4];
+      int len = skip_identifier(lexer, ident, sizeof(ident));
+
+      if(is_operator_keyword(ident)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
 /// @brief Main scan function. See https://tree-sitter.github.io/tree-sitter/creating-parsers/4-external-scanners.html#scan
 /// @param payload no touching
 /// @param lexer the lexer, see the link above
@@ -198,6 +299,15 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
 
     if (is_empty_arg(lexer)) {
       lexer->result_symbol = EMPTY_ARG;
+      return true;
+    }
+  }
+
+  if(valid_symbols[IMPLICIT_CONCAT_MARKER]) {
+    lexer->mark_end(lexer);
+
+    if(is_implicit_concatenation(lexer)) {
+      lexer->result_symbol = IMPLICIT_CONCAT_MARKER;
       return true;
     }
   }

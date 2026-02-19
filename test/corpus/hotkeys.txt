@@ -290,6 +290,24 @@ Named function hotkeys
               (string_literal))))))))
 
 ================================================================================
+Hotkey with call statement
+================================================================================
+
+^H::MsgBox "Hello, World!"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (identifier))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
+
+================================================================================
 Hotkey with combinator and modifier on left side
 ================================================================================
 
@@ -305,8 +323,10 @@ Hotkey with combinator and modifier on left side
       (hotkey_and)
       (hotkey_trigger
         (identifier)))
-    (identifier))
-  (string_literal))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
 
 ================================================================================
 Hotkey with combinator and modifier on right side
@@ -324,8 +344,10 @@ RButton & ~LButton::MsgBox "You pressed the left mouse button while holding down
       (hotkey_trigger
         (hotkey_nonblocking)
         (identifier)))
-    (identifier))
-  (string_literal))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
 
 ================================================================================
 Hotkey with combinator and modifiers on both sides
@@ -367,8 +389,10 @@ Hotkey with modifier and identifier-like name
     (hotkey_trigger
       (hotkey_nonblocking)
       (identifier))
-    (identifier))
-  (string_literal))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
 
 ================================================================================
 Hotkey with many modifiers
