@@ -521,11 +521,14 @@ export default grammar({
     param_sequence: $ => choice(
       // Just a variadic parameter: (params*)
       $.variadic_param,
-      // One or more regular params, optionally followed by variadic: (a, b, rest*)
+      // One or more regular params, optionally followed by a variadic or wildcard: (a, b, rest*)
       seq(
         choice($._param, $.byref_param),
         repeat(seq(",", choice($._param, $.byref_param))),
-        optional(seq(",", $.variadic_param))
+        optional(choice(
+          seq(",", $.variadic_param),
+          seq(",", $.wildcard)
+        ))
       )
     ),
 

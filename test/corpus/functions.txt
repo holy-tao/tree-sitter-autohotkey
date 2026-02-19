@@ -434,3 +434,77 @@ Function(arg1?) {
         (return_statement
           (return)
           (integer_literal))))))
+
+================================================================================
+Function with wildcard after parameter liest
+================================================================================
+
+Function(arg1, *) {
+    return 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (identifier)
+        (wildcard)))
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (integer_literal))))))
+
+================================================================================
+Function with variadic arg after parameter liest
+================================================================================
+
+Function(arg1, params*) {
+    return 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (identifier)
+        (variadic_param
+          (identifier)
+          (wildcard))))
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (integer_literal))))))
+
+================================================================================
+Function with wildcard not at end
+:error
+================================================================================
+
+Function(arg1, *, illegal) {
+    return 1
+}
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Function with variadic arg not at end
+:error
+================================================================================
+
+Function(arg1, variadic*, illegal) {
+    return 1
+}
+
+--------------------------------------------------------------------------------
+
+
