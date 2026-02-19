@@ -50,7 +50,7 @@ Text replacement with modifier
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_asterisk))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -68,11 +68,9 @@ Execution hotstring with code block
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_backspace))
-    (hotstring_modifier
-      (hotstring_asterisk))
-    (hotstring_modifier
+    (hotstring_option_sequence
+      (hotstring_backspace)
+      (hotstring_asterisk)
       (hotstring_question))
     (hotstring_trigger)
     (block
@@ -99,7 +97,7 @@ Execution hotstring with function declaration
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_execute))
     (hotstring_trigger)
     (function_declaration
@@ -148,7 +146,7 @@ Option: asterisk (*)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_asterisk))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -163,7 +161,7 @@ Option: question mark (?)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_question))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -178,7 +176,7 @@ Option: backspace enabled (B)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_backspace))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -193,7 +191,7 @@ Option: backspace disabled (B0)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_backspace))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -208,7 +206,7 @@ Option: case sensitive (C)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_case_sensitive))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -223,7 +221,7 @@ Option: case insensitive (C0)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_case_sensitive))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -238,7 +236,7 @@ Option: no case conforming (C1)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_case_conform))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -253,7 +251,7 @@ Option: key delay positive (K10)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_key_delay))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -268,7 +266,7 @@ Option: key delay negative (K-1)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_key_delay))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -283,7 +281,7 @@ Option: key delay with spaces (K 5)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_key_delay))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -298,7 +296,7 @@ Option: omit ending char (O)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_omit_ending))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -313,7 +311,7 @@ Option: priority (P1)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_priority))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -328,7 +326,7 @@ Option: raw mode (R)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_raw))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -343,7 +341,7 @@ Option: suspend exempt (S)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_suspend))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -358,7 +356,7 @@ Option: SendInput mode (SI)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_send_mode))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -373,7 +371,7 @@ Option: SendPlay mode (SP)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_send_mode))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -388,7 +386,7 @@ Option: SendEvent mode (SE)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_send_mode))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -403,7 +401,7 @@ Option: text mode (T)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_text_mode))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -418,10 +416,11 @@ Option: execute mode (X)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_execute))
     (hotstring_trigger)
-    (hotstring_replacement)))
+    (call_statement
+      (identifier))))
 
 ================================================================================
 Option: reset recognizer (Z)
@@ -433,7 +432,7 @@ Option: reset recognizer (Z)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_reset))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -448,9 +447,8 @@ Combination: two simple options (*?)
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_asterisk))
-    (hotstring_modifier
+    (hotstring_option_sequence
+      (hotstring_asterisk)
       (hotstring_question))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -465,11 +463,9 @@ Combination: three simple options (*?b0)
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_asterisk))
-    (hotstring_modifier
-      (hotstring_question))
-    (hotstring_modifier
+    (hotstring_option_sequence
+      (hotstring_asterisk)
+      (hotstring_question)
       (hotstring_backspace))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -484,13 +480,10 @@ Combination: mixed case options (*?B0C)
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_asterisk))
-    (hotstring_modifier
-      (hotstring_question))
-    (hotstring_modifier
-      (hotstring_backspace))
-    (hotstring_modifier
+    (hotstring_option_sequence
+      (hotstring_asterisk)
+      (hotstring_question)
+      (hotstring_backspace)
       (hotstring_case_sensitive))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -505,17 +498,12 @@ Combination: many options (*?b0c1k10o)
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_asterisk))
-    (hotstring_modifier
-      (hotstring_question))
-    (hotstring_modifier
-      (hotstring_backspace))
-    (hotstring_modifier
-      (hotstring_case_conform))
-    (hotstring_modifier
-      (hotstring_key_delay))
-    (hotstring_modifier
+    (hotstring_option_sequence
+      (hotstring_asterisk)
+      (hotstring_question)
+      (hotstring_backspace)
+      (hotstring_case_conform)
+      (hotstring_key_delay)
       (hotstring_omit_ending))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -530,11 +518,9 @@ Combination: parameterized mix (c1k10p1)
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_case_conform))
-    (hotstring_modifier
-      (hotstring_key_delay))
-    (hotstring_modifier
+    (hotstring_option_sequence
+      (hotstring_case_conform)
+      (hotstring_key_delay)
       (hotstring_priority))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -549,11 +535,9 @@ Combination: send mode with other options (sispk10)
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_send_mode))
-    (hotstring_modifier
-      (hotstring_send_mode))
-    (hotstring_modifier
+    (hotstring_option_sequence
+      (hotstring_send_mode)
+      (hotstring_send_mode)
       (hotstring_key_delay))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -583,7 +567,7 @@ Edge case: options with code block
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_asterisk))
     (hotstring_trigger)
     (block
@@ -596,15 +580,16 @@ Edge case: options with code block
 Edge case: options with unbraced statements
 ================================================================================
 
-:*:test::
+:*x:test::
     MsgBox "test"
 
 --------------------------------------------------------------------------------
 
 (source_file
   (hotstring
-    (hotstring_modifier
-      (hotstring_asterisk))
+    (hotstring_option_sequence
+      (hotstring_asterisk)
+      (hotstring_execute))
     (hotstring_trigger)
     (call_statement
       (identifier)
@@ -647,7 +632,7 @@ Edge case: zero delay with space (k 0)
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_key_delay))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -662,7 +647,7 @@ Edge case: case sensitive uppercase trigger
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_case_sensitive))
     (hotstring_trigger)
     (hotstring_replacement)))
@@ -677,15 +662,51 @@ Edge case: repeated character trigger
 
 (source_file
   (hotstring
-    (hotstring_modifier
+    (hotstring_option_sequence
       (hotstring_asterisk))
     (hotstring_trigger)
     (hotstring_replacement)))
 
 ================================================================================
-Hotstring with simple call statement
+Exec hotstring with simple call statement
 ================================================================================
 
 :x:hi::MsgBox "Hello, World!"
 
 --------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_execute))
+    (hotstring_trigger)
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
+
+================================================================================
+Non-exec hotstring with function declaration
+================================================================================
+
+::hi::
+  MyFunction(thisHotstring) {
+    MsgBox(thisHotstring)
+  }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_trigger)
+    (function_declaration
+      (identifier)
+      (function_head
+        (param_sequence
+          (identifier)))
+      (function_body
+        (block
+          (function_call
+            (identifier)
+            (arg_sequence
+              (identifier))))))))

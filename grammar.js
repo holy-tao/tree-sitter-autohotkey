@@ -899,15 +899,34 @@ export default grammar({
     //#region Hotstrings
     // See: https://www.autohotkey.com/docs/v2/Hotstrings.htm
     // See also KeySharp's ANTLR grammmar: https://github.com/Descolada/keysharp/blob/master/Keysharp.Core/Scripting/Parser/Antlr/MainLexer.g4#L60
-    hotstring: $ => prec.right(seq(
+    hotstring: $ => choice(
+      $._replacement_hotstring,
+      $._exec_hotstring
+    ),
+
+    _replacement_hotstring: $ => prec.right(seq(
         ":",
-        repeat($.hotstring_modifier),
+        field("modifiers", alias(repeat($._hotstring_modifier), $.hotstring_option_sequence)),
         token.immediate(":"),
-        $.hotstring_trigger,
+        field("trigger", $.hotstring_trigger),
         $._double_colon,
         optional(choice(
+          // blocks and function declarations are allowed, but calls can't be on the same line
           $.block,
+          $.function_declaration,
           $.hotstring_replacement,
+        ))
+    )),
+
+    _exec_hotstring: $ => prec.right(seq(
+        ":",
+        field("modifiers", alias($._hotstring_opt_seq_exec, $.hotstring_option_sequence)),
+        token.immediate(":"),
+        field("trigger", $.hotstring_trigger),
+        $._double_colon,
+        optional(choice(
+          // Can't have literal replacements, can have statements on the same line
+          $.block,
           $._single_expression,
           repeat1($._statement)
         ))
@@ -918,11 +937,16 @@ export default grammar({
     // Used in hotstrings - can match any non-whitespace, non-colon characters
     hotstring_trigger: $ => token(/[^\s:]+/),
 
-    // !FIXME: all statements on the same line as the hotstring are parsed as hotstring replacements
-    // !e.g. :x:hi::MsgBox "Hello, World!" should have the body parsed as a call statement
     hotstring_replacement: $ => token.immediate(/[^\n]+/),  // Rest of line as text replacement (one or more, excludes newline)
 
-    hotstring_modifier: $ => choice(
+    _hotstring_opt_seq_no_exec: $ => repeat($._hotstring_modifier),
+    _hotstring_opt_seq_exec: $ => seq(
+      repeat($._hotstring_modifier),
+      $.hotstring_execute,
+      repeat($._hotstring_modifier)
+    ),
+
+    _hotstring_modifier: $ => choice(
       $.hotstring_asterisk,
       $.hotstring_question,
       $.hotstring_backspace,
@@ -935,7 +959,6 @@ export default grammar({
       $.hotstring_suspend,
       $.hotstring_send_mode,
       $.hotstring_text_mode,
-      $.hotstring_execute,
       $.hotstring_reset
       // hotstring_space handled separately as its own hotstring pattern
     ),
@@ -984,7 +1007,7 @@ export default grammar({
     // Higher precedence than label to ensure :: is recognized before :
     // Using identifier here allows tree-sitter to resolve conflicts automatically
     hotkey: $ => prec.right(3, seq(
-      $.hotkey_trigger,
+      field("trigger", $.hotkey_trigger),
       token.immediate("::"),
       optional(choice(
         $._single_expression,
