@@ -221,20 +221,16 @@ static bool is_empty_arg(TSLexer *lexer) {
   return (lexer->lookahead == ',');
 }
 
-static inline bool is_operator_start(int32_t c) {
-  return c == '?' || c == '*' || c == '/' || c == '<' || c == '>' || 
-         c == '=' || c == '^' || c == '|' || c == '&' || c == '!' ||
-         c == '~' || c == ':' || c == '.' || c == ',';
-  // Note: +, - excluded (could be unary in concat context)
-}
+#define is_operator_start(c) (c == '?' || c == '*' || c == '/' || c == '<' || c == '>' || \
+                              c == '=' || c == '^' || c == '|' || c == '&' || c == '!' || \
+                              c == '~' || c == ':' || c == '.' || c == ',')
+                              // Note: +, - excluded (could be unary in concat context)
 
-static inline bool is_expression_start(int32_t c) {
-  // Things that can start a _single_expression
-  return is_identifier_char(c) ||
-         c == '_' || c == '"' || c == '\'' || c == '(' ||
-         c == '+' || c == '-' ||  // unary plus/minus
-         c == '%';                // deref
-}
+/// Characters that can start a single expression
+#define is_expression_start(c) (is_identifier_char(c) ||                                  \
+                                c == '_' || c == '"' || c == '\'' || c == '(' ||          \
+                                c == '+' || c == '-' ||                                   \
+                                c == '%')
 
 /// @brief Determines whether this is implicit concatenation. As a side effect, may call `lexer->mark_end`. Definitely
 ///        calls it if it returns true. 
