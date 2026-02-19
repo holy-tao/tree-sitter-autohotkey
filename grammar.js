@@ -824,7 +824,7 @@ export default grammar({
     class_body: $ => seq(
       "{",
       repeat(choice(
-        $.function_declaration,
+        alias($.function_declaration, $.method_declaration),
         $.class_declaration,
         $.property_declaration
       )),

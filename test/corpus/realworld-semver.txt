@@ -397,7 +397,7 @@ class SemVer {
                 (identifier)))
             (string_literal))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (scope_identifier)
         (identifier)
         (function_head
@@ -484,7 +484,7 @@ class SemVer {
                     (arg_sequence
                       (string_literal)))))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (scope_identifier)
         (identifier)
         (function_head
@@ -524,7 +524,7 @@ class SemVer {
                     (return)
                     (boolean_literal))))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (scope_identifier)
         (identifier)
         (function_head
@@ -706,7 +706,7 @@ class SemVer {
                 (arg_sequence
                   (identifier)))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (scope_identifier)
         (identifier)
         (function_head
@@ -746,7 +746,7 @@ class SemVer {
                     (return)
                     (boolean_literal))))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (param_sequence
@@ -845,7 +845,7 @@ class SemVer {
               (assignment_operator)
               (identifier)))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head)
         (function_body
@@ -909,7 +909,7 @@ class SemVer {
               (return)
               (identifier)))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head)
         (function_body
@@ -928,7 +928,7 @@ class SemVer {
                   (integer_literal)
                   (integer_literal)))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head)
         (function_body
@@ -950,7 +950,7 @@ class SemVer {
                     (integer_literal))
                   (integer_literal)))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head)
         (function_body
@@ -975,7 +975,7 @@ class SemVer {
                         (identifier)))
                     (integer_literal))))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (param_sequence
@@ -996,7 +996,7 @@ class SemVer {
                     (arg_sequence
                       (identifier)))))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (param_sequence
@@ -1019,7 +1019,7 @@ class SemVer {
                         (identifier)))))
                 (integer_literal))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (param_sequence
@@ -1042,7 +1042,7 @@ class SemVer {
                         (identifier)))))
                 (integer_literal))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (param_sequence
@@ -1065,7 +1065,7 @@ class SemVer {
                         (identifier)))))
                 (integer_literal))))))
       (block_comment)
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head)
         (function_body

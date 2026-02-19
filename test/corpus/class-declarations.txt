@@ -50,7 +50,7 @@ class Example {
     (class)
     (identifier)
     (class_body
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (param_sequence
@@ -81,7 +81,7 @@ class Example {
     (class)
     (identifier)
     (class_body
-      (function_declaration
+      (method_declaration
         (scope_identifier)
         (identifier)
         (function_head
@@ -117,7 +117,7 @@ class Example {
     (class)
     (identifier)
     (class_body
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head)
         (function_body
@@ -125,7 +125,7 @@ class Example {
             (return_statement
               (return)
               (float_literal)))))
-      (function_declaration
+      (method_declaration
         (scope_identifier)
         (identifier)
         (function_head
@@ -155,7 +155,7 @@ class Example
     (class)
     (identifier)
     (class_body
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head)
         (function_body
@@ -177,7 +177,7 @@ class Example
     (class)
     (identifier)
     (class_body
-      (function_declaration
+      (method_declaration
         (scope_identifier)
         (identifier)
         (function_head)
@@ -207,7 +207,7 @@ class Example
     (class)
     (identifier)
     (class_body
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (wildcard))
@@ -847,7 +847,7 @@ class Example {
         (identifier)
         (assignment_operator)
         (unset))
-      (function_declaration
+      (method_declaration
         (identifier)
         (function_head
           (param_sequence

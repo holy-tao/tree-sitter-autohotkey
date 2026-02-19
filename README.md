@@ -21,7 +21,6 @@ A reasonably complete list of known differences from the AutoHotkey interpreter 
   - Variable declarations in the [auto-execute](https://www.autohotkey.com/docs/v2/Scripts.htm#auto) section
   - Function (including method, see below) declarations
 - Related, the grammar permits [static function](https://www.autohotkey.com/docs/v2/Functions.htm#static-functions) declarations in the auto-execute section 
-- The grammar makes no distinction between method and function declarations. A method is simply a function attached to an object, therefore a method *declaration* is simply a function declaration inside the body of a class declaration
 - It really doesn't know anything about keywords (or, for that matter, built-in functions)
   - The grammar doesn't currently filter identifiers for keywords - `local := 1` will be parsed as a valid assignment operation, though `local` is reserved.
   - The grammer permits `else if` clauses in `try` and `for` statements
