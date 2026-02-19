@@ -32,6 +32,28 @@
                                     c == 'i' || c == 'I' || c == 'o' || c == 'O' || \
                                     c == 'c' || c == 'C')
 
+/// Check to see if ident is a control-flow keyword like "if"
+#define is_flow_keyword(ident) (strcaseeq(ident, "if")            || \
+                                strcaseeq(ident, "else")          || \
+                                strcaseeq(ident, "while")         || \
+                                strcaseeq(ident, "for")           || \
+                                strcaseeq(ident, "loop")          || \
+                                strcaseeq(ident, "throw")         || \
+                                strcaseeq(ident, "try")           || \
+                                strcaseeq(ident, "catch")         || \
+                                strcaseeq(ident, "finally")       || \
+                                strcaseeq(ident, "break")         || \
+                                strcaseeq(ident, "continue")      || \
+                                strcaseeq(ident, "as")            || \
+                                strcaseeq(ident, "in")            || \
+                                strcaseeq(ident, "switch")        || \
+                                strcaseeq(ident, "case")          || \
+                                strcaseeq(ident, "default")       || \
+                                strcaseeq(ident, "goto")          || \
+                                strcaseeq(ident, "return"))
+
+/// Check to see if ident is a reserved word in general
+#define is_keyword(ident) (is_operator_keyword(ident) || is_flow_keyword(ident))
 
 enum TokenType {
   OPTIONAL_MARKER,
@@ -123,6 +145,10 @@ static bool is_function_declaration(TSLexer *lexer) {
     if(skip_identifier(lexer, NULL, 0) == 0) {
       return false;
     }
+  }
+  else if(is_keyword(ident)) {
+    // constructs like if(condition) aren't declarations
+    return false;
   }
   
   // Expect '('

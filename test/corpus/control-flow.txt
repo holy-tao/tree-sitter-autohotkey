@@ -325,6 +325,23 @@ throw Error("Invalid value")
         (string_literal)))))
 
 ================================================================================
+Throw with parentheses
+================================================================================
+
+throw(Error("Invalid value"))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (throw_statement
+    (throw)
+    (expression_sequence
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
 Goto and label
 ================================================================================
 
@@ -1304,3 +1321,31 @@ switch type {
                 (identifier)
                 (assignment_operator)
                 (string_literal)))))))))
+
+================================================================================
+If with parentheses and block body
+================================================================================
+
+if(outCtrlHwnd == "") {
+    MsgBox("Clicked window but not a control")
+    return 1 ; Prevent further processing
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (expression_sequence
+      (equality_operation
+        (identifier)
+        (string_literal)))
+    (block
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal)))
+      (return_statement
+        (return)
+        (integer_literal))
+      (line_comment))))
