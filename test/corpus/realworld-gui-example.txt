@@ -1,0 +1,264 @@
+================================================================================
+Real example: simple gui example script
+================================================================================
+
+; This is a real script I whipped up once to demonstrate using OnMessage to handle clicks
+window := Gui("+OwnDialogs", "Example Gui")
+
+num := 10, padding := 5, size := 25
+
+loop(num) {
+    y := A_Index
+
+    loop(num) {
+        x := A_Index
+
+        name := Format("vPic{1}-{2}", x, y)
+        coords := Format("x{1} y{2}", ((x - 1) * size) + (x * padding), ((y - 1) * size) + (y * padding))
+
+        window.AddPic(Format("w{3} h{3} {1} {2} backgroundGray", name, coords, size), "")
+    }
+}
+
+OnMessage(WM_LBUTTONUP := 0x0202, OnClick)
+
+window.OnEvent("Close", (*) => ExitApp())
+window.Show(Format("w{1} h{1}", (num * size) + ((num + 1) * padding)))
+
+OnClick(wParam, lParam, msgNum, hwnd) {
+    ; Clicked something else
+    if(!(clickedGui := GuiFromHwnd(hwnd)) || clickedGui != window)
+        return
+
+    MouseGetPos(, , , &outCtrlHwnd := "", 2)
+    if(outCtrlHwnd == "") {
+        MsgBox("Clicked window but not a control")
+        return 1 ; Prevent further processing
+    }
+    else {
+        MsgBox("Clicked " GuiCtrlFromHwnd(outCtrlHwnd).Name)
+        return 1
+    }
+
+    ; Let the window handle the click
+    return 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (identifier)
+      (arg_sequence
+        (string_literal)
+        (string_literal))))
+  (expression_sequence
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (float_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (float_literal)))
+  (loop_statement
+    (loop)
+    (expression_sequence
+      (identifier))
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier))
+      (loop_statement
+        (loop)
+        (expression_sequence
+          (identifier))
+        (block
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (identifier))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier)
+              (arg_sequence
+                (string_literal)
+                (identifier)
+                (identifier))))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier)
+              (arg_sequence
+                (string_literal)
+                (additive_operation
+                  (expression_sequence
+                    (multiplicative_operation
+                      (expression_sequence
+                        (additive_operation
+                          (identifier)
+                          (integer_literal)))
+                      (identifier)))
+                  (expression_sequence
+                    (multiplicative_operation
+                      (identifier)
+                      (identifier))))
+                (additive_operation
+                  (expression_sequence
+                    (multiplicative_operation
+                      (expression_sequence
+                        (additive_operation
+                          (identifier)
+                          (integer_literal)))
+                      (identifier)))
+                  (expression_sequence
+                    (multiplicative_operation
+                      (identifier)
+                      (identifier)))))))
+          (function_call
+            (member_access
+              (identifier)
+              (member_identifier
+                (identifier)))
+            (arg_sequence
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (string_literal)
+                  (identifier)
+                  (identifier)
+                  (identifier)))
+              (string_literal)))))))
+  (function_call
+    (identifier)
+    (arg_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (hex_literal))
+      (identifier)))
+  (function_call
+    (member_access
+      (identifier)
+      (member_identifier
+        (identifier)))
+    (arg_sequence
+      (string_literal)
+      (fat_arrow_function
+        (function_head
+          (wildcard))
+        (arrow)
+        (function_call
+          (identifier)))))
+  (function_call
+    (member_access
+      (identifier)
+      (member_identifier
+        (identifier)))
+    (arg_sequence
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal)
+          (additive_operation
+            (expression_sequence
+              (multiplicative_operation
+                (identifier)
+                (identifier)))
+            (expression_sequence
+              (multiplicative_operation
+                (expression_sequence
+                  (additive_operation
+                    (identifier)
+                    (integer_literal)))
+                (identifier))))))))
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (identifier)
+        (identifier)
+        (identifier)
+        (identifier)))
+    (function_body
+      (block
+        (line_comment)
+        (if_statement
+          (if)
+          (expression_sequence
+            (logical_or_operation
+              (prefix_operation
+                (expression_sequence
+                  (assignment_operation
+                    (identifier)
+                    (assignment_operator)
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier))))))
+              (inequality_operation
+                (identifier)
+                (identifier))))
+          (return_statement
+            (return)
+            (function_call
+              (identifier)
+              (arg_sequence
+                (empty_arg)
+                (empty_arg)
+                (empty_arg)
+                (assignment_operation
+                  (varref_operation
+                    (identifier))
+                  (assignment_operator)
+                  (string_literal))
+                (integer_literal)))))
+        (if_statement
+          (if)
+          (expression_sequence
+            (equality_operation
+              (identifier)
+              (string_literal)))
+          (block
+            (function_call
+              (identifier)
+              (arg_sequence
+                (string_literal)))
+            (return_statement
+              (return)
+              (integer_literal))
+            (line_comment))
+          (else_statement
+            (else)
+            (block
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (implicit_concat_operation
+                    (string_literal)
+                    (member_access
+                      (function_call
+                        (identifier)
+                        (arg_sequence
+                          (identifier)))
+                      (member_identifier
+                        (identifier))))))
+              (return_statement
+                (return)
+                (integer_literal)))))
+        (line_comment)
+        (return_statement
+          (return)
+          (integer_literal))))))

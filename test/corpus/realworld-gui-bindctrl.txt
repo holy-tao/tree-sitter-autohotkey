@@ -1,0 +1,190 @@
+================================================================================
+Real example: BindCtrls method
+================================================================================
+
+static BindCtrls(*) {
+  events := Map(
+    "Click",[
+      "b38", "b39", "b3A", "b3B", "b3C", "b3D", "b3E", "b3F", "b52",
+      "b30", "b31", "b32", "b33", "b34", "b35", "b36", "b37", "b53",
+      "b28", "b29", "b2A", "b2B", "b2C", "b2D", "b2E", "b2F", "b54",
+      "b20", "b21", "b22", "b23", "b24", "b25", "b26", "b27", "b55",
+      "b18", "b19", "b1A", "b1B", "b1C", "b1D", "b1E", "b1F", "b56",
+      "b10", "b11", "b12", "b13", "b14", "b15", "b16", "b17", "b57",
+      "b08", "b09", "b0A", "b0B", "b0C", "b0D", "b0E", "b0F", "b58",
+      "b00", "b01", "b02", "b03", "b04", "b05", "b06", "b07", "b59",
+      "b40", "b41", "b42", "b43", "b44", "b45", "b46", "b47", "b48"
+    ])
+  for event, ctrls in events {
+    for ctrl in ctrls {
+      ClassName.MyGui[ctrl].OnEvent(event, ObjBindMethod(ClassName, "Do" event))
+    }
+  }
+}
+
+ static DoClick(aCtrl,*) {
+  switch (aCtrl.Name) {
+    default:
+      MsgBox(aCtrl.Name)
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (scope_identifier)
+    (identifier)
+    (function_head
+      (wildcard))
+    (function_body
+      (block
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (function_call
+            (identifier)
+            (arg_sequence
+              (string_literal)
+              (array_literal
+                (expression_sequence
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal)
+                  (string_literal))))))
+        (for_statement
+          (for)
+          (identifier)
+          (identifier)
+          (in)
+          (identifier)
+          (block
+            (for_statement
+              (for)
+              (identifier)
+              (in)
+              (identifier)
+              (block
+                (function_call
+                  (member_access
+                    (index_access
+                      (member_access
+                        (identifier)
+                        (member_identifier
+                          (identifier)))
+                      (arg_sequence
+                        (identifier)))
+                    (member_identifier
+                      (identifier)))
+                  (arg_sequence
+                    (identifier)
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier)
+                        (implicit_concat_operation
+                          (string_literal)
+                          (identifier)))))))))))))
+  (function_declaration
+    (scope_identifier)
+    (identifier)
+    (function_head
+      (param_sequence
+        (identifier)
+        (wildcard)))
+    (function_body
+      (block
+        (switch_statement
+          (switch)
+          (expression_sequence
+            (member_access
+              (identifier)
+              (member_identifier
+                (identifier))))
+          (switch_body
+            (default_clause
+              (default)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier))))))))))))

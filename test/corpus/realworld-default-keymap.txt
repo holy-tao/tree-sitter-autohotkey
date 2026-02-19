@@ -1,0 +1,183 @@
+================================================================================
+Real example: DefaultKeyMap
+================================================================================
+DefaultKeyMap(defaults*) {
+    return {
+        Call: (t, v*) => dkm(v*),
+        __Enum: (t, n) => defaults.__Enum(n)
+    }
+
+    dkm(values*) {
+        interleaved := []
+        e1 := defaults.__Enum(1), e2 := values.__Enum(1)
+        while e1(&k) && e2(&v)
+            interleaved.Push(k, v)
+        return Map(interleaved*)
+    }
+}
+
+
+DKM1 := DefaultKeyMap("k1", "k2")
+myMap := DKM1("v1", "v2")
+
+for key in DKM1
+    MsgBox "DKM1 " A_Index ": " key
+
+for key, value in myMap
+    MsgBox "myMap " key " -> " value
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (variadic_param
+          (identifier)
+          (wildcard))))
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (object_literal
+            (object_literal_member_sequence
+              (object_literal_member
+                (identifier)
+                (fat_arrow_function
+                  (function_head
+                    (param_sequence
+                      (identifier)
+                      (variadic_param
+                        (identifier)
+                        (wildcard))))
+                  (arrow)
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (identifier)
+                      (array_expansion_marker)))))
+              (object_literal_member
+                (identifier)
+                (fat_arrow_function
+                  (function_head
+                    (param_sequence
+                      (identifier)
+                      (identifier)))
+                  (arrow)
+                  (function_call
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (arg_sequence
+                      (identifier))))))))
+        (function_declaration
+          (identifier)
+          (function_head
+            (param_sequence
+              (variadic_param
+                (identifier)
+                (wildcard))))
+          (function_body
+            (block
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (array_literal))
+              (expression_sequence
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (function_call
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (arg_sequence
+                      (integer_literal))))
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (function_call
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (arg_sequence
+                      (integer_literal)))))
+              (while_statement
+                (while)
+                (logical_and_operation
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (varref_operation
+                        (identifier))))
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (varref_operation
+                        (identifier)))))
+                (function_call
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (arg_sequence
+                    (identifier)
+                    (identifier))))
+              (return_statement
+                (return)
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (identifier)
+                    (array_expansion_marker))))))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (identifier)
+      (arg_sequence
+        (string_literal)
+        (string_literal))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (identifier)
+      (arg_sequence
+        (string_literal)
+        (string_literal))))
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (identifier)
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (implicit_concat_operation
+          (implicit_concat_operation
+            (implicit_concat_operation
+              (string_literal)
+              (identifier))
+            (string_literal))
+          (identifier)))))
+  (for_statement
+    (for)
+    (identifier)
+    (identifier)
+    (in)
+    (identifier)
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (implicit_concat_operation
+          (implicit_concat_operation
+            (implicit_concat_operation
+              (string_literal)
+              (identifier))
+            (string_literal))
+          (identifier))))))

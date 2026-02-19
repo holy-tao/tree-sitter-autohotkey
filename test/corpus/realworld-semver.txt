@@ -1,0 +1,1097 @@
+================================================================================
+Real example: SemVer class
+================================================================================
+
+#Requires AutoHotkey v2.0
+
+#Include <Extensions\Errors\TypeErrorExtensions>
+
+/**
+ * Represents a semantic version, compliant with the {@link https://semver.org/ Semantic Versioning 2.0.0} 
+ * specification.
+ */
+class SemVer {
+
+    /**
+     * Regex used to identify a SemVer string. This is taken directly from the spec and should not be
+     * modified
+     * @see https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+     * @type {String}
+     */
+    static Regex => "^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+
+    /**
+     * The version of the specification that this class currently supports
+     * @type {SemVer}
+     */
+    static SpecVersion => SemVer(2, 0, 0)
+
+    /**
+     * The major version, incremented for incompatible or breaking API changes
+     * @type {Integer}
+     */
+    major := 0
+
+    /**
+     * The minor version, incremented when functionality is added in a backwards-compatible manner
+     * @type {Integer}
+     */
+    minor := 0
+
+    /**
+     * The patch version, incremented for backwards-compatible fixes
+     * @type {Integer}
+     */
+    patch := 0
+
+    /**
+     * The pre-release version. A pre-release version is optional and indicates that the version is unstable and might 
+     * not satisfy the intended compatibility requirements as denoted by its associated normal version.
+     * 
+     * If there is no pre-release version, this is an empty string
+     * @type {String}
+     */
+    prerelease := ""
+
+    /**
+     * Optional build metadata. Build metadata is purely informational and has no effect when comparing versions. 
+     * 
+     * If no build metadata is provided, this is an empty string.
+     * @type {String}
+     */
+    build := ""
+
+    /**
+     * Whether this version is a pre-release version (has a non-empty prerelease identifier).
+     * Pre-release versions indicate that the version is unstable and might not satisfy
+     * the intended compatibility requirements.
+     * @type {Boolean}
+     */
+    IsPrerelease => this.prerelease != ""
+
+    /**
+     * Parses a semantic versioning string. This method is strict, allowing no deviations from the
+     * standard except for a leading "v", which is trimmed off
+     *          
+     *          version := SemVer.Parse("1.4.13-testing")   ; Allowed
+     *          version := SemVer.Parse("v2.0.0+gcc")       ; Allowed
+     * @param {String} str the string to parse
+     * @throws {ValueError} if `str` is not a valid SemVer string
+     */
+    static Parse(str) {
+        TypeError.ThrowIfNot(str, String)
+
+        ; If "str" begins with a v, trim it off. That's the only deviation from the standard
+        ; parse will allow
+        if(InStr(str, "v") == 1)
+            str := SubStr(str, 2)
+
+        if(!RegExMatch(str, SemVer.regex, &match := ""))
+            throw ValueError("Not a valid Semantic Versioning 2.0.0 string", -1, str)
+
+        return SemVer(
+            match["major"],
+            match["minor"],
+            match["patch"],
+            match["prerelease"],
+            match["buildmetadata"]
+        )
+    }
+
+    /**
+     * Tries to parse a string into a `SemVer` object and returns success or failure.
+     * 
+     * @param {String} str the string to parse 
+     * @param {VarRef<SemVer | Error>} ver output variable which receives the parsed `SemVer`
+     *          object on success, or an `Error` on failure.
+     * @returns {Boolean} 1 on success, 0 on failure. 
+     */
+    static TryParse(str, &ver) {
+        try {
+            ver := SemVer.Parse(str)
+            return true
+        }
+        catch Error as err {
+            ver := ""
+            return false
+        } 
+    }
+
+    /**
+     * Makes a best-effort attempt to parse a string into a `SemVer` object, for example:
+     *  - `1.0` -> `1.0.0`
+     *  - `v0.4.2.54` -> `0.4.2`
+     *
+     * @param {String} str the string to parse
+     * @returns {SemVer} the parsed `SemVer` object
+     * @throws {ValueError} if the string could not be fuzzy-parsed
+     */
+    static FuzzyParse(str) {
+        TypeError.ThrowIfNot(str, String)
+        
+        ; Allow leading "v"
+        str := RegExReplace(str, "^v", "", &count := 0, 1)
+        
+        ; Relaxed pattern: capture version parts, prerelease, and build metadata
+        static pattern := "^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:\.\d+)*"    ; version parts (allow any number)
+                .  "(?:-([0-9a-zA-Z.-]*))?"                                         ; prerelease (allow trailing -)
+                .  "(?:\+([0-9a-zA-Z.-]*))?$"                                       ; build metadata (allow trailing +)
+        
+        if(!RegExMatch(str, pattern, &m))
+            throw ValueError("Could not fuzzy-parse SemVer string: no valid version pattern found", -1, str)
+        
+        ; Extract first 3 version numbers, default to 0
+        major := Integer(m[1] != "" ? m[1] : 0)
+        minor := Integer(m[2] != "" ? m[2] : 0)
+        patch := Integer(m[3] != "" ? m[3] : 0)
+        
+        ; Extract metadata (already in correct format or empty)
+        prerelease := m[5]
+        build := m[6]
+        
+        ; Validate prerelease/build against strict rules by constructing and parsing
+        ; This ensures the fuzzy-parsed result is still spec-compliant
+        candidate := Format("{1}.{2}.{3}", major, minor, patch)
+        if(prerelease != "")
+            candidate .= "-" prerelease
+        if(build != "")
+            candidate .= "+" build
+        
+        ; This will throw if the result isn't valid SemVer
+        return SemVer.Parse(candidate)
+    }
+
+    /**
+     * Tries to fuzzy-parse a string into a `SemVer` object and returns success or failure.
+     * 
+     * @param {String} str the string to parse 
+     * @param {VarRef<SemVer | Error>} ver output variable which receives the parsed `SemVer`
+     *          object on success, or an `Error` on failure.
+     * @returns {Boolean} 1 on success, 0 on failure. 
+     */
+    static TryFuzzyParse(str, &ver) {
+        try {
+            ver := SemVer.FuzzyParse(str)
+            return true
+        }
+        catch Error as err {
+            ver := ""
+            return false
+        } 
+    }
+
+    /**
+     * Initializes a new `SemVer` object. To parse out of a string, use {@link SemVer.Parse `Parse`} or 
+     * {@link SemVer.FuzzyParse `FuzzyParse`}.
+     * 
+     * @param {Integer} major The major version 
+     * @param {Integer} minor The minor version 
+     * @param {Integer} patch The patch version 
+     * @param {String} prerelease Optionally, the prerelease version 
+     * @param {String} build Optional build metadata 
+     */
+    __New(major, minor, patch, prerelease := "", build := "") {
+        TypeError.ThrowIfNotInteger(major)
+        TypeError.ThrowIfNotInteger(minor)
+        TypeError.ThrowIfNotInteger(patch)
+
+        TypeError.ThrowIfNot(prerelease, String)
+        TypeError.ThrowIfNot(build, String)
+
+        this.major := Integer(major)
+        this.minor := Integer(minor)
+        this.patch := Integer(patch)
+        this.prerelease := prerelease
+        this.build := build
+    }
+
+    /**
+     * Converts the object to a spec-compliant string.
+     * @type {String}
+     */
+    ToString() {
+        str := Format("{1}.{2}.{3}", this.major, this.minor, this.patch)
+        if(this.prerelease != "")
+            str .= "-" this.prerelease
+
+        if(this.build != "")
+            str .= "+" this.build
+
+        return str
+    }
+
+    /**
+     * Returns a new `SemVer` with the major version incremented. According to the spec,
+     * incrementing the major version resets minor and patch to 0 and clears prerelease
+     * and build metadata.
+     *
+     *      v := SemVer.Parse("1.2.3-alpha+build")
+     *      v2 := v.IncrementMajor()  ; Returns 2.0.0
+     *
+     * @returns {SemVer} a new SemVer with major incremented
+     */
+    IncrementMajor() {
+        return SemVer(this.major + 1, 0, 0)
+    }
+
+    /**
+     * Returns a new `SemVer` with the minor version incremented. According to the spec,
+     * incrementing the minor version resets patch to 0 and clears prerelease and build metadata.
+     *
+     *      v := SemVer.Parse("1.2.3-alpha+build")
+     *      v2 := v.IncrementMinor()  ; Returns 1.3.0
+     *
+     * @returns {SemVer} a new SemVer with minor incremented
+     */
+    IncrementMinor() {
+        return SemVer(this.major, this.minor + 1, 0)
+    }
+
+    /**
+     * Returns a new `SemVer` with the patch version incremented. According to the spec,
+     * incrementing the patch version clears prerelease and build metadata.
+     *
+     *      v := SemVer.Parse("1.2.3-alpha+build")
+     *      v2 := v.IncrementPatch()  ; Returns 1.2.4
+     *
+     * @returns {SemVer} a new SemVer with patch incremented
+     */
+    IncrementPatch() {
+        return SemVer(this.major, this.minor, this.patch + 1)
+    }
+
+    /**
+     * Compares this version with another version according to the {@link https://semver.org/#spec-item-11 SemVer precedence rules}
+     * using {@link VerCompare}
+     *  - a positive number if `this` newer than `other`
+     *  - 0 if `this` and `other` resolve to the same version
+     *  - a negative number if `this` is older than `other`
+     * @param {String | SemVer} other the version to compare to this one
+     * @returns {Integer} comparison result
+     */
+    Compare(other) {
+        return VerCompare(String(this), String(other))
+    }
+
+    /**
+     * Checks if this version is greater than (newer than) another version.
+     *
+     *      v1 := SemVer.Parse("2.0.0")
+     *      v2 := SemVer.Parse("1.0.0")
+     *      v1.IsGreaterThan(v2)  ; Returns true
+     *
+     * @param {String | SemVer} other the version to compare to
+     * @returns {Boolean} true if this version is greater than other
+     */
+    IsGreaterThan(other) {
+        return VerCompare(String(this), String(other)) > 0
+    }
+
+    /**
+     * Checks if this version is less than (older than) another version.
+     *
+     *      v1 := SemVer.Parse("1.0.0")
+     *      v2 := SemVer.Parse("2.0.0")
+     *      v1.IsLessThan(v2)  ; Returns true
+     *
+     * @param {String | SemVer} other the version to compare to
+     * @returns {Boolean} true if this version is less than other
+     */
+    IsLessThan(other) {
+        return VerCompare(String(this), String(other)) < 0
+    }
+
+    /**
+     * Checks if this version is equal to another version. Build metadata is ignored
+     * in the comparison per the SemVer spec.
+     *
+     *      v1 := SemVer.Parse("1.0.0+build1")
+     *      v2 := SemVer.Parse("1.0.0+build2")
+     *      v1.Equals(v2)  ; Returns true (build metadata ignored)
+     *
+     * @param {String | SemVer} other the version to compare to
+     * @returns {Boolean} true if versions are equal
+     */
+    Equals(other) {
+        return VerCompare(String(this), String(other)) == 0
+    }
+
+    /**
+     * Returns a new `SemVer` object that is a copy of this version with the same
+     * major, minor, patch, prerelease, and build values.
+     *
+     *      v := SemVer.Parse("1.2.3-alpha")
+     *      v2 := v.Clone()  ; Returns a new SemVer(1, 2, 3, "alpha", "")
+     *
+     * @returns {SemVer} a new SemVer instance with the same values
+     */
+    Clone() {
+        return SemVer(this.major, this.minor, this.patch, this.prerelease, this.build)
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (directive_identifier)
+    (anything))
+  (directive
+    (directive_identifier)
+    (anything))
+  (block_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (block_comment)
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (getter
+          (string_literal)))
+      (block_comment)
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (getter
+          (function_call
+            (identifier)
+            (arg_sequence
+              (integer_literal)
+              (integer_literal)
+              (integer_literal)))))
+      (block_comment)
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (block_comment)
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (block_comment)
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (block_comment)
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (string_literal))
+      (block_comment)
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (string_literal))
+      (block_comment)
+      (property_declaration
+        (identifier)
+        (getter
+          (inequality_operation
+            (member_access
+              (identifier)
+              (member_identifier
+                (identifier)))
+            (string_literal))))
+      (block_comment)
+      (function_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (function_call
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (arg_sequence
+                (identifier)
+                (identifier)))
+            (line_comment)
+            (line_comment)
+            (if_statement
+              (if)
+              (expression_sequence
+                (equality_operation
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (identifier)
+                      (string_literal)))
+                  (integer_literal)))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (identifier)
+                    (integer_literal)))))
+            (if_statement
+              (if)
+              (expression_sequence
+                (function_call
+                  (prefix_operation
+                    (identifier))
+                  (arg_sequence
+                    (identifier)
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (assignment_operation
+                      (varref_operation
+                        (identifier))
+                      (assignment_operator)
+                      (string_literal)))))
+              (throw_statement
+                (throw)
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (string_literal)
+                    (integer_literal)
+                    (identifier)))))
+            (return_statement
+              (return)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (index_access
+                    (identifier)
+                    (arg_sequence
+                      (string_literal)))
+                  (index_access
+                    (identifier)
+                    (arg_sequence
+                      (string_literal)))
+                  (index_access
+                    (identifier)
+                    (arg_sequence
+                      (string_literal)))
+                  (index_access
+                    (identifier)
+                    (arg_sequence
+                      (string_literal)))
+                  (index_access
+                    (identifier)
+                    (arg_sequence
+                      (string_literal)))))))))
+      (block_comment)
+      (function_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)
+            (byref_param
+              (identifier))))
+        (function_body
+          (block
+            (try_statement
+              (try)
+              (block
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (function_call
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (arg_sequence
+                      (identifier))))
+                (return_statement
+                  (return)
+                  (boolean_literal)))
+              (catch_clause
+                (catch)
+                (identifier)
+                (as)
+                (identifier)
+                (block
+                  (assignment_operation
+                    (identifier)
+                    (assignment_operator)
+                    (string_literal))
+                  (return_statement
+                    (return)
+                    (boolean_literal))))))))
+      (block_comment)
+      (function_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (function_call
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (arg_sequence
+                (identifier)
+                (identifier)))
+            (line_comment)
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (identifier)
+                  (string_literal)
+                  (string_literal)
+                  (assignment_operation
+                    (varref_operation
+                      (identifier))
+                    (assignment_operator)
+                    (integer_literal))
+                  (integer_literal))))
+            (line_comment)
+            (assignment_operation
+              (variable_declaration
+                (scope_identifier)
+                (identifier))
+              (assignment_operator)
+              (explicit_concat_operation
+                (explicit_concat_operation
+                  (string_literal)
+                  (line_comment)
+                  (string_literal))
+                (line_comment)
+                (string_literal)))
+            (line_comment)
+            (if_statement
+              (if)
+              (expression_sequence
+                (function_call
+                  (prefix_operation
+                    (identifier))
+                  (arg_sequence
+                    (identifier)
+                    (identifier)
+                    (varref_operation
+                      (identifier)))))
+              (throw_statement
+                (throw)
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (string_literal)
+                    (integer_literal)
+                    (identifier)))))
+            (line_comment)
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (ternary_expression
+                    (inequality_operation
+                      (index_access
+                        (identifier)
+                        (arg_sequence
+                          (integer_literal)))
+                      (string_literal))
+                    (index_access
+                      (identifier)
+                      (arg_sequence
+                        (integer_literal)))
+                    (integer_literal)))))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (ternary_expression
+                    (inequality_operation
+                      (index_access
+                        (identifier)
+                        (arg_sequence
+                          (integer_literal)))
+                      (string_literal))
+                    (index_access
+                      (identifier)
+                      (arg_sequence
+                        (integer_literal)))
+                    (integer_literal)))))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (ternary_expression
+                    (inequality_operation
+                      (index_access
+                        (identifier)
+                        (arg_sequence
+                          (integer_literal)))
+                      (string_literal))
+                    (index_access
+                      (identifier)
+                      (arg_sequence
+                        (integer_literal)))
+                    (integer_literal)))))
+            (line_comment)
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (index_access
+                (identifier)
+                (arg_sequence
+                  (integer_literal))))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (index_access
+                (identifier)
+                (arg_sequence
+                  (integer_literal))))
+            (line_comment)
+            (line_comment)
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (string_literal)
+                  (identifier)
+                  (identifier)
+                  (identifier))))
+            (if_statement
+              (if)
+              (expression_sequence
+                (inequality_operation
+                  (identifier)
+                  (string_literal)))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (implicit_concat_operation
+                  (string_literal)
+                  (identifier))))
+            (if_statement
+              (if)
+              (expression_sequence
+                (inequality_operation
+                  (identifier)
+                  (string_literal)))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (implicit_concat_operation
+                  (string_literal)
+                  (identifier))))
+            (line_comment)
+            (return_statement
+              (return)
+              (function_call
+                (member_access
+                  (identifier)
+                  (member_identifier
+                    (identifier)))
+                (arg_sequence
+                  (identifier)))))))
+      (block_comment)
+      (function_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)
+            (byref_param
+              (identifier))))
+        (function_body
+          (block
+            (try_statement
+              (try)
+              (block
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (function_call
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (arg_sequence
+                      (identifier))))
+                (return_statement
+                  (return)
+                  (boolean_literal)))
+              (catch_clause
+                (catch)
+                (identifier)
+                (as)
+                (identifier)
+                (block
+                  (assignment_operation
+                    (identifier)
+                    (assignment_operator)
+                    (string_literal))
+                  (return_statement
+                    (return)
+                    (boolean_literal))))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)
+            (identifier)
+            (identifier)
+            (default_param
+              (identifier)
+              (assignment_operator)
+              (string_literal))
+            (default_param
+              (identifier)
+              (assignment_operator)
+              (string_literal))))
+        (function_body
+          (block
+            (function_call
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (arg_sequence
+                (identifier)))
+            (function_call
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (arg_sequence
+                (identifier)))
+            (function_call
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (arg_sequence
+                (identifier)))
+            (function_call
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (arg_sequence
+                (identifier)
+                (identifier)))
+            (function_call
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (arg_sequence
+                (identifier)
+                (identifier)))
+            (assignment_operation
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (identifier))))
+            (assignment_operation
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (identifier))))
+            (assignment_operation
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (identifier))))
+            (assignment_operation
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (assignment_operator)
+              (identifier))
+            (assignment_operation
+              (member_access
+                (identifier)
+                (member_identifier
+                  (identifier)))
+              (assignment_operator)
+              (identifier)))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (string_literal)
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier))))))
+            (if_statement
+              (if)
+              (expression_sequence
+                (inequality_operation
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (string_literal)))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (implicit_concat_operation
+                  (string_literal)
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier))))))
+            (if_statement
+              (if)
+              (expression_sequence
+                (inequality_operation
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (string_literal)))
+              (assignment_operation
+                (identifier)
+                (assignment_operator)
+                (implicit_concat_operation
+                  (string_literal)
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier))))))
+            (return_statement
+              (return)
+              (identifier)))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (additive_operation
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (integer_literal))
+                  (integer_literal)
+                  (integer_literal)))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (additive_operation
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (integer_literal))
+                  (integer_literal)))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (additive_operation
+                    (member_access
+                      (identifier)
+                      (member_identifier
+                        (identifier)))
+                    (integer_literal))))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (identifier)))
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (identifier)))))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (relational_operation
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier)))
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier)))))
+                (integer_literal))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (relational_operation
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier)))
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier)))))
+                (integer_literal))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (equality_operation
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier)))
+                    (function_call
+                      (identifier)
+                      (arg_sequence
+                        (identifier)))))
+                (integer_literal))))))
+      (block_comment)
+      (function_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier)))
+                  (member_access
+                    (identifier)
+                    (member_identifier
+                      (identifier))))))))))))
