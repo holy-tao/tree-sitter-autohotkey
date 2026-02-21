@@ -11,8 +11,7 @@ You can grab a compiled binary and the c source files from the latest successful
 
 ### Known Differences From the AHK Interpreter
 
-The grammar is, by design, ***more permissive*** than the AutoHotkey interpreter. This is partly for reasons of laziness, partly because the AHK interpreter is extremely inconsistent and tree-sitter trades simplicity for some of the tools that would be required to handle it's inconsistencies with any reasonable amount of accuracy. It should produce an accurate parse tree for any valid AutoHotkey, but it is not intended to validate syntax and indeed will not do that. I recommmend running your script through the interpreter you intend to use with it with the [/Validate](https://www.autohotkey.com/docs/v2/Scripts.htm#cmd) flag to ensure that it does not contain syntax errors.
-
+The grammar is, by design, ***more permissive*** than the AutoHotkey interpreter. This is partly for reasons of laziness, partly because the AHK lexing is often contextual and tree-sitter lexing is context-free. It should produce an accurate parse tree for any valid AutoHotkey, but it is not intended to validate syntax and indeed will not do that. I recommmend running your script through the interpreter you intend to use with it with the [/Validate](https://www.autohotkey.com/docs/v2/Scripts.htm#cmd) flag to ensure that it does not contain syntax errors.
 
 A reasonably complete list of known differences from the AutoHotkey interpreter follows:
 
