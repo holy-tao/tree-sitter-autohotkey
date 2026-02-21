@@ -28,6 +28,15 @@ A reasonably complete list of known differences from the AutoHotkey interpreter 
 - Comments are treated as [extras](https://tree-sitter.github.io/tree-sitter/creating-parsers/3-writing-the-grammar.html#using-extras). Because of this,
   - The grammar allows comments in illegal places - for example, block comments inline with code.
   - The grammar permits unescaped semicolons in string literals.
+- The grammar can identify [continuation sections](https://www.autohotkey.com/docs/v2/Scripts.htm#continuation-section) and will parse most simple ones correctly, but it does not do any of the preprocessing that the interpreter does. As a consequence:
+  - The grammar does not correctly trim off whitespace between multiline strings and comments when the [`comments`](https://www.autohotkey.com/docs/v2/Scripts.htm#CommentOption) option is present
+  - The grammar cannot account for [`join`](https://www.autohotkey.com/docs/v2/Scripts.htm#Join) characters in the statements contained in continuation sections. For example, it will not identify this as a call to `MsgBox`, and will incorrectly produce two call statement nodes instead of one:
+    ```autohotkey
+    ( JoinB
+    Msg
+    ox "Hello, World!"
+    )
+    ```
 
 ## Contributing
 

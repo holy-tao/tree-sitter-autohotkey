@@ -155,7 +155,8 @@ export default grammar({
       $.fat_arrow_function,
       $.ternary_expression,
       $.dereference_operation,
-      $.varref_operation
+      $.varref_operation,
+      $.continuation_section
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
@@ -623,6 +624,16 @@ export default grammar({
       $._single_quote_str_multiline
     ),
 
+    continuation_section: $ => seq(
+      $._continuation_section_start,
+      seq(
+        // Comments always allowed because we can't filter for them in statements :(
+        alias(repeat($._continuation_opt_any), $.continuation_option_sequence),
+        $._continuation_newline,
+        repeat($._statement)
+      ),
+      token(prec.left(1, ')'))
+    ),
     
     _double_quote_str_multiline: $ => seq(
       '"',
@@ -670,6 +681,15 @@ export default grammar({
       repeat($._continuation_opt_except_comments)
     ),
 
+    _continuation_opt_any: $ => choice(
+      $.continuation_join,
+      $.continuation_ltrim,
+      $.continuation_ltrim_off,
+      $.continuation_rtrim_off,
+      $.continuation_no_escape,
+      $.continuation_allow_comments
+    ),
+
     _continuation_opt_except_comments: $ => choice(
         $.continuation_join,
         $.continuation_ltrim,
@@ -695,10 +715,7 @@ export default grammar({
       )
     ),
 
-    continuation_join: $ => seq(
-      token(prec(PREC.KEYWORD, /join/i)),
-      field("delimiter", token.immediate(/[^\r\n\s]{0,15}/))
-    ),
+    continuation_join: $ => token(prec(PREC.KEYWORD, /join[^\r\n\s]{0,15}/i)),
 
     continuation_ltrim: $ => token(prec(PREC.KEYWORD, /LTrim/i)),
     continuation_ltrim_off: $ => token(prec(PREC.KEYWORD, /LTrim0/i)),

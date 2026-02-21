@@ -1,0 +1,181 @@
+================================================================================
+Empty continuation section
+================================================================================
+
+test :=
+(
+
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section)))
+
+================================================================================
+Continuation section with join
+================================================================================
+
+Var :=
+( Join`s
+MsgBox "Hello, World!"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section
+      (continuation_option_sequence
+        (continuation_join))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Continuation section with LTrim
+================================================================================
+
+Var :=
+( LTrim
+MsgBox "Hello, World!"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section
+      (continuation_option_sequence
+        (continuation_ltrim))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Continuation section with LTrim0
+================================================================================
+
+Var :=
+( LTrim0
+    MsgBox "Hello, World!"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section
+      (continuation_option_sequence
+        (continuation_ltrim_off))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Continuation section with RTrim0
+================================================================================
+
+Var :=
+( RTrim0
+    MsgBox "Hello, World!"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section
+      (continuation_option_sequence
+        (continuation_rtrim_off))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Continuation section with comments
+================================================================================
+
+Var :=
+( Comment
+    MsgBox "Hello, World!" ; I'm a comment
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section
+      (continuation_option_sequence
+        (continuation_allow_comments))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (string_literal)))
+      (line_comment))))
+
+================================================================================
+Continuation section with backtick
+================================================================================
+
+Var :=
+( `
+    MsgBox "Hello, World!"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section
+      (continuation_option_sequence
+        (continuation_no_escape))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Continuation section with mixed options
+================================================================================
+
+Var :=
+( Comment ` RTrim0 LTrim
+    MsgBox "Hello, World!"
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (continuation_section
+      (continuation_option_sequence
+        (continuation_allow_comments)
+        (continuation_no_escape)
+        (continuation_rtrim_off)
+        (continuation_ltrim))
+      (call_statement
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
