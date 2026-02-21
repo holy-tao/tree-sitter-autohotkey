@@ -18,6 +18,8 @@
                                   lexer->advance(lexer, true);            \
                                 }
 
+#define skip_eol(lexer) while(is_eol(lexer->lookahead)) { lexer->advance(lexer, true); }
+
 #define is_eof(lexer) (lexer->eof(lexer))
 
 /// Check to see if ident is an operator keyword like "and" or "is". Get `ident` from skip_identifier
@@ -59,7 +61,9 @@ enum TokenType {
   OPTIONAL_MARKER,
   FUNCTION_DEF_MARKER,
   EMPTY_ARG,
-  IMPLICIT_CONCAT_MARKER
+  IMPLICIT_CONCAT_MARKER,
+  CONTINUATION_SECTION_START,
+  CONTINUATION_NEWLINE
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -301,6 +305,51 @@ static bool is_implicit_concatenation(TSLexer *lexer) {
   return false;
 }
 
+/// @brief Checks to see if this is the start of a string continuation section. This is true if the next
+///        token is a '(' preceded by a newline. Grammar is responsible for asserting that a quote precedes
+///        the marker. If one is found, the token is consumed, mark-end is called
+/// @param lexer 
+/// @return true if we found a string continuation start
+static bool is_string_continuation_start(TSLexer* lexer) {
+  skip_horizontal_ws(lexer);
+  if(is_eof(lexer))
+    return false;
+
+  if(!is_eol(lexer->lookahead)) {
+    // "(" must start on new line
+    return false;
+  }
+
+  skip_whitespace(lexer);
+  if(lexer->lookahead == '(') {
+    lexer->advance(lexer, false);
+    lexer->mark_end(lexer);
+    return true;
+  }
+
+  return false;
+}
+
+/// @brief Scans for a newline - to be used in continuation sections. The newline is consumed and mark_end is called
+///        if one is found. The grammar should be careful about when this is used - whitespace is generally not
+///        significant.
+/// @param lexer the lexer
+/// @return true if a newline was found, false if not
+static bool scan_continuation_newline(TSLexer *lexer) {
+  skip_horizontal_ws(lexer);
+  if(is_eof(lexer))
+    return false;
+
+  if(is_eol(lexer->lookahead)) {
+    // Keep leading whitespace after the newline since it may be relevant to users
+    skip_eol(lexer);
+    lexer->mark_end(lexer);
+    return true;
+  }
+
+  return false;
+}
+
 /// @brief Main scan function. See https://tree-sitter.github.io/tree-sitter/creating-parsers/4-external-scanners.html#scan
 /// @param payload no touching
 /// @param lexer the lexer, see the link above
@@ -330,6 +379,24 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
 
     if(is_implicit_concatenation(lexer)) {
       lexer->result_symbol = IMPLICIT_CONCAT_MARKER;
+      return true;
+    }
+  }
+
+  if(valid_symbols[CONTINUATION_SECTION_START]) {
+    lexer->mark_end(lexer);
+
+    if(is_string_continuation_start(lexer)) {
+      lexer->result_symbol = CONTINUATION_SECTION_START;
+      return true;
+    }
+  }
+
+  if(valid_symbols[CONTINUATION_NEWLINE]) {
+    lexer->mark_end(lexer);
+
+    if(scan_continuation_newline(lexer)) {
+      lexer->result_symbol = CONTINUATION_NEWLINE;
       return true;
     }
   }

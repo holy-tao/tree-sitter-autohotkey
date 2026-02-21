@@ -1,0 +1,456 @@
+================================================================================
+Empty double-quoted multiline string
+================================================================================
+
+test := "
+(
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal)))
+
+================================================================================
+Empty single-quoted multiline string
+================================================================================
+
+test := '
+(
+
+)'
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal)))
+
+================================================================================
+Join option
+================================================================================
+
+test := "
+( Join`r`n
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_join)))))
+
+================================================================================
+LTrim option
+================================================================================
+
+test := "
+( LTrim
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_ltrim)))))
+
+================================================================================
+LTrim0 option
+================================================================================
+
+test := "
+( LTrim0
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_ltrim_off)))))
+
+================================================================================
+RTrim0 option
+================================================================================
+
+test := "
+( RTrim0
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_rtrim_off)))))
+
+================================================================================
+Backtick option
+================================================================================
+
+test := "
+( `
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_no_escape)))))
+
+================================================================================
+Comments option
+================================================================================
+
+test := "
+( comments
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_allow_comments)))))
+
+================================================================================
+Many options combined
+================================================================================
+
+test := "
+( Join| RTrim0 ` LTrim Com
+
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_join)
+        (continuation_rtrim_off)
+        (continuation_no_escape)
+        (continuation_ltrim)
+        (continuation_allow_comments)))))
+
+================================================================================
+Multiline string with one line
+================================================================================
+
+test := "
+(
+The quick brown fox
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (multiline_string_line_sequence
+        (multiline_string_line)))))
+
+================================================================================
+Multiline string with two lines
+================================================================================
+
+test := "
+(
+The quick brown fox
+jumped over the lazy dog
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (multiline_string_line_sequence
+        (multiline_string_line)
+        (multiline_string_line)))))
+
+================================================================================
+Multiline string with one line and options
+================================================================================
+
+test := "
+( LTrim RTrim0
+    The quick brown fox
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_ltrim)
+        (continuation_rtrim_off))
+      (multiline_string_line_sequence
+        (multiline_string_line)))))
+
+================================================================================
+Multiline string with two lines
+================================================================================
+
+test := "
+( LTrim RTrim0
+The quick brown fox
+jumped over the lazy dog
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_ltrim)
+        (continuation_rtrim_off))
+      (multiline_string_line_sequence
+        (multiline_string_line)
+        (multiline_string_line)))))
+
+================================================================================
+Multiline string with mixed indentation
+================================================================================
+
+test := "
+(
+    Indented once
+        Indented twice
+    Dedented
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (multiline_string_line_sequence
+        (multiline_string_line)
+        (multiline_string_line)
+        (multiline_string_line)))))
+
+================================================================================
+Multiline string in function call
+================================================================================
+
+MsgBox("
+(
+Something has happened!
+    This line is indented a bit.
+This line is dedented
+
+Press OK to continue
+)", A_ThisFunc, "Icon! OK")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (multiline_string_literal
+        (multiline_string_line_sequence
+          (multiline_string_line)
+          (multiline_string_line)
+          (multiline_string_line)
+          (multiline_string_line)))
+      (identifier)
+      (string_literal))))
+
+================================================================================
+Multiline string in more complex statement
+================================================================================
+
+retry := MsgBox("
+(
+Something has happened!
+    This line is indented a bit.
+
+Would you like to try again?
+)", A_ThisFunc, "Icon? YesNo") = "Yes"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (equality_operation
+      (function_call
+        (identifier)
+        (arg_sequence
+          (multiline_string_literal
+            (multiline_string_line_sequence
+              (multiline_string_line)
+              (multiline_string_line)
+              (multiline_string_line)))
+          (identifier)
+          (string_literal)))
+      (string_literal))))
+
+================================================================================
+Single quote with comments and comment option
+================================================================================
+
+str := '
+( comments
+I'm in the string       ; I'm a comment
+I'm also in the string
+)'
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_allow_comments))
+      (multiline_string_line_sequence
+        (multiline_string_line)
+        (line_comment)
+        (multiline_string_line)))))
+
+================================================================================
+Double quote with comments and comment option
+================================================================================
+
+str := "
+( comments
+I'm in the string       ; I'm a comment
+I'm also in the string
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_allow_comments))
+      (multiline_string_line_sequence
+        (multiline_string_line)
+        (line_comment)
+        (multiline_string_line)))))
+
+================================================================================
+Multiline string with comments and no option
+================================================================================
+
+str := "
+( Join`r`n
+I'm in the string       ; I'm not a comment, though I look like one
+I'm also in the string
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_join))
+      (multiline_string_line_sequence
+        (multiline_string_line)
+        (multiline_string_line)))))
+
+================================================================================
+Multiline string with comment on own line
+================================================================================
+
+str := "
+( comments
+; I'm a comment
+)"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_allow_comments))
+      (line_comment)
+      (multiline_string_line_sequence))))
+
+================================================================================
+Multiline string with mixed comment location
+================================================================================
+
+str := '
+( comments
+I'm text in a string
+; I'm a comment on its own line
+I'm text in the string ; and I'm a comment on the same line as the text
+)'
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiline_string_literal
+      (continuation_option_sequence
+        (continuation_allow_comments))
+      (multiline_string_line_sequence
+        (multiline_string_line)
+        (line_comment)
+        (multiline_string_line)
+        (line_comment)))))

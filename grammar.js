@@ -58,7 +58,9 @@ export default grammar({
     $.optional_marker,
     $._function_def_marker,
     $.empty_arg,
-    $._implicit_concat_marker
+    $._implicit_concat_marker,
+    $._continuation_section_start,
+    $._continuation_newline
   ],
 
   conflicts: $ => [
@@ -556,6 +558,7 @@ export default grammar({
     _literal: $ => choice(
       $._numeric_literal,
       $.boolean_literal,
+      $.multiline_string_literal,
       $.string_literal,
       $.array_literal,
       $.object_literal,
@@ -579,7 +582,6 @@ export default grammar({
       prec(PREC.KEYWORD, choice(/true/i, /false/i))
     ),
 
-    // TODO multiline string literals - https://www.autohotkey.com/docs/v2/Scripts.htm#continuation
     string_literal: $ => choice(
       token(/"([^"\r\n;]|`[^\r\n\t])*"/),
       token(/'([^'\r\n;]|`[^\r\n\t])*'/)
@@ -613,6 +615,98 @@ export default grammar({
         /local/i,
         /global/i
     ))),
+
+    //#region Continuation Sections
+
+    multiline_string_literal: $ => choice(
+      $._double_quote_str_multiline,
+      $._single_quote_str_multiline
+    ),
+
+    
+    _double_quote_str_multiline: $ => seq(
+      '"',
+      $._continuation_section_start,
+      choice(
+        seq(
+          // With comments allowed
+          alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
+          $._continuation_newline,
+          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence))
+        ),
+        seq(
+          // Comments not allowed
+          alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
+          $._continuation_newline,
+          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence))
+        )
+      ),
+      token(prec.left(1, ')"'))
+    ),
+
+    _single_quote_str_multiline: $ => seq(
+      "'",
+      $._continuation_section_start,
+      choice(
+        seq(
+          // With comments allowed
+          alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
+          $._continuation_newline,
+          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence))
+        ),
+        seq(
+          // Comments not allowed
+          alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
+          $._continuation_newline,
+          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence))
+        )
+      ),
+      token(prec.left(1, ")'"))
+    ),
+
+    _continuation_opt_seq_comments: $ => seq(
+      repeat($._continuation_opt_except_comments),
+      $.continuation_allow_comments,
+      repeat($._continuation_opt_except_comments)
+    ),
+
+    _continuation_opt_except_comments: $ => choice(
+        $.continuation_join,
+        $.continuation_ltrim,
+        $.continuation_ltrim_off,
+        $.continuation_rtrim_off,
+        $.continuation_no_escape
+    ),
+
+    _multiline_str_seq_no_comments: $ => repeat1(
+      seq(
+        optional(alias($.anything, $.multiline_string_line)),
+        $._continuation_newline
+      )
+    ),
+
+    _multiline_str_seq_comments: $ => repeat1(
+      seq(
+        // Stop at ";", allow extras to create the comment
+        // !BUG whitespace to the left of the comment is not trimmed - can result in extra nodes for comments on
+        // !    lines without preceding text
+        optional(alias(/[^\r\n;]+/, $.multiline_string_line)),
+        $._continuation_newline
+      )
+    ),
+
+    continuation_join: $ => seq(
+      token(prec(PREC.KEYWORD, /join/i)),
+      field("delimiter", token.immediate(/[^\r\n\s]{0,15}/))
+    ),
+
+    continuation_ltrim: $ => token(prec(PREC.KEYWORD, /LTrim/i)),
+    continuation_ltrim_off: $ => token(prec(PREC.KEYWORD, /LTrim0/i)),
+    continuation_rtrim_off: $ => token(prec(PREC.KEYWORD, /RTrim0/i)),
+    continuation_allow_comments: $ => token(prec(PREC.KEYWORD, /Comments|Comment|Com|C/i)),
+    continuation_no_escape: $ => token(prec(PREC.KEYWORD, "`")),
+
+    //#endregion
 
     //#region Control Flow
 
