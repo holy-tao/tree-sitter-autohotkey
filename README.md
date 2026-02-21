@@ -26,7 +26,9 @@ A reasonably complete list of known differences from the AutoHotkey interpreter 
   - The grammer permits `else if` clauses in `try` and `for` statements
   - The grammar permits `continue` and `break` statements outside of loops
 - The grammar will allow illegal line continuations in a variety of places.
-- The grammar allows comments in illegal places - for example, block comments inline with code.
+- Comments are treated as [extras](https://tree-sitter.github.io/tree-sitter/creating-parsers/3-writing-the-grammar.html#using-extras). Because of this,
+  - The grammar allows comments in illegal places - for example, block comments inline with code.
+  - The grammar permits unescaped semicolons in string literals.
 
 ## Contributing
 

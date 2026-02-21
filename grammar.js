@@ -581,8 +581,8 @@ export default grammar({
 
     // TODO multiline string literals - https://www.autohotkey.com/docs/v2/Scripts.htm#continuation
     string_literal: $ => choice(
-      seq('"', repeat($._double_quote_str_char), '"'),
-      seq("'", repeat($._single_quote_str_char), "'")
+      token(/"([^"\r\n;]|`[^\r\n\t])*"/),
+      token(/'([^'\r\n;]|`[^\r\n\t])*'/)
     ),
 
     array_literal: $ => seq("[", optional($.expression_sequence), "]"),
@@ -605,21 +605,6 @@ export default grammar({
     //#endregion
 
     identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
-
-    // backtick plus any non-whitespace character - ahk doesn't actually require that the backtick is
-    // followed by a character that creates an escape sequence, though it will skip the backtick if it
-    // isn't
-    _escape_sequence: $ => /`[^\r\n\t]/,
-
-    _double_quote_str_char: $ => choice(
-      $._escape_sequence,
-      /[^"\r\n]/
-    ),
-
-    _single_quote_str_char: $ => choice(
-      $._escape_sequence,
-      /[^'\r\n]/
-    ),
 
     // Note: not strictly "modifiers" because declaring one can switch a function into assume-local/global mode
     scope_identifier: $ => token(
@@ -1080,7 +1065,7 @@ export default grammar({
     //#endregion
 
     // Matches anything (up to a newline)
-    anything: $ => /.*/,
+    anything: $ => /[^\r\n]*/,
 
     _newline: $ => "\n"
   }

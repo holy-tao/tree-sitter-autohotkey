@@ -111,8 +111,7 @@ str := "/* not a block comment */"
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (string_literal
-      (block_comment))))
+    (string_literal)))
 
 ================================================================================
 Line comments in code block
