@@ -1,5 +1,6 @@
 #include "tree_sitter/parser.h"
 #include <ctype.h>
+#include <string.h>
 
 // This external scanner currently handles lookaheads for:
 //  1.  Optional markers ("?") to differentiate them from ternary expressions
@@ -17,6 +18,11 @@
 #define skip_whitespace(lexer)  while (is_whitespace(lexer->lookahead)) { \
                                   lexer->advance(lexer, true);            \
                                 }
+
+// Skip characters until we hit a whitespace character or eof
+#define skip_to_whitespace(lexer) while(!is_whitespace(lexer->lookahead) && !is_eof(lexer)) {     \
+                                    lexer->advance(lexer, false);                                 \
+                                  }
 
 #define skip_eol(lexer) while(is_eol(lexer->lookahead)) { lexer->advance(lexer, true); }
 
@@ -53,6 +59,17 @@
                                 strcaseeq(ident, "default")       || \
                                 strcaseeq(ident, "goto")          || \
                                 strcaseeq(ident, "return"))
+
+#define STRCASEEQ_ANY_1(s, a)          strcaseeq(s, a)
+#define STRCASEEQ_ANY_2(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_1(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_3(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_2(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_4(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_3(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_5(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_4(s, __VA_ARGS__)
+
+#define _STRCASEEQ_ANY_N(_1,_2,_3,_4,_5,N,...) STRCASEEQ_ANY_##N
+/// Performs a case-insensitive comparison of `s` against up to 5 character arrays, returns true if any match
+#define strcaseeq_any(s, ...) \
+    (_STRCASEEQ_ANY_N(__VA_ARGS__, 5, 4, 3, 2, 1)(s, __VA_ARGS__))
 
 /// Check to see if ident is a reserved word in general
 #define is_keyword(ident) (is_operator_keyword(ident) || is_flow_keyword(ident))
@@ -305,12 +322,13 @@ static bool is_implicit_concatenation(TSLexer *lexer) {
   return false;
 }
 
-/// @brief Checks to see if this is the start of a string continuation section. This is true if the next
-///        token is a '(' preceded by a newline. Grammar is responsible for asserting that a quote precedes
-///        the marker. If one is found, the token is consumed, mark-end is called
-/// @param lexer 
+#include <stdio.h>
+
+/// @brief Checks to see if this is the start of a continuation section. If one is found, the token is consumed, 
+///        and mark-end is called
+/// @param lexer the lexer.
 /// @return true if we found a string continuation start
-static bool is_string_continuation_start(TSLexer* lexer) {
+static bool is_continuation_start(TSLexer* lexer) {
   skip_horizontal_ws(lexer);
   if(is_eof(lexer))
     return false;
@@ -321,13 +339,83 @@ static bool is_string_continuation_start(TSLexer* lexer) {
   }
 
   skip_whitespace(lexer);
-  if(lexer->lookahead == '(') {
-    lexer->advance(lexer, false);
-    lexer->mark_end(lexer);
-    return true;
+  if(lexer->lookahead != '(') {
+    return false;
   }
 
-  return false;
+  lexer->advance(lexer, false);
+  lexer->mark_end(lexer);
+  skip_horizontal_ws(lexer);
+
+  // scan ahead to ensure that we only find continuation options up until the newline. Anything else and this can't
+  // be a continuation section start
+
+  char opt[10] = {0};
+
+  while(!is_eol(lexer->lookahead)) {
+    if(is_eof(lexer)) {
+      return false;
+    }
+
+    memset(opt, '\0', sizeof(opt));
+
+    switch(lexer->lookahead) {
+      case 'j':
+      case 'J':
+        //Join - ensure the first 4 characters are "join" and skip past the rest
+        int id_chars = skip_identifier(lexer, opt, 5);
+        printf("Checking for continuation start - found J, skipped %i characters, first 4: '%s'\n", id_chars, opt);
+        if(!strcaseeq(opt, "join")) {
+          return false;
+        }
+
+        // skip the delimiter, which might not have been skipped in skip_identifier if it contains non-identifier
+        // characters
+        skip_to_whitespace(lexer);
+        skip_horizontal_ws(lexer);
+        continue;
+      
+      case 'c':
+      case 'C':
+        //Comment
+        skip_identifier(lexer, opt, sizeof(opt));
+        printf("Checking for continuation start - found C, skipped '%s'\n", opt);
+        if(!strcaseeq_any(opt, "comments", "comment", "com", "c")) {
+          return false;
+        }
+
+        skip_horizontal_ws(lexer);
+        continue;
+
+      case 'l':
+      case 'L':
+      case 'r':
+      case 'R':
+        // ltrim or rtrim option
+        skip_identifier(lexer, opt, sizeof(opt));
+        printf("Checking for continuation start - found L or R, skipped '%s'\n", opt);
+        if(!strcaseeq_any(opt, "ltrim", "ltrim0", "rtrim0")) {
+          return false;
+        }
+
+        skip_horizontal_ws(lexer);
+        continue;
+
+      case '`':
+        // literal backtick option, allowed
+        lexer->advance(lexer, false);
+        skip_horizontal_ws(lexer);
+        continue;
+
+      default:
+        printf("Scanning for continuation start, encountered illegal character '%c'\n", (char)(lexer->lookahead));
+        // not a continuation section option
+        return false;
+    }
+  }
+
+  printf("Found continuation section start\n");
+  return true;
 }
 
 /// @brief Scans for a newline - to be used in continuation sections. The newline is consumed and mark_end is called
@@ -386,7 +474,7 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   if(valid_symbols[CONTINUATION_SECTION_START]) {
     lexer->mark_end(lexer);
 
-    if(is_string_continuation_start(lexer)) {
+    if(is_continuation_start(lexer)) {
       lexer->result_symbol = CONTINUATION_SECTION_START;
       return true;
     }
