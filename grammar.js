@@ -60,7 +60,8 @@ export default grammar({
     $.empty_arg,
     $._implicit_concat_marker,
     $._continuation_section_start,
-    $._continuation_newline
+    $._continuation_newline,
+    $._explicit_concat_dot
   ],
 
   conflicts: $ => [
@@ -350,7 +351,10 @@ export default grammar({
 
     explicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
       field("left", $._single_expression),
-      field("operator", " . "),   // !IMPORTANT: space is required to differentiate from member access
+      // Turns out preceding whitespace is totally irrelevant for disambiguating member access from concatenation
+      // `obj .prop` is member access, `obj . prop` is concatenation
+      // Although `obj. prop` is a syntax error, and this parses it as concatenation
+      field("operator", token(/\.\s+/)),
       field("right", $._single_expression)
     )),
 
@@ -369,7 +373,6 @@ export default grammar({
 
     member_access: $ => prec(PREC.MEMBER_ACCESS, seq(
       field("object", $._single_expression),
-      // TODO I think this is gonna cause problems with implicit concatenation
       ".",
       field("member", $.member_identifier)
     )),

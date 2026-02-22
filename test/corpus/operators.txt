@@ -395,3 +395,25 @@ a ?? b
     (or_maybe_operation
       (identifier)
       (identifier))))
+
+================================================================================
+Repeated multline explicit concatenation
+================================================================================
+
+; A real example from cJSON
+codeB64 := ""
+		. "G7gAVVdWU4HsbAFAAACLvCSMAWC0RCSAATCcJIQAMIkA+IhEJDMPtwYAZoP4Aw+EBgiEAAAAJBQPhEQDJBAID4SiAxIFD4QCwAMSCQ+EhgAAQACF"
+		. "2w+ETgAiiwgDvV8AHIPGCI0AUB7HACIAVQBAx0AEbgBrAAwICG4AbwAGDHcAbiEABhBfAFYABhRhBABsAAYYdQBlAACJE2aJaByLhAQkiAGMXCQE"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (explicit_concat_operation
+      (explicit_concat_operation
+        (string_literal)
+        (string_literal))
+      (string_literal))))
