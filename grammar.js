@@ -588,8 +588,8 @@ export default grammar({
     ),
 
     string_literal: $ => choice(
-      token(/"([^"\r\n;]|`[^\r\n\t])*"/),
-      token(/'([^'\r\n;]|`[^\r\n\t])*'/)
+      token(/"([^"\r\n]|`[^\r\n\t])*"/),
+      token(/'([^'\r\n]|`[^\r\n\t])*'/)
     ),
 
     array_literal: $ => seq("[", optional($.expression_sequence), "]"),
