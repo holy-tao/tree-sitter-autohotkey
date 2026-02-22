@@ -64,11 +64,11 @@ export default grammar({
   ],
 
   conflicts: $ => [
-    [$._primary_expression, $._param],
-    [$._primary_expression, $.default_param],
-    [$._primary_expression, $.variadic_param],
+    [$._single_expression, $._param],
+    [$._single_expression, $.default_param],
+    [$._single_expression, $.variadic_param],
     [$.object_literal, $.block],
-    [$._primary_expression, $.dynamic_identifier],
+    [$._single_expression, $.dynamic_identifier],
     [$.dynamic_identifier],
     [$._single_expression, $._dynamic_identifier_chain],
     [$._dynamic_identifier_chain],
@@ -90,15 +90,14 @@ export default grammar({
       $.hotkey,
     ),
 
-    // TODO refactor this, refer here: https://www.autohotkey.com/docs/v2/Language.htm#expression-statements
     _statement: $ => prec(2, choice(
       // Directives are allowed anywhere but executed unconditionally
       $.directive,
       $.function_declaration,
       $.class_declaration,
       $.call_statement,  // call_statements only at statement level
-      $._single_expression,
       $.expression_sequence,
+      $._primary_expression,
       // blocks are allowed at the top level, though they don't do anything
       $.block,  
       $.label,
@@ -134,29 +133,31 @@ export default grammar({
       $.continue_statement
     ),
 
+    // "Expression statements" in the docs
+    // https://www.autohotkey.com/docs/v2/Language.htm#expression-statements
     _primary_expression: $ => choice(
-      $._literal,
-      $.identifier,
-      $.dynamic_identifier,
+      $.assignment_operation,
+      $.variable_declaration,
+      $.ternary_expression,
+      $.prefix_operation,
+      $.postfix_operation,
       seq("(", $.expression_sequence, ")"),
-      $._pairwise_operation,
       $.member_access,
       $.index_access,
-      $.function_call  // Only parenthesized calls allowed in expressions
+      $.continuation_section,
+      $.fat_arrow_function, // these are allowed, though unhelpful
+      $.function_call       // Only parenthesized calls allowed in expressions
     ),
 
     _single_expression: $ => choice(
-      $.variable_declaration,
+      $._pairwise_operation,
+      $._literal,
+      $.identifier,
+      $.dynamic_identifier,
       $._primary_expression,
-      $.assignment_operation,
-      $.prefix_operation,
-      $.postfix_operation,
       $.verbal_not_operation,
-      $.fat_arrow_function,
-      $.ternary_expression,
       $.dereference_operation,
       $.varref_operation,
-      $.continuation_section
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
@@ -246,9 +247,9 @@ export default grammar({
 
     // Postfix increment/decrement
     postfix_operation: $ => prec.left(PREC.POSTFIX, seq(
-      field("operand", $._primary_expression),
+      field("operand", choice($.identifier, $.dynamic_identifier, $._primary_expression)),
       field("operator", choice(
-        token.immediate("++"), 
+        token.immediate("++"),
         token.immediate("--")
       ))
     )),
@@ -260,7 +261,7 @@ export default grammar({
         "!", "~",       // logical NOT, bitwise NOT
         "+", "-"        // unary plus, unary minus
       )),
-      field("operand", choice($._primary_expression, $.postfix_operation))
+      field("operand", $._single_expression)
     )),
 
     // Verbal NOT operator (lower precedence than !)
@@ -493,7 +494,7 @@ export default grammar({
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
       $.function_head,
       $.arrow,
-      field("body", $._primary_expression)
+      field("body", $._single_expression)
     )),
 
     // FIXME global functions cannot be static (can't be static to the auto-execute section)
@@ -573,9 +574,9 @@ export default grammar({
       $.hex_literal,          // hex numbers
     ),
 
-    integer_literal: $ => token(/[+-]?([0-9])/),
+    integer_literal: $ => token(/[+-]?([0-9]+)/),
 
-    float_literal: $ => token(/[+-]?([0-9]*[.])?[0-9]+/),
+    float_literal: $ => token(/[+-]?[0-9]*\.[0-9]+/),
 
     hex_literal: $ => token(/0[xX][0-9a-fA-F]+/),
 

@@ -111,7 +111,7 @@ if (x > 5) {
       (assignment_operation
         (identifier)
         (assignment_operator)
-        (float_literal)))))
+        (integer_literal)))))
 
 ================================================================================
 If-else statement
@@ -136,7 +136,7 @@ if (x > 5) {
       (assignment_operation
         (identifier)
         (assignment_operator)
-        (float_literal)))
+        (integer_literal)))
     (else_statement
       (else)
       (block
@@ -165,7 +165,7 @@ if (x > 10) {
     (expression_sequence
       (relational_operation
         (identifier)
-        (float_literal)))
+        (integer_literal)))
     (block
       (assignment_operation
         (identifier)
@@ -208,7 +208,7 @@ while (i < 10) {
     (expression_sequence
       (relational_operation
         (identifier)
-        (float_literal)))
+        (integer_literal)))
     (block
       (postfix_operation
         (identifier)))))
@@ -271,7 +271,7 @@ loop {
         (expression_sequence
           (relational_operation
             (identifier)
-            (float_literal)))
+            (integer_literal)))
         (block
           (break_statement
             (break)))))))
@@ -292,7 +292,7 @@ loop 10 {
 (source_file
   (loop_statement
     (loop)
-    (float_literal)
+    (integer_literal)
     (block
       (if_statement
         (if)
@@ -441,7 +441,7 @@ loop 10 {
     (identifier))
   (loop_statement
     (loop)
-    (float_literal)
+    (integer_literal)
     (block
       (loop_statement
         (loop)
@@ -927,7 +927,7 @@ switch (true) {
         (expression_sequence
           (relational_operation
             (identifier)
-            (float_literal)))
+            (integer_literal)))
         (return_statement
           (return)
           (identifier))))))
@@ -989,7 +989,7 @@ loop 10 {
 (source_file
   (loop_statement
     (loop)
-    (float_literal)
+    (integer_literal)
     (block
       (if_statement
         (if)
@@ -1146,7 +1146,7 @@ loop {
       (until)
       (relational_operation
         (identifier)
-        (float_literal)))))
+        (integer_literal)))))
 
 ================================================================================
 Loop until with parentheses
@@ -1170,7 +1170,7 @@ until (x > 10)
       (expression_sequence
         (relational_operation
           (identifier)
-          (float_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 If without braces (single statement)
@@ -1191,7 +1191,7 @@ if (x > 5)
     (assignment_operation
       (identifier)
       (assignment_operator)
-      (float_literal))))
+      (integer_literal))))
 
 ================================================================================
 While without braces
@@ -1208,7 +1208,7 @@ while (i < 10)
     (expression_sequence
       (relational_operation
         (identifier)
-        (float_literal)))
+        (integer_literal)))
     (postfix_operation
       (identifier))))
 
@@ -1278,7 +1278,7 @@ if x > 5 {
       (assignment_operation
         (identifier)
         (assignment_operator)
-        (float_literal)))))
+        (integer_literal)))))
 
 ================================================================================
 Nested switch

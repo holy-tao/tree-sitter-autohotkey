@@ -60,7 +60,7 @@ OnClick(wParam, lParam, msgNum, hwnd) {
     (assignment_operation
       (identifier)
       (assignment_operator)
-      (float_literal))
+      (integer_literal))
     (assignment_operation
       (identifier)
       (assignment_operator)
@@ -68,7 +68,7 @@ OnClick(wParam, lParam, msgNum, hwnd) {
     (assignment_operation
       (identifier)
       (assignment_operator)
-      (float_literal)))
+      (integer_literal)))
   (loop_statement
     (loop)
     (expression_sequence

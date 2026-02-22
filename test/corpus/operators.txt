@@ -377,9 +377,10 @@ a ~= b
 --------------------------------------------------------------------------------
 
 (source_file
-  (regex_match_operation
-    (identifier)
-    (identifier)))
+  (expression_sequence
+    (regex_match_operation
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Or-maybe operation
@@ -390,6 +391,7 @@ a ?? b
 --------------------------------------------------------------------------------
 
 (source_file
-  (or_maybe_operation
-    (identifier)
-    (identifier)))
+  (expression_sequence
+    (or_maybe_operation
+      (identifier)
+      (identifier))))

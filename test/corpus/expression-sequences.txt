@@ -111,17 +111,18 @@ Expression sequence as math operand
 --------------------------------------------------------------------------------
 
 (source_file
-  (additive_operation
-    (integer_literal)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (additive_operation
-        (identifier)
-        (identifier)))))
+  (expression_sequence
+    (additive_operation
+      (integer_literal)
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (additive_operation
+          (identifier)
+          (identifier))))))

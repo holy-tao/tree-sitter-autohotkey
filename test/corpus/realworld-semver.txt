@@ -436,20 +436,20 @@ class SemVer {
             (if_statement
               (if)
               (expression_sequence
-                (function_call
-                  (prefix_operation
-                    (identifier))
-                  (arg_sequence
+                (prefix_operation
+                  (function_call
                     (identifier)
-                    (member_access
+                    (arg_sequence
                       (identifier)
-                      (member_identifier
-                        (identifier)))
-                    (assignment_operation
-                      (varref_operation
-                        (identifier))
-                      (assignment_operator)
-                      (string_literal)))))
+                      (member_access
+                        (identifier)
+                        (member_identifier
+                          (identifier)))
+                      (assignment_operation
+                        (varref_operation
+                          (identifier))
+                        (assignment_operator)
+                        (string_literal))))))
               (throw_statement
                 (throw)
                 (function_call
@@ -573,14 +573,14 @@ class SemVer {
             (if_statement
               (if)
               (expression_sequence
-                (function_call
-                  (prefix_operation
-                    (identifier))
-                  (arg_sequence
+                (prefix_operation
+                  (function_call
                     (identifier)
-                    (identifier)
-                    (varref_operation
-                      (identifier)))))
+                    (arg_sequence
+                      (identifier)
+                      (identifier)
+                      (varref_operation
+                        (identifier))))))
               (throw_statement
                 (throw)
                 (function_call

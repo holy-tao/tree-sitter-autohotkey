@@ -103,8 +103,9 @@ Variable reference simple
 --------------------------------------------------------------------------------
 
 (source_file
-  (varref_operation
-    (identifier)))
+  (expression_sequence
+    (varref_operation
+      (identifier))))
 
 ================================================================================
 Variable reference quoted
@@ -115,11 +116,12 @@ Variable reference quoted
 --------------------------------------------------------------------------------
 
 (source_file
-  (varref_operation
-    (expression_sequence
-      (multiplicative_operation
-        (identifier)
-        (identifier)))))
+  (expression_sequence
+    (varref_operation
+      (expression_sequence
+        (multiplicative_operation
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Nested parenthesized expression

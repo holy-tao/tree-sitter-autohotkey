@@ -124,7 +124,7 @@ class Example {
           (block
             (return_statement
               (return)
-              (float_literal)))))
+              (integer_literal)))))
       (method_declaration
         (scope_identifier)
         (identifier)
@@ -159,7 +159,7 @@ class Example
         (identifier)
         (function_head)
         (function_body
-          (float_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Class with static fat-arrow method
@@ -182,7 +182,7 @@ class Example
         (identifier)
         (function_head)
         (function_body
-          (float_literal))))))
+          (integer_literal))))))
 
 ================================================================================
 Class with nested methods
@@ -773,7 +773,7 @@ class Example
                 (assignment_operation
                   (identifier)
                   (assignment_operator)
-                  (float_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 Class with mixed property declaration styles
@@ -821,7 +821,7 @@ class Example {
                 (assignment_operation
                   (identifier)
                   (assignment_operator)
-                  (float_literal))))))))))
+                  (integer_literal))))))))))
 
 ================================================================================
 Class with property and method

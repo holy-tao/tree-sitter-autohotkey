@@ -69,7 +69,7 @@ MsgBox("Pi is approximately " 22/7)
       (implicit_concat_operation
         (string_literal)
         (multiplicative_operation
-          (float_literal)
+          (integer_literal)
           (integer_literal))))))
 
 ================================================================================
@@ -151,7 +151,7 @@ MsgBox(22/7 "is approximately pi")
     (arg_sequence
       (implicit_concat_operation
         (multiplicative_operation
-          (float_literal)
+          (integer_literal)
           (integer_literal))
         (string_literal)))))
 

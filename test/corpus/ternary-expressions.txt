@@ -92,7 +92,7 @@ result := x + y > 10? "big" : "small"
         (additive_operation
           (identifier)
           (identifier))
-        (float_literal))
+        (integer_literal))
       (string_literal)
       (string_literal))))
 
@@ -136,7 +136,7 @@ result := x > 5 && y < 10? "valid" : "invalid"
           (integer_literal))
         (relational_operation
           (identifier)
-          (float_literal)))
+          (integer_literal)))
       (string_literal)
       (string_literal))))
 
@@ -334,7 +334,7 @@ result := 10 + (x? 5 : 3)
     (identifier)
     (assignment_operator)
     (additive_operation
-      (float_literal)
+      (integer_literal)
       (expression_sequence
         (ternary_expression
           (identifier)
@@ -482,7 +482,7 @@ result := (x > 5 && y < 10)? (z := a + b) : (w := c * d)
             (integer_literal))
           (relational_operation
             (identifier)
-            (float_literal))))
+            (integer_literal))))
       (expression_sequence
         (assignment_operation
           (identifier)

@@ -10,7 +10,7 @@ x := 42
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (float_literal)))
+    (integer_literal)))
 
 ================================================================================
 Global variable declaration with assignment
@@ -44,7 +44,7 @@ var := 42
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (float_literal)))
+    (integer_literal)))
 
 ================================================================================
 String literal assignment

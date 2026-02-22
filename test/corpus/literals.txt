@@ -2,231 +2,291 @@
 Integer literal
 ================================================================================
 
-42
+var := 42
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (float_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Negative integer
 ================================================================================
 
--42
+var := -42
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (float_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal)))
 
 ================================================================================
 Float literal
 ================================================================================
 
-3.14
+var := 3.14
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (float_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (float_literal)))
 
 ================================================================================
 Hex literal
 ================================================================================
 
-0xFF00
+var := 0xFF00
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (hex_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (hex_literal)))
 
 ================================================================================
 Double-quoted string
 ================================================================================
 
-"hello world"
+var := "hello world"
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 Single-quoted string
 ================================================================================
 
-'hello world'
+var := 'hello world'
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 String with single quotes inside double quotes
 ================================================================================
 
-"un 'quote' d"
+var := "un 'quote' d"
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 String with double quotes inside single quotes
 ================================================================================
 
-'outer "double quoted" outer'
+var := 'outer "double quoted" outer'
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 String with nested single quotes
 ================================================================================
 
-"she said 'hello' to me"
+var := "she said 'hello' to me"
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 String with escape sequence
 ================================================================================
 
-"line1`nline2"
+var := "line1`nline2"
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 String with unused escape sequence
 ================================================================================
 
-"line1` line2"
+var := "line1` line2"
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 String with escaped backtick
 ================================================================================
 
-"line1``line2"
+var := "line1``line2"
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 Empty double-quoted string
 ================================================================================
 
-""
+var := ""
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 Empty single-quoted string
 ================================================================================
 
-''
+var := ''
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (string_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (string_literal)))
 
 ================================================================================
 Boolean true lowercase
 ================================================================================
 
-true
+var := true
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (boolean_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (boolean_literal)))
 
 ================================================================================
 Boolean true uppercase
 ================================================================================
 
-TRUE
+var := TRUE
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (boolean_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (boolean_literal)))
 
 ================================================================================
 Boolean false mixed case
 ================================================================================
 
-False
+var := False
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (boolean_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (boolean_literal)))
 
 ================================================================================
 Unset literal
 ================================================================================
 
-unset
+var := unset
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (unset))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (unset)))
 
 ================================================================================
 Empty array literal
 ================================================================================
 
-[]
+var := []
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (array_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal)))
 
 ================================================================================
 Array literal with string literals
 ================================================================================
 
-["one", "two", "three"]
+var := ["one", "two", "three"]
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (array_literal
-    (expression_sequence
-      (string_literal)
-      (string_literal)
-      (string_literal))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (string_literal)
+        (string_literal)
+        (string_literal)))))
 
 ================================================================================
 Array literal with expressions
 ================================================================================
 
-[
+var := [
     one := 1,
     two := 2,
     (a := 3 + 3, a + 3)
@@ -235,47 +295,53 @@ Array literal with expressions
 --------------------------------------------------------------------------------
 
 (source_file
-  (array_literal
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
       (expression_sequence
         (assignment_operation
           (identifier)
           (assignment_operator)
-          (additive_operation
-            (integer_literal)
-            (integer_literal)))
-        (additive_operation
+          (integer_literal))
+        (assignment_operation
           (identifier)
-          (integer_literal))))))
+          (assignment_operator)
+          (integer_literal))
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (additive_operation
+              (integer_literal)
+              (integer_literal)))
+          (additive_operation
+            (identifier)
+            (integer_literal)))))))
 
 ================================================================================
 Array literal with numbers
 ================================================================================
 
-[1, 2, 3]
+var := [1, 2, 3]
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (array_literal
-    (expression_sequence
-      (integer_literal)
-      (integer_literal)
-      (integer_literal))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (integer_literal)
+        (integer_literal)
+        (integer_literal)))))
 
 ================================================================================
 Array literal with object literals
 ================================================================================
 
-[
+var := [
   { one: "one" },
   { two: "two"}
 ]
@@ -283,18 +349,21 @@ Array literal with object literals
 --------------------------------------------------------------------------------
 
 (source_file
-  (array_literal
-    (expression_sequence
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (string_literal))))
-      (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (string_literal)))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (object_literal
+          (object_literal_member_sequence
+            (object_literal_member
+              (identifier)
+              (string_literal))))
+        (object_literal
+          (object_literal_member_sequence
+            (object_literal_member
+              (identifier)
+              (string_literal))))))))
 
 ================================================================================
 Empty object literal
@@ -511,4 +580,4 @@ obj := {
                 (string_literal))
               (object_literal_member
                 (identifier)
-                (float_literal)))))))))
+                (integer_literal)))))))))

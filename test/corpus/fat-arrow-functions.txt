@@ -75,7 +75,7 @@ Fat-arrow function with named argument with default
         (default_param
           (identifier)
           (assignment_operator)
-          (float_literal))))
+          (integer_literal))))
     (arrow)
     (identifier)))
 
@@ -95,7 +95,7 @@ Fat-arrow function with mixed argument types
         (default_param
           (identifier)
           (assignment_operator)
-          (float_literal))
+          (integer_literal))
         (identifier)
         (optional_param
           (identifier)

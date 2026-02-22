@@ -134,7 +134,7 @@ var123 := 321
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (float_literal)))
+    (integer_literal)))
 
 ================================================================================
 VarRef with initializer
@@ -149,4 +149,4 @@ VarRef with initializer
     (varref_operation
       (identifier))
     (assignment_operator)
-    (float_literal)))
+    (integer_literal)))
