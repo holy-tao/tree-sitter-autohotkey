@@ -322,8 +322,6 @@ static bool is_implicit_concatenation(TSLexer *lexer) {
   return false;
 }
 
-#include <stdio.h>
-
 /// @brief Checks to see if this is the start of a continuation section. If one is found, the token is consumed, 
 ///        and mark-end is called
 /// @param lexer the lexer.
@@ -364,7 +362,6 @@ static bool is_continuation_start(TSLexer* lexer) {
       case 'J':
         //Join - ensure the first 4 characters are "join" and skip past the rest
         int id_chars = skip_identifier(lexer, opt, 5);
-        printf("Checking for continuation start - found J, skipped %i characters, first 4: '%s'\n", id_chars, opt);
         if(!strcaseeq(opt, "join")) {
           return false;
         }
@@ -379,7 +376,6 @@ static bool is_continuation_start(TSLexer* lexer) {
       case 'C':
         //Comment
         skip_identifier(lexer, opt, sizeof(opt));
-        printf("Checking for continuation start - found C, skipped '%s'\n", opt);
         if(!strcaseeq_any(opt, "comments", "comment", "com", "c")) {
           return false;
         }
@@ -393,7 +389,6 @@ static bool is_continuation_start(TSLexer* lexer) {
       case 'R':
         // ltrim or rtrim option
         skip_identifier(lexer, opt, sizeof(opt));
-        printf("Checking for continuation start - found L or R, skipped '%s'\n", opt);
         if(!strcaseeq_any(opt, "ltrim", "ltrim0", "rtrim0")) {
           return false;
         }
@@ -408,13 +403,11 @@ static bool is_continuation_start(TSLexer* lexer) {
         continue;
 
       default:
-        printf("Scanning for continuation start, encountered illegal character '%c'\n", (char)(lexer->lookahead));
         // not a continuation section option
         return false;
     }
   }
 
-  printf("Found continuation section start\n");
   return true;
 }
 
