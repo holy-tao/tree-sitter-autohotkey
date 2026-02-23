@@ -61,7 +61,7 @@ export default grammar({
     $._implicit_concat_marker,
     $._continuation_section_start,
     $._continuation_newline,
-    $._explicit_concat_dot
+    $._directive_end
   ],
 
   conflicts: $ => [
@@ -93,7 +93,7 @@ export default grammar({
 
     _statement: $ => prec(2, choice(
       // Directives are allowed anywhere but executed unconditionally
-      $.directive,
+      $._directive,
       $.function_declaration,
       $.class_declaration,
       $.call_statement,  // call_statements only at statement level
@@ -976,23 +976,159 @@ export default grammar({
     // care about their contents, except for HotIf
 
     // #Include, #HotIf, etc
-    directive: $ => seq($.directive_identifier, $.anything),
+    _directive: $ => choice(
+      $.clipboard_timeout_directive,
+      $.dll_load_directive,
+      $.error_stdout_directive,
+      $.requires_directive,
+      $.hotif_directive,
+      $.hotif_timeout_directive,
+      $.hotstring_directive,
+      $.include_directive,
+      $.include_again_directive,
+      $.input_level_directive,
+      $.use_hook_directive,
+      $.max_threads_directive,
+      $.max_threads_per_hotkey_directive,
+      $.max_threads_buffer_directive,
+      $.no_tray_icon_directive,
+      $.single_instance_directive,
+      $.warn_directive,
+    ),
 
-    directive_identifier: $ => token(prec(PREC.KEYWORD, 
+    clipboard_timeout_directive: $ => seq(token(prec(PREC.KEYWORD, /#ClipboardTimeout/i)), $.integer_literal),
+
+    dll_load_directive: $ => seq(
+      kwtok(/#DllLoad/i),
+      optional($.file_or_dir_name),
+      $._directive_end
+    ),
+
+    // https://www.autohotkey.com/docs/v2/lib/FileEncoding.htm
+    error_stdout_directive: $ => seq(
+      kwtok(/#ErrorStdOut/i),
+      optional(alias(kwtok(/['"]?(utf-8(-raw)?|utf-16(-raw)?|cp\d+|\d+)['"]?/i), $.encoding_identifier)),
+      $._directive_end
+    ),
+
+    requires_directive: $ => prec.right(seq(
+      kwtok(/#Requires/i),
+      kwtok(/AutoHotkey/i),
+      repeat($.version_requirement),
+      optional($.bitness),
+      $._directive_end
+    )),
+
+    hotif_directive: $ => prec.right(seq(
+      kwtok(/#Hotif/i),
+      optional(field("expression", $._single_expression)),
+      $._directive_end
+    )),
+
+    hotif_timeout_directive: $ => seq(
+      kwtok(/#HotifTimeout/i),
+      $.integer_literal,
+      $._directive_end
+    ),
+
+    hotstring_directive: $ => seq(
+      kwtok(/#Hotstring/i),
       choice(
-        /#ClipboardTimeout/i,
-        /#DllLoad/i, 
-        /#ErrStdOut/i, 
-        /#Requires/i, 
-        /#Hotif/i, 
-        /#HotifTimeout/i,
-        /#Hotstring/i, 
-        /#Include/i, 
-        /#IncludeAgain/i, 
-        /#InputLevel/i, 
-        /#UseHook/i, 
-        /#MaxThreads/i
-    ))),
+        alias(kwtok(/NoMouse/i), $.hotstring_no_mouse),
+        seq(
+          kwtok(/EndChars/i),
+          alias(token(/[^\s]{1,100}/), $.hotstring_end_chars)
+        ),
+        alias(repeat1(choice($._hotstring_modifier, $.hotstring_execute)), $.hotstring_option_sequence)
+      ),
+      $._directive_end
+    ),
+
+    include_directive: $ => prec.left(seq(
+      kwtok(/#Include/i),
+      optional($.include_ignore_failure),
+      choice(
+        $.file_or_dir_name,
+        $.lib_name
+      ),
+      $._directive_end
+    )),
+
+    include_again_directive: $ => prec.left(seq(
+      kwtok(/#IncludeAgain/i),
+      optional($.include_ignore_failure),
+      choice(
+        $.file_or_dir_name,
+        $.lib_name
+      ),
+      $._directive_end
+    )),
+
+    input_level_directive: $ => seq(
+      kwtok(/#InputLevel/i),
+      $.integer_literal,
+      $._directive_end
+    ),
+
+    use_hook_directive: $ => seq(
+      kwtok(/#UseHook/i),
+      choice(
+        $.boolean_literal, 
+        alias(choice(token("0"), token("1")), $.integer_literal)
+      ),
+      $._directive_end,
+    ),
+
+    max_threads_directive: $ => seq(
+      kwtok(/#MaxThreads/i),
+      $.integer_literal,
+      $._directive_end
+    ),
+
+    max_threads_per_hotkey_directive: $ => seq(
+      kwtok(/#MaxThreadsPerHotkey/i),
+      $.integer_literal,
+      $._directive_end
+    ),
+
+    max_threads_buffer_directive: $ => seq(
+      kwtok(/#MaxThreadsBuffer/i),
+      optional(choice(
+        $.boolean_literal, 
+        alias(choice(token("0"), token("1")), $.integer_literal)
+      )),
+      $._directive_end
+    ),
+
+    no_tray_icon_directive: $ => seq(
+      kwtok(/#NoTrayIcon/i),
+      $._directive_end
+    ),
+
+    single_instance_directive: $ => seq(
+      kwtok(/#SingleInstance/i),
+      optional(alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode)),
+      $._directive_end
+    ),
+
+    warn_directive: $ => seq(
+      kwtok(/#Warn/i),
+      optional(seq(
+        $.warning_type,
+        optional(seq(",", $.warning_mode))
+      )),
+      $._directive_end
+    ),
+
+    warning_type: $ => kwtok(/VarUnset|LocalSameAsGlobal|Unreachable|All/i),
+    warning_mode: $ => kwtok(/MsgBox|StdOut|OutputDebug|Off/i),
+    version_requirement: $ => kwtok(/(|<=|>=|>|<)?[vV]?[^\r\n\t ]+[\+]?/i),
+
+    include_ignore_failure: $ => token(prec.right(PREC.KEYWORD, "*i")),
+    file_or_dir_name: $ => token(prec.right(PREC.KEYWORD, /['"]?[^\r\n\s<>\*\?"]+[^\r\n<>\*\?"]*[^\r\n<>\*\?"]*['"]?/i)),
+    lib_name: $ => token(prec.right(PREC.KEYWORD, /['"]?<[^\r\n\s<>\*\?"]+[^\r\n<>\*\?"]*[^\r\n<>\*\?"]*>['"]?/i)),
+
+    bitness: $ => token(prec(PREC.KEYWORD + 1, /32-bit|64-bit/i)),
 
     //#endregion
 
@@ -1185,3 +1321,10 @@ export default grammar({
     _newline: $ => "\n"
   }
 });
+
+/**
+ * @param {RuleOrLiteral} pattern
+ */
+function kwtok(pattern) {
+  return token(prec(PREC.KEYWORD, pattern));
+}

@@ -80,7 +80,8 @@ enum TokenType {
   EMPTY_ARG,
   IMPLICIT_CONCAT_MARKER,
   CONTINUATION_SECTION_START,
-  CONTINUATION_NEWLINE
+  CONTINUATION_NEWLINE,
+  DIRECTIVE_END
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -431,6 +432,14 @@ static bool scan_continuation_newline(TSLexer *lexer) {
   return false;
 }
 
+/// @brief Checks if we're at the end of a directive line (newline, EOF, or comment start).
+/// @param lexer the lexer
+/// @return true if at a line boundary, false otherwise
+static bool is_directive_end(TSLexer *lexer) {
+  skip_horizontal_ws(lexer);
+  return is_eof(lexer) || is_eol(lexer->lookahead) || lexer->lookahead == ';';
+}
+
 /// @brief Main scan function. See https://tree-sitter.github.io/tree-sitter/creating-parsers/4-external-scanners.html#scan
 /// @param payload no touching
 /// @param lexer the lexer, see the link above
@@ -478,6 +487,15 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
 
     if(scan_continuation_newline(lexer)) {
       lexer->result_symbol = CONTINUATION_NEWLINE;
+      return true;
+    }
+  }
+
+  if(valid_symbols[DIRECTIVE_END]) {
+    lexer->mark_end(lexer);
+
+    if(is_directive_end(lexer)) {
+      lexer->result_symbol = DIRECTIVE_END;
       return true;
     }
   }

@@ -94,9 +94,8 @@ Hotkey after directive (check '#' is parsed correctly)
 --------------------------------------------------------------------------------
 
 (source_file
-  (directive
-    (directive_identifier)
-    (anything))
+  (hotif_directive
+    (boolean_literal))
   (hotkey
     (hotkey_trigger
       (hotkey_left)
