@@ -68,12 +68,11 @@ export default grammar({
     [$._single_expression, $._param],
     [$._single_expression, $.default_param],
     [$._single_expression, $.variadic_param],
-    [$.object_literal, $.block],
     [$._single_expression, $.dynamic_identifier],
     [$.dynamic_identifier],
     [$._single_expression, $._dynamic_identifier_chain],
     [$._dynamic_identifier_chain],
-    [$.if_statement, $.else_statement]
+    [$.if_statement, $.else_statement],
   ],
 
   extras: $ => [
@@ -103,7 +102,7 @@ export default grammar({
       $.block,  
       $.label,
       $._control_flow_statement,
-      $._loop_flow_statement    
+      $._loop_flow_statement
     )),
 
     // NOTE: this is actually more permissive than the AHK interpreter, which doesn't allow block comments inline
@@ -128,11 +127,10 @@ export default grammar({
       $.goto_statement
     ),
 
-    // TODO restrict to loop blocks only
-    _loop_flow_statement: $ => choice(
+    _loop_flow_statement: $ => prec(2, choice(
       $.break_statement,
       $.continue_statement
-    ),
+    )),
 
     // "Expression statements" in the docs
     // https://www.autohotkey.com/docs/v2/Language.htm#expression-statements
@@ -165,27 +163,6 @@ export default grammar({
       $._single_expression,
       repeat(seq(",", $._single_expression))
     )),
-
-    // Helper for expressions without top-level parentheses (used in specialized loops)
-    _non_paren_primary: $ => choice(
-      $._literal,
-      $.identifier,
-      $._pairwise_operation,
-      $.member_access
-    ),
-
-    _non_paren_expression: $ => choice(
-      $._non_paren_primary,
-      $.variable_declaration,
-      $.assignment_operation,
-      $.prefix_operation,
-      $.postfix_operation,
-      $.verbal_not_operation,
-      $.fat_arrow_function,
-      $.ternary_expression,
-      $.dereference_operation,
-      $.varref_operation,
-    ),
 
     // FIXME some declarations are contextually illegal - you can't delcare local variables in the auto-execute
     // section, for example. We may not be able to detect those with pure grammar rules
@@ -731,9 +708,10 @@ export default grammar({
 
     //#region Control Flow
 
-    block: $ => seq(
+    // higher precedence than object_literal
+    block: $ => prec(1, seq(
       "{", repeat($._statement), "}"
-    ),
+    )),
 
     if_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.if,
@@ -750,21 +728,24 @@ export default grammar({
       )
     )),
 
-    loop_statement: $ => seq(
+    loop_statement: $ => prec.right(seq(
       $.loop,
-      optional(choice(
-        // Regular loop count - can be parenthesized
-        prec(2, $._single_expression),
-        // Specialized loops - no top-level parentheses allowed
-        prec(1, seq($.parse, $._non_paren_expression, optional(seq(",", $._non_paren_expression)), optional(seq(",", $._non_paren_expression)))),
-        prec(1, seq($.read, $._non_paren_expression, optional(seq(",", $._non_paren_expression)))),
-        prec(1, seq($.files, $._non_paren_expression, optional(seq(",", $._non_paren_expression)))),
-        prec(1, seq($.reg, $._non_paren_expression, optional(seq(",", $._non_paren_expression))))
-      )),
-      // TODO make a special loop_block that allows break and continue, remove them from generic block
-      $.block,
+      optional(field("head", choice(
+        choice(
+          seq(token("("), $._single_expression, token(")")),
+          $._single_expression
+        ),
+        choice(
+          // Specialized loops - no top-level parentheses allowed
+          prec(1, seq($.parse, $._single_expression, optional(seq(",", $._single_expression)), optional(seq(",", $._single_expression)))),
+          prec(1, seq($.read, $._single_expression, optional(seq(",", $._single_expression)))),
+          prec(1, seq($.files, $._single_expression, optional(seq(",", $._single_expression)))),
+          prec(1, seq($.reg, $._single_expression, optional(seq(",", $._single_expression))))
+        )
+      ))),
+      field("body", $._statement),
       optional($.until_statement)
-    ),
+    )),
 
     until_statement: $ => seq($.until, $._single_expression),
 
@@ -773,8 +754,11 @@ export default grammar({
 
     while_statement: $ => seq(
       $.while,
-      $._single_expression,
-      choice($.block, $._statement)  // support brace-less forms
+      choice(
+        seq(token("("), $._single_expression, token(")")),
+        $._single_expression
+      ),
+      field("body", $._statement),
     ),
 
     break_statement: $ => prec.right(seq(
@@ -804,13 +788,12 @@ export default grammar({
 
     for_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.for,
-      choice(
+      field("head", choice(
         // Parenthesized form: for (var in expr) or for (key, val in expr)
         seq("(", $._for_params, ")"),
         $._for_params
-      ),
-      choice($.block, $._statement),  // support brace-less forms
-      // FIXME else if is not allowed here
+      )),
+      field("body", $._statement),
       optional($.else_statement)
     )),
 
@@ -855,8 +838,8 @@ export default grammar({
 
     switch_statement: $ => seq(
       $.switch,
-      $._single_expression,
-      $.switch_body
+      field("head", $._single_expression),
+      field("body", $.switch_body)
     ),
 
     switch_body: $ => seq(

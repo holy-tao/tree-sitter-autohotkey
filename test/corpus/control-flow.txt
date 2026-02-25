@@ -205,10 +205,9 @@ while (i < 10) {
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (relational_operation
+      (identifier)
+      (integer_literal))
     (block
       (postfix_operation
         (identifier)))))
@@ -244,8 +243,7 @@ loop (5) {
 (source_file
   (loop_statement
     (loop)
-    (expression_sequence
-      (integer_literal))
+    (integer_literal)
     (block
       (postfix_operation
         (identifier)))))
@@ -1047,8 +1045,7 @@ while (running) {
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (identifier))
+    (identifier)
     (block
       (for_statement
         (for)
@@ -1205,10 +1202,9 @@ while (i < 10)
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (relational_operation
+      (identifier)
+      (integer_literal))
     (postfix_operation
       (identifier))))
 
@@ -1250,8 +1246,7 @@ loop 5 { }
     (block))
   (while_statement
     (while)
-    (expression_sequence
-      (identifier))
+    (identifier)
     (block))
   (loop_statement
     (loop)
