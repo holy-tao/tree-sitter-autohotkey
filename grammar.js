@@ -888,7 +888,7 @@ export default grammar({
       field("name", $.identifier),
       optional(seq(
         $.extends,
-        field("superclass", $.identifier)
+        field("superclass", choice($.identifier, $.member_access))
       )),
       $.class_body
     ),

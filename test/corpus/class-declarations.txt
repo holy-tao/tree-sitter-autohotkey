@@ -968,3 +968,23 @@ class Outer extends Object
             (identifier)
             (getter
               (string_literal))))))))
+
+================================================================================
+Class extending inner class of another
+================================================================================
+
+class Foo extends Bar.Baz {
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (extends)
+    (member_access
+      (identifier)
+      (member_identifier
+        (identifier)))
+    (class_body)))
