@@ -335,7 +335,7 @@ export default grammar({
       field("right", $._single_expression)
     )),
 
-    exponent_operation: $ => prec.left(PREC.EXPONENT, seq(
+    exponent_operation: $ => prec.right(PREC.EXPONENT, seq(
       field("left", $._single_expression),
       field("operator", "**"),
       field("right", $._single_expression)
