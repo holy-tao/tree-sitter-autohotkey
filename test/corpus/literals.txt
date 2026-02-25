@@ -398,6 +398,49 @@ obj := { one: 1 }
           (integer_literal))))))
 
 ================================================================================
+Object literal with dynamic identifier member
+================================================================================
+
+obj := { %var%: "test"}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (dynamic_identifier
+            (dereference_operation
+              (identifier)))
+          (string_literal))))))
+
+================================================================================
+Object literal with complex dynamic identifier member
+================================================================================
+
+obj := { %var%key%var2%: "test"}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (dynamic_identifier
+            (dereference_operation
+              (identifier))
+            (identifier)
+            (dereference_operation
+              (identifier)))
+          (string_literal))))))
+
+================================================================================
 Object literal with multiple members
 ================================================================================
 

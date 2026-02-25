@@ -568,7 +568,7 @@ export default grammar({
     ),
 
     object_literal_member: $ => seq(
-      $.identifier, 
+      choice($.identifier, $.dynamic_identifier), 
       ":", 
       choice(
         $._single_expression, 
