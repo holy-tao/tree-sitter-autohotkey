@@ -382,21 +382,10 @@ export default grammar({
     assignment_operator: $ => 
       choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>="),
 
-    // "is must have whitespace, others are optional"
-    comparison_operator: $ => choice(">", "<", ">=", "<=", "=", "==", "!=", "!==", "~=", / is /i),
-
-    unary_operator: $ => choice("~", "+", "-", "!"),
-
-    math_operator: $ => choice("+", "-", "*", "/", "//"),
-
-    bitwise_operator: $ => choice("&", "|", "^"),
-
     bitshift_operator: $ => choice("<<", ">>", ">>>"),
 
     arrow: $ => "=>",
-
-    maybe_operator: $ => token.immediate("?"),
-
+    
     boolean_comparison_operator: $ => token(
       prec(PREC.KEYWORD, 
         choice("&&", /and/i, "||", /or/i
