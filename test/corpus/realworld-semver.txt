@@ -454,7 +454,8 @@ class SemVer {
                   (identifier)
                   (arg_sequence
                     (string_literal)
-                    (integer_literal)
+                    (prefix_operation
+                      (integer_literal))
                     (identifier)))))
             (return_statement
               (return)
@@ -585,7 +586,8 @@ class SemVer {
                   (identifier)
                   (arg_sequence
                     (string_literal)
-                    (integer_literal)
+                    (prefix_operation
+                      (integer_literal))
                     (identifier)))))
             (line_comment)
             (assignment_operation

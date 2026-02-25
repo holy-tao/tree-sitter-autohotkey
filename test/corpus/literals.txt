@@ -24,7 +24,8 @@ var := -42
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (integer_literal)))
+    (prefix_operation
+      (integer_literal))))
 
 ================================================================================
 Float literal

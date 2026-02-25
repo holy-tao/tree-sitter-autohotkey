@@ -102,7 +102,8 @@ MsgBox("Test" -5)
     (arg_sequence
       (implicit_concat_operation
         (string_literal)
-        (integer_literal)))))
+        (prefix_operation
+          (integer_literal))))))
 
 ================================================================================
 Implicit concatenation with variables

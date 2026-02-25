@@ -417,3 +417,71 @@ codeB64 := ""
         (string_literal)
         (string_literal))
       (string_literal))))
+
+================================================================================
+Subtraction with negative integer on right
+================================================================================
+
+result := 2 - -2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (integer_literal)
+      (prefix_operation
+        (integer_literal)))))
+
+================================================================================
+Subtraction with negative integer on left
+================================================================================
+
+result := 2 - -2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (integer_literal)
+      (prefix_operation
+        (integer_literal)))))
+
+================================================================================
+Subtraction with prefix-positive integer on right
+================================================================================
+
+result := 2 - +2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (integer_literal)
+      (prefix_operation
+        (integer_literal)))))
+
+================================================================================
+Addition with negative integer on right
+================================================================================
+
+result := 2 + -2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (integer_literal)
+      (prefix_operation
+        (integer_literal)))))

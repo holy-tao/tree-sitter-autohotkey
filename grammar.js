@@ -543,9 +543,9 @@ export default grammar({
       $.hex_literal,          // hex numbers
     ),
 
-    integer_literal: $ => token(/[+-]?([0-9]+)/),
+    integer_literal: $ => token(/([0-9]+)/),
 
-    float_literal: $ => token(/[+-]?[0-9]*\.[0-9]+/),
+    float_literal: $ => token(/[0-9]*\.[0-9]+/),
 
     hex_literal: $ => token(/0[xX][0-9a-fA-F]+/),
 
