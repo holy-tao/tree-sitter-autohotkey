@@ -81,7 +81,8 @@ enum TokenType {
   IMPLICIT_CONCAT_MARKER,
   CONTINUATION_SECTION_START,
   CONTINUATION_NEWLINE,
-  DIRECTIVE_END
+  DIRECTIVE_END,
+  BLOCK_COMMENT
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -440,6 +441,62 @@ static bool is_directive_end(TSLexer *lexer) {
   return is_eof(lexer) || is_eol(lexer->lookahead) || lexer->lookahead == ';';
 }
 
+/// @brief Scans for a block comment. In AHK v2, block comments open with /* and close with */,
+///        but the closing */ must be the LAST non-whitespace content on its line. A */ followed by
+///        more content on the same line does NOT close the comment.
+/// @param lexer the lexer (should be positioned at the start of the potential comment)
+/// @return true if a block comment was found and consumed
+static bool scan_block_comment(TSLexer *lexer) {
+  // Must start with /*
+  if (lexer->lookahead != '/') return false;
+  lexer->advance(lexer, false);
+  if (lexer->lookahead != '*') return false;
+  lexer->advance(lexer, false);
+
+  // Scan for closing */ that is the last non-whitespace on its line
+  while (!lexer->eof(lexer)) {
+    if (lexer->lookahead == '*') {
+      lexer->advance(lexer, false);
+      if (lexer->eof(lexer)) return false;
+
+      if (lexer->lookahead == '/') {
+        lexer->advance(lexer, false);
+
+        // Check if this */ is the last non-whitespace before EOL/EOF
+        while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+          lexer->advance(lexer, false);
+        }
+
+        if (is_eol(lexer->lookahead) || lexer->eof(lexer)) {
+          // Consume the newline
+          if (lexer->lookahead == '\r') lexer->advance(lexer, false);
+          if (lexer->lookahead == '\n') lexer->advance(lexer, false);
+
+          // Consume leading whitespace on the next line so that indentation after the
+          // comment isn't misinterpreted as implicit concatenation whitespace.
+          // We must use advance(false) here, NOT advance(true), because advance(true)
+          // moves the token START position forward, which would collapse the span.
+          while ((lexer->lookahead == ' ' || lexer->lookahead == '\t') && !lexer->eof(lexer)) {
+            lexer->advance(lexer, false);
+          }
+
+          lexer->mark_end(lexer);
+          return true;
+        }
+
+        // */ was not at end of line — continue scanning the comment body
+        continue;
+      }
+      // * not followed by /, continue
+      continue;
+    }
+    lexer->advance(lexer, false);
+  }
+
+  // EOF without a valid closing */
+  return false;
+}
+
 /// @brief Main scan function. See https://tree-sitter.github.io/tree-sitter/creating-parsers/4-external-scanners.html#scan
 /// @param payload no touching
 /// @param lexer the lexer, see the link above
@@ -507,6 +564,14 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     
     if (is_function_declaration(lexer)) {
       lexer->result_symbol = FUNCTION_DEF_MARKER;
+      return true;
+    }
+  }
+
+  // Check for block comment — must be checked last since it's an extra
+  if (valid_symbols[BLOCK_COMMENT] && lexer->lookahead == '/') {
+    if (scan_block_comment(lexer)) {
+      lexer->result_symbol = BLOCK_COMMENT;
       return true;
     }
   }

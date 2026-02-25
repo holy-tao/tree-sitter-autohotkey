@@ -61,7 +61,8 @@ export default grammar({
     $._implicit_concat_marker,
     $._continuation_section_start,
     $._continuation_newline,
-    $._directive_end
+    $._directive_end,
+    $.block_comment
   ],
 
   conflicts: $ => [
@@ -111,7 +112,6 @@ export default grammar({
     // Precedence must be lower than string literals
     // TODO we could probably parse JSDoc comments and compiler directives like ;@ahk2exe-ignorebegin
     line_comment: $ => prec(PREC.COMMENT, token(/;[^\r\n]*/)),
-    block_comment: $ => prec(PREC.COMMENT, token(/\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\//)),
 
     //#region General Expressions
 

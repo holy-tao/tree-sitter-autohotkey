@@ -183,3 +183,72 @@ obj.Function(
       (hex_literal)
       (line_comment)
       (string_literal))))
+
+================================================================================
+Nested block comments
+================================================================================
+
+/*
+ * Close must be at EOL so this isn't an error
+ * (/* nested */)
+*/
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (block_comment))
+
+================================================================================
+Block comment between class members
+================================================================================
+
+; Regression for the trailing-indentation fix in block comment scanning
+
+class Foo {
+    static Bar => "baz"
+
+    /**
+     * A property
+     */
+    Qux := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (getter
+          (string_literal)))
+      (block_comment)
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Unclosed block comment
+:error
+================================================================================
+
+/*
+ * Invalid comment
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Block comment inline with code
+:error
+================================================================================
+
+Foo("bar", /* illegal */ "bar")  
+
+--------------------------------------------------------------------------------
