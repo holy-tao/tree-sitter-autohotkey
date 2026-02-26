@@ -1344,3 +1344,133 @@ if(outCtrlHwnd == "") {
         (return)
         (integer_literal))
       (line_comment))))
+
+================================================================================
+Loop with member access head
+================================================================================
+
+loop foo.bar {
+    baz := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (member_access
+      (identifier)
+      (member_identifier
+        (identifier)))
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Loop with function call head
+================================================================================
+
+loop foo() {
+    baz := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (function_call
+      (identifier))
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Loop with method call head
+================================================================================
+
+loop foo.bar() {
+    baz := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (function_call
+      (member_access
+        (identifier)
+        (member_identifier
+          (identifier))))
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Loop with member access head and bare statement body
+================================================================================
+
+loop foo.bar 
+    baz += A_Index
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (member_access
+      (identifier)
+      (member_identifier
+        (identifier)))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (identifier))))
+
+================================================================================
+Loop with function call head and bare statement body
+================================================================================
+
+loop foo()
+    bar += A_Index
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (function_call
+      (identifier))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (identifier))))
+
+================================================================================
+Loop with method call head and bare statement body
+================================================================================
+
+loop foo.bar()
+    baz += A_Index
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (function_call
+      (member_access
+        (identifier)
+        (member_identifier
+          (identifier))))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (identifier))))

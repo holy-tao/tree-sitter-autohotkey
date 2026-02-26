@@ -82,7 +82,7 @@ enum TokenType {
   IMPLICIT_CONCAT_MARKER,
   CONTINUATION_SECTION_START,
   CONTINUATION_NEWLINE,
-  DIRECTIVE_END,
+  EOL,
   BLOCK_COMMENT
 };
 
@@ -440,7 +440,7 @@ static bool scan_continuation_newline(TSLexer *lexer) {
 /// @brief Checks if we're at the end of a directive line (newline, EOF, or comment start).
 /// @param lexer the lexer
 /// @return true if at a line boundary, false otherwise
-static bool is_directive_end(TSLexer *lexer) {
+static bool is_last_element(TSLexer *lexer) {
   skip_horizontal_ws(lexer);
   return is_eof(lexer) || is_eol(lexer->lookahead) || lexer->lookahead == ';';
 }
@@ -552,11 +552,11 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
-  if(valid_symbols[DIRECTIVE_END]) {
+  if(valid_symbols[EOL]) {
     lexer->mark_end(lexer);
 
-    if(is_directive_end(lexer)) {
-      lexer->result_symbol = DIRECTIVE_END;
+    if(is_last_element(lexer)) {
+      lexer->result_symbol = EOL;
       return true;
     }
   }

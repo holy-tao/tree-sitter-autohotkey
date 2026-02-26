@@ -62,8 +62,8 @@ export default grammar({
     $._implicit_concat_marker,
     $._continuation_section_start,
     $._continuation_newline,
-    $._directive_end,
-    $.block_comment
+    $._eol,
+    $.block_comment,
   ],
 
   conflicts: $ => [
@@ -741,7 +741,11 @@ export default grammar({
           prec(1, seq($.reg, $._single_expression, optional(seq(",", $._single_expression))))
         )
       ))),
-      field("body", $._statement),
+      field("body", choice(
+        // bare statement requires a newline
+        seq($._eol, $._statement),
+        $.block
+      )),
       optional($.until_statement)
     )),
 
@@ -982,14 +986,14 @@ export default grammar({
     dll_load_directive: $ => seq(
       kwtok(/#DllLoad/i),
       optional($.file_or_dir_name),
-      $._directive_end
+      $._eol
     ),
 
     // https://www.autohotkey.com/docs/v2/lib/FileEncoding.htm
     error_stdout_directive: $ => seq(
       kwtok(/#ErrorStdOut/i),
       optional(alias(kwtok(/['"]?(utf-8(-raw)?|utf-16(-raw)?|cp\d+|\d+)['"]?/i), $.encoding_identifier)),
-      $._directive_end
+      $._eol
     ),
 
     requires_directive: $ => prec.right(seq(
@@ -997,19 +1001,19 @@ export default grammar({
       kwtok(/AutoHotkey/i),
       repeat($.version_requirement),
       optional($.bitness),
-      $._directive_end
+      $._eol
     )),
 
     hotif_directive: $ => prec.right(seq(
       kwtok(/#Hotif/i),
       optional(field("expression", $._single_expression)),
-      $._directive_end
+      $._eol
     )),
 
     hotif_timeout_directive: $ => seq(
       kwtok(/#HotifTimeout/i),
       $.integer_literal,
-      $._directive_end
+      $._eol
     ),
 
     hotstring_directive: $ => seq(
@@ -1022,7 +1026,7 @@ export default grammar({
         ),
         alias(repeat1(choice($._hotstring_modifier, $.hotstring_execute)), $.hotstring_option_sequence)
       ),
-      $._directive_end
+      $._eol
     ),
 
     include_directive: $ => prec.left(seq(
@@ -1032,7 +1036,7 @@ export default grammar({
         $.file_or_dir_name,
         $.lib_name
       ),
-      $._directive_end
+      $._eol
     )),
 
     include_again_directive: $ => prec.left(seq(
@@ -1042,13 +1046,13 @@ export default grammar({
         $.file_or_dir_name,
         $.lib_name
       ),
-      $._directive_end
+      $._eol
     )),
 
     input_level_directive: $ => seq(
       kwtok(/#InputLevel/i),
       $.integer_literal,
-      $._directive_end
+      $._eol
     ),
 
     use_hook_directive: $ => seq(
@@ -1057,19 +1061,19 @@ export default grammar({
         $.boolean_literal, 
         alias(choice(token("0"), token("1")), $.integer_literal)
       ),
-      $._directive_end,
+      $._eol,
     ),
 
     max_threads_directive: $ => seq(
       kwtok(/#MaxThreads/i),
       $.integer_literal,
-      $._directive_end
+      $._eol
     ),
 
     max_threads_per_hotkey_directive: $ => seq(
       kwtok(/#MaxThreadsPerHotkey/i),
       $.integer_literal,
-      $._directive_end
+      $._eol
     ),
 
     max_threads_buffer_directive: $ => seq(
@@ -1078,18 +1082,18 @@ export default grammar({
         $.boolean_literal, 
         alias(choice(token("0"), token("1")), $.integer_literal)
       )),
-      $._directive_end
+      $._eol
     ),
 
     no_tray_icon_directive: $ => seq(
       kwtok(/#NoTrayIcon/i),
-      $._directive_end
+      $._eol
     ),
 
     single_instance_directive: $ => seq(
       kwtok(/#SingleInstance/i),
       optional(alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode)),
-      $._directive_end
+      $._eol
     ),
 
     warn_directive: $ => seq(
@@ -1098,7 +1102,7 @@ export default grammar({
         $.warning_type,
         optional(seq(",", $.warning_mode))
       )),
-      $._directive_end
+      $._eol
     ),
 
     warning_type: $ => kwtok(/VarUnset|LocalSameAsGlobal|Unreachable|All/i),
