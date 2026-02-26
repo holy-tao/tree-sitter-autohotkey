@@ -988,3 +988,92 @@ class Foo extends Bar.Baz {
       (member_identifier
         (identifier)))
     (class_body)))
+
+================================================================================
+Class with method that shadows keyword
+================================================================================
+
+class Foo {
+  If(arg) {
+    DoStuff()
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (method_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (function_call
+              (identifier))))))))
+
+================================================================================
+Class with method with inner function
+================================================================================
+
+class Foo {
+  Outer() {
+    static Inner() {
+
+    }
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (function_declaration
+              (scope_identifier)
+              (identifier)
+              (function_head)
+              (function_body
+                (block)))))))))
+
+================================================================================
+Class with method with static inner function
+================================================================================
+
+class Foo {
+  Outer() {
+    static Inner() {
+
+    }
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (function_declaration
+              (scope_identifier)
+              (identifier)
+              (function_head)
+              (function_body
+                (block)))))))))

@@ -484,6 +484,33 @@ Function(arg1, params*) {
           (integer_literal))))))
 
 ================================================================================
+Function with static inner function
+================================================================================
+
+static Function(arg1, arg2) {
+    var3 := arg1 + arg2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (scope_identifier)
+    (identifier)
+    (function_head
+      (param_sequence
+        (identifier)
+        (identifier)))
+    (function_body
+      (block
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (additive_operation
+            (identifier)
+            (identifier)))))))
+
+================================================================================
 Function with wildcard not at end
 :error
 ================================================================================

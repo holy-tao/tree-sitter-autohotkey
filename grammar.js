@@ -57,6 +57,7 @@ export default grammar({
   externals: $ => [
     $.optional_marker,
     $._function_def_marker,
+    $._method_def_marker,
     $.empty_arg,
     $._implicit_concat_marker,
     $._continuation_section_start,
@@ -473,6 +474,14 @@ export default grammar({
     // $scope_identifier $identifier sequence
     function_declaration: $ => seq(
       $._function_def_marker,
+      optional($.scope_identifier),
+      field("name", $.identifier),
+      field("head", $.function_head),
+      field("body", $.function_body)
+    ),
+
+    method_declaration: $ => seq(
+      $._method_def_marker,
       optional($.scope_identifier),
       field("name", $.identifier),
       field("head", $.function_head),
@@ -896,7 +905,7 @@ export default grammar({
     class_body: $ => seq(
       "{",
       repeat(choice(
-        alias($.function_declaration, $.method_declaration),
+        $.method_declaration,
         $.class_declaration,
         $.property_declaration
       )),

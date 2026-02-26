@@ -77,6 +77,7 @@
 enum TokenType {
   OPTIONAL_MARKER,
   FUNCTION_DEF_MARKER,
+  METHOD_DEF_MARKER,
   EMPTY_ARG,
   IMPLICIT_CONCAT_MARKER,
   CONTINUATION_SECTION_START,
@@ -138,12 +139,15 @@ static inline bool strcaseeq(const char *a, const char *b) {
   return *a == *b;
 }
 
-/// @brief Forward scan to see if the next statement is a function declaration. This is required to differentiate
-///        `function_call block` from `function_declaration`, since e.g. `MyFunnc(arg)` could be the start of either.
+/// @brief Forward scan to see if the next statement is a function or method declaration. This is required to
+///        differentiate `function_call block` from `function_declaration`, since e.g. `MyFunnc(arg)` could be the 
+///        start of either. Methods and functions are structurally similar but have slightly different naming
+///        constraints
 ///        Call `lexer->mark_end` before this
 /// @param lexer tree-sitter lexer
+/// @param method true to scan for a method instead of a function
 /// @return true if the next statement is a function declaration, false otherwise
-static bool is_function_declaration(TSLexer *lexer) {
+static bool is_function_declaration(TSLexer *lexer, bool method) {
   // Skip any leading whitespace (including newlines)
   skip_whitespace(lexer);
 
@@ -154,7 +158,7 @@ static bool is_function_declaration(TSLexer *lexer) {
   char ident[16];
   skip_identifier(lexer, ident, sizeof(ident));
 
-  // If 'static', consume it and get the real name
+  // Methods can be static, as can functions that aren't in the auto-execute section
   if (strcaseeq(ident, "static")) {
     if (!skip_horizontal_ws(lexer)) {
       return false;  // need space after static
@@ -169,8 +173,8 @@ static bool is_function_declaration(TSLexer *lexer) {
       return false;
     }
   }
-  else if(is_keyword(ident)) {
-    // constructs like if(condition) aren't declarations
+  else if(!method && is_keyword(ident)) {
+    // Functions cannot shadow keywords (methods can)
     return false;
   }
   
@@ -562,8 +566,17 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   if (valid_symbols[FUNCTION_DEF_MARKER]) {
     lexer->mark_end(lexer);
     
-    if (is_function_declaration(lexer)) {
+    if (is_function_declaration(lexer, false)) {
       lexer->result_symbol = FUNCTION_DEF_MARKER;
+      return true;
+    }
+  }
+
+  if (valid_symbols[METHOD_DEF_MARKER]) {
+    lexer->mark_end(lexer);
+    
+    if (is_function_declaration(lexer, true)) {
+      lexer->result_symbol = METHOD_DEF_MARKER;
       return true;
     }
   }
