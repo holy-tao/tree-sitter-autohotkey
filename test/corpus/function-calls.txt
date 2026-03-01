@@ -238,3 +238,62 @@ Critical
 (source_file
   (call_statement
     (identifier)))
+
+================================================================================
+Multiplication is not confused for array expansion
+================================================================================
+
+StrGet(2*pos)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (multiplicative_operation
+        (integer_literal)
+        (identifier)))))
+
+
+================================================================================
+Multiplication is not confused for array expansion multiline
+================================================================================
+
+StrGet(
+  2*pos
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (multiplicative_operation
+        (integer_literal)
+        (identifier)))))
+
+================================================================================
+Multiplication is not confused for array expansion with more complex arguments
+================================================================================
+
+; Real code!
+StrGet(StrPtr(str) + 2*pos, 1)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (function_call
+    (identifier)
+    (arg_sequence
+      (additive_operation
+        (function_call
+          (identifier)
+          (arg_sequence
+            (identifier)))
+        (multiplicative_operation
+          (integer_literal)
+          (identifier)))
+      (integer_literal))))

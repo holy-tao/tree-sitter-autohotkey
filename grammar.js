@@ -64,6 +64,7 @@ export default grammar({
     $._continuation_newline,
     $._eol,
     $.block_comment,
+    $.array_expansion_marker,
   ],
 
   conflicts: $ => [
@@ -445,7 +446,7 @@ export default grammar({
       ),
       // Single arg with expansion
       seq(
-        $._single_expression,
+        prec.right($._single_expression),
         $.array_expansion_marker
       ),
       // Multiple args with last one having expansion
@@ -458,7 +459,8 @@ export default grammar({
       )
     )),
 
-    array_expansion_marker: $ => token.immediate("*"),
+    // array_expansion_marker is produced by the external scanner, which disambiguates
+    // it from the multiplication operator by looking ahead for ')' or ']'
 
     //#region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(

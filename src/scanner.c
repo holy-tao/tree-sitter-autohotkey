@@ -5,6 +5,7 @@
 // This external scanner currently handles lookaheads for:
 //  1.  Optional markers ("?") to differentiate them from ternary expressions
 //  2.  Function declarations
+//  3.  Array expansion markers ("*") to differentiate them from multiplication
 
 // tree-sitter characters are of type int32_t, <ctypes> expects chars, so we roll our own macros
 
@@ -83,7 +84,8 @@ enum TokenType {
   CONTINUATION_SECTION_START,
   CONTINUATION_NEWLINE,
   EOL,
-  BLOCK_COMMENT
+  BLOCK_COMMENT,
+  ARRAY_EXPANSION_MARKER
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -532,6 +534,26 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
       lexer->result_symbol = IMPLICIT_CONCAT_MARKER;
       return true;
     }
+  }
+
+  // Check for array expansion marker vs multiplication operator.
+  // Both are '*' immediately after an expression; we disambiguate by looking ahead:
+  // array expansion is always the last thing in an arg list, so '*' must be followed by ')' or ']'.
+  if (valid_symbols[ARRAY_EXPANSION_MARKER] && lexer->lookahead == '*') {
+    lexer->advance(lexer, false);
+    lexer->mark_end(lexer);
+
+    // Skip whitespace to see what follows
+    skip_whitespace(lexer);
+
+    if (lexer->lookahead == ')' || lexer->lookahead == ']') {
+      lexer->result_symbol = ARRAY_EXPANSION_MARKER;
+      return true;
+    }
+
+    // Not array expansion — it's a multiplication operator.
+    // No other external token starts with '*', so return false to let the regular lexer handle it.
+    return false;
   }
 
   if(valid_symbols[CONTINUATION_SECTION_START]) {
