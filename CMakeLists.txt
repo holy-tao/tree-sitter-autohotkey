@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(tree-sitter-autohotkey
-        VERSION "0.0.0"
+        VERSION "0.1.1"
         DESCRIPTION "Tree-sitter grammar for AHK v2"
         HOMEPAGE_URL "https://github.com/holy-tao/tree-sitter-autohotkey"
         LANGUAGES C)
