@@ -569,7 +569,9 @@ export default grammar({
 
     object_literal_member_sequence: $ => seq(
       $.object_literal_member,
-      repeat(seq(",", $.object_literal_member))
+      repeat(seq(",", $.object_literal_member)),
+      // like arg sequences, trailing commas allowed and ignored
+      optional(",")
     ),
 
     object_literal_member: $ => seq(

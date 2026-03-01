@@ -625,3 +625,45 @@ obj := {
               (object_literal_member
                 (identifier)
                 (integer_literal)))))))))
+
+================================================================================
+Object literal with trailing comma
+================================================================================
+
+obj := { prop: "value", }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (string_literal))))))
+
+================================================================================
+Object literal with trailing comma multiline
+================================================================================
+
+obj := { 
+  prop1: "value",
+  prop2: 42,
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member_sequence
+        (object_literal_member
+          (identifier)
+          (string_literal))
+        (object_literal_member
+          (identifier)
+          (integer_literal))))))
