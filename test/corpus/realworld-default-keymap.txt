@@ -41,36 +41,35 @@ for key, value in myMap
         (return_statement
           (return)
           (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
-                (identifier)
-                (fat_arrow_function
-                  (function_head
-                    (param_sequence
-                      (identifier)
-                      (variadic_param
-                        (identifier)
-                        (wildcard))))
-                  (arrow)
-                  (function_call
+            (object_literal_member
+              (identifier)
+              (fat_arrow_function
+                (function_head
+                  (param_sequence
                     (identifier)
-                    (arg_sequence
+                    (variadic_param
                       (identifier)
-                      (array_expansion_marker)))))
-              (object_literal_member
-                (identifier)
-                (fat_arrow_function
-                  (function_head
-                    (param_sequence
-                      (identifier)
-                      (identifier)))
-                  (arrow)
-                  (function_call
-                    (member_access
-                      (identifier)
-                      (identifier))
-                    (arg_sequence
-                      (identifier))))))))
+                      (wildcard))))
+                (arrow)
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (identifier)
+                    (array_expansion_marker)))))
+            (object_literal_member
+              (identifier)
+              (fat_arrow_function
+                (function_head
+                  (param_sequence
+                    (identifier)
+                    (identifier)))
+                (arrow)
+                (function_call
+                  (member_access
+                    (identifier)
+                    (identifier))
+                  (arg_sequence
+                    (identifier)))))))
         (function_declaration
           (identifier)
           (function_head

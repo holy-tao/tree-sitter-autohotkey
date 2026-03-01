@@ -565,9 +565,9 @@ export default grammar({
 
     array_literal: $ => seq("[", optional($.expression_sequence), "]"),
 
-    object_literal: $ => seq("{", optional($.object_literal_member_sequence), "}"),
+    object_literal: $ => seq("{", optional($._object_literal_member_sequence), "}"),
 
-    object_literal_member_sequence: $ => seq(
+    _object_literal_member_sequence: $ => seq(
       $.object_literal_member,
       repeat(seq(",", $.object_literal_member)),
       // like arg sequences, trailing commas allowed and ignored

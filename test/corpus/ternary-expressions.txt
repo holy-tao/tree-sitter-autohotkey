@@ -232,15 +232,14 @@ obj := {value: x > 0? x : 0}
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (ternary_expression
-            (relational_operation
-              (identifier)
-              (integer_literal))
+      (object_literal_member
+        (identifier)
+        (ternary_expression
+          (relational_operation
             (identifier)
-            (integer_literal)))))))
+            (integer_literal))
+          (identifier)
+          (integer_literal))))))
 
 ================================================================================
 Ternary with prefix operators
@@ -452,15 +451,13 @@ result := flag? {x: 1} : {y: 2}
     (ternary_expression
       (identifier)
       (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (integer_literal))))
+        (object_literal_member
+          (identifier)
+          (integer_literal)))
       (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (integer_literal)))))))
+        (object_literal_member
+          (identifier)
+          (integer_literal))))))
 
 ================================================================================
 Complex nested ternary with mixed operators

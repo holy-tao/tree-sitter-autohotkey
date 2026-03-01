@@ -356,15 +356,13 @@ var := [
     (array_literal
       (expression_sequence
         (object_literal
-          (object_literal_member_sequence
-            (object_literal_member
-              (identifier)
-              (string_literal))))
+          (object_literal_member
+            (identifier)
+            (string_literal)))
         (object_literal
-          (object_literal_member_sequence
-            (object_literal_member
-              (identifier)
-              (string_literal))))))))
+          (object_literal_member
+            (identifier)
+            (string_literal)))))))
 
 ================================================================================
 Empty object literal
@@ -393,10 +391,9 @@ obj := { one: 1 }
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (integer_literal))))))
+      (object_literal_member
+        (identifier)
+        (integer_literal)))))
 
 ================================================================================
 Object literal with dynamic identifier member
@@ -411,12 +408,11 @@ obj := { %var%: "test"}
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (dynamic_identifier
-            (dereference_operation
-              (identifier)))
-          (string_literal))))))
+      (object_literal_member
+        (dynamic_identifier
+          (dereference_operation
+            (identifier)))
+        (string_literal)))))
 
 ================================================================================
 Object literal with complex dynamic identifier member
@@ -431,15 +427,14 @@ obj := { %var%key%var2%: "test"}
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (dynamic_identifier
-            (dereference_operation
-              (identifier))
-            (identifier)
-            (dereference_operation
-              (identifier)))
-          (string_literal))))))
+      (object_literal_member
+        (dynamic_identifier
+          (dereference_operation
+            (identifier))
+          (identifier)
+          (dereference_operation
+            (identifier)))
+        (string_literal)))))
 
 ================================================================================
 Object literal with multiple members
@@ -457,13 +452,12 @@ obj := {
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (integer_literal))
-        (object_literal_member
-          (identifier)
-          (string_literal))))))
+      (object_literal_member
+        (identifier)
+        (integer_literal))
+      (object_literal_member
+        (identifier)
+        (string_literal)))))
 
 ================================================================================
 Object literal with expression member
@@ -482,27 +476,26 @@ obj := {
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (integer_literal))
-        (object_literal_member
-          (identifier)
-          (string_literal))
-        (object_literal_member
-          (identifier)
-          (expression_sequence
-            (assignment_operation
-              (identifier)
-              (assignment_operator)
-              (integer_literal))
-            (assignment_operation
-              (identifier)
-              (assignment_operator)
-              (integer_literal))
-            (additive_operation
-              (identifier)
-              (identifier))))))))
+      (object_literal_member
+        (identifier)
+        (integer_literal))
+      (object_literal_member
+        (identifier)
+        (string_literal))
+      (object_literal_member
+        (identifier)
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (additive_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Object literal with array
@@ -517,10 +510,9 @@ obj := { emptyArr: [] }
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (array_literal))))))
+      (object_literal_member
+        (identifier)
+        (array_literal)))))
 
 ================================================================================
 Object literal with fat-arrow function member
@@ -535,19 +527,18 @@ obj := { Add: (self, left, right) => left + right }
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (fat_arrow_function
-            (function_head
-              (param_sequence
-                (identifier)
-                (identifier)
-                (identifier)))
-            (arrow)
-            (additive_operation
+      (object_literal_member
+        (identifier)
+        (fat_arrow_function
+          (function_head
+            (param_sequence
               (identifier)
-              (identifier))))))))
+              (identifier)
+              (identifier)))
+          (arrow)
+          (additive_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Object literal multiline with fat-arrow function members
@@ -565,31 +556,30 @@ obj := {
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (fat_arrow_function
-            (function_head
-              (param_sequence
-                (identifier)
-                (identifier)
-                (identifier)))
-            (arrow)
-            (additive_operation
+      (object_literal_member
+        (identifier)
+        (fat_arrow_function
+          (function_head
+            (param_sequence
               (identifier)
-              (identifier))))
-        (object_literal_member
-          (identifier)
-          (fat_arrow_function
-            (function_head
-              (param_sequence
-                (identifier)
-                (identifier)
-                (identifier)))
-            (arrow)
-            (additive_operation
               (identifier)
-              (identifier))))))))
+              (identifier)))
+          (arrow)
+          (additive_operation
+            (identifier)
+            (identifier))))
+      (object_literal_member
+        (identifier)
+        (fat_arrow_function
+          (function_head
+            (param_sequence
+              (identifier)
+              (identifier)
+              (identifier)))
+          (arrow)
+          (additive_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Nested object literals
@@ -611,20 +601,18 @@ obj := {
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (string_literal))
-        (object_literal_member
-          (identifier)
-          (object_literal
-            (object_literal_member_sequence
-              (object_literal_member
-                (identifier)
-                (string_literal))
-              (object_literal_member
-                (identifier)
-                (integer_literal)))))))))
+      (object_literal_member
+        (identifier)
+        (string_literal))
+      (object_literal_member
+        (identifier)
+        (object_literal
+          (object_literal_member
+            (identifier)
+            (string_literal))
+          (object_literal_member
+            (identifier)
+            (integer_literal)))))))
 
 ================================================================================
 Object literal with trailing comma
@@ -639,10 +627,9 @@ obj := { prop: "value", }
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (string_literal))))))
+      (object_literal_member
+        (identifier)
+        (string_literal)))))
 
 ================================================================================
 Object literal with trailing comma multiline
@@ -660,10 +647,9 @@ obj := {
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (string_literal))
-        (object_literal_member
-          (identifier)
-          (integer_literal))))))
+      (object_literal_member
+        (identifier)
+        (string_literal))
+      (object_literal_member
+        (identifier)
+        (integer_literal)))))

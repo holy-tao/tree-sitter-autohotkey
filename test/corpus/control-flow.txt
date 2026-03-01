@@ -31,10 +31,9 @@ Block with object literal
       (identifier)
       (assignment_operator)
       (object_literal
-        (object_literal_member_sequence
-          (object_literal_member
-            (identifier)
-            (integer_literal)))))))
+        (object_literal_member
+          (identifier)
+          (integer_literal))))))
 
 ================================================================================
 Empty return statement

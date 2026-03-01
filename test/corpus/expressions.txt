@@ -207,20 +207,19 @@ obj := {
     (identifier)
     (assignment_operator)
     (object_literal
-      (object_literal_member_sequence
-        (object_literal_member
-          (identifier)
-          (fat_arrow_function
-            (function_head
-              (param_sequence
-                (identifier)
-                (identifier)
-                (identifier)))
-            (arrow)
-            (expression_sequence
-              (additive_operation
-                (identifier)
-                (identifier)))))))))
+      (object_literal_member
+        (identifier)
+        (fat_arrow_function
+          (function_head
+            (param_sequence
+              (identifier)
+              (identifier)
+              (identifier)))
+          (arrow)
+          (expression_sequence
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Dereference expression sequence
