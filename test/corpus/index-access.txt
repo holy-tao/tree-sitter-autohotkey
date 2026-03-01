@@ -169,8 +169,7 @@ val := obj.property[1]
     (index_access
       (member_access
         (identifier)
-        (member_identifier
-          (identifier)))
+        (identifier))
       (arg_sequence
         (integer_literal)))))
 
@@ -207,10 +206,9 @@ val := obj.%array%[1]
     (index_access
       (member_access
         (identifier)
-        (member_identifier
-          (dynamic_identifier
-            (dereference_operation
-              (identifier)))))
+        (dynamic_identifier
+          (dereference_operation
+            (identifier))))
       (arg_sequence
         (integer_literal)))))
 
@@ -315,8 +313,7 @@ val := arr[1].property
         (identifier)
         (arg_sequence
           (integer_literal)))
-      (member_identifier
-        (identifier)))))
+      (identifier))))
 
 ================================================================================
 Index access with optional argument

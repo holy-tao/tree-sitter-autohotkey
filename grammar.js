@@ -353,15 +353,7 @@ export default grammar({
     member_access: $ => prec(PREC.MEMBER_ACCESS, seq(
       field("object", $._single_expression),
       ".",
-      field("member", $.member_identifier)
-    )),
-
-    // Precedence should be lower than dynamic_identifier and _dynamic_identifier_chain so the chain in particular
-    // can consume tokens greedily
-    member_identifier: $ => prec(-1, choice(
-      $.identifier,
-      repeat1($.dereference_operation),
-      $.dynamic_identifier,
+      field("member", choice($.identifier, $.dynamic_identifier))
     )),
 
     // A combination of identifiers and derefs, such as `a%b%`

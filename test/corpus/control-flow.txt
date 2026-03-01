@@ -1360,8 +1360,7 @@ loop foo.bar {
     (loop)
     (member_access
       (identifier)
-      (member_identifier
-        (identifier)))
+      (identifier))
     (block
       (assignment_operation
         (identifier)
@@ -1405,8 +1404,7 @@ loop foo.bar() {
     (function_call
       (member_access
         (identifier)
-        (member_identifier
-          (identifier))))
+        (identifier)))
     (block
       (assignment_operation
         (identifier)
@@ -1427,8 +1425,7 @@ loop foo.bar
     (loop)
     (member_access
       (identifier)
-      (member_identifier
-        (identifier)))
+      (identifier))
     (assignment_operation
       (identifier)
       (assignment_operator)
@@ -1468,8 +1465,7 @@ loop foo.bar()
     (function_call
       (member_access
         (identifier)
-        (member_identifier
-          (identifier))))
+        (identifier)))
     (assignment_operation
       (identifier)
       (assignment_operator)

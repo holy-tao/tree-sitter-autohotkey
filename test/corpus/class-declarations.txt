@@ -985,8 +985,7 @@ class Foo extends Bar.Baz {
     (extends)
     (member_access
       (identifier)
-      (member_identifier
-        (identifier)))
+      (identifier))
     (class_body)))
 
 ================================================================================

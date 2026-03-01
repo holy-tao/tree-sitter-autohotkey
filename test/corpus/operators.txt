@@ -485,3 +485,44 @@ result := 2 + -2
       (integer_literal)
       (prefix_operation
         (integer_literal)))))
+
+================================================================================
+Assignment with dynamic member access
+================================================================================
+
+result.%definition.name% := validatedValue
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (dereference_operation
+          (member_access
+            (identifier)
+            (identifier)))))
+    (assignment_operator)
+    (identifier)))
+
+================================================================================
+Assignment with complex dynamic member access
+================================================================================
+
+result.%definition.name%prop := validatedValue
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (dereference_operation
+          (member_access
+            (identifier)
+            (identifier)))
+        (identifier)))
+    (assignment_operator)
+    (identifier)))

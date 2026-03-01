@@ -177,8 +177,7 @@ obj.Function(
   (function_call
     (member_access
       (identifier)
-      (member_identifier
-        (identifier)))
+      (identifier))
     (arg_sequence
       (hex_literal)
       (line_comment)
@@ -252,3 +251,5 @@ Block comment inline with code
 Foo("bar", /* illegal */ "bar")  
 
 --------------------------------------------------------------------------------
+
+

@@ -128,8 +128,7 @@ OnClick(wParam, lParam, msgNum, hwnd) {
           (function_call
             (member_access
               (identifier)
-              (member_identifier
-                (identifier)))
+              (identifier))
             (arg_sequence
               (function_call
                 (identifier)
@@ -150,8 +149,7 @@ OnClick(wParam, lParam, msgNum, hwnd) {
   (function_call
     (member_access
       (identifier)
-      (member_identifier
-        (identifier)))
+      (identifier))
     (arg_sequence
       (string_literal)
       (fat_arrow_function
@@ -163,8 +161,7 @@ OnClick(wParam, lParam, msgNum, hwnd) {
   (function_call
     (member_access
       (identifier)
-      (member_identifier
-        (identifier)))
+      (identifier))
     (arg_sequence
       (function_call
         (identifier)
@@ -251,8 +248,7 @@ OnClick(wParam, lParam, msgNum, hwnd) {
                         (identifier)
                         (arg_sequence
                           (identifier)))
-                      (member_identifier
-                        (identifier))))))
+                      (identifier)))))
               (return_statement
                 (return)
                 (integer_literal)))))

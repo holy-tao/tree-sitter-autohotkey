@@ -147,12 +147,10 @@ static BindCtrls(*) {
                     (index_access
                       (member_access
                         (identifier)
-                        (member_identifier
-                          (identifier)))
+                        (identifier))
                       (arg_sequence
                         (identifier)))
-                    (member_identifier
-                      (identifier)))
+                    (identifier))
                   (arg_sequence
                     (identifier)
                     (function_call
@@ -176,8 +174,7 @@ static BindCtrls(*) {
           (expression_sequence
             (member_access
               (identifier)
-              (member_identifier
-                (identifier))))
+              (identifier)))
           (switch_body
             (default_clause
               (default)
@@ -186,5 +183,4 @@ static BindCtrls(*) {
                 (arg_sequence
                   (member_access
                     (identifier)
-                    (member_identifier
-                      (identifier))))))))))))
+                    (identifier)))))))))))

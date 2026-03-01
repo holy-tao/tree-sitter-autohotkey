@@ -68,8 +68,7 @@ for key, value in myMap
                   (function_call
                     (member_access
                       (identifier)
-                      (member_identifier
-                        (identifier)))
+                      (identifier))
                     (arg_sequence
                       (identifier))))))))
         (function_declaration
@@ -92,8 +91,7 @@ for key, value in myMap
                   (function_call
                     (member_access
                       (identifier)
-                      (member_identifier
-                        (identifier)))
+                      (identifier))
                     (arg_sequence
                       (integer_literal))))
                 (assignment_operation
@@ -102,8 +100,7 @@ for key, value in myMap
                   (function_call
                     (member_access
                       (identifier)
-                      (member_identifier
-                        (identifier)))
+                      (identifier))
                     (arg_sequence
                       (integer_literal)))))
               (while_statement
@@ -122,8 +119,7 @@ for key, value in myMap
                 (function_call
                   (member_access
                     (identifier)
-                    (member_identifier
-                      (identifier)))
+                    (identifier))
                   (arg_sequence
                     (identifier)
                     (identifier))))
