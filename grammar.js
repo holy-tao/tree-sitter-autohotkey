@@ -73,6 +73,8 @@ export default grammar({
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
     [$.dynamic_identifier],
+    [$.break_statement],
+    [$.continue_statement],
     [$._single_expression, $._dynamic_identifier_chain],
     [$._dynamic_identifier_chain],
     [$.if_statement, $.else_statement],
@@ -757,15 +759,15 @@ export default grammar({
       field("body", $._statement),
     ),
 
-    break_statement: $ => prec.right(seq(
+    break_statement: $ => seq(
       $.break,
-      optional($.identifier)  // optional label target
-    )),
+      field("looplabel", optional(choice($.identifier, $.string_literal)))  // optional label target
+    ),
 
-    continue_statement: $ => prec.right(seq(
+    continue_statement: $ => seq(
       $.continue,
-      optional($.identifier)  // optional label target
-    )),
+      field("looplabel", optional(choice($.identifier, $.string_literal)))  // optional label target
+    ),
 
     throw_statement: $ => seq(
       $.throw,

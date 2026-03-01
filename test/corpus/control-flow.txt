@@ -1470,3 +1470,188 @@ loop foo.bar()
       (identifier)
       (assignment_operator)
       (identifier))))
+
+================================================================================
+Continue with loop label
+================================================================================
+
+label:
+loop 10 {
+  if(condition)
+    continue label
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (label
+    (identifier))
+  (loop_statement
+    (loop)
+    (integer_literal)
+    (block
+      (if_statement
+        (if)
+        (expression_sequence
+          (identifier))
+        (continue_statement
+          (continue)
+          (identifier))))))
+
+================================================================================
+Continue with string literal loop label
+================================================================================
+
+label:
+loop 10 {
+  if condition
+    continue "label"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (label
+    (identifier))
+  (loop_statement
+    (loop)
+    (integer_literal)
+    (block
+      (if_statement
+        (if)
+        (identifier)
+        (continue_statement
+          (continue)
+          (string_literal))))))
+
+================================================================================
+Continue followed by statement
+================================================================================
+
+for (dest, definition in this._definitions) {
+    if result.HasOwnProp(dest) || definition.envVar == ""
+        continue
+    envValue := EnvGet(definition.envVar)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (identifier)
+    (in)
+    (member_access
+      (identifier)
+      (identifier))
+    (block
+      (if_statement
+        (if)
+        (logical_or_operation
+          (function_call
+            (member_access
+              (identifier)
+              (identifier))
+            (arg_sequence
+              (identifier)))
+          (equality_operation
+            (member_access
+              (identifier)
+              (identifier))
+            (string_literal)))
+        (continue_statement
+          (continue)))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (function_call
+          (identifier)
+          (arg_sequence
+            (member_access
+              (identifier)
+              (identifier))))))))
+
+================================================================================
+Break with loop label
+================================================================================
+
+label:
+loop 10 {
+  if(condition)
+    break label
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (label
+    (identifier))
+  (loop_statement
+    (loop)
+    (integer_literal)
+    (block
+      (if_statement
+        (if)
+        (expression_sequence
+          (identifier))
+        (break_statement
+          (break)
+          (identifier))))))
+
+================================================================================
+Break with string literal loop label
+================================================================================
+
+label:
+loop 10 {
+  if condition
+    break "label"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (label
+    (identifier))
+  (loop_statement
+    (loop)
+    (integer_literal)
+    (block
+      (if_statement
+        (if)
+        (identifier)
+        (break_statement
+          (break)
+          (string_literal))))))
+
+================================================================================
+Break followed by statement
+================================================================================
+
+label:
+loop 10 {
+  if(condition)
+    break
+  var := 10
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (label
+    (identifier))
+  (loop_statement
+    (loop)
+    (integer_literal)
+    (block
+      (if_statement
+        (if)
+        (expression_sequence
+          (identifier))
+        (break_statement
+          (break)))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
