@@ -77,7 +77,6 @@ export default grammar({
     [$.continue_statement],
     [$._single_expression, $._dynamic_identifier_chain],
     [$._dynamic_identifier_chain],
-    [$.if_statement, $.else_statement],
   ],
 
   extras: $ => [
@@ -711,17 +710,17 @@ export default grammar({
 
     if_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.if,
-      $._single_expression,
-      choice($.block, $._statement),  // support brace-less forms
-      repeat($.else_statement)
+      field("condition", $._single_expression),
+      field("body", choice($.block, $._statement)),  // support brace-less forms
+      field("else_block", repeat($.else_statement))
     )),
 
-    else_statement: $ => prec.right(PREC.DEFAULT, seq(
+    else_statement: $ => prec.right(PREC.DEFAULT+1, seq(
       $.else,
-      choice(
-        seq($.if, $._single_expression, choice($.block, $._statement)),  // else if (condition) ... (with or without braces)
+      field("body", choice(
+        $.if_statement,
         choice($.block, $._statement)                                    // else ... (with or without braces)
-      )
+      ))
     )),
 
     loop_statement: $ => prec.right(seq(
