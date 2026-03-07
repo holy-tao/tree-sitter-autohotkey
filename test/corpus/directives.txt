@@ -240,7 +240,7 @@ HotIf with expression followed by ctrl hotkey
     trigger: (hotkey_trigger
       (hotkey_ctrl)
       (identifier))
-    (function_call
+    body: (function_call
       function: (identifier))))
 
 ================================================================================

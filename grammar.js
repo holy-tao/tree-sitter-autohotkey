@@ -170,12 +170,12 @@ export default grammar({
     // FIXME some declarations are contextually illegal - you can't delcare local variables in the auto-execute
     // section, for example. We may not be able to detect those with pure grammar rules
     variable_declaration: $ => seq(
-      $.scope_identifier,
-      $.identifier
+      field("scope", $.scope_identifier),
+      field("name", $.identifier)
     ),
 
     ternary_expression: $ => prec.right(PREC.TERNARY, seq(
-      $._single_expression,
+      field("condition", $._single_expression),
       "?",
       field("true_branch", $._single_expression),
       ":",
@@ -192,11 +192,11 @@ export default grammar({
     )),
 
     dereference_operation: $ => prec.left(PREC.DEREFERENCE, seq(
-      "%", $._single_expression, "%"
+      "%", field("operand", $._single_expression), "%"
     )),
 
     varref_operation: $ => prec.right(PREC.PREFIX + 5, seq(
-      "&", $._single_expression
+      "&", field("operand", $._single_expression)
     )),
 
     // Any expression like left <op> right (e.g. 2 + 2, true != false)
@@ -395,7 +395,7 @@ export default grammar({
     index_access: $ => prec(PREC.OVERRIDE, seq(
       field("object", $._single_expression),
       token.immediate("["),
-      optional($.arg_sequence), 
+      field("arguments", optional($.arg_sequence)),
       "]"
     )),
 
@@ -404,7 +404,7 @@ export default grammar({
     function_call: $ => prec(PREC.OVERRIDE, seq(
       field("function", $._single_expression),
       token.immediate("("),
-      optional($.arg_sequence),
+      field("arguments", optional($.arg_sequence)),
       ")"
     )),
 
@@ -413,10 +413,10 @@ export default grammar({
     call_statement: $ => prec.right(PREC.OVERRIDE, seq(
       // Only simple identifiers and object members for command-style
       field("function", choice(
-        $.identifier, 
+        $.identifier,
         $.member_access
       )),
-      optional($.arg_sequence)
+      field("arguments", optional($.arg_sequence))
     )),
 
     _arg: $ => choice(
@@ -457,7 +457,7 @@ export default grammar({
 
     //#region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
-      $.function_head,
+      field("head", $.function_head),
       $.arrow,
       field("body", $._single_expression)
     )),
@@ -515,15 +515,15 @@ export default grammar({
       $.default_param
     ),
 
-    default_param: $ => seq($.identifier, $._initializer),
+    default_param: $ => seq(field("name", $.identifier), $._initializer),
       
     _initializer: $ => seq(
-      alias(":=", $.assignment_operator), 
-      $._single_expression),
+      alias(":=", $.assignment_operator),
+      field("value", $._single_expression)),
 
-    byref_param: $ => seq("&", $._param),
+    byref_param: $ => seq("&", field("param", $._param)),
 
-    variadic_param: $ => seq($.identifier, $.wildcard),
+    variadic_param: $ => seq(field("name", $.identifier), $.wildcard),
 
     wildcard: $ => "*",
 
@@ -574,12 +574,12 @@ export default grammar({
     ),
 
     object_literal_member: $ => seq(
-      choice($.identifier, $.dynamic_identifier), 
-      ":", 
-      choice(
-        $._single_expression, 
+      field("key", choice($.identifier, $.dynamic_identifier)),
+      ":",
+      field("value", choice(
+        $._single_expression,
         $.optional_identifier
-      )),
+      ))),
 
     //#endregion
 
@@ -743,20 +743,27 @@ export default grammar({
         seq($._eol, $._statement),
         $.block
       )),
-      optional($.until_statement)
+      optional(field("until_block", $.until_statement))
     )),
 
-    until_statement: $ => seq($.until, $._single_expression),
+    until_statement: $ => seq(
+      $.until, 
+      field("condition", $._single_expression)
+    ),
 
     return_statement: $ => prec.right(PREC.DEFAULT,
-      seq($.return, optional($._single_expression))),
+      seq(
+        $.return, 
+        optional(field("value", $._single_expression))
+      )
+    ),
 
     while_statement: $ => seq(
       $.while,
-      choice(
+      field("condition", choice(
         seq(token("("), $._single_expression, token(")")),
         $._single_expression
-      ),
+      )),
       field("body", $._statement),
     ),
 
@@ -772,16 +779,16 @@ export default grammar({
 
     throw_statement: $ => seq(
       $.throw,
-      $._single_expression
+      field("thrown", $._single_expression)
     ),
 
     goto_statement: $ => seq(
       $.goto,
-      $._single_expression
+      field("label", $._single_expression)
     ),
 
     label: $ => prec(1, seq(
-      $.identifier,
+      field("name", $.identifier),
       token.immediate(":")
     )),
 
@@ -793,17 +800,17 @@ export default grammar({
         $._for_params
       )),
       field("body", $._statement),
-      optional($.else_statement)
+      optional(field("else_block", $.else_statement))
     )),
 
     _for_params: $ => choice(
-      seq($.identifier, $.in, $._single_expression),
-      seq($.identifier, ",", $.identifier, $.in, $._single_expression)
+      seq(field("iterator", $.identifier), $.in, field("iterable", $._single_expression)),
+      seq(field("iterator", $.identifier), ",", field("iterator", $.identifier), $.in, field("iterable", $._single_expression))
     ),
 
     try_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.try,
-      choice(
+      field("body", choice(
         seq(
           $.block,
           repeat($.catch_clause),
@@ -813,26 +820,26 @@ export default grammar({
         ),
         // try x := 1 / 0
         $._single_expression
-      )
+      ))
     )),
 
     catch_clause: $ => seq(
       $.catch,
-      optional(choice(
+      field("head", optional(choice(
         seq("(", $._catch_params, ")"),
         $._catch_params
-      )),
-      $.block
+      ))),
+      field("body", $.block)
     ),
 
     _catch_params: $ => seq(
-      $.identifier,              // error type
-      optional(seq($.as, $.identifier))    // as variable
+      field("type", $.identifier),              // error type
+      optional(seq($.as, field("variable", $.identifier)))    // as variable
     ),
 
     finally_clause: $ => seq(
       $.finally,
-      $.block
+      field("body", $.block)
     ),
 
     switch_statement: $ => seq(
@@ -852,16 +859,16 @@ export default grammar({
 
     case_clause: $ => seq(
       $.case,
-      $._single_expression,
-      repeat(seq(",", $._single_expression)),  // multiple values
+      field("value", $._single_expression),
+      repeat(seq(",", field("value", $._single_expression))),  // multiple values
       ":",
-      repeat($._statement)
+      field("body", repeat($._statement))
     ),
 
     default_clause: $ => seq(
       $.default,
       ":",
-      repeat($._statement)
+      field("body", repeat($._statement))
     ),
 
     // Control flow keywords
@@ -900,7 +907,7 @@ export default grammar({
         $.extends,
         field("superclass", choice($.identifier, $.member_access))
       )),
-      $.class_body
+      field("body", $.class_body)
     ),
 
     class_body: $ => seq(
@@ -916,7 +923,7 @@ export default grammar({
     property_declaration: $ => seq(
       //FIXME global and static aren't valid scope identifiers here
       optional($.scope_identifier),
-      $.identifier,
+      field("name", $.identifier),
       optional(seq("[", $.param_sequence, "]")),
       choice(
         // Property initializer: prop := value
@@ -1128,12 +1135,12 @@ export default grammar({
         token.immediate(":"),
         field("trigger", $.hotstring_trigger),
         $._double_colon,
-        optional(choice(
+        field("body", optional(choice(
           // blocks and function declarations are allowed, but calls can't be on the same line
           $.block,
           $.function_declaration,
           $.hotstring_replacement,
-        ))
+        )))
     )),
 
     _exec_hotstring: $ => prec.right(seq(
@@ -1142,12 +1149,12 @@ export default grammar({
         token.immediate(":"),
         field("trigger", $.hotstring_trigger),
         $._double_colon,
-        optional(choice(
+        field("body", optional(choice(
           // Can't have literal replacements, can have statements on the same line
           $.block,
           $._single_expression,
           repeat1($._statement)
-        ))
+        )))
     )),
 
     _double_colon: $ => token("::"),
@@ -1227,13 +1234,13 @@ export default grammar({
     hotkey: $ => prec.right(3, seq(
       field("trigger", $.hotkey_trigger),
       token.immediate("::"),
-      optional(choice(
+      field("body", optional(choice(
         $._single_expression,
         $.function_declaration,
         $.block,
         $._hotkey_alttabcommand,
         $.call_statement
-      ))
+      )))
     )),
 
     hotkey_trigger: $ => prec.right(PREC.KEYWORD, seq(
