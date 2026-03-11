@@ -106,12 +106,14 @@ var := (two := 2, two + two)
 Expression sequence as math operand
 ================================================================================
 
-2 + (one := 1, two := 2, one + two)
+val := 2 + (one := 1, two := 2, one + two)
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (expression_sequence
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
     (additive_operation
       (integer_literal)
       (expression_sequence
@@ -126,3 +128,14 @@ Expression sequence as math operand
         (additive_operation
           (identifier)
           (identifier))))))
+
+================================================================================
+Top-level expression sequences must start with primary expressions
+:error
+================================================================================
+
+1 + 1, 2 + 2
+
+--------------------------------------------------------------------------------
+
+

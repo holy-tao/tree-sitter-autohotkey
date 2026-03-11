@@ -98,12 +98,14 @@ var := (
 Variable reference simple
 ================================================================================
 
-&myVar
+v := &myVar
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (expression_sequence
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
     (varref_operation
       (identifier))))
 
@@ -111,12 +113,14 @@ Variable reference simple
 Variable reference quoted
 ================================================================================
 
-&(a * b)
+v := &(a * b)
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (expression_sequence
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
     (varref_operation
       (expression_sequence
         (multiplicative_operation

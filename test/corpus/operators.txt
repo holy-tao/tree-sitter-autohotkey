@@ -372,12 +372,14 @@ x--
 Regex match
 ================================================================================
 
-a ~= b
+v := a ~= b
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (expression_sequence
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
     (regex_match_operation
       (identifier)
       (identifier))))
@@ -386,12 +388,14 @@ a ~= b
 Or-maybe operation
 ================================================================================
 
-a ?? b
+v := a ?? b
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (expression_sequence
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
     (or_maybe_operation
       (identifier)
       (identifier))))

@@ -101,14 +101,20 @@ export default grammar({
       $.function_declaration,
       $.class_declaration,
       $.call_statement,  // call_statements only at statement level
-      $.expression_sequence,
       $._primary_expression,
+      alias($.top_level_expression_sequence, $.expression_sequence),
       // blocks are allowed at the top level, though they don't do anything
       $.block,  
       $.label,
       $._control_flow_statement,
       $._loop_flow_statement
     )),
+
+    top_level_expression_sequence: $ => seq(
+      // Exactly like expression_sequence, but first expression must be primary and no parentheses allowed
+      $._primary_expression,
+      repeat1(seq(",", $._single_expression))
+    ),
 
     // NOTE: this is actually more permissive than the AHK interpreter, which doesn't allow block comments inline
     // and requires a space before the ';' to start a line comment. For analysis purposes, this is fine. Feed your
