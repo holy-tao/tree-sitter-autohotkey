@@ -222,6 +222,42 @@ Call with dynamic identifier
       (integer_literal))))
 
 ================================================================================
+Call with dynamic identifier with literal prefix
+================================================================================
+
+my%prop%(1, 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (dynamic_identifier
+      (identifier)
+      (dereference_operation
+        (identifier)))
+    (arg_sequence
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Call with dynamic identifier with literal suffix
+================================================================================
+
+%prop%handler(1, 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (dynamic_identifier
+      (dereference_operation
+        (identifier))
+      (identifier))
+    (arg_sequence
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
 Call statement with no arguments
 ================================================================================
 

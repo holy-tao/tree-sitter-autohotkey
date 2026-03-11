@@ -77,6 +77,7 @@ export default grammar({
     [$.continue_statement],
     [$._single_expression, $._dynamic_identifier_chain],
     [$._dynamic_identifier_chain],
+    [$._single_expression, $.hotkey_trigger]
   ],
 
   extras: $ => [
@@ -416,7 +417,8 @@ export default grammar({
         $.identifier,
         $.member_access
       )),
-      field("arguments", optional($.arg_sequence))
+      field("arguments", optional($.arg_sequence)),
+      $._eol
     )),
 
     _arg: $ => choice(
