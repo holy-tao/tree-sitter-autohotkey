@@ -283,3 +283,63 @@ result := &%"ref"%
     (varref_operation
       (dereference_operation
         (string_literal)))))
+
+================================================================================
+Chained member access with dynamic identifiers on both sides
+================================================================================
+
+v := %object%.%member%
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (dereference_operation
+        (identifier))
+      (dereference_operation
+        (identifier)))))
+
+================================================================================
+Chained member access with dynamic identifier
+================================================================================
+
+v := obj.%prop%handler.nested
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (member_access
+        (identifier)
+        (dynamic_identifier
+          (dereference_operation
+            (identifier))
+          (identifier)))
+      (identifier))))
+
+================================================================================
+Dynamic member access in arithmetic expression
+================================================================================
+
+v := obj.my%prop% + 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (additive_operation
+      (member_access
+        (identifier)
+        (dynamic_identifier
+          (identifier)
+          (dereference_operation
+            (identifier))))
+      (integer_literal))))

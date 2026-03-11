@@ -222,7 +222,7 @@ Call with dynamic identifier
       (integer_literal))))
 
 ================================================================================
-Call with dynamic identifier with literal prefix
+Function call with dynamic identifier with literal prefix
 ================================================================================
 
 my%prop%(1, 2)
@@ -240,7 +240,7 @@ my%prop%(1, 2)
       (integer_literal))))
 
 ================================================================================
-Call with dynamic identifier with literal suffix
+Function call with dynamic identifier with literal suffix
 ================================================================================
 
 %prop%handler(1, 2)
@@ -256,6 +256,66 @@ Call with dynamic identifier with literal suffix
     (arg_sequence
       (integer_literal)
       (integer_literal))))
+
+================================================================================
+Method call with dynamic identifier with literal prefix
+================================================================================
+
+obj.my%prop%(1, 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (identifier)
+        (dereference_operation
+          (identifier))))
+    (arg_sequence
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Method call with dynamic identifier with literal suffix
+================================================================================
+
+obj.%prop%handler(1, 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (dereference_operation
+          (identifier))
+        (identifier)))
+    (arg_sequence
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Method call with dynamic identifier with both prefix and suffix
+================================================================================
+
+obj.my%a%c(args)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (identifier)
+        (dereference_operation
+          (identifier))
+        (identifier)))
+    (arg_sequence
+      (identifier))))
 
 ================================================================================
 Call statement with no arguments

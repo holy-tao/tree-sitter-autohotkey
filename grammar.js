@@ -72,11 +72,10 @@ export default grammar({
     [$._single_expression, $.default_param],
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
+    [$.member_access, $._member_dynamic_identifier],
     [$.dynamic_identifier],
     [$.break_statement],
     [$.continue_statement],
-    [$._single_expression, $._dynamic_identifier_chain],
-    [$._dynamic_identifier_chain],
     [$._single_expression, $.hotkey_trigger]
   ],
 
@@ -361,23 +360,52 @@ export default grammar({
     member_access: $ => prec(PREC.MEMBER_ACCESS, seq(
       field("object", $._single_expression),
       ".",
-      field("member", choice($.identifier, $.dynamic_identifier))
+      field("member", choice(
+        $.identifier,
+        $.dereference_operation,
+        alias($._member_dynamic_identifier, $.dynamic_identifier),
+      ))
     )),
 
     // A combination of identifiers and derefs, such as `a%b%`
-    // Derefs can follow other derefs, like obj.%a%%b% - but the rules won't allow identifiers to follow other
-    // identifiers; that's just a longer single identifier.
+    // Derefs can follow other derefs, like obj.%a%%b%
+    // All parts must be contiguous (no whitespace) — `a %b%` is implicit concatenation, not a dynamic identifier
     // Adapted from: https://github.com/Descolada/keysharp/blob/master/Keysharp.Core/Scripting/Parser/Antlr/MainParser.g4#L480
-    dynamic_identifier: $ => prec.left(choice(
-      seq($.identifier, $._dynamic_identifier_chain),
-      $._dynamic_identifier_chain
+    dynamic_identifier: $ => prec.right(choice(
+      seq(
+        $.identifier,
+        $.dereference_operation,
+        repeat(choice(
+          $.identifier,
+          $.dereference_operation))
+      ),
+      seq(
+        $.dereference_operation,
+        repeat1(choice(
+          $.identifier,
+          $.dereference_operation
+        ))
+      ),
     )),
 
-    _dynamic_identifier_chain: $ => prec.right(seq(
-      repeat1($.dereference_operation), 
-      optional($.identifier), 
-      optional($._dynamic_identifier_chain)
-    )),
+    // Same as dynamic_identifier but with higher precedence for use in member_access,
+    // so tree-sitter sees a real GLR conflict instead of resolving via precedence
+    _member_dynamic_identifier: $ => prec.dynamic(1, prec.right(PREC.MEMBER_ACCESS, choice(
+      seq(
+        $.identifier,
+        $.dereference_operation,
+        repeat(choice(
+          $.identifier,
+          $.dereference_operation))
+      ),
+      seq(
+        $.dereference_operation,
+        repeat1(choice(
+          $.identifier,
+          $.dereference_operation
+        ))
+      ),
+    ))),
 
     optional_identifier: $ => prec.right(PREC.MAYBE, seq($.identifier, $.optional_marker)),
 
@@ -582,7 +610,7 @@ export default grammar({
     ),
 
     object_literal_member: $ => seq(
-      field("key", choice($.identifier, $.dynamic_identifier)),
+      field("key", choice($.identifier, $.dynamic_identifier, $.dereference_operation)),
       ":",
       field("value", choice(
         $._single_expression,

@@ -206,9 +206,8 @@ val := obj.%array%[1]
     (index_access
       (member_access
         (identifier)
-        (dynamic_identifier
-          (dereference_operation
-            (identifier))))
+        (dereference_operation
+          (identifier)))
       (arg_sequence
         (integer_literal)))))
 

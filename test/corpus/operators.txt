@@ -502,11 +502,10 @@ result.%definition.name% := validatedValue
   (assignment_operation
     (member_access
       (identifier)
-      (dynamic_identifier
-        (dereference_operation
-          (member_access
-            (identifier)
-            (identifier)))))
+      (dereference_operation
+        (member_access
+          (identifier)
+          (identifier))))
     (assignment_operator)
     (identifier)))
 
