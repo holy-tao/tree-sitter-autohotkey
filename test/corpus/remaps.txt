@@ -1,146 +1,112 @@
 ================================================================================
-Hotkey with modifier symbols
+Simple remap
 ================================================================================
 
-#n::
-{
-    a := "before"
-}
+CapsLock::Ctrl
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (hotkey
-    (hotkey_trigger
-      (hotkey_win)
+  (remap
+    (remap_origin
       (key_identifier))
-    (block
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (string_literal)))))
+    (remap_destination
+      (key_identifier))))
 
 ================================================================================
-Hotkey with no modifier symbols
+Remap with modifier on left
 ================================================================================
 
-n::
-{
-    a := "before"
-}
+~XButton2::LButton
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (hotkey
-    (hotkey_trigger
+  (remap
+    (remap_origin
+      (hotkey_nonblocking)
       (key_identifier))
-    (block
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (string_literal)))))
+    (remap_destination
+      (key_identifier))))
 
 ================================================================================
-No-op hotkey with fallthrough
+Remap with modifier on right
 ================================================================================
 
-a::
-#n::
-{
-    a := "fallthrough"
-}
+XButton2::^LButton
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (hotkey
-    (hotkey_trigger
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (hotkey_ctrl)
+      (key_identifier))))
+
+================================================================================
+Remap with modifiers on both left and right
+================================================================================
+
+~XButton2::^LButton
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (hotkey_nonblocking)
+      (key_identifier))
+    (remap_destination
+      (hotkey_ctrl)
+      (key_identifier))))
+
+================================================================================
+Two remaps in a row
+================================================================================
+
+A::b
+^a::b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
       (key_identifier)))
-  (hotkey
-    (hotkey_trigger
-      (hotkey_win)
-      (key_identifier))
-    (block
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (string_literal)))))
-
-================================================================================
-Hotkey with only modifier symbols
-================================================================================
-
-<^>+::"no-op"
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (hotkey_left)
+  (remap
+    (remap_origin
       (hotkey_ctrl)
-      (hotkey_right)
-      (hotkey_shift))
-    (string_literal)))
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
 
 ================================================================================
-Hotkey after directive (check '#' is parsed correctly)
+Remap following directive
 ================================================================================
 
-#Hotif true
-<^>+::"no-op"
+#InputLevel 1
+a::b
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (hotif_directive
-    (boolean_literal))
-  (hotkey
-    (hotkey_trigger
-      (hotkey_left)
-      (hotkey_ctrl)
-      (hotkey_right)
-      (hotkey_shift))
-    (string_literal)))
+  (input_level_directive
+    (integer_literal))
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
 
 ================================================================================
-Hotkey with combinator modifier
+Bare call statement hotkeys aren't remaps
 ================================================================================
 
-LCtrl & CapsLock::"no-op"
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (key_identifier)
-      (hotkey_and)
-      (hotkey_trigger
-        (key_identifier)))
-    (string_literal)))
-
-================================================================================
-Hotkey with verbal up modifier
-================================================================================
-
-LCtrl up::"no-op"
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (key_identifier)
-      (hotkey_up))
-    (string_literal)))
-
-================================================================================
-Alt-tab hotkey: AltTab
-================================================================================
-
-MButton::AltTab
+LCtrl::MsgBox
 
 --------------------------------------------------------------------------------
 
@@ -148,13 +114,151 @@ MButton::AltTab
   (hotkey
     (hotkey_trigger
       (key_identifier))
-    (hotkey_alttab)))
+    (call_statement
+      (identifier))))
 
 ================================================================================
-Alt-tab hotkey: ShiftAltTab
+Remap to Media_Play_Pause
 ================================================================================
 
-MButton::ShiftAltTab
+LButton::Media_Play_Pause
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap to Numpad8
+================================================================================
+
+a::Numpad8
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap to non-identifier character
+================================================================================
+
+a::-
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap from non-identifier character
+================================================================================
+
+)::a
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap to number
+================================================================================
+
+a::9
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap from number
+================================================================================
+
+3::a
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap to escaped open brace
+================================================================================
+
+a::`{
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap from open brace
+================================================================================
+
+; No escaping required, but looks like a block
+{::a
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap to NumpadEnter
+================================================================================
+
+a::NumpadEnter
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remaps to Joystick not allowed (parsed as hotkey)
+================================================================================
+
+a::Joy1
 
 --------------------------------------------------------------------------------
 
@@ -162,13 +266,30 @@ MButton::ShiftAltTab
   (hotkey
     (hotkey_trigger
       (key_identifier))
-    (hotkey_shiftalttab)))
+    (call_statement
+      (identifier))))
 
 ================================================================================
-Alt-tab hotkey: AltTabMenu
+Remap where left side is also modifier key
 ================================================================================
 
-MButton::AltTabMenu
+^::a
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (remap
+    (remap_origin
+      (key_identifier))
+    (remap_destination
+      (key_identifier))))
+
+================================================================================
+Remap following hotkey
+================================================================================
+
+LCtrl::MsgBox "Hello, World!"
+RCtrl::LCtrl
 
 --------------------------------------------------------------------------------
 
@@ -176,60 +297,22 @@ MButton::AltTabMenu
   (hotkey
     (hotkey_trigger
       (key_identifier))
-    (hotkey_alttabmenu)))
-
-================================================================================
-Alt-tab hotkey: AltTabAndMenu
-================================================================================
-
-MButton::AltTabAndMenu
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal))))
+  (remap
+    (remap_origin
       (key_identifier))
-    (hotkey_alttabandmenu)))
+    (remap_destination
+      (key_identifier))))
 
 ================================================================================
-Alt-tab hotkey: AltTabMenuDismiss
+Remap following hotstring
 ================================================================================
 
-MButton::AltTabMenuDismiss
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (key_identifier))
-    (hotkey_alttabmenudismiss)))
-
-================================================================================
-Hotkey followed by hotstring
-================================================================================
-
-MButton::AltTabMenuDismiss
-::ttyl::Talk To You Later
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (key_identifier))
-    (hotkey_alttabmenudismiss))
-  (hotstring
-    (hotstring_trigger)
-    (hotstring_replacement)))
-
-================================================================================
-Hotstring followed by hotkey
-================================================================================
-
-::ttyl::Talk To You Later
-MButton::AltTabMenuDismiss
+::hi::Hello
+RCtrl::LCtrl
 
 --------------------------------------------------------------------------------
 
@@ -237,205 +320,41 @@ MButton::AltTabMenuDismiss
   (hotstring
     (hotstring_trigger)
     (hotstring_replacement))
-  (hotkey
-    (hotkey_trigger
+  (remap
+    (remap_origin
       (key_identifier))
-    (hotkey_alttabmenudismiss)))
+    (remap_destination
+      (key_identifier))))
 
 ================================================================================
-Named function hotkeys
+Function calls disambiguate remaps from call operation hotkeys
 ================================================================================
 
-^+o::
-^+e::
-    editor_open_folder(hk)
-    {
-        stuff := "done"
-        key := hk == "&+e" ? "e" : "o"
-    }
+RCtrl::WheelRight()
 
 --------------------------------------------------------------------------------
 
 (source_file
   (hotkey
     (hotkey_trigger
-      (hotkey_ctrl)
-      (hotkey_shift)
-      (key_identifier)))
-  (hotkey
-    (hotkey_trigger
-      (hotkey_ctrl)
-      (hotkey_shift)
       (key_identifier))
-    (function_declaration
-      (identifier)
-      (function_head
-        (param_sequence
-          (identifier)))
-      (function_body
-        (block
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (string_literal))
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (ternary_expression
-              (equality_operation
-                (identifier)
-                (string_literal))
-              (string_literal)
-              (string_literal))))))))
+    (function_call
+      (identifier))))
 
 ================================================================================
-Hotkey with call statement
+Call statement arguments disambiguate remaps from hotkeys
 ================================================================================
 
-^H::MsgBox "Hello, World!"
+RCtrl::PrintScreen "test", "test"
 
 --------------------------------------------------------------------------------
 
 (source_file
   (hotkey
     (hotkey_trigger
-      (hotkey_ctrl)
       (key_identifier))
     (call_statement
       (identifier)
       (arg_sequence
+        (string_literal)
         (string_literal)))))
-
-================================================================================
-Hotkey with call statement and empty args
-================================================================================
-
-^H::MsgBox ,
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (hotkey_ctrl)
-      (key_identifier))
-    (call_statement
-      (identifier)
-      (arg_sequence
-        (empty_arg)))))
-
-================================================================================
-Hotkey with combinator and modifier on left side
-================================================================================
-
-~RButton & LButton::MsgBox "You pressed the left mouse button while holding down the right."
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (hotkey_nonblocking)
-      (key_identifier)
-      (hotkey_and)
-      (hotkey_trigger
-        (key_identifier)))
-    (call_statement
-      (identifier)
-      (arg_sequence
-        (string_literal)))))
-
-================================================================================
-Hotkey with combinator and modifier on right side
-================================================================================
-
-RButton & ~LButton::MsgBox "You pressed the left mouse button while holding down the right."
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (key_identifier)
-      (hotkey_and)
-      (hotkey_trigger
-        (hotkey_nonblocking)
-        (key_identifier)))
-    (call_statement
-      (identifier)
-      (arg_sequence
-        (string_literal)))))
-
-================================================================================
-Hotkey with combinator and modifiers on both sides
-================================================================================
-
-~RButton & ^!a::
-{
-    val := 1
-}
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (hotkey_nonblocking)
-      (key_identifier)
-      (hotkey_and)
-      (hotkey_trigger
-        (hotkey_ctrl)
-        (hotkey_alt)
-        (key_identifier)))
-    (block
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
-
-================================================================================
-Hotkey with modifier and identifier-like name
-================================================================================
-
-~RButton::MsgBox "You pressed the left mouse button while holding down the right."
-
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (hotkey_nonblocking)
-      (key_identifier))
-    (call_statement
-      (identifier)
-      (arg_sequence
-        (string_literal)))))
-
-================================================================================
-Hotkey with many modifiers
-================================================================================
-~$<^>+ & ^!a::
-{
-    val := 1
-}
---------------------------------------------------------------------------------
-
-(source_file
-  (hotkey
-    (hotkey_trigger
-      (hotkey_nonblocking)
-      (hotkey_usehook)
-      (hotkey_left)
-      (hotkey_ctrl)
-      (hotkey_right)
-      (hotkey_shift)
-      (hotkey_and)
-      (hotkey_trigger
-        (hotkey_ctrl)
-        (hotkey_alt)
-        (key_identifier)))
-    (block
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))

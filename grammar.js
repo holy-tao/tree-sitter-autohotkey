@@ -65,6 +65,8 @@ export default grammar({
     $._eol,
     $.block_comment,
     $.array_expansion_marker,
+    $._hotkey_double_colon,
+    $._remap_double_colon,
   ],
 
   conflicts: $ => [
@@ -76,7 +78,7 @@ export default grammar({
     [$.dynamic_identifier],
     [$.break_statement],
     [$.continue_statement],
-    [$._single_expression, $.hotkey_trigger]
+    [$.object_literal, $.block],
   ],
 
   extras: $ => [
@@ -91,6 +93,7 @@ export default grammar({
     _top_level_statement: $ => choice(
       $._statement,
       $.hotstring,
+      $.remap,
       $.hotkey,
     ),
 
@@ -740,9 +743,9 @@ export default grammar({
     //#region Control Flow
 
     // higher precedence than object_literal
-    block: $ => prec(1, seq(
+    block: $ => seq(
       "{", repeat($._statement), "}"
-    )),
+    ),
 
     if_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.if,
@@ -1170,7 +1173,7 @@ export default grammar({
         field("modifiers", alias(repeat($._hotstring_modifier), $.hotstring_option_sequence)),
         token.immediate(":"),
         field("trigger", $.hotstring_trigger),
-        $._double_colon,
+        token.immediate("::"),
         field("body", optional(choice(
           // blocks and function declarations are allowed, but calls can't be on the same line
           $.block,
@@ -1182,9 +1185,9 @@ export default grammar({
     _exec_hotstring: $ => prec.right(seq(
         ":",
         field("modifiers", alias($._hotstring_opt_seq_exec, $.hotstring_option_sequence)),
-        token.immediate(":"),
+        ikwtok(":"),
         field("trigger", $.hotstring_trigger),
-        $._double_colon,
+        ikwtok("::"),
         field("body", optional(choice(
           // Can't have literal replacements, can have statements on the same line
           $.block,
@@ -1198,7 +1201,7 @@ export default grammar({
     // Used in hotstrings - can match any non-whitespace, non-colon characters
     hotstring_trigger: $ => token(/[^\s:]+/),
 
-    hotstring_replacement: $ => token.immediate(/[^\n]+/),  // Rest of line as text replacement (one or more, excludes newline)
+    hotstring_replacement: $ => token.immediate(prec(1, /[^\n]+/)),  // Rest of line as text replacement (one or more, excludes newline)
 
     _hotstring_opt_seq_no_exec: $ => repeat($._hotstring_modifier),
     _hotstring_opt_seq_exec: $ => seq(
@@ -1267,9 +1270,9 @@ export default grammar({
 
     // Higher precedence than label to ensure :: is recognized before :
     // Using identifier here allows tree-sitter to resolve conflicts automatically
-    hotkey: $ => prec.right(3, seq(
+    hotkey: $ => prec.right(PREC.OVERRIDE, seq(
       field("trigger", $.hotkey_trigger),
-      token.immediate("::"),
+      $._hotkey_double_colon,
       field("body", optional(choice(
         $._single_expression,
         $.function_declaration,
@@ -1279,10 +1282,20 @@ export default grammar({
       )))
     )),
 
+    // Remaps are effectively preprocessor directives, so they beat everything in precedence. Even
+    // if you have a function shadowing a remapped key, the remap wins.
+    // See: https://www.autohotkey.com/docs/v2/misc/Remap.htm
+    remap: $ => prec(PREC.OVERRIDE, seq(
+      field("origin", $.remap_origin),
+      $._remap_double_colon,
+      field("destination", $.remap_destination),
+      $._eol
+    )),
+
     hotkey_trigger: $ => prec.right(PREC.KEYWORD, seq(
       seq(
-        repeat($._hotkey_modifier),
-        $._hotkey_trigger_char_sequence,
+        repeat($._hotkey_meta_modifier),
+        $._hotkey_trigger_identifier,
         optional($.hotkey_up)
       ),
       optional(repeat(seq(
@@ -1291,21 +1304,75 @@ export default grammar({
       )))
     )),
 
-    // hotkey modifiers
-    _hotkey_modifier: $ => choice(
+    // Remap trigger: like hotkey_trigger but modifier chars (^, !, #, +, <, >)
+    // can also be literal keys. e.g., ^::a remaps caret key to a.
+    // No combinator (& ) or up modifier since remaps are single keys.
+    remap_origin: $ => prec.right(PREC.KEYWORD, seq(
+      repeat($._hotkey_meta_modifier),
+      $._remap_origin_key,
+    )),
+
+    _remap_origin_key: $ => prec.right(choice(
+      // modifier(s) + key
+      seq(
+        repeat1($._hotkey_modifier),
+        choice(
+          alias(token("{"), $.key_identifier),
+          alias(token(/\S/), $.key_identifier),
+          alias($.integer_literal, $.key_identifier),
+          alias($.identifier, $.key_identifier),
+        )
+      ),
+      // key only (including modifier chars as literal keys)
+      choice(
+        alias(token("{"), $.key_identifier),
+        alias(token(/\S/), $.key_identifier),
+        alias($.integer_literal, $.key_identifier),
+        alias($.identifier, $.key_identifier),
+        alias($.hotkey_win, $.key_identifier),
+        alias($.hotkey_alt, $.key_identifier),
+        alias($.hotkey_ctrl, $.key_identifier),
+        alias($.hotkey_shift, $.key_identifier),
+        alias($.hotkey_left, $.key_identifier),
+        alias($.hotkey_right, $.key_identifier),
+      ),
+    )),
+
+    // Similar to hotkey trigger except only a single key is allowed
+    remap_destination: $ => prec.right(PREC.KEYWORD, choice(
+      $._hotkey_trigger_identifier,
+      alias(token("`{"), $.key_identifier)   // Open braces must be escaped as remap targets
+    )),
+
+    // special modifiers must precede all others and are invalid in some cases
+    _hotkey_meta_modifier: $ => choice(
       $.hotkey_nonblocking,
       $.hotkey_usehook,
     ),
 
-    _hotkey_trigger_char_sequence: $ => repeat1(choice(
-      // Special characters for "modifier" keys
+    // "regular" modifiers like ctrl, win, etc.
+    _hotkey_modifier: $ => choice(
       $.hotkey_win,
       $.hotkey_alt,
       $.hotkey_ctrl,
       $.hotkey_shift,
       $.hotkey_left,
       $.hotkey_right,
-      $.identifier
+    ),
+
+    _hotkey_trigger_identifier: $ => prec.right(choice(
+      // modifier(s) only - must be at least one
+      repeat1($._hotkey_modifier),
+      seq(
+        // optional modifier(s) + key
+        repeat($._hotkey_modifier),
+        choice(
+          alias(token("{"), $.key_identifier),        // force conflict resolution w/blocks
+          alias(token(/\S/), $.key_identifier),       // single non-word chars (}, ), etc.)
+          alias($.integer_literal, $.key_identifier), // digit keys (0-9)
+          alias($.identifier, $.key_identifier)       // word-like keys (letters, named keys)
+        )
+      )
     )),
 
     hotkey_win: $ => token('#'),
@@ -1353,3 +1420,13 @@ export default grammar({
 function kwtok(pattern) {
   return token(prec(PREC.KEYWORD, pattern));
 }
+
+/**
+ * Alias for `token.immediate(prec(PREC.KEYWORD, pattern))`
+ * 
+ * @param {RuleOrLiteral} pattern
+ */
+function ikwtok(pattern) {
+  return token.immediate(prec(PREC.KEYWORD, pattern));
+}
+

@@ -10,10 +10,36 @@
 // tree-sitter characters are of type int32_t, <ctypes> expects chars, so we roll our own macros
 
 #define is_alpha(c) ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-#define is_alnum(c) (is_alpha(c) || (c >= '0' && c <= '9'))
+#define is_digit(c) ((c) >= '0' && (c) <= '9')
+#define is_xdigit(c) (is_digit(c) || ((c) >= 'a' && (c) <= 'f') || ((c) >= 'A' && (c) <= 'F'))
+#define is_alnum(c) (is_alpha(c) || is_digit(c))
 #define is_identifier_char(c) (is_alnum(c) || (c == '_'))
 #define is_eol(c) (c == '\r' || c == '\n' || c == '\0')
 #define is_whitespace(c) (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+
+#define STRCASEEQ_ANY_1(s, a)          strcaseeq(s, a)
+#define STRCASEEQ_ANY_2(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_1(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_3(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_2(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_4(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_3(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_5(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_4(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_6(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_5(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_7(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_6(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_8(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_7(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_9(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_8(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_10(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_9(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_11(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_10(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_12(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_11(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_13(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_12(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_14(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_13(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_15(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_14(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_16(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_15(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_17(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_16(s, __VA_ARGS__)
+#define STRCASEEQ_ANY_18(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_17(s, __VA_ARGS__)
+
+#define _STRCASEEQ_ANY_N(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15,_16,_17,_18,N,...) STRCASEEQ_ANY_##N
+/// Performs a case-insensitive comparison of `s` against up to 12 character arrays, returns true if any match
+#define strcaseeq_any(s, ...) \
+    (_STRCASEEQ_ANY_N(__VA_ARGS__, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)(s, __VA_ARGS__))
 
 /// Skips all whitespace, including newlines
 #define skip_whitespace(lexer)  while (is_whitespace(lexer->lookahead)) { \
@@ -29,12 +55,17 @@
 
 #define is_eof(lexer) (lexer->eof(lexer))
 
+/// Check to see if a character is a hotkey modifier symbol
+#define is_hotkey_modifier(c) (c == '^' || c == '!' || c == '#' || c == '+' || \
+                               c == '<' || c == '>' || c == '~' || c == '$')
+
+/// Check to see if an identifier is an AltTab command
+#define is_alttab_command(ident) \
+  (strcaseeq_any(ident, "AltTab", "ShiftAltTab", "AltTabMenu", "AltTabAndMenu", "AltTabMenuDismiss"))
+
 /// Check to see if ident is an operator keyword like "and" or "is". Get `ident` from skip_identifier
-#define is_operator_keyword(ident) (strcaseeq(ident, "and") || \
-                                    strcaseeq(ident, "not") || \
-                                    strcaseeq(ident, "is")  || \
-                                    strcaseeq(ident, "or")  || \
-                                    strcaseeq(ident, "contains"))
+#define is_operator_keyword(ident) \
+  (strcaseeq_any(ident, "and", "not", "is", "or", "contains"))
 
 /// Check to see if a character could start an operator keyword
 #define starts_operator_keyword(c) (c == 'a' || c == 'A' || c == 'n' || c == 'N' || \
@@ -42,35 +73,9 @@
                                     c == 'c' || c == 'C')
 
 /// Check to see if ident is a control-flow keyword like "if"
-#define is_flow_keyword(ident) (strcaseeq(ident, "if")            || \
-                                strcaseeq(ident, "else")          || \
-                                strcaseeq(ident, "while")         || \
-                                strcaseeq(ident, "for")           || \
-                                strcaseeq(ident, "loop")          || \
-                                strcaseeq(ident, "throw")         || \
-                                strcaseeq(ident, "try")           || \
-                                strcaseeq(ident, "catch")         || \
-                                strcaseeq(ident, "finally")       || \
-                                strcaseeq(ident, "break")         || \
-                                strcaseeq(ident, "continue")      || \
-                                strcaseeq(ident, "as")            || \
-                                strcaseeq(ident, "in")            || \
-                                strcaseeq(ident, "switch")        || \
-                                strcaseeq(ident, "case")          || \
-                                strcaseeq(ident, "default")       || \
-                                strcaseeq(ident, "goto")          || \
-                                strcaseeq(ident, "return"))
-
-#define STRCASEEQ_ANY_1(s, a)          strcaseeq(s, a)
-#define STRCASEEQ_ANY_2(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_1(s, __VA_ARGS__)
-#define STRCASEEQ_ANY_3(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_2(s, __VA_ARGS__)
-#define STRCASEEQ_ANY_4(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_3(s, __VA_ARGS__)
-#define STRCASEEQ_ANY_5(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_4(s, __VA_ARGS__)
-
-#define _STRCASEEQ_ANY_N(_1,_2,_3,_4,_5,N,...) STRCASEEQ_ANY_##N
-/// Performs a case-insensitive comparison of `s` against up to 5 character arrays, returns true if any match
-#define strcaseeq_any(s, ...) \
-    (_STRCASEEQ_ANY_N(__VA_ARGS__, 5, 4, 3, 2, 1)(s, __VA_ARGS__))
+#define is_flow_keyword(ident) \
+  (strcaseeq_any(ident, "if", "else", "while", "for", "loop", "throw", "try", "catch", \
+    "finally", "break", "continue", "as", "in", "switch", "case", "default", "goto", "return"))
 
 /// Check to see if ident is a reserved word in general
 #define is_keyword(ident) (is_operator_keyword(ident) || is_flow_keyword(ident))
@@ -85,7 +90,9 @@ enum TokenType {
   CONTINUATION_NEWLINE,
   EOL,
   BLOCK_COMMENT,
-  ARRAY_EXPANSION_MARKER
+  ARRAY_EXPANSION_MARKER,
+  HOTKEY_DOUBLE_COLON,
+  REMAP_DOUBLE_COLON
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -503,6 +510,116 @@ static bool scan_block_comment(TSLexer *lexer) {
   return false;
 }
 
+/// @brief Checks if an identifier is a valid AHK key name for remap destinations.
+///        See: https://www.autohotkey.com/docs/v2/KeyList.htm
+/// @param key null-terminated key name buffer
+/// @param len actual length of the identifier (may exceed buffer if truncated)
+/// @return true if the identifier is a recognized key name
+static bool is_remap_key(const char *key, int len) {
+  if (len == 0) return false;
+
+  // Single alphanumeric character is always a valid key (letter or digit key)
+  if (len == 1) return is_alnum(key[0]);
+
+  switch (tolower(key[0])) {
+    case 'a':
+      return strcaseeq_any(key, "Alt", "AppsKey"); 
+
+    case 'b':
+      return strcaseeq_any(key, "Backspace", "BS", "Browser_Back", "Browser_Forward", "Browser_Refresh", 
+        "Browser_Stop", "Browser_Search", "Browser_Favorites", "Browser_Home");
+
+    case 'c':
+      return strcaseeq_any(key, "CapsLock", "Control", "Ctrl", "CtrlBreak"); 
+
+    case 'd':
+      return strcaseeq_any(key, "Delete", "Del", "Down"); 
+
+    case 'e':
+      return strcaseeq_any(key, "End", "Enter", "Escape", "Esc"); 
+
+    case 'f':
+      // F1-F24
+      if (len >= 2 && len <= 3 && is_digit(key[1])) {
+        int num = key[1] - '0';
+        if (len == 3) {
+          if (!is_digit(key[2])) return false;
+          num = num * 10 + (key[2] - '0');
+        }
+        return num >= 1 && num <= 24;
+      }
+      return false;
+
+    case 'h':
+      return strcaseeq_any(key, "Help", "Home");
+
+    case 'i':
+      return strcaseeq_any(key, "Insert", "Ins"); 
+
+    case 'l':
+      return strcaseeq_any(key, "LAlt", "Launch_Mail", "Launch_Media", "Launch_App1", "Launch_App2",
+        "LButton", "LControl", "LCtrl", "Left", "LShift", "LWin"); 
+
+    case 'm':
+      return strcaseeq_any(key, "MButton", "Media_Next", "Media_Prev", "Media_Stop", "Media_Play_Pause"); 
+
+    case 'n':
+      if (strcaseeq(key, "NumLock")) return true;
+      // Numpad keys: Numpad0-9 and named variants
+      if (len >= 7 && tolower(key[1]) == 'u' && tolower(key[2]) == 'm' &&
+          tolower(key[3]) == 'p' && tolower(key[4]) == 'a' && tolower(key[5]) == 'd') {
+        const char *suffix = key + 6;
+
+        if (len == 7 && is_digit(suffix[0])) return true;  // Numpad0-Numpad9
+
+        return strcaseeq_any(suffix, "Ins", "End", "Down", "PgDn", "Left", "Clear", "Right", "Home",
+          "Up", "PgUp", "Del", "Dot", "Div", "Mult", "Add", "Sub", "Enter");
+      }
+      return false;
+
+    case 'p':
+      return strcaseeq_any(key, "Pause", "PgDn", "PgUp", "PrintScreen"); 
+
+    case 'r':
+      return strcaseeq_any(key, "RAlt", "RButton", "RControl", "RCtrl", "Right", "RShift", "RWin");
+
+    case 's':
+      if (strcaseeq_any(key, "ScrollLock", "Shift", "Sleep", "Space")) {
+        return true;
+      }
+      // Sc scan codes: Sc followed by 3 hex digits
+      if (len == 5 && tolower(key[1]) == 'c') {
+        return is_xdigit(key[2]) && is_xdigit(key[3]) && is_xdigit(key[4]);
+      }
+      return false;
+
+    case 't':
+      return strcaseeq_any(key, "Tab");
+
+    case 'u':
+      return strcaseeq_any(key, "Up");
+
+    case 'v':
+      if (strcaseeq_any(key, "Volume_Mute", "Volume_Down", "Volume_Up")) {
+        return true;
+      }
+      // Vk virtual key codes: Vk followed by 2 hex digits
+      if (len == 4 && tolower(key[1]) == 'k') {
+        return is_xdigit(key[2]) && is_xdigit(key[3]);
+      }
+      return false;
+
+    case 'w':
+      return strcaseeq_any(key, "WheelDown", "WheelUp", "WheelLeft", "WheelRight");
+
+    case 'x':
+      return strcaseeq_any(key, "XButton1", "XButton2");
+
+    default:
+      return false;
+  }
+}
+
 /// @brief Main scan function. See https://tree-sitter.github.io/tree-sitter/creating-parsers/4-external-scanners.html#scan
 /// @param payload no touching
 /// @param lexer the lexer, see the link above
@@ -571,6 +688,74 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     if(scan_continuation_newline(lexer)) {
       lexer->result_symbol = CONTINUATION_NEWLINE;
       return true;
+    }
+  }
+
+  // Disambiguate hotkey :: from remap :: by looking ahead after "::"
+  // A remap is: trigger :: [modifiers] key EOL (single key on same line)
+  // A hotkey is: trigger :: body (anything else)
+  if (valid_symbols[HOTKEY_DOUBLE_COLON] || valid_symbols[REMAP_DOUBLE_COLON]) {
+    if (lexer->lookahead == ':') {
+      lexer->advance(lexer, false);
+      if (lexer->lookahead == ':') {
+        lexer->advance(lexer, false);
+        lexer->mark_end(lexer);  // token is just "::"
+
+        // Look ahead to determine if this is a remap or hotkey
+        // Skip optional hotkey modifier symbols
+        while (is_hotkey_modifier(lexer->lookahead)) {
+          lexer->advance(lexer, false);
+        }
+
+        // Check what follows to determine if this is a remap destination
+        bool found_key = false;
+
+        if (is_identifier_char(lexer->lookahead)) {
+          // Word-like key: read identifier and validate against key list
+          char key_buf[24] = {0};
+          int key_len = skip_identifier(lexer, key_buf, sizeof(key_buf));
+
+          // AltTab commands are hotkey bodies, not remap destinations
+          if (is_alttab_command(key_buf)) {
+            goto hotkey_colon;
+          }
+
+          found_key = is_remap_key(key_buf, key_len);
+        } else if (lexer->lookahead == '`') {
+          // Backtick escape sequence (e.g., `{ for literal open brace)
+          lexer->advance(lexer, false);
+          if (!is_eol(lexer->lookahead) && !is_eof(lexer)) {
+            lexer->advance(lexer, false);  // consume the escaped char
+            found_key = true;
+          }
+        } else if (!is_eol(lexer->lookahead) && !is_eof(lexer) &&
+                   lexer->lookahead != ' ' && lexer->lookahead != '\t' &&
+                   lexer->lookahead != '{') {
+          // Single non-identifier char key (e.g., }, (, -, .)
+          // Excludes { which starts a hotkey body block
+          lexer->advance(lexer, false);
+          found_key = true;
+        }
+
+        if (found_key) {
+          // After the key, must be EOL (nothing else on the line)
+          skip_horizontal_ws(lexer);
+          if (is_eol(lexer->lookahead) || is_eof(lexer) || lexer->lookahead == ';') {
+            if (valid_symbols[REMAP_DOUBLE_COLON]) {
+              lexer->result_symbol = REMAP_DOUBLE_COLON;
+              return true;
+            }
+          }
+        }
+
+        hotkey_colon:
+        if (valid_symbols[HOTKEY_DOUBLE_COLON]) {
+          lexer->result_symbol = HOTKEY_DOUBLE_COLON;
+          return true;
+        }
+      }
+      // Single ":" — not our token, let the regular lexer handle it
+      return false;
     }
   }
 

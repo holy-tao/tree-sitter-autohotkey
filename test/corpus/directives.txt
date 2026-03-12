@@ -201,7 +201,7 @@ M::MsgBox("Hello!")
         (string_literal))))
   (hotkey
     (hotkey_trigger
-      (identifier))
+      (key_identifier))
     (function_call
       (identifier)
       (arg_sequence
@@ -239,7 +239,7 @@ HotIf with expression followed by ctrl hotkey
   (hotkey
     trigger: (hotkey_trigger
       (hotkey_ctrl)
-      (identifier))
+      (key_identifier))
     body: (function_call
       function: (identifier))))
 
