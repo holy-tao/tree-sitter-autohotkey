@@ -100,6 +100,7 @@ export default grammar({
     _statement: $ => prec(2, choice(
       // Directives are allowed anywhere but executed unconditionally
       $._directive,
+      $.directive_comment,
       $.function_declaration,
       $.class_declaration,
       $.call_statement,  // call_statements only at statement level
@@ -122,8 +123,15 @@ export default grammar({
     // and requires a space before the ';' to start a line comment. For analysis purposes, this is fine. Feed your
     // script through /validate beforehand to check for overt syntax errors.
     // Precedence must be lower than string literals
-    // TODO we could probably parse JSDoc comments and compiler directives like ;@ahk2exe-ignorebegin
-    line_comment: $ => prec(PREC.COMMENT, token(/;[^\r\n]*/)),
+    // TODO we could probably parse JSDoc comments
+    line_comment: $ => prec(PREC.COMMENT, token(/;[^@\r\n][^\r\n]*/)),
+
+    directive_comment: $ => prec(PREC.COMMENT, seq(
+      token(";@"),
+      field("directive", alias(/[^\r\n\s]*/i, $.directive_identifier)),
+      optional(field("arguments", alias(/[^\r\n]*/, $.directive_arguments))),
+      $._eol
+    )),
 
     //#region General Expressions
 

@@ -10,7 +10,7 @@ Basic line comment
   (line_comment))
 
 ================================================================================
-Basic "directive" comment
+Basic directive comment
 ================================================================================
 
 ;@region Example
@@ -18,7 +18,21 @@ Basic "directive" comment
 --------------------------------------------------------------------------------
 
 (source_file
-  (line_comment))
+  (directive_comment
+    (directive_identifier)
+    (directive_arguments)))
+
+================================================================================
+Directive comment without arguments
+================================================================================
+
+;@Ahk2Exe-IgnoreBegin
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_comment
+    (directive_identifier)))
 
 ================================================================================
 Line comment after statement
@@ -63,6 +77,43 @@ Several line comments in a row
   (line_comment)
   (line_comment)
   (line_comment))
+
+================================================================================
+Several directive comments in a row
+================================================================================
+
+;@Ahk2Exe-SetCompanyName Example
+;@Ahk2Exe-SetCopyright © 2026 Me
+;@Ahk2Exe-SetDescription My cool script
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive_comment
+    (directive_identifier)
+    (directive_arguments))
+  (directive_comment
+    (directive_identifier)
+    (directive_arguments))
+  (directive_comment
+    (directive_identifier)
+    (directive_arguments)))
+
+================================================================================
+Directive comment following statement code
+================================================================================
+
+; Unsure if this should be allowed tbh
+DoSomething() ;@Ahk2Exe-IgnoreBegin
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (function_call
+    (identifier))
+  (directive_comment
+    (directive_identifier)))
 
 ================================================================================
 Basic block comment
