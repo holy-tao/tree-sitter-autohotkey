@@ -74,11 +74,16 @@ export default grammar({
     [$._single_expression, $.default_param],
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
+    [$._single_expression, $._statement],
+    [$.if_statement, $._statement],
+    [$._exec_hotstring, $._statement],
     [$.member_access, $._member_dynamic_identifier],
     [$.dynamic_identifier],
     [$.break_statement],
     [$.continue_statement],
     [$.object_literal, $.block],
+    [$._switch_clause_body],
+    [$.case_clause],
   ],
 
   extras: $ => [
@@ -97,7 +102,7 @@ export default grammar({
       $.hotkey,
     ),
 
-    _statement: $ => prec(2, choice(
+    _statement: $ => choice(
       // Directives are allowed anywhere but executed unconditionally
       $._directive,
       $.directive_comment,
@@ -111,7 +116,7 @@ export default grammar({
       $.label,
       $._control_flow_statement,
       $._loop_flow_statement
-    )),
+    ),
 
     top_level_expression_sequence: $ => seq(
       // Exactly like expression_sequence, but first expression must be primary and no parentheses allowed
@@ -647,13 +652,16 @@ export default grammar({
       $._single_quote_str_multiline
     ),
 
+    // Separate recursive rule for continuation section bodies (same reason as _block_body)
+    _continuation_body: $ => seq($._statement, optional($._continuation_body)),
+
     continuation_section: $ => seq(
       $._continuation_section_start,
       seq(
         // Comments always allowed because we can't filter for them in statements :(
         alias(repeat($._continuation_opt_any), $.continuation_option_sequence),
         $._continuation_newline,
-        repeat($._statement)
+        optional($._continuation_body)
       ),
       token(prec.left(1, ')'))
     ),
@@ -751,8 +759,12 @@ export default grammar({
     //#region Control Flow
 
     // higher precedence than object_literal
+    // Separate recursive rule for block bodies (prevents LALR state merging with
+    // _switch_clause_body, keeping 'case'/'default' out of block lexer states)
+    _block_body: $ => seq($._statement, optional($._block_body)),
+
     block: $ => seq(
-      "{", repeat($._statement), "}"
+      "{", optional($._block_body), "}"
     ),
 
     if_statement: $ => prec.right(PREC.DEFAULT, seq(
@@ -834,7 +846,7 @@ export default grammar({
       field("label", $._single_expression)
     ),
 
-    label: $ => prec(1, seq(
+    label: $ => prec(-1, seq(
       field("name", $.identifier),
       token.immediate(":")
     )),
@@ -904,19 +916,31 @@ export default grammar({
       "}"
     ),
 
+    // Separate recursive rule for switch clause bodies.
+    // Using repeat($._statement) here would merge LALR states with block, causing
+    // 'case'/'default' keywords to leak into block lexer states and prevent them
+    // from being lexed as identifiers in contexts like `return default`.
+    _switch_clause_body: $ => seq($._statement, optional($._switch_clause_body)),
+
     case_clause: $ => seq(
-      $.case,
+      alias($.identifier, $.case),
       field("value", $._single_expression),
       repeat(seq(",", field("value", $._single_expression))),  // multiple values
-      ":",
-      field("body", repeat($._statement))
+      token(":"),
+      field("body", optional($._switch_clause_body))
     ),
 
     default_clause: $ => seq(
-      $.default,
-      ":",
-      field("body", repeat($._statement))
+      // Use a combined "default:" token (longer than bare identifier) so the lexer
+      // unambiguously prefers this over the `label` rule in switch clause bodies.
+      // The colon is consumed as part of this token. Uses a named hidden rule so the
+      // resulting node range correctly excludes preceding whitespace.
+      alias($._default_clause_kw, $.default),
+      field("body", $._switch_clause_body)
     ),
+
+    // Named hidden rule for "default:" — see default_clause comment.
+    _default_clause_kw: $ => /default\s*:/i,
 
     // Control flow keywords
     if: $ => token(prec(PREC.KEYWORD, /if/i)),
@@ -936,8 +960,8 @@ export default grammar({
     continue: $ => token(prec(PREC.KEYWORD, /continue/i)),
     as: $ => token(prec(PREC.KEYWORD, /as/i)),
     switch: $ => token(prec(PREC.KEYWORD, /switch/i)),
-    case: $ => token(prec(PREC.KEYWORD, /case/i)),
-    default: $ => token(prec(PREC.KEYWORD, /default/i)),
+    case: $ => kwtok(/case/i),
+    default: $ => kwtok(/default/i),
     parse: $ => token(prec(PREC.KEYWORD, /parse/i)),
     read: $ => token(prec(PREC.KEYWORD, /read/i)),
     files: $ => token(prec(PREC.KEYWORD, /files/i)),

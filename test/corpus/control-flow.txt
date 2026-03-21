@@ -76,6 +76,60 @@ return 2 + 2
       (integer_literal))))
 
 ================================================================================
+Return with or-maybe statement
+================================================================================
+
+return variable ?? false
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (return_statement
+    (return)
+    (or_maybe_operation
+      (identifier)
+      (boolean_literal))))
+
+================================================================================
+Return with switch keyword
+================================================================================
+
+; Precedence rules were causing this to be misparsed as the start of a default_clause
+return default
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (return_statement
+    (return)
+    (identifier)))
+
+================================================================================
+Return with switch keyword in function
+================================================================================
+
+; Precedence rules were causing this to be misparsed as the start of a default_clause
+fn(default) {
+    return default
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (function_declaration
+    (identifier)
+    (function_head
+      (param_sequence
+        (identifier)))
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (identifier))))))
+
+================================================================================
 Parenthesized return with literal
 ================================================================================
 
@@ -852,6 +906,70 @@ switch (value) {
           (identifier)
           (assignment_operator)
           (string_literal)))
+      (case_clause
+        (case)
+        (integer_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
+      (default_clause
+        (default)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))))))
+
+================================================================================
+Switch statement with space between default keyword and colon
+================================================================================
+
+switch value {
+    case 1:
+        result := "one"
+    default :
+        result := "other"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (identifier)
+    (switch_body
+      (case_clause
+        (case)
+        (integer_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
+      (default_clause
+        (default)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))))))
+
+================================================================================
+Switch statement with space between case keyword and colon
+================================================================================
+
+switch value {
+    case 1 :
+        result := "one"
+    default:
+        result := "other"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (identifier)
+    (switch_body
       (case_clause
         (case)
         (integer_literal)
