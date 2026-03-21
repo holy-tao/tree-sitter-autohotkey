@@ -943,29 +943,29 @@ export default grammar({
     _default_clause_kw: $ => /default\s*:/i,
 
     // Control flow keywords
-    if: $ => token(prec(PREC.KEYWORD, /if/i)),
-    else: $ => token(prec(PREC.KEYWORD, /else/i)),
-    while: $ => token(prec(PREC.KEYWORD, /while/i)),
-    for: $ => token(prec(PREC.KEYWORD, /for/i)),
-    in: $ => token(prec(PREC.KEYWORD, /in/i)),
-    loop: $ => token(prec(PREC.KEYWORD, /loop/i)),
-    until: $ => token(prec(PREC.KEYWORD, /until/i)),
-    try: $ => token(prec(PREC.KEYWORD, /try/i)),
-    catch: $ => token(prec(PREC.KEYWORD, /catch/i)),
-    finally: $ => token(prec(PREC.KEYWORD, /finally/i)),
-    return: $ => token(prec(PREC.KEYWORD, /return/i)),
-    throw: $ => token(prec(PREC.KEYWORD, /throw/i)),
-    goto: $ => token(prec(PREC.KEYWORD, /goto/i)),
-    break: $ => token(prec(PREC.KEYWORD, /break/i)),
-    continue: $ => token(prec(PREC.KEYWORD, /continue/i)),
-    as: $ => token(prec(PREC.KEYWORD, /as/i)),
-    switch: $ => token(prec(PREC.KEYWORD, /switch/i)),
+    if: $ => kwtok(/if/i),
+    else: $ => kwtok(/else/i),
+    while: $ => kwtok(/while/i),
+    for: $ => kwtok(/for/i),
+    in: $ => kwtok(/in/i),
+    loop: $ => kwtok(/loop/i),
+    until: $ => kwtok(/until/i),
+    try: $ => kwtok(/try/i),
+    catch: $ => kwtok(/catch/i),
+    finally: $ => kwtok(/finally/i),
+    return: $ => kwtok(/return/i),
+    throw: $ => kwtok(/throw/i),
+    goto: $ => kwtok(/goto/i),
+    break: $ => kwtok(/break/i),
+    continue: $ => kwtok(/continue/i),
+    as: $ => kwtok(/as/i),
+    switch: $ => kwtok(/switch/i),
     case: $ => kwtok(/case/i),
     default: $ => kwtok(/default/i),
-    parse: $ => token(prec(PREC.KEYWORD, /parse/i)),
-    read: $ => token(prec(PREC.KEYWORD, /read/i)),
-    files: $ => token(prec(PREC.KEYWORD, /files/i)),
-    reg: $ => token(prec(PREC.KEYWORD, /reg/i)),
+    parse: $ => kwtok(/parse/i),
+    read: $ => kwtok(/read/i),
+    files: $ => kwtok(/files/i),
+    reg: $ => kwtok(/reg/i),
 
     //#endregion
 
@@ -1017,18 +1017,18 @@ export default grammar({
     setter: $ => seq($.set, $.function_body),
 
     // class-related keywords
-    class: $ => token(prec(PREC.KEYWORD, /class/i)),
-    extends: $ => token(prec(PREC.KEYWORD, /extends/i)),
-    get: $ => token(prec(PREC.KEYWORD, /get/i)),
-    set: $ => token(prec(PREC.KEYWORD, /set/i)),
-    static: $ => token(prec(PREC.KEYWORD, /static/i)),
+    class: $ => kwtok(/class/i),
+    extends: $ => kwtok(/extends/i),
+    get: $ => kwtok(/get/i),
+    set: $ => kwtok(/set/i),
+    static: $ => kwtok(/static/i),
 
     //#endregion
 
-    unset: $ => token(prec(PREC.KEYWORD, /unset/i)),
+    unset: $ => kwtok(/unset/i),
 
     // Reserved keyword (not currently used as operator in v2, but reserved)
-    _contains: $ => token(prec(PREC.KEYWORD, /contains/i)),
+    _contains: $ => kwtok(/contains/i),
 
     //#region Directives
 
