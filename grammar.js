@@ -21,7 +21,7 @@ const PREC = {
   LOGICAL_AND: 40,           // &&, and
   LOGICAL_NOT: 50,           // not (verbal NOT operator)
   CASE_INSENSITIVE: 60,      // is (type comparison)
-  REGEX_MATCH: 70,           // ~= (regex match)
+  REGEX_MATCH: 70,           // ~=, !~= (regex match)
   INEQUALITY: 80,            // !=, !==
   EQUALITY: 90,              // =, ==
   RELATIONAL: 100,           // <, >, <=, >=
@@ -305,7 +305,7 @@ export default grammar({
 
     regex_match_operation: $ => prec.left(PREC.REGEX_MATCH, seq(
       field("left", $._single_expression),
-      field("operator", token(prec(200, "~="))),
+      field("operator", token(prec(200, choice("~=", "!~=")))),
       field("right", $._single_expression)
     )),
 
@@ -426,7 +426,7 @@ export default grammar({
     optional_identifier: $ => prec.right(PREC.MAYBE, seq($.identifier, $.optional_marker)),
 
     assignment_operator: $ => 
-      choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>="),
+      choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>=", "??="),
 
     bitshift_operator: $ => choice("<<", ">>", ">>>"),
 
