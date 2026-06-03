@@ -1105,6 +1105,7 @@ export default grammar({
       $.include_again_directive,
       $.input_level_directive,
       $.use_hook_directive,
+      $.module_directive,
       $.max_threads_directive,
       $.max_threads_per_hotkey_directive,
       $.max_threads_buffer_directive,
@@ -1217,6 +1218,8 @@ export default grammar({
       $.integer_literal,
       $._eol
     ),
+
+    module_directive: $ => seq(kwtok(/#Module/i), $.identifier, $._eol),
 
     use_hook_directive: $ => seq(
       kwtok(/#UseHook/i),

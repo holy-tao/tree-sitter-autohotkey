@@ -977,6 +977,7 @@ Multiple Successive Imports
 #Import Module2 { Bar, Baz }
 
 -------------------------------------------------------------------------------
+
 (source_file
   (import_directive
     (identifier)
@@ -996,6 +997,7 @@ StructPack directive with packing size
 #StructPack 4
 
 -------------------------------------------------------------------------------
+
 (source_file
   (struct_pack_directive
     pack: (integer_literal)))
@@ -1020,3 +1022,16 @@ StructPack directive with illegal size
 
 -------------------------------------------------------------------------------
 
+
+
+===============================================================================
+Module directive
+===============================================================================
+
+#Module Extensions
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (module_directive
+    (identifier)))
