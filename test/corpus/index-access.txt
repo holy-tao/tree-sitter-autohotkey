@@ -329,7 +329,7 @@ val := arr[a?]
     (index_access
       (identifier)
       (arg_sequence
-        (optional_arg
+        (optional_expression
           (identifier)
           (optional_marker))))))
 
@@ -349,7 +349,7 @@ val := arr[a, b?]
       (identifier)
       (arg_sequence
         (identifier)
-        (optional_arg
+        (optional_expression
           (identifier)
           (optional_marker))))))
 

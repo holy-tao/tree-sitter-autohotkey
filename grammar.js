@@ -71,6 +71,9 @@ export default grammar({
 
   conflicts: $ => [
     [$._single_expression, $._param],
+    // `(a?)` is ambiguous between a parenthesized optional_expression and a
+    // fat-arrow/function parameter list with an optional param; defer to GLR.
+    [$.optional_expression, $.optional_param],
     [$._single_expression, $.default_param],
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
@@ -167,7 +170,7 @@ export default grammar({
       $.ternary_expression,
       $.prefix_operation,
       $.postfix_operation,
-      seq("(", $.expression_sequence, ")"),
+      $._parenthesized_expression,
       $.member_access,
       $.index_access,
       $.continuation_section,
@@ -184,6 +187,11 @@ export default grammar({
       $.verbal_not_operation,
       $.dereference_operation,
       $.varref_operation,
+      // The maybe operator (?) is a postfix marker on an operand. It is permitted
+      // in expression position generally so that optional chains (x?.y) and
+      // alpha.29 short-circuiting (f()? as an operand of any operator) compose
+      // naturally. Where it is actually legal is contextual; we are permissive.
+      $.optional_expression,
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
@@ -212,7 +220,7 @@ export default grammar({
     assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
       field("left", $._single_expression),
       $.assignment_operator,
-      field("right", choice($._single_expression, $.optional_identifier))
+      field("right", $._single_expression)
     )),
 
     dereference_operation: $ => prec.left(PREC.DEREFERENCE, seq(
@@ -425,7 +433,26 @@ export default grammar({
       ),
     ))),
 
-    optional_identifier: $ => prec.right(PREC.MAYBE, seq($.identifier, $.optional_marker)),
+    // The "maybe" operator: a postfix `?` permitting its operand to be unset.
+    // Syntactically it just wraps the immediately-preceding operand; the
+    // short-circuit semantics are a runtime concern and are not modelled here.
+    // The operand is restricted to the things that can legally precede `?`:
+    // a variable, a property/member access, an index access, or a call.
+    optional_expression: $ => prec.right(PREC.MAYBE, seq(
+      field("operand", choice(
+        $.identifier,
+        $.member_access,
+        $.index_access,
+        $.function_call,
+        // A parenthesized sub-expression may also be made optional: `(a ?? b)?.c`
+        $._parenthesized_expression,
+      )),
+      $.optional_marker
+    )),
+
+    // Hidden so `(expr)` still surfaces its inner expression_sequence directly,
+    // exactly as before. Shared by _primary_expression and optional_expression.
+    _parenthesized_expression: $ => seq("(", $.expression_sequence, ")"),
 
     assignment_operator: $ => 
       choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>=", "??="),
@@ -475,7 +502,6 @@ export default grammar({
 
     _arg: $ => choice(
       $._single_expression,
-      alias($.optional_identifier, $.optional_arg),
       $.empty_arg
     ),
 
@@ -565,9 +591,15 @@ export default grammar({
 
     _param: $ => choice(
       $.identifier,
-      alias($.optional_identifier, $.optional_param),
+      $.optional_param,
       $.default_param
     ),
+
+    // A parameter may be marked optional with the maybe operator (name?). Unlike a
+    // general optional_expression, a parameter name is only ever a bare identifier.
+    // Shares PREC.MAYBE with optional_expression so the reduce/reduce on `(a?)`
+    // is a genuine conflict resolved by GLR (see conflicts), not by precedence.
+    optional_param: $ => prec.right(PREC.MAYBE, seq(field("name", $.identifier), $.optional_marker)),
 
     default_param: $ => seq(field("name", $.identifier), $._initializer),
       
@@ -630,10 +662,7 @@ export default grammar({
     object_literal_member: $ => seq(
       field("key", choice($.identifier, $.dynamic_identifier, $.dereference_operation)),
       ":",
-      field("value", choice(
-        $._single_expression,
-        $.optional_identifier
-      ))),
+      field("value", $._single_expression)),
 
     //#endregion
 

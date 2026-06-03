@@ -230,18 +230,43 @@ static bool is_optional_marker(TSLexer *lexer) {
   // Consume the '?'
   lexer->advance(lexer, false);
 
-  // Skip whitespace after '?'
-  skip_whitespace(lexer);
+  // The token is just the '?'. Mark the end here so the follower lookahead below
+  // (which may advance past '.', whitespace, etc.) does not get folded into it.
+  lexer->mark_end(lexer);
 
-  // Check that what follows is one of: ) ] } , : or EOF
-  // Per AHK docs: "The question mark must be followed by one of the following symbols: )]},:."
+  // An immediately-adjacent '?' is the '??' (or-maybe) operator, not a maybe
+  // marker followed by a ternary.
+  if (lexer->lookahead == '?') {
+    return false;
+  }
+
+  // Skip whitespace after '?' (including newlines) as pure lookahead. Do not consume
+  // the '?' characters, as this would result in a zero-width marker.
+  while (is_whitespace(lexer->lookahead)) {
+    lexer->advance(lexer, false);
+  }
+
+  // Check that what follows is one of the legal followers. Per AHK docs these are
+  // )]},:?. — but two of those need care:
+  //   '.' : starts an optional chain (x?.y), but `cond ? .5 : x` is a ternary
+  //         whose true branch is the float .5. Only treat '.' as a marker
+  //         follower when it is followed by a member-access start (a letter, '_',
+  //         or '%' deref) — never a digit, which would be a float.
+  //   '?' : a ternary following a maybe operand, e.g. `a? ? b : c`. Only reached
+  //         here when whitespace separated the two '?' (the adjacent '??' case
+  //         was already handled above as or-maybe).
+  if (lexer->lookahead == '.') {
+    lexer->advance(lexer, false);
+    return is_alpha(lexer->lookahead) || lexer->lookahead == '_' || lexer->lookahead == '%';
+  }
+
   return (
     lexer->lookahead == ')' ||
     lexer->lookahead == ']' ||
     lexer->lookahead == '}' ||
     lexer->lookahead == ',' ||
     lexer->lookahead == ':' ||
-    lexer->eof(lexer)
+    lexer->lookahead == '?'
   );
 }
 
