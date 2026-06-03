@@ -959,6 +959,7 @@ export default grammar({
     break: $ => kwtok(/break/i),
     continue: $ => kwtok(/continue/i),
     as: $ => kwtok(/as/i),
+    export: $ => kwtok(/Export/i),
     switch: $ => kwtok(/switch/i),
     case: $ => kwtok(/case/i),
     default: $ => kwtok(/default/i),
@@ -1044,6 +1045,7 @@ export default grammar({
       $.hotif_directive,
       $.hotif_timeout_directive,
       $.hotstring_directive,
+      $.import_directive,
       $.include_directive,
       $.include_again_directive,
       $.input_level_directive,
@@ -1104,6 +1106,36 @@ export default grammar({
       $._eol
     ),
 
+    // https://www.autohotkey.com/docs/alpha/lib/_Import.htm
+    import_directive: $ => prec.right(seq(
+      kwtok(/#Import/i),
+      optional($.export),
+      field("module", choice(
+        $.identifier,
+        $.string_literal
+      )),
+      optional(seq(
+        $.as,
+        field("alias", $.identifier),
+      )),
+      optional(seq(
+        "{",
+        // Note strictly speaking, wildcard is only legal once in an import list
+        repeat1(choice($.export_name, $.wildcard)),
+        "}"
+      )),
+      $._eol
+    )),
+
+    export_name: $ => seq(
+      field("export", $.identifier),
+      optional(seq(
+        $.as,
+        field("alias", $.identifier)
+      )),
+      optional(",")
+    ),
+    
     include_directive: $ => prec.left(seq(
       kwtok(/#Include/i),
       optional($.include_ignore_failure),
