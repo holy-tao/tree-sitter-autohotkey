@@ -1,0 +1,633 @@
+================================================================================
+Empty struct declaration
+================================================================================
+
+struct Example { 
+
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body)))
+
+================================================================================
+Empty struct declaration with superclass
+================================================================================
+
+struct Example extends Object { 
+
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (extends)
+    (identifier)
+    (struct_body)))
+
+================================================================================
+Struct declaration with one typed property using identifier
+================================================================================
+
+struct Test { 
+  data: IntPtr
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))
+
+================================================================================
+Struct declaration with typed property using identifier
+================================================================================
+
+struct Point { 
+  x: Int32
+  y: Int32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    name: (identifier)
+    body: (struct_body
+      (typed_property_declaration
+        name: (identifier)
+        type: (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        name: (identifier)
+        type: (type_specifier
+          (identifier))))))
+
+================================================================================
+Struct declaration with typed array property
+================================================================================
+
+struct Example { 
+  length: Int32
+  data: Int8[]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (index_access
+            (identifier)))))))
+
+================================================================================
+Struct declaration with typed array property with size specifier
+================================================================================
+
+struct Example { 
+  length: Int32
+  data: Int8[4]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (index_access
+            (identifier)
+            (arg_sequence
+              (integer_literal))))))))
+
+================================================================================
+Struct declaration with pointer property
+================================================================================
+
+struct Example { 
+  length: Int32
+  next: Example.Ptr
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (member_access
+            (identifier)
+            (identifier)))))))
+
+================================================================================
+Nested structs
+================================================================================
+
+struct Example { 
+  length: Int32
+  next: IntPtr
+
+  struct Nested {
+    value1: Int16
+    value2: Int32
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (struct_declaration
+        (struct)
+        (identifier)
+        (struct_body
+          (typed_property_declaration
+            (identifier)
+            (type_specifier
+              (identifier)))
+          (typed_property_declaration
+            (identifier)
+            (type_specifier
+              (identifier))))))))
+
+================================================================================
+Struct with nested class
+================================================================================
+
+struct Example { 
+  length: Int32
+  next: IntPtr
+
+  class Nested {
+    value1 := "something"
+    value2 := "else"
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (class_declaration
+        (class)
+        (identifier)
+        (class_body
+          (property_declaration
+            (identifier)
+            (assignment_operator)
+            (string_literal))
+          (property_declaration
+            (identifier)
+            (assignment_operator)
+            (string_literal)))))))
+
+================================================================================
+Struct with method
+================================================================================
+
+struct Example { 
+  length: Int32
+  next: Example.Ptr
+
+  ToString() {
+    return "test test this is a test"
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (member_access
+            (identifier)
+            (identifier))))
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (string_literal))))))))
+
+================================================================================
+Struct with fat-arrow property
+================================================================================
+
+struct Example { 
+  length: Int32
+  next: Example.Ptr
+
+  TEST => "test"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (member_access
+            (identifier)
+            (identifier))))
+      (property_declaration
+        (identifier)
+        (getter
+          (string_literal))))))
+
+================================================================================
+Struct with multiple property declarations on one line
+================================================================================
+
+struct lldiv_t {
+    quot : Int64, rem : Int64
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))
+
+================================================================================
+Struct with function call identifier
+================================================================================
+
+struct XStruct {
+  str : CString(32, "UTF-8")
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (function_call
+            (identifier)
+            (arg_sequence
+              (integer_literal)
+              (string_literal))))))))
+
+================================================================================
+Struct with function call identifier followed by accessors
+================================================================================
+
+struct lldiv_t {
+    quot : CString(32).Property
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (member_access
+            (function_call
+              (identifier)
+              (arg_sequence
+                (integer_literal)))
+            (identifier)))))))
+
+================================================================================
+Struct with method and property
+================================================================================
+
+struct LoadedHModule {
+    h : IntPtr
+    __value => this.h ? this : throw(OSError(A_LastError, -1))
+    __delete() => DllCall("FreeLibrary", "ptr", this.h)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (property_declaration
+        (identifier)
+        (getter
+          (ternary_expression
+            (member_access
+              (identifier)
+              (identifier))
+            (identifier)
+            (function_call
+              (identifier)
+              (arg_sequence
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (identifier)
+                    (prefix_operation
+                      (integer_literal)))))))))
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (function_call
+            (identifier)
+            (arg_sequence
+              (string_literal)
+              (string_literal)
+              (member_access
+                (identifier)
+                (identifier)))))))))
+
+================================================================================
+Struct with methods and __value block property
+================================================================================
+
+struct BSTR {  ; This type can also be used in a struct.
+    ptr : IntPtr
+    size => DllCall("oleaut32\SysStringByteLen", "ptr", this, "uint")
+    __value {
+        get => StrGet(this)
+        set {
+            if this.ptr  ; In case of use in a struct.
+                this.__delete()
+            this.ptr := DllCall("oleaut32\SysAllocStringLen", "wstr", value, "uint", StrLen(value), "ptr")
+        }
+    }
+    __delete() => DllCall("oleaut32\SysFreeString", "ptr", this)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (line_comment)
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (property_declaration
+        (identifier)
+        (getter
+          (function_call
+            (identifier)
+            (arg_sequence
+              (string_literal)
+              (string_literal)
+              (identifier)
+              (string_literal)))))
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (identifier)))))
+          (setter
+            (set)
+            (function_body
+              (block
+                (if_statement
+                  (if)
+                  (member_access
+                    (identifier)
+                    (identifier))
+                  (line_comment)
+                  (function_call
+                    (member_access
+                      (identifier)
+                      (identifier))))
+                (assignment_operation
+                  (member_access
+                    (identifier)
+                    (identifier))
+                  (assignment_operator)
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (string_literal)
+                      (string_literal)
+                      (identifier)
+                      (string_literal)
+                      (function_call
+                        (identifier)
+                        (arg_sequence
+                          (identifier)))
+                      (string_literal)))))))))
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (function_call
+            (identifier)
+            (arg_sequence
+              (string_literal)
+              (string_literal)
+              (identifier))))))))
+
+================================================================================
+Struct declaration with member-access superclass
+================================================================================
+
+struct Derived extends Some.Base {
+  x: Int32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (extends)
+    (member_access
+      (identifier)
+      (identifier))
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))
+
+================================================================================
+Typed property with initializer
+================================================================================
+
+struct LVINSERTMARK {
+  cbSize : UInt32 := this.Size
+  iItem  : Int32 := 40
+  dwFlags : UInt32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))
+        (assignment_operator)
+        (member_access
+          (identifier)
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))
+        (assignment_operator)
+        (integer_literal))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))
+
+================================================================================
+Parenthesized type specifier
+================================================================================
+
+struct X {
+  y : (MakeType())
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (expression_sequence
+            (function_call
+              (identifier))))))))
+
+================================================================================
+Integer literal type specifier (untyped binary data)
+================================================================================
+
+struct X {
+  buf : 32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (integer_literal))))))

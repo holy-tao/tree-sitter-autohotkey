@@ -84,6 +84,7 @@ export default grammar({
     [$.object_literal, $.block],
     [$._switch_clause_body],
     [$.case_clause],
+    [$.struct_body],
   ],
 
   extras: $ => [
@@ -108,6 +109,7 @@ export default grammar({
       $.directive_comment,
       $.function_declaration,
       $.class_declaration,
+      $.struct_declaration,
       $.call_statement,  // call_statements only at statement level
       $._primary_expression,
       alias($.top_level_expression_sequence, $.expression_sequence),
@@ -987,6 +989,7 @@ export default grammar({
       repeat(choice(
         $.method_declaration,
         $.class_declaration,
+        $.struct_declaration,
         $.property_declaration
       )),
       "}"
@@ -1030,6 +1033,58 @@ export default grammar({
 
     // Reserved keyword (not currently used as operator in v2, but reserved)
     _contains: $ => kwtok(/contains/i),
+
+    // #region Structs
+    // ...which are special classes that can have typed properties
+
+    struct: $ => kwtok(/struct/i),
+
+    struct_declaration: $ => seq(
+      $.struct,
+      field("name", $.identifier),
+      optional(seq(
+        $.extends,
+        field("superclass", choice($.identifier, $.member_access))
+      )),
+      field("body", $.struct_body)
+    ),
+
+    struct_body: $ => seq(
+      "{",
+      repeat(choice(
+        $.method_declaration,
+        $.class_declaration,
+        $.struct_declaration,
+        $.property_declaration,
+        // Multiple typed properties can be declared on one line
+        repeat1(seq($.typed_property_declaration, optional(",")))
+      )),
+      "}"
+    ),
+
+    typed_property_declaration: $ => prec.right(seq(
+      field("name", $.identifier),
+      ":",
+      field("type", $.type_specifier),
+      optional($._initializer)
+    )),
+
+    // Docs say that type specifiers have very specific rules but I think they're outdated, integer literals don't 
+    // work in alpha.30. General idea is that it must be an expression evaluating to a Class that fulfils certain
+    // properties (basically, is a struct), with caveats. No top-level dereference operations, for example.
+    // https://www.autohotkey.com/docs/alpha/Structs.htm#type-specs
+    type_specifier: $ => prec(10, choice(
+      $.identifier,
+      $.integer_literal,
+      // An exact class name (`Example.Ptr`), an array type (`Int8[]`), or a function call
+      // optionally followed by property/method calls.
+      $.member_access,
+      $.index_access,
+      $.function_call,
+      seq("(", $.expression_sequence, ")"),
+    )),
+
+    // #endregion Structs
 
     //#region Directives
 
