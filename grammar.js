@@ -1033,8 +1033,8 @@ export default grammar({
 
     //#region Directives
 
-    // Directives - we should match these to prevent errors, but for our purposes we don't actually
-    // care about their contents, except for HotIf
+    // Directives - note that these tend to have very specific requirements for their parameters
+    // when they exist. Read the docs carefully
 
     // #Include, #HotIf, etc
     _directive: $ => choice(
@@ -1055,6 +1055,7 @@ export default grammar({
       $.max_threads_buffer_directive,
       $.no_tray_icon_directive,
       $.single_instance_directive,
+      $.struct_pack_directive,
       $.warn_directive,
     ),
 
@@ -1200,6 +1201,12 @@ export default grammar({
     single_instance_directive: $ => seq(
       kwtok(/#SingleInstance/i),
       optional(alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode)),
+      $._eol
+    ),
+
+    struct_pack_directive: $ => seq(
+      kwtok(/#StructPack/i),
+      optional(field("pack", alias(/0|1|2|4|8/, $.integer_literal))),
       $._eol
     ),
 
