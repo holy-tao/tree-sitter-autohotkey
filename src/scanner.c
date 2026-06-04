@@ -89,7 +89,8 @@ enum TokenType {
   BLOCK_COMMENT,
   ARRAY_EXPANSION_MARKER,
   HOTKEY_DOUBLE_COLON,
-  REMAP_DOUBLE_COLON
+  REMAP_DOUBLE_COLON,
+  EXPORT_DEF_MARKER
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -153,6 +154,42 @@ static inline bool strcaseeq(const char *a, const char *b) {
 /// @param lexer tree-sitter lexer
 /// @param method true to scan for a method instead of a function
 /// @return true if the next statement is a function declaration, false otherwise
+/// @brief Given the lexer is positioned immediately after a (potential) function name, check whether a
+///        function head and body follow: `( ... )` then either `{` or `=>`. Advances the lexer.
+/// @param lexer tree-sitter lexer
+/// @param block_only if true, only a block body `{` counts (a fat-arrow `=>` body does not)
+/// @return true if a function head + body follows
+static bool is_function_body_follows(TSLexer *lexer, bool block_only) {
+  // Expect '('
+  if (lexer->lookahead != '(') {
+    return false;
+  }
+  lexer->advance(lexer, false);
+
+  // Match parens...
+  int depth = 1;
+  while (depth > 0 && lexer->lookahead != 0) {
+    if (lexer->lookahead == '(') depth++;
+    else if (lexer->lookahead == ')') depth--;
+    lexer->advance(lexer, false);
+  }
+  if (depth != 0) return false;
+
+  // Skip all whitespace (including newlines), check for '{' or '=>'
+  skip_whitespace(lexer);
+
+  // Function body can start with either '{' or '=>'
+  if (lexer->lookahead == '{') {
+    return true;
+  }
+  if (!block_only && lexer->lookahead == '=') {
+    lexer->advance(lexer, false);
+    return lexer->lookahead == '>';
+  }
+
+  return false;
+}
+
 static bool is_function_declaration(TSLexer *lexer, bool method) {
   // Skip any leading whitespace (including newlines)
   skip_whitespace(lexer);
@@ -183,35 +220,38 @@ static bool is_function_declaration(TSLexer *lexer, bool method) {
     // Functions cannot shadow keywords (methods can)
     return false;
   }
-  
-  // Expect '('
-  if (lexer->lookahead != '(') {
+
+  return is_function_body_follows(lexer, false);
+}
+
+/// @brief Given the lexer is positioned immediately after the `export` keyword, determine whether a real
+///        Export *declaration* follows (as opposed to an ordinary use of a function/variable named
+///        "export", which v2.0 backward-compat preserves). Per the docs, a declaration follows when the
+///        next word is `default`, `global`, `class` or `struct`, or when it is a block-bodied function
+///        definition `Name(...) {`. A fat-arrow body, a bare name (`export MyVar`) or a call
+///        (`export(...)`) are not declarations. Advances the lexer.
+/// @param lexer tree-sitter lexer
+/// @return true if an export declaration follows
+static bool export_decl_follows(TSLexer *lexer) {
+  // A declaration always has whitespace after the keyword; `export(...)` (a call) does not.
+  if (!skip_horizontal_ws(lexer)) {
     return false;
   }
-  lexer->advance(lexer, false);
-  
-  // Match parens...
-  int depth = 1;
-  while (depth > 0 && lexer->lookahead != 0) {
-    if (lexer->lookahead == '(') depth++;
-    else if (lexer->lookahead == ')') depth--;
-    lexer->advance(lexer, false);
+
+  if (!is_identifier_char(lexer->lookahead)) {
+    return false;  // e.g. `export {`, `export "str"` — not a declaration
   }
-  if (depth != 0) return false;
 
-  // Skip all whitespace (including newlines), check for '{' or '=>'
-  skip_whitespace(lexer);
+  char w[16];
+  skip_identifier(lexer, w, sizeof(w));
 
-  // Function body can start with either '{' or '=>'
-  if (lexer->lookahead == '{') {
+  // Keyword followers unambiguously begin a declaration.
+  if (strcaseeq_any(w, "default", "global", "class", "struct")) {
     return true;
   }
-  if (lexer->lookahead == '=') {
-    lexer->advance(lexer, false);
-    return lexer->lookahead == '>';
-  }
 
-  return false;
+  // Otherwise it must be a block-bodied function definition `Name(...) {`.
+  return is_function_body_follows(lexer, true);
 }
 
 /// @brief Check to see if the next token is an optional marker (as opposed to the "?" of a
@@ -781,21 +821,54 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
-  // Check function declaration vs function definition
+  // Statement-level declaration heads — export declaration, function declaration and method
+  // declaration all begin with a leading identifier, so they can be valid simultaneously and
+  // must be resolved in a single pass: once we advance past that identifier we cannot rewind,
+  // so a fall-through to a second block would scan from a corrupted position.
+  //
+  // All three emit a zero-width marker anchored here; for export declarations the `export`
+  // keyword itself is then lexed normally by the internal lexer.
   // We need to check this last.
-  if (valid_symbols[FUNCTION_DEF_MARKER]) {
+  if (valid_symbols[FUNCTION_DEF_MARKER] || valid_symbols[METHOD_DEF_MARKER] ||
+      valid_symbols[EXPORT_DEF_MARKER]) {
     lexer->mark_end(lexer);
-    
-    if (is_function_declaration(lexer, false)) {
+
+    // Only the export path needs to advance past the leading word before the function/method
+    // check, so it has to fully resolve the declaration here. We gate it on a cheap first-char
+    // test so ordinary declarations (whose name does not start with 'e') reach the untouched
+    // function/method check below.
+    if (valid_symbols[EXPORT_DEF_MARKER]) {
+      skip_whitespace(lexer);
+      if (lexer->lookahead == 'e' || lexer->lookahead == 'E') {
+        char w[16];
+        int wl = skip_identifier(lexer, w, sizeof(w));
+
+        if (wl == 6 && strcaseeq(w, "export") && export_decl_follows(lexer)) {
+          lexer->result_symbol = EXPORT_DEF_MARKER;
+          return true;
+        }
+
+        // The 'e' word is an ordinary name (either not "export", or "export" not beginning a
+        // declaration, e.g. a function literally named `export`). The only declaration it can
+        // still begin is a function/method definition `name(...) { | =>`. Functions — unlike
+        // methods — cannot shadow keywords.
+        bool method = !valid_symbols[FUNCTION_DEF_MARKER] && valid_symbols[METHOD_DEF_MARKER];
+        if (!(!method && is_keyword(w)) && is_function_body_follows(lexer, false)) {
+          lexer->result_symbol = valid_symbols[FUNCTION_DEF_MARKER]
+                                   ? FUNCTION_DEF_MARKER : METHOD_DEF_MARKER;
+          return true;
+        }
+
+        return false;
+      }
+    }
+
+    if (valid_symbols[FUNCTION_DEF_MARKER] && is_function_declaration(lexer, false)) {
       lexer->result_symbol = FUNCTION_DEF_MARKER;
       return true;
     }
-  }
 
-  if (valid_symbols[METHOD_DEF_MARKER]) {
-    lexer->mark_end(lexer);
-    
-    if (is_function_declaration(lexer, true)) {
+    if (valid_symbols[METHOD_DEF_MARKER] && is_function_declaration(lexer, true)) {
       lexer->result_symbol = METHOD_DEF_MARKER;
       return true;
     }

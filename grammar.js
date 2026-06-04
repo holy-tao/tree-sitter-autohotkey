@@ -67,6 +67,9 @@ export default grammar({
     $.array_expansion_marker,
     $._hotkey_double_colon,
     $._remap_double_colon,
+    // Zero-width marker the scanner emits before the `export` keyword only when a real
+    // export *declaration* follows (vs. an ordinary use of a name "export"). See scanner.c.
+    $._export_def_marker,
   ],
 
   conflicts: $ => [
@@ -113,6 +116,7 @@ export default grammar({
       $.function_declaration,
       $.class_declaration,
       $.struct_declaration,
+      $.export_declaration,
       $.call_statement,  // call_statements only at statement level
       $._primary_expression,
       alias($.top_level_expression_sequence, $.expression_sequence),
@@ -1114,6 +1118,45 @@ export default grammar({
     )),
 
     // #endregion Structs
+
+    // #region Exports
+
+        // https://www.autohotkey.com/docs/alpha/lib/Export.htm
+    // `export [default] <function|class|struct definition>` or `export global <var list>`.
+    // Only global names can be exported; a method cannot be exported (only its class/struct),
+    // which falls out naturally because export is a statement-level construct and
+    // method_declaration only appears inside class/struct bodies.
+    // Backward-compat caveats from the docs (export remains usable as an ordinary name):
+    //   - `export MyVar`     is a call statement, not an export (global keyword required)
+    //   - `export fn() => 1` is a call to a user "export" function (fat-arrow excluded)
+    export_declaration: $ => seq(
+      $._export_def_marker,
+      $.export,
+      choice(
+        seq(
+          optional($.default),
+          field("declaration", choice(
+            $.function_declaration,
+            $.class_declaration,
+            $.struct_declaration
+          ))
+        ),
+        seq(
+          // Note this isn't actually a scope identifier, just required for the interpreter
+          // to distinguish between `export` as an export and `export` as a function name
+          kwtok(/global/i),
+          alias($._exported_variable, $.variable_declaration),
+          repeat(seq(",", alias($._exported_variable, $.variable_declaration)))
+        )
+      )
+    ),
+
+    _exported_variable: $ => seq(
+      field("name", $.identifier),
+      optional($._initializer)
+    ),
+
+    // #endregion Exports
 
     //#region Directives
 

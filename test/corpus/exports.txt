@@ -1,0 +1,221 @@
+===============================================================================
+Export function declaration
+===============================================================================
+
+export MyFunction() {
+  return 42
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (export_declaration
+    (export)
+    (function_declaration
+      (identifier)
+      (function_head)
+      (function_body
+        (block
+          (return_statement
+            (return)
+            (integer_literal)))))))
+
+===============================================================================
+Export default function declaration
+===============================================================================
+
+export default MyFunction() {
+  return 42
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (export_declaration
+    (export)
+    (default)
+    (function_declaration
+      (identifier)
+      (function_head)
+      (function_body
+        (block
+          (return_statement
+            (return)
+            (integer_literal)))))))
+
+===============================================================================
+Export default class declaration
+===============================================================================
+
+export default class MyModule {
+  x := 1
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (export_declaration
+    (export)
+    (default)
+    (class_declaration
+      (class)
+      (identifier)
+      (class_body
+        (property_declaration
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+===============================================================================
+Export class declaration
+===============================================================================
+
+export class Widget {
+  Name := ""
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (export_declaration
+    (export)
+    (class_declaration
+      (class)
+      (identifier)
+      (class_body
+        (property_declaration
+          (identifier)
+          (assignment_operator)
+          (string_literal))))))
+
+===============================================================================
+Export struct declaration
+===============================================================================
+
+export struct Point {
+  x: Int
+  y: Int
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (export_declaration
+    (export)
+    (struct_declaration
+      (struct)
+      (identifier)
+      (struct_body
+        (typed_property_declaration
+          (identifier)
+          (type_specifier
+            (identifier)))
+        (typed_property_declaration
+          (identifier)
+          (type_specifier
+            (identifier)))))))
+
+===============================================================================
+Export global single variable
+===============================================================================
+
+export global MyVar
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (export_declaration
+    (export)
+    (variable_declaration
+      (identifier))))
+
+===============================================================================
+Export global multiple variables with initializer
+===============================================================================
+
+export global MyVar, MyOther := 1
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (export_declaration
+    (export)
+    (variable_declaration
+      (identifier))
+    (variable_declaration
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
+
+===============================================================================
+Export keyword as call statement (backward compatibility)
+===============================================================================
+
+export MyVar
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (identifier))))
+
+===============================================================================
+Export keyword as parenthesized call (backward compatibility)
+===============================================================================
+
+export(1, 2)
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (integer_literal)
+      (integer_literal))))
+
+===============================================================================
+Function named export (backward compatibility)
+===============================================================================
+
+export() {
+  return 1
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (integer_literal))))))
+
+===============================================================================
+Export methods not allowed in classes
+:error
+===============================================================================
+
+class MyModule {
+  export Bad() {
+
+  }
+}
+
+-------------------------------------------------------------------------------
+
+===============================================================================
+Export properties not allowed in classes
+:error
+===============================================================================
+
+class MyModule {
+  export foo := "bar"
+}
+
+-------------------------------------------------------------------------------
