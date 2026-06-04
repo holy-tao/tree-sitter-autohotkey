@@ -466,8 +466,12 @@ static bool scan_block_comment(TSLexer *lexer) {
   if (lexer->lookahead != '*') return false;
   lexer->advance(lexer, false);
 
-  // Scan for closing */ that is the last non-whitespace on its line
+  // Scan for closing */ that is either the first or last non-whitespace on its line
   while (!lexer->eof(lexer)) {
+    bool is_line_start = is_eol(lexer->lookahead);
+    if (is_line_start)
+      lexer->advance(lexer, false);
+    
     if (lexer->lookahead == '*') {
       lexer->advance(lexer, false);
       if (lexer->eof(lexer)) return false;
@@ -480,8 +484,8 @@ static bool scan_block_comment(TSLexer *lexer) {
           lexer->advance(lexer, false);
         }
 
-        if (is_eol(lexer->lookahead) || lexer->eof(lexer)) {
-          // Consume the newline
+        if (is_line_start || is_eol(lexer->lookahead) || lexer->eof(lexer)) {
+          // Consume the newline, if any
           if (lexer->lookahead == '\r') lexer->advance(lexer, false);
           if (lexer->lookahead == '\n') lexer->advance(lexer, false);
 
@@ -497,7 +501,7 @@ static bool scan_block_comment(TSLexer *lexer) {
           return true;
         }
 
-        // */ was not at end of line — continue scanning the comment body
+        // */ was not at start or end of line — continue scanning the comment body
         continue;
       }
       // * not followed by /, continue
