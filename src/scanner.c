@@ -56,8 +56,7 @@
 #define is_eof(lexer) (lexer->eof(lexer))
 
 /// Check to see if a character is a hotkey modifier symbol
-#define is_hotkey_modifier(c) (c == '^' || c == '!' || c == '#' || c == '+' || \
-                               c == '<' || c == '>' || c == '~' || c == '$')
+#define is_hotkey_modifier(c) strchr("^!#+<>~$", c)
 
 /// Check to see if an identifier is an AltTab command
 #define is_alttab_command(ident) \
@@ -68,9 +67,7 @@
   (strcaseeq_any(ident, "and", "not", "is", "or", "contains"))
 
 /// Check to see if a character could start an operator keyword
-#define starts_operator_keyword(c) (c == 'a' || c == 'A' || c == 'n' || c == 'N' || \
-                                    c == 'i' || c == 'I' || c == 'o' || c == 'O' || \
-                                    c == 'c' || c == 'C')
+#define starts_operator_keyword(c) strchr("aAnNiIoOcC", c)
 
 /// Check to see if ident is a control-flow keyword like "if"
 #define is_flow_keyword(ident) \
@@ -260,14 +257,7 @@ static bool is_optional_marker(TSLexer *lexer) {
     return is_alpha(lexer->lookahead) || lexer->lookahead == '_' || lexer->lookahead == '%';
   }
 
-  return (
-    lexer->lookahead == ')' ||
-    lexer->lookahead == ']' ||
-    lexer->lookahead == '}' ||
-    lexer->lookahead == ',' ||
-    lexer->lookahead == ':' ||
-    lexer->lookahead == '?'
-  );
+  return strchr(")]},:?", lexer->lookahead);
 }
 
 /// @brief Determines whether the currenty token is an empty arg. Call mark_end before
@@ -281,17 +271,11 @@ static bool is_empty_arg(TSLexer *lexer) {
   // to just MsgBox("Hello"). Also, it's kind of a nightmare
   return (lexer->lookahead == ',');
 }
-
-#define is_operator_start(c) (c == '?' || c == '*' || c == '/' || c == '<' || c == '>' || \
-                              c == '=' || c == '^' || c == '|' || c == '&' || c == '!' || \
-                              c == '~' || c == ':' || c == '.' || c == ',')
-                              // Note: +, - excluded (could be unary in concat context)
+// Note: +, - excluded (could be unary in concat context)
+#define is_operator_start(c) strchr("?*/<>=^|&!~:.,", c)
 
 /// Characters that can start a single expression
-#define is_expression_start(c) (is_identifier_char(c) ||                                  \
-                                c == '_' || c == '"' || c == '\'' || c == '(' ||          \
-                                c == '+' || c == '-' ||                                   \
-                                c == '%')
+#define is_expression_start(c) (is_identifier_char(c) || strchr("_\"'(+-%", c))
 
 /// @brief Determines whether this is implicit concatenation. As a side effect, may call `lexer->mark_end`. Definitely
 ///        calls it if it returns true. 
