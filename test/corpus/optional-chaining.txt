@@ -1,8 +1,8 @@
 ================================================================================
-Simple assignment
+Optional member access
 ================================================================================
 
-x := 42
+a := x?.y
 
 --------------------------------------------------------------------------------
 
@@ -10,47 +10,17 @@ x := 42
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (integer_literal)))
+    (member_access
+      (optional_expression
+        (identifier)
+        (optional_marker))
+      (identifier))))
 
 ================================================================================
-Global variable declaration with assignment
+Optional chain with multiple members
 ================================================================================
 
-global oNE := 1
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (variable_declaration
-      (scope_identifier)
-      (identifier))
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Global variable declaration followed by assignment
-================================================================================
-
-global var
-var := 42
-
---------------------------------------------------------------------------------
-
-(source_file
-  (variable_declaration
-    (scope_identifier)
-    (identifier))
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-String literal assignment
-================================================================================
-
-str := "un 'quote' d"
+a := x?.y.z
 
 --------------------------------------------------------------------------------
 
@@ -58,13 +28,19 @@ str := "un 'quote' d"
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (string_literal)))
+    (member_access
+      (member_access
+        (optional_expression
+          (identifier)
+          (optional_marker))
+        (identifier))
+      (identifier))))
 
 ================================================================================
-Assignment with unset
+Optional chain with method call
 ================================================================================
 
-x := unset
+a := x?.y()
 
 --------------------------------------------------------------------------------
 
@@ -72,13 +48,18 @@ x := unset
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (unset)))
+    (function_call
+      (member_access
+        (optional_expression
+          (identifier)
+          (optional_marker))
+        (identifier)))))
 
 ================================================================================
-Addition assignment
+Optional call followed by a chain
 ================================================================================
 
-x += 5
+a := h()?.z()
 
 --------------------------------------------------------------------------------
 
@@ -86,225 +67,212 @@ x += 5
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (integer_literal)))
+    (function_call
+      (member_access
+        (optional_expression
+          (function_call
+            (identifier))
+          (optional_marker))
+        (identifier)))))
 
 ================================================================================
-Subtraction assignment
+Maybe operator on a property argument
 ================================================================================
 
-x -= 5
+f(x.y?)
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
+  (function_call
     (identifier)
-    (assignment_operator)
-    (integer_literal)))
+    (arg_sequence
+      (optional_expression
+        (member_access
+          (identifier)
+          (identifier))
+        (optional_marker)))))
 
 ================================================================================
-Multiplication assignment
+Maybe operator on an index access argument
 ================================================================================
 
-x *= 2
+f(x.y[z]?)
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
+  (function_call
     (identifier)
-    (assignment_operator)
-    (integer_literal)))
+    (arg_sequence
+      (optional_expression
+        (index_access
+          (member_access
+            (identifier)
+            (identifier))
+          (arg_sequence
+            (identifier)))
+        (optional_marker)))))
 
 ================================================================================
-Division assignment
+Maybe operator on a function call argument
 ================================================================================
 
-x /= 2
+f(g()?)
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
+  (function_call
     (identifier)
-    (assignment_operator)
-    (integer_literal)))
+    (arg_sequence
+      (optional_expression
+        (function_call
+          (identifier))
+        (optional_marker)))))
 
 ================================================================================
-Floor division assignment
+Maybe operator on a bare identifier argument
 ================================================================================
 
-x //= 2
+f(a?)
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
+  (function_call
     (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Concatenation assignment
-================================================================================
-
-str .= " more"
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (string_literal)))
-
-================================================================================
-Bitwise OR assignment
-================================================================================
-
-x |= 8
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Bitwise AND assignment
-================================================================================
-
-x &= 8
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Bitwise XOR assignment
-================================================================================
-
-x ^= 8
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Right shift assignment
-================================================================================
-
-x >>= 2
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Left shift assignment
-================================================================================
-
-x <<= 2
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Unsigned right shift assignment
-================================================================================
-
-x >>>= 2
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Unset coalescing assignment
-================================================================================
-
-x ??= 2
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Local variable declaration
-================================================================================
-
-local myVar
-
---------------------------------------------------------------------------------
-
-(source_file
-  (variable_declaration
-    (scope_identifier)
-    (identifier)))
-
-================================================================================
-Static variable declaration with assignment
-================================================================================
-
-static counter := 0
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (variable_declaration
-      (scope_identifier)
-      (identifier))
-    (assignment_operator)
-    (integer_literal)))
-
-================================================================================
-Simple assignment with optional variable
-================================================================================
-
-x := (var?)
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (expression_sequence
+    (arg_sequence
       (optional_expression
         (identifier)
         (optional_marker)))))
 
 ================================================================================
-A statement cannot end with a bare maybe operator
-:error
+Parenthesized maybe operand in a chain
 ================================================================================
 
-x := var?
+a := (w ?? x?.y)?.z()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (member_access
+        (optional_expression
+          (expression_sequence
+            (or_maybe_operation
+              (identifier)
+              (member_access
+                (optional_expression
+                  (identifier)
+                  (optional_marker))
+                (identifier))))
+          (optional_marker))
+        (identifier)))))
+
+================================================================================
+Short-circuiting across multiple operators
+================================================================================
+
+a := ((b?) < c?.d && f()?) ?? false
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (or_maybe_operation
+      (expression_sequence
+        (logical_and_operation
+          (relational_operation
+            (expression_sequence
+              (optional_expression
+                (identifier)
+                (optional_marker)))
+            (member_access
+              (optional_expression
+                (identifier)
+                (optional_marker))
+              (identifier)))
+          (optional_expression
+            (function_call
+              (identifier))
+            (optional_marker))))
+      (boolean_literal))))
+
+================================================================================
+Optional chain as an assignment target
+================================================================================
+
+x?.y := z
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (member_access
+      (optional_expression
+        (identifier)
+        (optional_marker))
+      (identifier))
+    (assignment_operator)
+    (identifier)))
+
+================================================================================
+Maybe operator with or-maybe fallback
+================================================================================
+
+a := x?.y ?? z
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (or_maybe_operation
+      (member_access
+        (optional_expression
+          (identifier)
+          (optional_marker))
+        (identifier))
+      (identifier))))
+
+================================================================================
+Maybe operand as a ternary condition (space-separated question marks)
+================================================================================
+
+r := a? ? "t" : "f"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (optional_expression
+        (identifier)
+        (optional_marker))
+      (string_literal)
+      (string_literal))))
+
+================================================================================
+Adjacent question marks are or-maybe, not maybe-then-ternary
+================================================================================
+
+r := a ?? b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (or_maybe_operation
+      (identifier)
+      (identifier))))

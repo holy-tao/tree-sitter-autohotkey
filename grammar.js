@@ -21,7 +21,7 @@ const PREC = {
   LOGICAL_AND: 40,           // &&, and
   LOGICAL_NOT: 50,           // not (verbal NOT operator)
   CASE_INSENSITIVE: 60,      // is (type comparison)
-  REGEX_MATCH: 70,           // ~= (regex match)
+  REGEX_MATCH: 70,           // ~=, !~= (regex match)
   INEQUALITY: 80,            // !=, !==
   EQUALITY: 90,              // =, ==
   RELATIONAL: 100,           // <, >, <=, >=
@@ -67,10 +67,20 @@ export default grammar({
     $.array_expansion_marker,
     $._hotkey_double_colon,
     $._remap_double_colon,
+    // Zero-width marker the scanner emits before the `export` keyword only when a real
+    // export *declaration* follows (vs. an ordinary use of a name "export"). See scanner.c.
+    $._export_def_marker,
+    // Zero-width marker emitted only when the next `{` is on the same line (reached after
+    // skipping horizontal whitespace, no intervening newline). Used to enforce the OTB
+    // requirement on unenclosed function-expression bodies. See scanner.c.
+    $._otb_brace,
   ],
 
   conflicts: $ => [
     [$._single_expression, $._param],
+    // `(a?)` is ambiguous between a parenthesized optional_expression and a
+    // fat-arrow/function parameter list with an optional param; defer to GLR.
+    [$.optional_expression, $.optional_param],
     [$._single_expression, $.default_param],
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
@@ -82,8 +92,13 @@ export default grammar({
     [$.break_statement],
     [$.continue_statement],
     [$.object_literal, $.block],
+    // A leading name in an expression position may reduce to an expression (becoming a
+    // function_call) or be the name of a named function_expression; keep both parses alive
+    // until the trailing `{` (or its absence) decides which it is.
+    [$._single_expression, $._function_expression_head],
     [$._switch_clause_body],
     [$.case_clause],
+    [$.struct_body],
   ],
 
   extras: $ => [
@@ -108,11 +123,16 @@ export default grammar({
       $.directive_comment,
       $.function_declaration,
       $.class_declaration,
+      $.struct_declaration,
+      $.export_declaration,
       $.call_statement,  // call_statements only at statement level
       $._primary_expression,
       alias($.top_level_expression_sequence, $.expression_sequence),
-      // blocks are allowed at the top level, though they don't do anything
-      $.block,  
+      // blocks are allowed at the top level, though they don't do anything. The negative
+      // dynamic precedence makes a bare block lose to a function_expression when a brace
+      // follows an expression on the same line (`cb := worker() { ... }` is a function
+      // expression assignment, not an assignment followed by a free-floating block).
+      prec.dynamic(-10, $.block),
       $.label,
       $._control_flow_statement,
       $._loop_flow_statement
@@ -165,11 +185,12 @@ export default grammar({
       $.ternary_expression,
       $.prefix_operation,
       $.postfix_operation,
-      seq("(", $.expression_sequence, ")"),
+      $._parenthesized_expression,
       $.member_access,
       $.index_access,
       $.continuation_section,
       $.fat_arrow_function, // these are allowed, though unhelpful
+      $.function_expression, // v2.1: a brace-bodied function defined inside an expression
       $.function_call       // Only parenthesized calls allowed in expressions
     ),
 
@@ -182,6 +203,11 @@ export default grammar({
       $.verbal_not_operation,
       $.dereference_operation,
       $.varref_operation,
+      // The maybe operator (?) is a postfix marker on an operand. It is permitted
+      // in expression position generally so that optional chains (x?.y) and
+      // alpha.29 short-circuiting (f()? as an operand of any operator) compose
+      // naturally. Where it is actually legal is contextual; we are permissive.
+      $.optional_expression,
     ),
 
     expression_sequence: $ => prec.left(PREC.COMMA, seq(
@@ -210,13 +236,15 @@ export default grammar({
     assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
       field("left", $._single_expression),
       $.assignment_operator,
-      field("right", choice($._single_expression, $.optional_identifier))
+      field("right", $._single_expression)
     )),
 
     dereference_operation: $ => prec.left(PREC.DEREFERENCE, seq(
       "%", field("operand", $._single_expression), "%"
     )),
 
+    // Maybe more accurately a "reference operation", since in v2.1 these can produce PropRefs
+    // or invoke __ref
     varref_operation: $ => prec.right(PREC.PREFIX + 5, seq(
       "&", field("operand", $._single_expression)
     )),
@@ -305,7 +333,7 @@ export default grammar({
 
     regex_match_operation: $ => prec.left(PREC.REGEX_MATCH, seq(
       field("left", $._single_expression),
-      field("operator", token(prec(200, "~="))),
+      field("operator", token(prec(200, choice("~=", "!~=")))),
       field("right", $._single_expression)
     )),
 
@@ -423,10 +451,29 @@ export default grammar({
       ),
     ))),
 
-    optional_identifier: $ => prec.right(PREC.MAYBE, seq($.identifier, $.optional_marker)),
+    // The "maybe" operator: a postfix `?` permitting its operand to be unset.
+    // Syntactically it just wraps the immediately-preceding operand; the
+    // short-circuit semantics are a runtime concern and are not modelled here.
+    // The operand is restricted to the things that can legally precede `?`:
+    // a variable, a property/member access, an index access, or a call.
+    optional_expression: $ => prec.right(PREC.MAYBE, seq(
+      field("operand", choice(
+        $.identifier,
+        $.member_access,
+        $.index_access,
+        $.function_call,
+        // A parenthesized sub-expression may also be made optional: `(a ?? b)?.c`
+        $._parenthesized_expression,
+      )),
+      $.optional_marker
+    )),
+
+    // Hidden so `(expr)` still surfaces its inner expression_sequence directly,
+    // exactly as before. Shared by _primary_expression and optional_expression.
+    _parenthesized_expression: $ => seq("(", $.expression_sequence, ")"),
 
     assignment_operator: $ => 
-      choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>="),
+      choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>=", "??="),
 
     bitshift_operator: $ => choice("<<", ">>", ">>>"),
 
@@ -473,7 +520,6 @@ export default grammar({
 
     _arg: $ => choice(
       $._single_expression,
-      alias($.optional_identifier, $.optional_arg),
       $.empty_arg
     ),
 
@@ -513,6 +559,56 @@ export default grammar({
       $.arrow,
       field("body", $._single_expression)
     )),
+
+    // v2.1 (alpha.3+): a function defined within an expression. Unlike the statement-level
+    // function_declaration, this is markerless — it is disambiguated from a function_call by
+    // GLR (a call can never be followed by a `{` in expression position), so the scanner's
+    // _function_def_marker is intentionally NOT involved. This keeps `if f() {` parsing as a
+    // call plus the if-body block, rather than a function expression as the condition.
+    // The name is optional; the body is always a block (the `=>` form is fat_arrow_function).
+    //
+    // There are two body forms, distinguished by the scanner's _otb_brace marker (emitted only
+    // when the `{` is on the same line as the `)`):
+    //   - OTB body (`_otb_brace` + block): the AHK "one true brace" form. prec.dynamic(-1) lets
+    //     it win over a following standalone block (`cb := f() { ... }` is a function
+    //     expression), while still losing to a control-flow body block (`if (x) { }` is a
+    //     parenthesized condition plus the if-body, not an anonymous function expression).
+    //   - newline body (plain block): the `{` is on a later line. AHK only treats this as a
+    //     function body when the function is enclosed in `()`/`[]`/`{}` (no standalone block can
+    //     follow there); unenclosed, it is a call plus a separate block. We cannot detect
+    //     enclosure, so this form is heavily penalized (prec.dynamic(-20)) — it loses to a
+    //     standalone block wherever one can follow (the unenclosed case) but still parses when
+    //     nothing competes (the enclosed case).
+    function_expression: $ => choice(
+      prec.dynamic(-1, seq(
+        $._function_expression_head,
+        $._otb_brace,
+        field("body", $.block)
+      )),
+      prec.dynamic(-20, seq(
+        $._function_expression_head,
+        field("body", $.block)
+      ))
+    ),
+
+    // The name + parameter list shared by both function-expression body forms. The named form's
+    // `(` is immediate (`name(...)`, exactly like a function_call) so the two share the same
+    // token and GLR can keep both alive until the trailing `{` decides; the anonymous form uses
+    // a normal `(` (which may be separated by whitespace).
+    _function_expression_head: $ => choice(
+      field("head", $.function_head),
+      seq(
+        field("name", $.identifier),
+        field("head", alias($._immediate_function_head, $.function_head))
+      )
+    ),
+
+    // Like function_head but with an immediate `(` so `name(...)` lexes the same as a call.
+    _immediate_function_head: $ => seq(
+      token.immediate("("),
+      optional(choice($.wildcard, $.param_sequence)),
+      ")"
+    ),
 
     // FIXME global functions cannot be static (can't be static to the auto-execute section)
     // but methods and nested functions (even nested inside global functions) can.
@@ -563,9 +659,15 @@ export default grammar({
 
     _param: $ => choice(
       $.identifier,
-      alias($.optional_identifier, $.optional_param),
+      $.optional_param,
       $.default_param
     ),
+
+    // A parameter may be marked optional with the maybe operator (name?). Unlike a
+    // general optional_expression, a parameter name is only ever a bare identifier.
+    // Shares PREC.MAYBE with optional_expression so the reduce/reduce on `(a?)`
+    // is a genuine conflict resolved by GLR (see conflicts), not by precedence.
+    optional_param: $ => prec.right(PREC.MAYBE, seq(field("name", $.identifier), $.optional_marker)),
 
     default_param: $ => seq(field("name", $.identifier), $._initializer),
       
@@ -628,10 +730,7 @@ export default grammar({
     object_literal_member: $ => seq(
       field("key", choice($.identifier, $.dynamic_identifier, $.dereference_operation)),
       ":",
-      field("value", choice(
-        $._single_expression,
-        $.optional_identifier
-      ))),
+      field("value", $._single_expression)),
 
     //#endregion
 
@@ -823,7 +922,11 @@ export default grammar({
         seq(token("("), $._single_expression, token(")")),
         $._single_expression
       )),
-      field("body", $._statement),
+      // A direct block body (rather than routing through $._statement -> $.block) keeps the
+      // brace body unpenalized so it wins over reading the condition as an anonymous
+      // function_expression whose block would otherwise be taken as the loop body. The bare
+      // statement form requires a preceding newline, mirroring loop_statement.
+      field("body", choice($.block, seq($._eol, $._statement))),
     ),
 
     break_statement: $ => seq(
@@ -858,7 +961,9 @@ export default grammar({
         seq("(", $._for_params, ")"),
         $._for_params
       )),
-      field("body", $._statement),
+      // Direct block body (see while_statement) so the brace body is not penalized against an
+      // anonymous function_expression in the iterable; bare statement requires a newline.
+      field("body", choice($.block, seq($._eol, $._statement))),
       optional(field("else_block", $.else_statement))
     )),
 
@@ -959,6 +1064,7 @@ export default grammar({
     break: $ => kwtok(/break/i),
     continue: $ => kwtok(/continue/i),
     as: $ => kwtok(/as/i),
+    export: $ => kwtok(/Export/i),
     switch: $ => kwtok(/switch/i),
     case: $ => kwtok(/case/i),
     default: $ => kwtok(/default/i),
@@ -986,6 +1092,7 @@ export default grammar({
       repeat(choice(
         $.method_declaration,
         $.class_declaration,
+        $.struct_declaration,
         $.property_declaration
       )),
       "}"
@@ -1030,10 +1137,101 @@ export default grammar({
     // Reserved keyword (not currently used as operator in v2, but reserved)
     _contains: $ => kwtok(/contains/i),
 
+    // #region Structs
+    // ...which are special classes that can have typed properties
+
+    struct: $ => kwtok(/struct/i),
+
+    struct_declaration: $ => seq(
+      $.struct,
+      field("name", $.identifier),
+      optional(seq(
+        $.extends,
+        field("superclass", choice($.identifier, $.member_access))
+      )),
+      field("body", $.struct_body)
+    ),
+
+    struct_body: $ => seq(
+      "{",
+      repeat(choice(
+        $.method_declaration,
+        $.class_declaration,
+        $.struct_declaration,
+        $.property_declaration,
+        // Multiple typed properties can be declared on one line
+        repeat1(seq($.typed_property_declaration, optional(",")))
+      )),
+      "}"
+    ),
+
+    typed_property_declaration: $ => prec.right(seq(
+      field("name", $.identifier),
+      ":",
+      field("type", $.type_specifier),
+      optional($._initializer)
+    )),
+
+    // Docs say that type specifiers have very specific rules but I think they're outdated, integer literals don't 
+    // work in alpha.30. General idea is that it must be an expression evaluating to a Class that fulfils certain
+    // properties (basically, is a struct), with caveats. No top-level dereference operations, for example.
+    // https://www.autohotkey.com/docs/alpha/Structs.htm#type-specs
+    type_specifier: $ => prec(10, choice(
+      $.identifier,
+      $.integer_literal,
+      // An exact class name (`Example.Ptr`), an array type (`Int8[]`), or a function call
+      // optionally followed by property/method calls.
+      $.member_access,
+      $.index_access,
+      $.function_call,
+      seq("(", $.expression_sequence, ")"),
+    )),
+
+    // #endregion Structs
+
+    // #region Exports
+
+        // https://www.autohotkey.com/docs/alpha/lib/Export.htm
+    // `export [default] <function|class|struct definition>` or `export global <var list>`.
+    // Only global names can be exported; a method cannot be exported (only its class/struct),
+    // which falls out naturally because export is a statement-level construct and
+    // method_declaration only appears inside class/struct bodies.
+    // Backward-compat caveats from the docs (export remains usable as an ordinary name):
+    //   - `export MyVar`     is a call statement, not an export (global keyword required)
+    //   - `export fn() => 1` is a call to a user "export" function (fat-arrow excluded)
+    export_declaration: $ => seq(
+      $._export_def_marker,
+      $.export,
+      choice(
+        seq(
+          optional($.default),
+          field("declaration", choice(
+            $.function_declaration,
+            $.class_declaration,
+            $.struct_declaration
+          ))
+        ),
+        seq(
+          // Note this isn't actually a scope identifier, just required for the interpreter
+          // to distinguish between `export` as an export and `export` as a function name
+          kwtok(/global/i),
+          alias($._exported_variable, $.variable_declaration),
+          repeat(seq(",", alias($._exported_variable, $.variable_declaration)))
+        )
+      )
+    ),
+
+    _exported_variable: $ => seq(
+      field("name", $.identifier),
+      optional($._initializer)
+    ),
+
+    // #endregion Exports
+
     //#region Directives
 
-    // Directives - we should match these to prevent errors, but for our purposes we don't actually
-    // care about their contents, except for HotIf
+    // Directives - note that these tend to have very specific requirements for their parameters
+    // when they exist. Read the docs carefully
 
     // #Include, #HotIf, etc
     _directive: $ => choice(
@@ -1044,15 +1242,18 @@ export default grammar({
       $.hotif_directive,
       $.hotif_timeout_directive,
       $.hotstring_directive,
+      $.import_directive,
       $.include_directive,
       $.include_again_directive,
       $.input_level_directive,
       $.use_hook_directive,
+      $.module_directive,
       $.max_threads_directive,
       $.max_threads_per_hotkey_directive,
       $.max_threads_buffer_directive,
       $.no_tray_icon_directive,
       $.single_instance_directive,
+      $.struct_pack_directive,
       $.warn_directive,
     ),
 
@@ -1104,6 +1305,36 @@ export default grammar({
       $._eol
     ),
 
+    // https://www.autohotkey.com/docs/alpha/lib/_Import.htm
+    import_directive: $ => prec.right(seq(
+      kwtok(/#Import/i),
+      optional($.export),
+      field("module", choice(
+        $.identifier,
+        $.string_literal
+      )),
+      optional(seq(
+        $.as,
+        field("alias", $.identifier),
+      )),
+      optional(seq(
+        "{",
+        // Note strictly speaking, wildcard is only legal once in an import list
+        repeat1(choice($.export_name, $.wildcard)),
+        "}"
+      )),
+      $._eol
+    )),
+
+    export_name: $ => seq(
+      field("export", $.identifier),
+      optional(seq(
+        $.as,
+        field("alias", $.identifier)
+      )),
+      optional(",")
+    ),
+    
     include_directive: $ => prec.left(seq(
       kwtok(/#Include/i),
       optional($.include_ignore_failure),
@@ -1129,6 +1360,8 @@ export default grammar({
       $.integer_literal,
       $._eol
     ),
+
+    module_directive: $ => seq(kwtok(/#Module/i), $.identifier, $._eol),
 
     use_hook_directive: $ => seq(
       kwtok(/#UseHook/i),
@@ -1168,6 +1401,12 @@ export default grammar({
     single_instance_directive: $ => seq(
       kwtok(/#SingleInstance/i),
       optional(alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode)),
+      $._eol
+    ),
+
+    struct_pack_directive: $ => seq(
+      kwtok(/#StructPack/i),
+      optional(field("pack", alias(/0|1|2|4|8/, $.integer_literal))),
       $._eol
     ),
 

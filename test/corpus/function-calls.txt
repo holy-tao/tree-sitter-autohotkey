@@ -395,6 +395,7 @@ Optional argument default
 return super.Get(key, default?)
 
 --------------------------------------------------------------------------------
+
 (source_file
   (line_comment)
   (return_statement
@@ -405,7 +406,7 @@ return super.Get(key, default?)
         (identifier))
       (arg_sequence
         (identifier)
-        (optional_arg
+        (optional_expression
           (identifier)
           (optional_marker))))))
 
@@ -416,6 +417,7 @@ Optional argument default in complex statement
 ; Ensure switch statement parsing doesn't interfere with identifiers
 Array.Prototype.DefineProp("FirstOrDefault", { Call: (this, condition?, default?) => ArrayExtensions.FirstOrDefault(this, condition?, default?) })
 --------------------------------------------------------------------------------
+
 (source_file
   (line_comment)
   (function_call
@@ -446,9 +448,9 @@ Array.Prototype.DefineProp("FirstOrDefault", { Call: (this, condition?, default?
                 (identifier))
               (arg_sequence
                 (identifier)
-                (optional_arg
+                (optional_expression
                   (identifier)
                   (optional_marker))
-                (optional_arg
+                (optional_expression
                   (identifier)
                   (optional_marker))))))))))

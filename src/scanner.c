@@ -56,8 +56,7 @@
 #define is_eof(lexer) (lexer->eof(lexer))
 
 /// Check to see if a character is a hotkey modifier symbol
-#define is_hotkey_modifier(c) (c == '^' || c == '!' || c == '#' || c == '+' || \
-                               c == '<' || c == '>' || c == '~' || c == '$')
+#define is_hotkey_modifier(c) strchr("^!#+<>~$", c)
 
 /// Check to see if an identifier is an AltTab command
 #define is_alttab_command(ident) \
@@ -68,9 +67,7 @@
   (strcaseeq_any(ident, "and", "not", "is", "or", "contains"))
 
 /// Check to see if a character could start an operator keyword
-#define starts_operator_keyword(c) (c == 'a' || c == 'A' || c == 'n' || c == 'N' || \
-                                    c == 'i' || c == 'I' || c == 'o' || c == 'O' || \
-                                    c == 'c' || c == 'C')
+#define starts_operator_keyword(c) strchr("aAnNiIoOcC", c)
 
 /// Check to see if ident is a control-flow keyword like "if"
 #define is_flow_keyword(ident) \
@@ -92,7 +89,9 @@ enum TokenType {
   BLOCK_COMMENT,
   ARRAY_EXPANSION_MARKER,
   HOTKEY_DOUBLE_COLON,
-  REMAP_DOUBLE_COLON
+  REMAP_DOUBLE_COLON,
+  EXPORT_DEF_MARKER,
+  OTB_BRACE
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -156,6 +155,42 @@ static inline bool strcaseeq(const char *a, const char *b) {
 /// @param lexer tree-sitter lexer
 /// @param method true to scan for a method instead of a function
 /// @return true if the next statement is a function declaration, false otherwise
+/// @brief Given the lexer is positioned immediately after a (potential) function name, check whether a
+///        function head and body follow: `( ... )` then either `{` or `=>`. Advances the lexer.
+/// @param lexer tree-sitter lexer
+/// @param block_only if true, only a block body `{` counts (a fat-arrow `=>` body does not)
+/// @return true if a function head + body follows
+static bool is_function_body_follows(TSLexer *lexer, bool block_only) {
+  // Expect '('
+  if (lexer->lookahead != '(') {
+    return false;
+  }
+  lexer->advance(lexer, false);
+
+  // Match parens...
+  int depth = 1;
+  while (depth > 0 && lexer->lookahead != 0) {
+    if (lexer->lookahead == '(') depth++;
+    else if (lexer->lookahead == ')') depth--;
+    lexer->advance(lexer, false);
+  }
+  if (depth != 0) return false;
+
+  // Skip all whitespace (including newlines), check for '{' or '=>'
+  skip_whitespace(lexer);
+
+  // Function body can start with either '{' or '=>'
+  if (lexer->lookahead == '{') {
+    return true;
+  }
+  if (!block_only && lexer->lookahead == '=') {
+    lexer->advance(lexer, false);
+    return lexer->lookahead == '>';
+  }
+
+  return false;
+}
+
 static bool is_function_declaration(TSLexer *lexer, bool method) {
   // Skip any leading whitespace (including newlines)
   skip_whitespace(lexer);
@@ -186,35 +221,38 @@ static bool is_function_declaration(TSLexer *lexer, bool method) {
     // Functions cannot shadow keywords (methods can)
     return false;
   }
-  
-  // Expect '('
-  if (lexer->lookahead != '(') {
+
+  return is_function_body_follows(lexer, false);
+}
+
+/// @brief Given the lexer is positioned immediately after the `export` keyword, determine whether a real
+///        Export *declaration* follows (as opposed to an ordinary use of a function/variable named
+///        "export", which v2.0 backward-compat preserves). Per the docs, a declaration follows when the
+///        next word is `default`, `global`, `class` or `struct`, or when it is a block-bodied function
+///        definition `Name(...) {`. A fat-arrow body, a bare name (`export MyVar`) or a call
+///        (`export(...)`) are not declarations. Advances the lexer.
+/// @param lexer tree-sitter lexer
+/// @return true if an export declaration follows
+static bool export_decl_follows(TSLexer *lexer) {
+  // A declaration always has whitespace after the keyword; `export(...)` (a call) does not.
+  if (!skip_horizontal_ws(lexer)) {
     return false;
   }
-  lexer->advance(lexer, false);
-  
-  // Match parens...
-  int depth = 1;
-  while (depth > 0 && lexer->lookahead != 0) {
-    if (lexer->lookahead == '(') depth++;
-    else if (lexer->lookahead == ')') depth--;
-    lexer->advance(lexer, false);
+
+  if (!is_identifier_char(lexer->lookahead)) {
+    return false;  // e.g. `export {`, `export "str"` — not a declaration
   }
-  if (depth != 0) return false;
 
-  // Skip all whitespace (including newlines), check for '{' or '=>'
-  skip_whitespace(lexer);
+  char w[16];
+  skip_identifier(lexer, w, sizeof(w));
 
-  // Function body can start with either '{' or '=>'
-  if (lexer->lookahead == '{') {
+  // Keyword followers unambiguously begin a declaration.
+  if (strcaseeq_any(w, "default", "global", "class", "struct")) {
     return true;
   }
-  if (lexer->lookahead == '=') {
-    lexer->advance(lexer, false);
-    return lexer->lookahead == '>';
-  }
 
-  return false;
+  // Otherwise it must be a block-bodied function definition `Name(...) {`.
+  return is_function_body_follows(lexer, true);
 }
 
 /// @brief Check to see if the next token is an optional marker (as opposed to the "?" of a
@@ -230,19 +268,37 @@ static bool is_optional_marker(TSLexer *lexer) {
   // Consume the '?'
   lexer->advance(lexer, false);
 
-  // Skip whitespace after '?'
-  skip_whitespace(lexer);
+  // The token is just the '?'. Mark the end here so the follower lookahead below
+  // (which may advance past '.', whitespace, etc.) does not get folded into it.
+  lexer->mark_end(lexer);
 
-  // Check that what follows is one of: ) ] } , : or EOF
-  // Per AHK docs: "The question mark must be followed by one of the following symbols: )]},:."
-  return (
-    lexer->lookahead == ')' ||
-    lexer->lookahead == ']' ||
-    lexer->lookahead == '}' ||
-    lexer->lookahead == ',' ||
-    lexer->lookahead == ':' ||
-    lexer->eof(lexer)
-  );
+  // An immediately-adjacent '?' is the '??' (or-maybe) operator, not a maybe
+  // marker followed by a ternary.
+  if (lexer->lookahead == '?') {
+    return false;
+  }
+
+  // Skip whitespace after '?' (including newlines) as pure lookahead. Do not consume
+  // the '?' characters, as this would result in a zero-width marker.
+  while (is_whitespace(lexer->lookahead)) {
+    lexer->advance(lexer, false);
+  }
+
+  // Check that what follows is one of the legal followers. Per AHK docs these are
+  // )]},:?. — but two of those need care:
+  //   '.' : starts an optional chain (x?.y), but `cond ? .5 : x` is a ternary
+  //         whose true branch is the float .5. Only treat '.' as a marker
+  //         follower when it is followed by a member-access start (a letter, '_',
+  //         or '%' deref) — never a digit, which would be a float.
+  //   '?' : a ternary following a maybe operand, e.g. `a? ? b : c`. Only reached
+  //         here when whitespace separated the two '?' (the adjacent '??' case
+  //         was already handled above as or-maybe).
+  if (lexer->lookahead == '.') {
+    lexer->advance(lexer, false);
+    return is_alpha(lexer->lookahead) || lexer->lookahead == '_' || lexer->lookahead == '%';
+  }
+
+  return strchr(")]},:?", lexer->lookahead);
 }
 
 /// @brief Determines whether the currenty token is an empty arg. Call mark_end before
@@ -256,17 +312,11 @@ static bool is_empty_arg(TSLexer *lexer) {
   // to just MsgBox("Hello"). Also, it's kind of a nightmare
   return (lexer->lookahead == ',');
 }
-
-#define is_operator_start(c) (c == '?' || c == '*' || c == '/' || c == '<' || c == '>' || \
-                              c == '=' || c == '^' || c == '|' || c == '&' || c == '!' || \
-                              c == '~' || c == ':' || c == '.' || c == ',')
-                              // Note: +, - excluded (could be unary in concat context)
+// Note: +, - excluded (could be unary in concat context)
+#define is_operator_start(c) strchr("?*/<>=^|&!~:.,", c)
 
 /// Characters that can start a single expression
-#define is_expression_start(c) (is_identifier_char(c) ||                                  \
-                                c == '_' || c == '"' || c == '\'' || c == '(' ||          \
-                                c == '+' || c == '-' ||                                   \
-                                c == '%')
+#define is_expression_start(c) (is_identifier_char(c) || strchr("_\"'(+-%", c))
 
 /// @brief Determines whether this is implicit concatenation. As a side effect, may call `lexer->mark_end`. Definitely
 ///        calls it if it returns true. 
@@ -337,23 +387,34 @@ static bool is_implicit_concatenation(TSLexer *lexer) {
   return false;
 }
 
-/// @brief Checks to see if this is the start of a continuation section. If one is found, the token is consumed, 
+/// Result of is_continuation_start. The distinction matters because is_continuation_start
+/// advances the shared lexer past a leading '(' to inspect continuation options; on failure the
+/// caller must know whether that '(' was consumed so it does not fall through to the
+/// function/method-def marker checks and misread `(name(params) {` as a declaration.
+typedef enum {
+  CONT_NONE,        ///< Not a continuation, and no '(' was consumed (safe to try other tokens).
+  CONT_YES,         ///< A continuation section start was found and consumed.
+  CONT_PAREN_EXPR   ///< A '(' was consumed but it begins a parenthesized expression, not a section.
+} ContinuationResult;
+
+/// @brief Checks to see if this is the start of a continuation section. If one is found, the token is consumed,
 ///        and mark-end is called
 /// @param lexer the lexer.
-/// @return true if we found a string continuation start
-static bool is_continuation_start(TSLexer* lexer) {
+/// @return CONT_YES if a continuation start was found; CONT_PAREN_EXPR if a leading '(' was
+///         consumed but is not a continuation; CONT_NONE otherwise (no '(' consumed).
+static ContinuationResult is_continuation_start(TSLexer* lexer) {
   skip_horizontal_ws(lexer);
   if(is_eof(lexer))
-    return false;
+    return CONT_NONE;
 
   if(!is_eol(lexer->lookahead)) {
     // "(" must start on new line
-    return false;
+    return CONT_NONE;
   }
 
   skip_whitespace(lexer);
   if(lexer->lookahead != '(') {
-    return false;
+    return CONT_NONE;
   }
 
   lexer->advance(lexer, false);
@@ -367,7 +428,7 @@ static bool is_continuation_start(TSLexer* lexer) {
 
   while(!is_eol(lexer->lookahead)) {
     if(is_eof(lexer)) {
-      return false;
+      return CONT_PAREN_EXPR;
     }
 
     memset(opt, '\0', sizeof(opt));
@@ -378,7 +439,7 @@ static bool is_continuation_start(TSLexer* lexer) {
         //Join - ensure the first 4 characters are "join" and skip past the rest
         int id_chars = skip_identifier(lexer, opt, 5);
         if(!strcaseeq(opt, "join")) {
-          return false;
+          return CONT_PAREN_EXPR;
         }
 
         // skip the delimiter, which might not have been skipped in skip_identifier if it contains non-identifier
@@ -386,13 +447,13 @@ static bool is_continuation_start(TSLexer* lexer) {
         skip_to_whitespace(lexer);
         skip_horizontal_ws(lexer);
         continue;
-      
+
       case 'c':
       case 'C':
         //Comment
         skip_identifier(lexer, opt, sizeof(opt));
         if(!strcaseeq_any(opt, "comments", "comment", "com", "c")) {
-          return false;
+          return CONT_PAREN_EXPR;
         }
 
         skip_horizontal_ws(lexer);
@@ -405,7 +466,7 @@ static bool is_continuation_start(TSLexer* lexer) {
         // ltrim or rtrim option
         skip_identifier(lexer, opt, sizeof(opt));
         if(!strcaseeq_any(opt, "ltrim", "ltrim0", "rtrim0")) {
-          return false;
+          return CONT_PAREN_EXPR;
         }
 
         skip_horizontal_ws(lexer);
@@ -419,11 +480,11 @@ static bool is_continuation_start(TSLexer* lexer) {
 
       default:
         // not a continuation section option
-        return false;
+        return CONT_PAREN_EXPR;
     }
   }
 
-  return true;
+  return CONT_YES;
 }
 
 /// @brief Scans for a newline - to be used in continuation sections. The newline is consumed and mark_end is called
@@ -638,6 +699,24 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
+  // OTB ("one true brace") marker: a zero-width token emitted only when the next '{' is on the
+  // same line — i.e. reached after skipping only horizontal whitespace, with no intervening
+  // newline. It lets the grammar require an unenclosed function-expression body's brace to be
+  // OTB (`f() {`), so that `f()` followed by a brace on the *next* line is read as a call plus a
+  // separate block rather than a function expression. Only valid right after a function head.
+  if (valid_symbols[OTB_BRACE]) {
+    lexer->mark_end(lexer);  // zero-width: the '{' itself is lexed normally by the block rule
+
+    while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+      lexer->advance(lexer, true);
+    }
+
+    if (lexer->lookahead == '{') {
+      lexer->result_symbol = OTB_BRACE;
+      return true;
+    }
+  }
+
   // Check for empty arg
   if(valid_symbols[EMPTY_ARG]) {
     lexer->mark_end(lexer);
@@ -680,10 +759,21 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   if(valid_symbols[CONTINUATION_SECTION_START]) {
     lexer->mark_end(lexer);
 
-    if(is_continuation_start(lexer)) {
+    ContinuationResult cont = is_continuation_start(lexer);
+    if(cont == CONT_YES) {
       lexer->result_symbol = CONTINUATION_SECTION_START;
       return true;
     }
+    if(cont == CONT_PAREN_EXPR) {
+      // A leading '(' began a parenthesized expression, not a continuation section. We have
+      // already advanced the lexer past that '(', so we must NOT fall through to the
+      // function/method-def marker checks below — from the post-'(' position they would misread
+      // `(name(params) {` as a function declaration. Returning false discards our advances and
+      // lets the internal lexer re-lex the '(' from the token boundary (e.g. so it can begin a
+      // v2.1 function-expression IIFE like `(f(y) { ... })(x)`).
+      return false;
+    }
+    // CONT_NONE: no '(' was consumed; fall through to the remaining token checks.
   }
 
   if(valid_symbols[CONTINUATION_NEWLINE]) {
@@ -772,21 +862,54 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
-  // Check function declaration vs function definition
+  // Statement-level declaration heads — export declaration, function declaration and method
+  // declaration all begin with a leading identifier, so they can be valid simultaneously and
+  // must be resolved in a single pass: once we advance past that identifier we cannot rewind,
+  // so a fall-through to a second block would scan from a corrupted position.
+  //
+  // All three emit a zero-width marker anchored here; for export declarations the `export`
+  // keyword itself is then lexed normally by the internal lexer.
   // We need to check this last.
-  if (valid_symbols[FUNCTION_DEF_MARKER]) {
+  if (valid_symbols[FUNCTION_DEF_MARKER] || valid_symbols[METHOD_DEF_MARKER] ||
+      valid_symbols[EXPORT_DEF_MARKER]) {
     lexer->mark_end(lexer);
-    
-    if (is_function_declaration(lexer, false)) {
+
+    // Only the export path needs to advance past the leading word before the function/method
+    // check, so it has to fully resolve the declaration here. We gate it on a cheap first-char
+    // test so ordinary declarations (whose name does not start with 'e') reach the untouched
+    // function/method check below.
+    if (valid_symbols[EXPORT_DEF_MARKER]) {
+      skip_whitespace(lexer);
+      if (lexer->lookahead == 'e' || lexer->lookahead == 'E') {
+        char w[16];
+        int wl = skip_identifier(lexer, w, sizeof(w));
+
+        if (wl == 6 && strcaseeq(w, "export") && export_decl_follows(lexer)) {
+          lexer->result_symbol = EXPORT_DEF_MARKER;
+          return true;
+        }
+
+        // The 'e' word is an ordinary name (either not "export", or "export" not beginning a
+        // declaration, e.g. a function literally named `export`). The only declaration it can
+        // still begin is a function/method definition `name(...) { | =>`. Functions — unlike
+        // methods — cannot shadow keywords.
+        bool method = !valid_symbols[FUNCTION_DEF_MARKER] && valid_symbols[METHOD_DEF_MARKER];
+        if (!(!method && is_keyword(w)) && is_function_body_follows(lexer, false)) {
+          lexer->result_symbol = valid_symbols[FUNCTION_DEF_MARKER]
+                                   ? FUNCTION_DEF_MARKER : METHOD_DEF_MARKER;
+          return true;
+        }
+
+        return false;
+      }
+    }
+
+    if (valid_symbols[FUNCTION_DEF_MARKER] && is_function_declaration(lexer, false)) {
       lexer->result_symbol = FUNCTION_DEF_MARKER;
       return true;
     }
-  }
 
-  if (valid_symbols[METHOD_DEF_MARKER]) {
-    lexer->mark_end(lexer);
-    
-    if (is_function_declaration(lexer, true)) {
+    if (valid_symbols[METHOD_DEF_MARKER] && is_function_declaration(lexer, true)) {
       lexer->result_symbol = METHOD_DEF_MARKER;
       return true;
     }

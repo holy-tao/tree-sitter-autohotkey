@@ -716,3 +716,322 @@ MaxThreadsBuffer integer literal
 (source_file
   (max_threads_buffer_directive
     (integer_literal)))
+
+===============================================================================
+Bare Import
+===============================================================================
+
+#Import Module
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (identifier)))
+
+===============================================================================
+Bare Import with String
+===============================================================================
+
+#Import "path/to/module.ahk"
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (string_literal)))
+
+===============================================================================
+String import with Re-Export
+===============================================================================
+
+#Import export "path/to/module.ahk"
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (export)
+    module: (string_literal)))
+
+===============================================================================
+Bare Import with Re-Export
+===============================================================================
+
+#Import export Module
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (export)
+    module: (identifier)))
+
+===============================================================================
+Simple Import with Alias
+===============================================================================
+
+#Import Module as MyModule
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    (as)
+    alias: (identifier)))
+
+===============================================================================
+Aliased String Import
+===============================================================================
+
+#Import "path/to/module.ahk" as Foo
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (string_literal)
+    (as)
+    alias: (identifier)))
+
+===============================================================================
+Import with Imported Name
+===============================================================================
+
+#Import Module { Foo }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    (export_name
+      export: (identifier))))
+
+===============================================================================
+Re-Export with Imported Name
+===============================================================================
+
+#Import export Module { Foo }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (export)
+    module: (identifier)
+    (export_name
+      export: (identifier))))
+
+===============================================================================
+Import with Multiple Imported Names
+===============================================================================
+
+#Import Module { Foo, Bar, Baz }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    (export_name
+      export: (identifier))
+    (export_name
+      export: (identifier))
+    (export_name
+      export: (identifier))))
+
+===============================================================================
+Import with Aliased Imported Name
+===============================================================================
+
+#Import Module { Foo as Bar }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))))
+
+===============================================================================
+Import with Multiple Aliased Imported Names
+===============================================================================
+
+#Import Module { Foo as MyFoo, Bar as MyBar, Baz as MyBaz }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))))
+
+===============================================================================
+Import with Multiple Imported Names Multiline
+===============================================================================
+
+#Import "path/to/module" { 
+  Foo, 
+  Bar, 
+  Baz 
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (string_literal)
+    (export_name
+      (identifier))
+    (export_name
+      (identifier))
+    (export_name
+      (identifier))))
+
+===============================================================================
+Import with Multiple Aliased Imported Names
+===============================================================================
+
+#Import Module { 
+  Foo as MyFoo,
+  Bar as MyBar,
+  Baz as MyBaz
+}
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))))
+
+===============================================================================
+Import with Module Alias and Imported Names
+===============================================================================
+
+#Import Module as MyModule { Foo as Bar }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    (as)
+    alias: (identifier)
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))))
+
+===============================================================================
+Re-Export with Module Alias and Imported Names
+===============================================================================
+
+#Import export Module as MyModule { Foo as Bar }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (export)
+    module: (identifier)
+    (as)
+    alias: (identifier)
+    (export_name
+      export: (identifier)
+      (as)
+      alias: (identifier))))
+
+===============================================================================
+Multiple Successive Imports
+===============================================================================
+
+#Import Module1 { Foo }
+#Import Module2 { Bar, Baz }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    (identifier)
+    (export_name
+      (identifier)))
+  (import_directive
+    (identifier)
+    (export_name
+      (identifier))
+    (export_name
+      (identifier))))
+
+===============================================================================
+StructPack directive with packing size
+===============================================================================
+
+#StructPack 4
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (struct_pack_directive
+    pack: (integer_literal)))
+
+===============================================================================
+StructPack directive with no packing size
+===============================================================================
+
+#StructPack
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (struct_pack_directive))
+
+===============================================================================
+StructPack directive with illegal size
+:error
+===============================================================================
+
+#StructPack 9
+
+-------------------------------------------------------------------------------
+
+
+
+===============================================================================
+Module directive
+===============================================================================
+
+#Module Extensions
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (module_directive
+    (identifier)))
