@@ -243,6 +243,8 @@ export default grammar({
       "%", field("operand", $._single_expression), "%"
     )),
 
+    // Maybe more accurately a "reference operation", since in v2.1 these can produce PropRefs
+    // or invoke __ref
     varref_operation: $ => prec.right(PREC.PREFIX + 5, seq(
       "&", field("operand", $._single_expression)
     )),
