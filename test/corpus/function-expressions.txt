@@ -1,0 +1,429 @@
+================================================================================
+Anonymous function expression as a call argument
+================================================================================
+
+SetTimer(() {
+    MsgBox "expired"
+}, -5000)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (function_expression
+        (function_head)
+        (block
+          (call_statement
+            (identifier)
+            (arg_sequence
+              (string_literal)))))
+      (prefix_operation
+        (integer_literal)))))
+
+================================================================================
+Named function expression as a call argument
+================================================================================
+
+SetTimer(tick() {
+    static n := 3
+    MsgBox n--
+}, 1000)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (function_expression
+        (identifier)
+        (function_head)
+        (block
+          (assignment_operation
+            (variable_declaration
+              (scope_identifier)
+              (identifier))
+            (assignment_operator)
+            (integer_literal))
+          (call_statement
+            (identifier)
+            (arg_sequence
+              (postfix_operation
+                (identifier))))))
+      (integer_literal))))
+
+================================================================================
+Named function expression as an assignment RHS (unenclosed)
+================================================================================
+
+cb := worker(a, b) {
+    return a + b
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_expression
+      (identifier)
+      (function_head
+        (param_sequence
+          (identifier)
+          (identifier)))
+      (block
+        (return_statement
+          (return)
+          (additive_operation
+            (identifier)
+            (identifier)))))))
+
+================================================================================
+Function expression as assignment RHS in control-flow (enclosed)
+================================================================================
+
+if foo := (bar() {
+    MsgBox "In function declaration expressioni"
+}) 
+{
+    MsgBox "In if statement body"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    condition: (assignment_operation
+      left: (identifier)
+      (assignment_operator)
+      right: (expression_sequence
+        (function_expression
+          name: (identifier)
+          head: (function_head)
+          body: (block
+            (call_statement
+              function: (identifier)
+              arguments: (arg_sequence
+                (string_literal)))))))
+    body: (block
+      (call_statement
+        function: (identifier)
+        arguments: (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Function expression defined and immediately invoked
+================================================================================
+
+(inner(y) {
+    x := y + 1
+})(x)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (expression_sequence
+      (function_expression
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (block
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (additive_operation
+              (identifier)
+              (integer_literal))))))
+    (arg_sequence
+      (identifier))))
+
+================================================================================
+Anonymous function expression as a statement
+================================================================================
+
+() {
+    MsgBox 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_expression
+    head: (function_head)
+    body: (block
+      (call_statement
+        function: (identifier)
+        arguments: (arg_sequence
+          (integer_literal))))))
+
+================================================================================
+Function expression with parameter features
+================================================================================
+
+cb := handler(a, b := 1, &c, rest*) {
+    return a
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (function_expression
+      name: (identifier)
+      head: (function_head
+        (param_sequence
+          (identifier)
+          (default_param
+            name: (identifier)
+            (assignment_operator)
+            value: (integer_literal))
+          (byref_param
+            param: (identifier))
+          (variadic_param
+            name: (identifier)
+            (wildcard))))
+      body: (block
+        (return_statement
+          (return)
+          value: (identifier))))))
+
+================================================================================
+Function expression inside an array literal
+================================================================================
+
+handlers := [first() {
+    return 1
+}, second() {
+    return 2
+}]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (array_literal
+      (expression_sequence
+        (function_expression
+          name: (identifier)
+          head: (function_head)
+          body: (block
+            (return_statement
+              (return)
+              value: (integer_literal))))
+        (function_expression
+          name: (identifier)
+          head: (function_head)
+          body: (block
+            (return_statement
+              (return)
+              value: (integer_literal))))))))
+
+================================================================================
+Regression: if with a call condition and block body is not a function expression
+================================================================================
+
+if f() {
+    body()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (function_call
+      (identifier))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+Regression: if with assignment condition is a call plus body, not a function expression
+================================================================================
+
+if foo := bar() {
+    body()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (function_call
+        (identifier)))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+Regression: while with a call condition and block body
+================================================================================
+
+while g() {
+    body()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (function_call
+      (identifier))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+Regression: parenthesized condition with a block body is not a function expression
+================================================================================
+
+if (x) {
+    body()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (expression_sequence
+      (identifier))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+Doc Example: Named timer
+================================================================================
+
+SetTimer(
+    tick() {
+        static n := 3
+        MsgBox n--,, 'T1'
+        if n = 0
+            SetTimer tick, false
+    }, 1000)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (function_expression
+        (identifier)
+        (function_head)
+        (block
+          (assignment_operation
+            (variable_declaration
+              (scope_identifier)
+              (identifier))
+            (assignment_operator)
+            (integer_literal))
+          (call_statement
+            (identifier)
+            (arg_sequence
+              (postfix_operation
+                (identifier))
+              (empty_arg)
+              (string_literal)))
+          (if_statement
+            (if)
+            (equality_operation
+              (identifier)
+              (integer_literal))
+            (call_statement
+              (identifier)
+              (arg_sequence
+                (identifier)
+                (boolean_literal))))))
+      (integer_literal))))
+
+================================================================================
+Doc Example: Anonymous timer
+================================================================================
+
+SetTimer(() {
+    MsgBox "5 second timer expired."
+}, -5000)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (function_expression
+        (function_head)
+        (block
+          (call_statement
+            (identifier)
+            (arg_sequence
+              (string_literal)))))
+      (prefix_operation
+        (integer_literal)))))
+
+================================================================================
+OTB: unenclosed function expression requires the brace on the same line
+================================================================================
+
+cb := worker(a)
+{
+    return a
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (function_call
+      function: (identifier)
+      arguments: (arg_sequence
+        (identifier))))
+  (block
+    (return_statement
+      (return)
+      value: (identifier))))
+
+================================================================================
+OTB: enclosed function expression may put the brace on the next line
+================================================================================
+
+SetTimer(tick(a)
+{
+    return a
+}, 1000)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    function: (identifier)
+    arguments: (arg_sequence
+      (function_expression
+        name: (identifier)
+        head: (function_head
+          (param_sequence
+            (identifier)))
+        body: (block
+          (return_statement
+            (return)
+            value: (identifier))))
+      (integer_literal))))

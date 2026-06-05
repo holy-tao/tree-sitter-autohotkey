@@ -90,7 +90,8 @@ enum TokenType {
   ARRAY_EXPANSION_MARKER,
   HOTKEY_DOUBLE_COLON,
   REMAP_DOUBLE_COLON,
-  EXPORT_DEF_MARKER
+  EXPORT_DEF_MARKER,
+  OTB_BRACE
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -386,23 +387,34 @@ static bool is_implicit_concatenation(TSLexer *lexer) {
   return false;
 }
 
-/// @brief Checks to see if this is the start of a continuation section. If one is found, the token is consumed, 
+/// Result of is_continuation_start. The distinction matters because is_continuation_start
+/// advances the shared lexer past a leading '(' to inspect continuation options; on failure the
+/// caller must know whether that '(' was consumed so it does not fall through to the
+/// function/method-def marker checks and misread `(name(params) {` as a declaration.
+typedef enum {
+  CONT_NONE,        ///< Not a continuation, and no '(' was consumed (safe to try other tokens).
+  CONT_YES,         ///< A continuation section start was found and consumed.
+  CONT_PAREN_EXPR   ///< A '(' was consumed but it begins a parenthesized expression, not a section.
+} ContinuationResult;
+
+/// @brief Checks to see if this is the start of a continuation section. If one is found, the token is consumed,
 ///        and mark-end is called
 /// @param lexer the lexer.
-/// @return true if we found a string continuation start
-static bool is_continuation_start(TSLexer* lexer) {
+/// @return CONT_YES if a continuation start was found; CONT_PAREN_EXPR if a leading '(' was
+///         consumed but is not a continuation; CONT_NONE otherwise (no '(' consumed).
+static ContinuationResult is_continuation_start(TSLexer* lexer) {
   skip_horizontal_ws(lexer);
   if(is_eof(lexer))
-    return false;
+    return CONT_NONE;
 
   if(!is_eol(lexer->lookahead)) {
     // "(" must start on new line
-    return false;
+    return CONT_NONE;
   }
 
   skip_whitespace(lexer);
   if(lexer->lookahead != '(') {
-    return false;
+    return CONT_NONE;
   }
 
   lexer->advance(lexer, false);
@@ -416,7 +428,7 @@ static bool is_continuation_start(TSLexer* lexer) {
 
   while(!is_eol(lexer->lookahead)) {
     if(is_eof(lexer)) {
-      return false;
+      return CONT_PAREN_EXPR;
     }
 
     memset(opt, '\0', sizeof(opt));
@@ -427,7 +439,7 @@ static bool is_continuation_start(TSLexer* lexer) {
         //Join - ensure the first 4 characters are "join" and skip past the rest
         int id_chars = skip_identifier(lexer, opt, 5);
         if(!strcaseeq(opt, "join")) {
-          return false;
+          return CONT_PAREN_EXPR;
         }
 
         // skip the delimiter, which might not have been skipped in skip_identifier if it contains non-identifier
@@ -435,13 +447,13 @@ static bool is_continuation_start(TSLexer* lexer) {
         skip_to_whitespace(lexer);
         skip_horizontal_ws(lexer);
         continue;
-      
+
       case 'c':
       case 'C':
         //Comment
         skip_identifier(lexer, opt, sizeof(opt));
         if(!strcaseeq_any(opt, "comments", "comment", "com", "c")) {
-          return false;
+          return CONT_PAREN_EXPR;
         }
 
         skip_horizontal_ws(lexer);
@@ -454,7 +466,7 @@ static bool is_continuation_start(TSLexer* lexer) {
         // ltrim or rtrim option
         skip_identifier(lexer, opt, sizeof(opt));
         if(!strcaseeq_any(opt, "ltrim", "ltrim0", "rtrim0")) {
-          return false;
+          return CONT_PAREN_EXPR;
         }
 
         skip_horizontal_ws(lexer);
@@ -468,11 +480,11 @@ static bool is_continuation_start(TSLexer* lexer) {
 
       default:
         // not a continuation section option
-        return false;
+        return CONT_PAREN_EXPR;
     }
   }
 
-  return true;
+  return CONT_YES;
 }
 
 /// @brief Scans for a newline - to be used in continuation sections. The newline is consumed and mark_end is called
@@ -687,6 +699,24 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
+  // OTB ("one true brace") marker: a zero-width token emitted only when the next '{' is on the
+  // same line — i.e. reached after skipping only horizontal whitespace, with no intervening
+  // newline. It lets the grammar require an unenclosed function-expression body's brace to be
+  // OTB (`f() {`), so that `f()` followed by a brace on the *next* line is read as a call plus a
+  // separate block rather than a function expression. Only valid right after a function head.
+  if (valid_symbols[OTB_BRACE]) {
+    lexer->mark_end(lexer);  // zero-width: the '{' itself is lexed normally by the block rule
+
+    while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+      lexer->advance(lexer, true);
+    }
+
+    if (lexer->lookahead == '{') {
+      lexer->result_symbol = OTB_BRACE;
+      return true;
+    }
+  }
+
   // Check for empty arg
   if(valid_symbols[EMPTY_ARG]) {
     lexer->mark_end(lexer);
@@ -729,10 +759,21 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   if(valid_symbols[CONTINUATION_SECTION_START]) {
     lexer->mark_end(lexer);
 
-    if(is_continuation_start(lexer)) {
+    ContinuationResult cont = is_continuation_start(lexer);
+    if(cont == CONT_YES) {
       lexer->result_symbol = CONTINUATION_SECTION_START;
       return true;
     }
+    if(cont == CONT_PAREN_EXPR) {
+      // A leading '(' began a parenthesized expression, not a continuation section. We have
+      // already advanced the lexer past that '(', so we must NOT fall through to the
+      // function/method-def marker checks below — from the post-'(' position they would misread
+      // `(name(params) {` as a function declaration. Returning false discards our advances and
+      // lets the internal lexer re-lex the '(' from the token boundary (e.g. so it can begin a
+      // v2.1 function-expression IIFE like `(f(y) { ... })(x)`).
+      return false;
+    }
+    // CONT_NONE: no '(' was consumed; fall through to the remaining token checks.
   }
 
   if(valid_symbols[CONTINUATION_NEWLINE]) {

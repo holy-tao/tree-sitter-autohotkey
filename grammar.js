@@ -70,6 +70,10 @@ export default grammar({
     // Zero-width marker the scanner emits before the `export` keyword only when a real
     // export *declaration* follows (vs. an ordinary use of a name "export"). See scanner.c.
     $._export_def_marker,
+    // Zero-width marker emitted only when the next `{` is on the same line (reached after
+    // skipping horizontal whitespace, no intervening newline). Used to enforce the OTB
+    // requirement on unenclosed function-expression bodies. See scanner.c.
+    $._otb_brace,
   ],
 
   conflicts: $ => [
@@ -88,6 +92,10 @@ export default grammar({
     [$.break_statement],
     [$.continue_statement],
     [$.object_literal, $.block],
+    // A leading name in an expression position may reduce to an expression (becoming a
+    // function_call) or be the name of a named function_expression; keep both parses alive
+    // until the trailing `{` (or its absence) decides which it is.
+    [$._single_expression, $._function_expression_head],
     [$._switch_clause_body],
     [$.case_clause],
     [$.struct_body],
@@ -120,8 +128,11 @@ export default grammar({
       $.call_statement,  // call_statements only at statement level
       $._primary_expression,
       alias($.top_level_expression_sequence, $.expression_sequence),
-      // blocks are allowed at the top level, though they don't do anything
-      $.block,  
+      // blocks are allowed at the top level, though they don't do anything. The negative
+      // dynamic precedence makes a bare block lose to a function_expression when a brace
+      // follows an expression on the same line (`cb := worker() { ... }` is a function
+      // expression assignment, not an assignment followed by a free-floating block).
+      prec.dynamic(-10, $.block),
       $.label,
       $._control_flow_statement,
       $._loop_flow_statement
@@ -179,6 +190,7 @@ export default grammar({
       $.index_access,
       $.continuation_section,
       $.fat_arrow_function, // these are allowed, though unhelpful
+      $.function_expression, // v2.1: a brace-bodied function defined inside an expression
       $.function_call       // Only parenthesized calls allowed in expressions
     ),
 
@@ -546,6 +558,56 @@ export default grammar({
       field("body", $._single_expression)
     )),
 
+    // v2.1 (alpha.3+): a function defined within an expression. Unlike the statement-level
+    // function_declaration, this is markerless — it is disambiguated from a function_call by
+    // GLR (a call can never be followed by a `{` in expression position), so the scanner's
+    // _function_def_marker is intentionally NOT involved. This keeps `if f() {` parsing as a
+    // call plus the if-body block, rather than a function expression as the condition.
+    // The name is optional; the body is always a block (the `=>` form is fat_arrow_function).
+    //
+    // There are two body forms, distinguished by the scanner's _otb_brace marker (emitted only
+    // when the `{` is on the same line as the `)`):
+    //   - OTB body (`_otb_brace` + block): the AHK "one true brace" form. prec.dynamic(-1) lets
+    //     it win over a following standalone block (`cb := f() { ... }` is a function
+    //     expression), while still losing to a control-flow body block (`if (x) { }` is a
+    //     parenthesized condition plus the if-body, not an anonymous function expression).
+    //   - newline body (plain block): the `{` is on a later line. AHK only treats this as a
+    //     function body when the function is enclosed in `()`/`[]`/`{}` (no standalone block can
+    //     follow there); unenclosed, it is a call plus a separate block. We cannot detect
+    //     enclosure, so this form is heavily penalized (prec.dynamic(-20)) — it loses to a
+    //     standalone block wherever one can follow (the unenclosed case) but still parses when
+    //     nothing competes (the enclosed case).
+    function_expression: $ => choice(
+      prec.dynamic(-1, seq(
+        $._function_expression_head,
+        $._otb_brace,
+        field("body", $.block)
+      )),
+      prec.dynamic(-20, seq(
+        $._function_expression_head,
+        field("body", $.block)
+      ))
+    ),
+
+    // The name + parameter list shared by both function-expression body forms. The named form's
+    // `(` is immediate (`name(...)`, exactly like a function_call) so the two share the same
+    // token and GLR can keep both alive until the trailing `{` decides; the anonymous form uses
+    // a normal `(` (which may be separated by whitespace).
+    _function_expression_head: $ => choice(
+      field("head", $.function_head),
+      seq(
+        field("name", $.identifier),
+        field("head", alias($._immediate_function_head, $.function_head))
+      )
+    ),
+
+    // Like function_head but with an immediate `(` so `name(...)` lexes the same as a call.
+    _immediate_function_head: $ => seq(
+      token.immediate("("),
+      optional(choice($.wildcard, $.param_sequence)),
+      ")"
+    ),
+
     // FIXME global functions cannot be static (can't be static to the auto-execute section)
     // but methods and nested functions (even nested inside global functions) can.
     // FIXME static is the only valid scope identifier for function declarations, but
@@ -858,7 +920,11 @@ export default grammar({
         seq(token("("), $._single_expression, token(")")),
         $._single_expression
       )),
-      field("body", $._statement),
+      // A direct block body (rather than routing through $._statement -> $.block) keeps the
+      // brace body unpenalized so it wins over reading the condition as an anonymous
+      // function_expression whose block would otherwise be taken as the loop body. The bare
+      // statement form requires a preceding newline, mirroring loop_statement.
+      field("body", choice($.block, seq($._eol, $._statement))),
     ),
 
     break_statement: $ => seq(
@@ -893,7 +959,9 @@ export default grammar({
         seq("(", $._for_params, ")"),
         $._for_params
       )),
-      field("body", $._statement),
+      // Direct block body (see while_statement) so the brace body is not penalized against an
+      // anonymous function_expression in the iterable; bare statement requires a newline.
+      field("body", choice($.block, seq($._eol, $._statement))),
       optional(field("else_block", $.else_statement))
     )),
 
