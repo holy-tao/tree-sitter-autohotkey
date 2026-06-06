@@ -1317,12 +1317,12 @@ export default grammar({
         $.as,
         field("alias", $.identifier),
       )),
-      optional(seq(
+      field("name", optional(seq(
         "{",
         // Note strictly speaking, wildcard is only legal once in an import list
-        repeat1(choice($.export_name, $.wildcard)),
+        repeat1(seq(choice($.export_name, $.wildcard), optional(","))),
         "}"
-      )),
+      ))),
       $._eol
     )),
 
@@ -1331,8 +1331,7 @@ export default grammar({
       optional(seq(
         $.as,
         field("alias", $.identifier)
-      )),
-      optional(",")
+      ))
     ),
     
     include_directive: $ => prec.left(seq(

@@ -806,7 +806,7 @@ Import with Imported Name
 (source_file
   (import_directive
     module: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier))))
 
 ===============================================================================
@@ -821,7 +821,7 @@ Re-Export with Imported Name
   (import_directive
     (export)
     module: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier))))
 
 ===============================================================================
@@ -835,11 +835,11 @@ Import with Multiple Imported Names
 (source_file
   (import_directive
     module: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier))
-    (export_name
+    name: (export_name
       export: (identifier))
-    (export_name
+    name: (export_name
       export: (identifier))))
 
 ===============================================================================
@@ -853,7 +853,7 @@ Import with Aliased Imported Name
 (source_file
   (import_directive
     module: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))))
@@ -869,15 +869,15 @@ Import with Multiple Aliased Imported Names
 (source_file
   (import_directive
     module: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))))
@@ -896,13 +896,13 @@ Import with Multiple Imported Names Multiline
 
 (source_file
   (import_directive
-    (string_literal)
-    (export_name
-      (identifier))
-    (export_name
-      (identifier))
-    (export_name
-      (identifier))))
+    module: (string_literal)
+    name: (export_name
+      export: (identifier))
+    name: (export_name
+      export: (identifier))
+    name: (export_name
+      export: (identifier))))
 
 ===============================================================================
 Import with Multiple Aliased Imported Names
@@ -919,15 +919,15 @@ Import with Multiple Aliased Imported Names
 (source_file
   (import_directive
     module: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))))
@@ -945,7 +945,7 @@ Import with Module Alias and Imported Names
     module: (identifier)
     (as)
     alias: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))))
@@ -964,7 +964,7 @@ Re-Export with Module Alias and Imported Names
     module: (identifier)
     (as)
     alias: (identifier)
-    (export_name
+    name: (export_name
       export: (identifier)
       (as)
       alias: (identifier))))
@@ -989,6 +989,49 @@ Multiple Successive Imports
       (identifier))
     (export_name
       (identifier))))
+
+===============================================================================
+Wildcard Import
+===============================================================================
+
+#Import Module { * }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    name: (wildcard)))
+
+===============================================================================
+Wildcard Import with Preceding Named Import
+===============================================================================
+
+#Import Module { Something, * }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    name: (export_name
+      export: (identifier))
+    name: (wildcard)))
+
+===============================================================================
+Wildcard Import with Followed by Named Import
+===============================================================================
+
+#Import Module { *, Something }
+
+-------------------------------------------------------------------------------
+
+(source_file
+  (import_directive
+    module: (identifier)
+    name: (wildcard)
+    name: (export_name
+      export: (identifier))))
 
 ===============================================================================
 StructPack directive with packing size
