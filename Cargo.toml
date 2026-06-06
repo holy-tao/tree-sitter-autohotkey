@@ -1,0 +1,34 @@
+[package]
+name = "tree-sitter-autohotkey"
+description = "Tree-sitter grammar for AHK v2"
+version = "0.4.0"
+authors = ["Tao Beloney"]
+license = "Unlicense"
+readme = "README.md"
+keywords = ["incremental", "parsing", "tree-sitter", "autohotkey"]
+categories = ["parser-implementations", "parsing", "text-editors"]
+repository = "https://github.com/holy-tao/tree-sitter-autohotkey"
+edition = "2021"
+autoexamples = false
+
+build = "bindings/rust/build.rs"
+include = [
+  "bindings/rust/*",
+  "grammar.js",
+  "queries/*",
+  "src/*",
+  "tree-sitter.json",
+  "/LICENSE",
+]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter-language = "0.1"
+
+[build-dependencies]
+cc = "1.2"
+
+[dev-dependencies]
+tree-sitter = "0.26.5"
