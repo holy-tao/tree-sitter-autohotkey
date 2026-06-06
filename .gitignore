@@ -46,7 +46,3 @@ zig-out/
 *.tgz
 *.zip
 *.jar
-
-# Tree sitter build artifacts
-src/*
-!src/scanner.c
