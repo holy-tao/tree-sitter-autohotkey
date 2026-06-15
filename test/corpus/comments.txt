@@ -316,3 +316,37 @@ Block comment closed as first token of line
   (block_comment)
   (function_call
     (identifier)))
+
+================================================================================
+Block comment between a function-call hotkey body and a function declaration
+================================================================================
+
+; Regression: the function-def-marker lookahead must not park the lexer on the
+; block comment's '/', which previously folded the MsgBox() body into the comment.
+
+^o:: MsgBox()
+
+/**
+ * Block comment
+ */
+FunctionDecl() {
+
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (line_comment)
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (key_identifier))
+    (function_call
+      (identifier)))
+  (block_comment)
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block))))

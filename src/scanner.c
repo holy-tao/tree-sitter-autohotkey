@@ -862,6 +862,24 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
+  // Block comment is an extra and may appear almost anywhere, including where a hotkey/statement
+  // body could begin. It MUST be checked before the declaration-marker lookaheads below: those
+  // forward-scan and advance the shared lexer (e.g. is_function_declaration consumes a call's
+  // `Name()` and the following newlines while probing for a `{`/`=>`), and on failure leave it
+  // parked on a later token. Were the comment checked afterwards, it would resume from that
+  // corrupted position and fold the skipped text (e.g. a `MsgBox()` hotkey body) into the comment.
+  // We skip leading whitespace (including newlines) ourselves so this doesn't depend on a prior
+  // check having advanced past it. skip_whitespace skips (advance=true) rather than consuming, so
+  // the leading whitespace isn't folded into the comment token; on a non-comment the lexer is reset
+  // when scan() ultimately returns false.
+  if (valid_symbols[BLOCK_COMMENT]) {
+    skip_whitespace(lexer);
+    if (lexer->lookahead == '/' && scan_block_comment(lexer)) {
+      lexer->result_symbol = BLOCK_COMMENT;
+      return true;
+    }
+  }
+
   // Statement-level declaration heads — export declaration, function declaration and method
   // declaration all begin with a leading identifier, so they can be valid simultaneously and
   // must be resolved in a single pass: once we advance past that identifier we cannot rewind,
@@ -911,14 +929,6 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
 
     if (valid_symbols[METHOD_DEF_MARKER] && is_function_declaration(lexer, true)) {
       lexer->result_symbol = METHOD_DEF_MARKER;
-      return true;
-    }
-  }
-
-  // Check for block comment — must be checked last since it's an extra
-  if (valid_symbols[BLOCK_COMMENT] && lexer->lookahead == '/') {
-    if (scan_block_comment(lexer)) {
-      lexer->result_symbol = BLOCK_COMMENT;
       return true;
     }
   }
