@@ -168,7 +168,6 @@ export default grammar({
       $.loop_statement,
       $.switch_statement,
       $.try_statement,
-      $.throw_statement,
       $.goto_statement
     ),
 
@@ -189,9 +188,10 @@ export default grammar({
       $.member_access,
       $.index_access,
       $.continuation_section,
-      $.fat_arrow_function, // these are allowed, though unhelpful
-      $.function_expression, // v2.1: a brace-bodied function defined inside an expression
-      $.function_call       // Only parenthesized calls allowed in expressions
+      $.fat_arrow_function,   // these are allowed, though unhelpful
+      $.function_expression,  // v2.1: a brace-bodied function defined inside an expression
+      $.function_call,        // Only parenthesized calls allowed in expressions
+      $.throw_statement,      // in v2.1 throw is a function
     ),
 
     _single_expression: $ => choice(
@@ -939,10 +939,10 @@ export default grammar({
       field("looplabel", optional(choice($.identifier, $.string_literal)))  // optional label target
     ),
 
-    throw_statement: $ => seq(
+    throw_statement: $ => prec.right(seq(
       $.throw,
       field("thrown", $._single_expression)
-    ),
+    )),
 
     goto_statement: $ => seq(
       $.goto,

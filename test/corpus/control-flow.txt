@@ -393,6 +393,63 @@ throw(Error("Invalid value"))
           (string_literal))))))
 
 ================================================================================
+Throw statement in function position - ternary arm
+================================================================================
+
+; v2.1: throw is just a function now
+myVar := IsInteger(val) ? val : throw(TypeError("Expected a String"))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (ternary_expression
+      condition: (function_call
+        function: (identifier)
+        arguments: (arg_sequence
+          (identifier)))
+      true_branch: (identifier)
+      false_branch: (throw_statement
+        (throw)
+        thrown: (expression_sequence
+          (function_call
+            function: (identifier)
+            arguments: (arg_sequence
+              (string_literal))))))))
+
+================================================================================
+Throw statement in function position - expression sequence
+================================================================================
+
+; v2.1: throw is just a function now
+Cleanup() => (
+  ResetTheThing(),
+  throw(Error("Thing failed!"))
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (function_declaration
+    name: (identifier)
+    head: (function_head)
+    body: (function_body
+      (expression_sequence
+        (function_call
+          function: (identifier))
+        (throw_statement
+          (throw)
+          thrown: (expression_sequence
+            (function_call
+              function: (identifier)
+              arguments: (arg_sequence
+                (string_literal)))))))))
+
+================================================================================
 Goto and label
 ================================================================================
 
