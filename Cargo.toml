@@ -1,7 +1,7 @@
 [package]
 name = "tree-sitter-autohotkey"
 description = "Tree-sitter grammar for AHK v2"
-version = "0.4.2"
+version = "0.4.3"
 authors = ["Tao Beloney"]
 license = "Unlicense"
 readme = "README.md"
