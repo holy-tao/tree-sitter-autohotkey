@@ -37,6 +37,7 @@ A reasonably complete list of known differences from the AutoHotkey interpreter 
     ox "Hello, World!"
     )
     ```
+- `Throw` is treated allowed anywhere a function is, which is correct for v2.1 but not for v2.0.
 
 ## Contributing
 
