@@ -3464,7 +3464,71 @@
           "named": true
         },
         {
+          "type": "clipboard_timeout_directive",
+          "named": true
+        },
+        {
+          "type": "directive_comment",
+          "named": true
+        },
+        {
+          "type": "dll_load_directive",
+          "named": true
+        },
+        {
+          "type": "error_stdout_directive",
+          "named": true
+        },
+        {
+          "type": "hotif_directive",
+          "named": true
+        },
+        {
+          "type": "hotif_timeout_directive",
+          "named": true
+        },
+        {
+          "type": "hotstring_directive",
+          "named": true
+        },
+        {
+          "type": "import_directive",
+          "named": true
+        },
+        {
+          "type": "include_again_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "input_level_directive",
+          "named": true
+        },
+        {
+          "type": "max_threads_buffer_directive",
+          "named": true
+        },
+        {
+          "type": "max_threads_directive",
+          "named": true
+        },
+        {
+          "type": "max_threads_per_hotkey_directive",
+          "named": true
+        },
+        {
           "type": "method_declaration",
+          "named": true
+        },
+        {
+          "type": "module_directive",
+          "named": true
+        },
+        {
+          "type": "no_tray_icon_directive",
           "named": true
         },
         {
@@ -3472,7 +3536,27 @@
           "named": true
         },
         {
+          "type": "requires_directive",
+          "named": true
+        },
+        {
+          "type": "single_instance_directive",
+          "named": true
+        },
+        {
           "type": "struct_declaration",
+          "named": true
+        },
+        {
+          "type": "struct_pack_directive",
+          "named": true
+        },
+        {
+          "type": "use_hook_directive",
+          "named": true
+        },
+        {
+          "type": "warn_directive",
           "named": true
         }
       ]
@@ -15503,7 +15587,71 @@
           "named": true
         },
         {
+          "type": "clipboard_timeout_directive",
+          "named": true
+        },
+        {
+          "type": "directive_comment",
+          "named": true
+        },
+        {
+          "type": "dll_load_directive",
+          "named": true
+        },
+        {
+          "type": "error_stdout_directive",
+          "named": true
+        },
+        {
+          "type": "hotif_directive",
+          "named": true
+        },
+        {
+          "type": "hotif_timeout_directive",
+          "named": true
+        },
+        {
+          "type": "hotstring_directive",
+          "named": true
+        },
+        {
+          "type": "import_directive",
+          "named": true
+        },
+        {
+          "type": "include_again_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "input_level_directive",
+          "named": true
+        },
+        {
+          "type": "max_threads_buffer_directive",
+          "named": true
+        },
+        {
+          "type": "max_threads_directive",
+          "named": true
+        },
+        {
+          "type": "max_threads_per_hotkey_directive",
+          "named": true
+        },
+        {
           "type": "method_declaration",
+          "named": true
+        },
+        {
+          "type": "module_directive",
+          "named": true
+        },
+        {
+          "type": "no_tray_icon_directive",
           "named": true
         },
         {
@@ -15511,11 +15659,31 @@
           "named": true
         },
         {
+          "type": "requires_directive",
+          "named": true
+        },
+        {
+          "type": "single_instance_directive",
+          "named": true
+        },
+        {
           "type": "struct_declaration",
           "named": true
         },
         {
+          "type": "struct_pack_directive",
+          "named": true
+        },
+        {
           "type": "typed_property_declaration",
+          "named": true
+        },
+        {
+          "type": "use_hook_directive",
+          "named": true
+        },
+        {
+          "type": "warn_directive",
           "named": true
         }
       ]

@@ -4777,6 +4777,14 @@
             "members": [
               {
                 "type": "SYMBOL",
+                "name": "directive_comment"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_directive"
+              },
+              {
+                "type": "SYMBOL",
                 "name": "method_declaration"
               },
               {
@@ -5111,6 +5119,14 @@
           "content": {
             "type": "CHOICE",
             "members": [
+              {
+                "type": "SYMBOL",
+                "name": "directive_comment"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_directive"
+              },
               {
                 "type": "SYMBOL",
                 "name": "method_declaration"

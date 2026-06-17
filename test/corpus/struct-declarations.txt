@@ -631,3 +631,51 @@ struct X {
         (identifier)
         (type_specifier
           (integer_literal))))))
+
+================================================================================
+Struct with directive
+================================================================================
+
+; these are their own nodes, not extras
+struct C {
+    #StructPack 8 
+    dwFlags : UInt32
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (struct_pack_directive
+        (integer_literal))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))
+
+================================================================================
+Struct with directive comment in body
+================================================================================
+
+; these are their own nodes, not extras
+struct C {
+    ;@AhkBuild-Keep
+    dwFlags : UInt32
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (directive_comment
+        (directive_identifier))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))

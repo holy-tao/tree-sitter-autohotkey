@@ -1090,6 +1090,8 @@ export default grammar({
     class_body: $ => seq(
       "{",
       repeat(choice(
+        $.directive_comment,
+        $._directive,
         $.method_declaration,
         $.class_declaration,
         $.struct_declaration,
@@ -1155,6 +1157,8 @@ export default grammar({
     struct_body: $ => seq(
       "{",
       repeat(choice(
+        $.directive_comment,
+        $._directive,
         $.method_declaration,
         $.class_declaration,
         $.struct_declaration,

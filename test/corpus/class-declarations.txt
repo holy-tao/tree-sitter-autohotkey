@@ -1098,3 +1098,57 @@ class Foo {
               (function_head)
               (function_body
                 (block)))))))))
+
+================================================================================
+Class with directive
+================================================================================
+
+; these are their own nodes, not extras
+class C {
+    #HotIf true 
+    Kept() {
+
+    }
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (hotif_directive
+        (boolean_literal))
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block))))))
+
+================================================================================
+Class with directive comment in body
+================================================================================
+
+; these are their own nodes, not extras
+class C {
+    ;@AhkBuild-Keep
+    Kept() {
+
+    }
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (directive_comment
+        (directive_identifier))
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block))))))
