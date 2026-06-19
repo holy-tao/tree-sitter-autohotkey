@@ -3329,12 +3329,21 @@
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "block"
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "_eol"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "_statement"
+                    }
+                  ]
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "_statement"
+                  "name": "block"
                 }
               ]
             }

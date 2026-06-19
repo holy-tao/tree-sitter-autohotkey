@@ -167,6 +167,75 @@ if (x > 5) {
         (integer_literal)))))
 
 ================================================================================
+Unparenthesized if statement with bare expression
+================================================================================
+
+if 2 + 2 == 4
+    MsgBox("Math checks out")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (equality_operation
+      (additive_operation
+        (integer_literal)
+        (integer_literal))
+      (integer_literal))
+    (function_call
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
+
+================================================================================
+Parenthesized if statement with bare expression
+================================================================================
+
+if (2 + 2 == 4)
+    MsgBox("Math checks out")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (expression_sequence
+      (equality_operation
+        (additive_operation
+          (integer_literal)
+          (integer_literal))
+        (integer_literal)))
+    (function_call
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
+
+================================================================================
+Unparenthesized if statement with block body
+================================================================================
+
+if 2 + 2 == 4 {
+    MsgBox("Math checks out")
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (equality_operation
+      (additive_operation
+        (integer_literal)
+        (integer_literal))
+      (integer_literal))
+    (block
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
 If-else statement
 ================================================================================
 

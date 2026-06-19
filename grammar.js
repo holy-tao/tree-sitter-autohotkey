@@ -869,7 +869,10 @@ export default grammar({
     if_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.if,
       field("condition", $._single_expression),
-      field("body", choice($.block, $._statement)),  // support brace-less forms
+      field("body", choice(
+        seq($._eol, $._statement), // bare statement requires newline
+        $.block, 
+      )),
       field("else_block", repeat($.else_statement))
     )),
 
