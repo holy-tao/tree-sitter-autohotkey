@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tree-sitter-autohotkey"
 description = "Tree-sitter grammar for AHK v2"
-version = "0.4.4"
+version = "0.4.5"
 keywords = ["incremental", "parsing", "tree-sitter", "autohotkey"]
 classifiers = [
   "Intended Audience :: Developers",
