@@ -126,11 +126,23 @@
       "type": "PREC",
       "value": -30,
       "content": {
-        "type": "TOKEN",
-        "content": {
-          "type": "PATTERN",
-          "value": ";[^@\\r\\n][^\\r\\n]*"
-        }
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "TOKEN",
+            "content": {
+              "type": "STRING",
+              "value": ";"
+            }
+          },
+          {
+            "type": "TOKEN",
+            "content": {
+              "type": "PATTERN",
+              "value": ";[^@\\r\\n][^\\r\\n]*"
+            }
+          }
+        ]
       }
     },
     "directive_comment": {
@@ -7874,10 +7886,6 @@
     ],
     [
       "_single_expression",
-      "_statement"
-    ],
-    [
-      "if_statement",
       "_statement"
     ],
     [

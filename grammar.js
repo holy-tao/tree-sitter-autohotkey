@@ -85,7 +85,6 @@ export default grammar({
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
     [$._single_expression, $._statement],
-    [$.if_statement, $._statement],
     [$._exec_hotstring, $._statement],
     [$.member_access, $._member_dynamic_identifier],
     [$.dynamic_identifier],
@@ -149,7 +148,7 @@ export default grammar({
     // script through /validate beforehand to check for overt syntax errors.
     // Precedence must be lower than string literals
     // TODO we could probably parse JSDoc comments
-    line_comment: $ => prec(PREC.COMMENT, token(/;[^@\r\n][^\r\n]*/)),
+    line_comment: $ => prec(PREC.COMMENT, choice(token(';'), token(/;[^@\r\n][^\r\n]*/))),
 
     directive_comment: $ => prec(PREC.COMMENT, seq(
       token(";@"),
