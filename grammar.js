@@ -697,14 +697,18 @@ export default grammar({
     _numeric_literal: $ => choice(
       $.integer_literal,      // ints
       $.float_literal,        // floats
-      $.hex_literal,          // hex numbers
+      $.hex_literal          // hex numbers
     ),
 
     integer_literal: $ => token(/([0-9]+)/),
 
-    float_literal: $ => token(/[0-9]*\.[0-9]+/),
+    float_literal: $ => choice(
+      token(/[0-9]*\.[0-9]+/),                  // standard
+      token(/\d+(?:\.\d+)?(?:[eE][+-]?\d+)/)    // scientific notation, incl. e.g 1e-5
+    ),
 
     hex_literal: $ => token(/0[xX][0-9a-fA-F]+/),
+
 
     boolean_literal: $ => token(
       prec(PREC.KEYWORD, choice(/true/i, /false/i))

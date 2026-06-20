@@ -2563,11 +2563,23 @@
       }
     },
     "float_literal": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "[0-9]*\\.[0-9]+"
-      }
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "[0-9]*\\.[0-9]+"
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)"
+          }
+        }
+      ]
     },
     "hex_literal": {
       "type": "TOKEN",
