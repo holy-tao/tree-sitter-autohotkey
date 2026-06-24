@@ -408,6 +408,46 @@ var := [
             (string_literal)))))))
 
 ================================================================================
+Array literal with trailing comma
+================================================================================
+
+var := ["one", "two", "three", ]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (string_literal)
+        (string_literal)
+        (string_literal)))))
+
+================================================================================
+Array literal multiline with trailing comma
+================================================================================
+
+var := [
+    "one",
+    "two",
+    "three",
+]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (string_literal)
+        (string_literal)
+        (string_literal)))))
+
+================================================================================
 Empty object literal
 ================================================================================
 

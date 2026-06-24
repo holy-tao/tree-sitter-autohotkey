@@ -209,7 +209,7 @@ export default grammar({
       $.optional_expression,
     ),
 
-    expression_sequence: $ => prec.left(PREC.COMMA, seq(
+    expression_sequence: $ => prec(PREC.COMMA, seq(
       $._single_expression,
       repeat(seq(",", $._single_expression))
     )),
@@ -719,7 +719,16 @@ export default grammar({
       token(/'([^'\r\n]|`[^\r\n\t])*'/)
     ),
 
-    array_literal: $ => seq("[", optional($.expression_sequence), "]"),
+    array_literal: $ => seq(
+      "[",
+      optional(alias($._array_element_sequence, $.expression_sequence)),
+      "]"),
+
+    _array_element_sequence: $ => seq(
+      $._single_expression,
+      repeat(seq(",", $._single_expression)),
+      optional(",")
+    ),
 
     object_literal: $ => seq("{", optional($._object_literal_member_sequence), "}"),
 
