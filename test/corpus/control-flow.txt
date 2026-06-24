@@ -964,6 +964,70 @@ try {
           (boolean_literal))))))
 
 ================================================================================
+Try-catch as alias only (no type)
+================================================================================
+
+try {
+    x := 1 / 0
+} catch as err {
+    x := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (multiplicative_operation
+          (integer_literal)
+          (integer_literal))))
+    (catch_clause
+      (catch)
+      (as)
+      (identifier)
+      (block
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+================================================================================
+Try-catch as alias only (parenthesized, no type)
+================================================================================
+
+try {
+    x := 1 / 0
+} catch (as err) {
+    x := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (multiplicative_operation
+          (integer_literal)
+          (integer_literal))))
+    (catch_clause
+      (catch)
+      (as)
+      (identifier)
+      (block
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+================================================================================
 Switch statement
 ================================================================================
 

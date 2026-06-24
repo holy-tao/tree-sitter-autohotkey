@@ -1011,9 +1011,9 @@ export default grammar({
       field("body", $.block)
     ),
 
-    _catch_params: $ => seq(
-      field("type", $.identifier),              // error type
-      optional(seq($.as, field("variable", $.identifier)))    // as variable
+    _catch_params: $ => choice(
+      seq(field("type", $.identifier), optional(seq($.as, field("variable", $.identifier)))),
+      seq($.as, field("variable", $.identifier)),
     ),
 
     finally_clause: $ => seq(
