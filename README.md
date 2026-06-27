@@ -1,5 +1,7 @@
 # tree-sitter-autohotkey 
 [![Test Grammar](https://github.com/holy-tao/tree-sitter-autohotkey/actions/workflows/test.yml/badge.svg)](https://github.com/holy-tao/tree-sitter-autohotkey/actions/workflows/test.yml)
+![Crates.io Version](https://img.shields.io/crates/v/tree-sitter-autohotkey)
+
 
 Tree-sitter grammar for AutoHotkey v2.
 
