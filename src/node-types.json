@@ -3388,11 +3388,223 @@
     "named": true,
     "fields": {
       "body": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
+            "type": "\n",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "assignment_operation",
+            "named": true
+          },
+          {
             "type": "block",
+            "named": true
+          },
+          {
+            "type": "break_statement",
+            "named": true
+          },
+          {
+            "type": "call_statement",
+            "named": true
+          },
+          {
+            "type": "class_declaration",
+            "named": true
+          },
+          {
+            "type": "clipboard_timeout_directive",
+            "named": true
+          },
+          {
+            "type": "continuation_section",
+            "named": true
+          },
+          {
+            "type": "continue_statement",
+            "named": true
+          },
+          {
+            "type": "directive_comment",
+            "named": true
+          },
+          {
+            "type": "dll_load_directive",
+            "named": true
+          },
+          {
+            "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "export_declaration",
+            "named": true
+          },
+          {
+            "type": "expression_sequence",
+            "named": true
+          },
+          {
+            "type": "fat_arrow_function",
+            "named": true
+          },
+          {
+            "type": "for_statement",
+            "named": true
+          },
+          {
+            "type": "function_call",
+            "named": true
+          },
+          {
+            "type": "function_declaration",
+            "named": true
+          },
+          {
+            "type": "function_expression",
+            "named": true
+          },
+          {
+            "type": "goto_statement",
+            "named": true
+          },
+          {
+            "type": "hotif_directive",
+            "named": true
+          },
+          {
+            "type": "hotif_timeout_directive",
+            "named": true
+          },
+          {
+            "type": "hotstring_directive",
+            "named": true
+          },
+          {
+            "type": "if_statement",
+            "named": true
+          },
+          {
+            "type": "import_directive",
+            "named": true
+          },
+          {
+            "type": "include_again_directive",
+            "named": true
+          },
+          {
+            "type": "include_directive",
+            "named": true
+          },
+          {
+            "type": "index_access",
+            "named": true
+          },
+          {
+            "type": "input_level_directive",
+            "named": true
+          },
+          {
+            "type": "label",
+            "named": true
+          },
+          {
+            "type": "loop_statement",
+            "named": true
+          },
+          {
+            "type": "max_threads_buffer_directive",
+            "named": true
+          },
+          {
+            "type": "max_threads_directive",
+            "named": true
+          },
+          {
+            "type": "max_threads_per_hotkey_directive",
+            "named": true
+          },
+          {
+            "type": "member_access",
+            "named": true
+          },
+          {
+            "type": "module_directive",
+            "named": true
+          },
+          {
+            "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "postfix_operation",
+            "named": true
+          },
+          {
+            "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "requires_directive",
+            "named": true
+          },
+          {
+            "type": "return_statement",
+            "named": true
+          },
+          {
+            "type": "single_instance_directive",
+            "named": true
+          },
+          {
+            "type": "struct_declaration",
+            "named": true
+          },
+          {
+            "type": "struct_pack_directive",
+            "named": true
+          },
+          {
+            "type": "switch_statement",
+            "named": true
+          },
+          {
+            "type": "ternary_expression",
+            "named": true
+          },
+          {
+            "type": "throw_statement",
+            "named": true
+          },
+          {
+            "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "use_hook_directive",
+            "named": true
+          },
+          {
+            "type": "variable_declaration",
+            "named": true
+          },
+          {
+            "type": "warn_directive",
+            "named": true
+          },
+          {
+            "type": "while_statement",
             "named": true
           }
         ]
@@ -6578,11 +6790,223 @@
     "named": true,
     "fields": {
       "body": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
+            "type": "\n",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "assignment_operation",
+            "named": true
+          },
+          {
             "type": "block",
+            "named": true
+          },
+          {
+            "type": "break_statement",
+            "named": true
+          },
+          {
+            "type": "call_statement",
+            "named": true
+          },
+          {
+            "type": "class_declaration",
+            "named": true
+          },
+          {
+            "type": "clipboard_timeout_directive",
+            "named": true
+          },
+          {
+            "type": "continuation_section",
+            "named": true
+          },
+          {
+            "type": "continue_statement",
+            "named": true
+          },
+          {
+            "type": "directive_comment",
+            "named": true
+          },
+          {
+            "type": "dll_load_directive",
+            "named": true
+          },
+          {
+            "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "export_declaration",
+            "named": true
+          },
+          {
+            "type": "expression_sequence",
+            "named": true
+          },
+          {
+            "type": "fat_arrow_function",
+            "named": true
+          },
+          {
+            "type": "for_statement",
+            "named": true
+          },
+          {
+            "type": "function_call",
+            "named": true
+          },
+          {
+            "type": "function_declaration",
+            "named": true
+          },
+          {
+            "type": "function_expression",
+            "named": true
+          },
+          {
+            "type": "goto_statement",
+            "named": true
+          },
+          {
+            "type": "hotif_directive",
+            "named": true
+          },
+          {
+            "type": "hotif_timeout_directive",
+            "named": true
+          },
+          {
+            "type": "hotstring_directive",
+            "named": true
+          },
+          {
+            "type": "if_statement",
+            "named": true
+          },
+          {
+            "type": "import_directive",
+            "named": true
+          },
+          {
+            "type": "include_again_directive",
+            "named": true
+          },
+          {
+            "type": "include_directive",
+            "named": true
+          },
+          {
+            "type": "index_access",
+            "named": true
+          },
+          {
+            "type": "input_level_directive",
+            "named": true
+          },
+          {
+            "type": "label",
+            "named": true
+          },
+          {
+            "type": "loop_statement",
+            "named": true
+          },
+          {
+            "type": "max_threads_buffer_directive",
+            "named": true
+          },
+          {
+            "type": "max_threads_directive",
+            "named": true
+          },
+          {
+            "type": "max_threads_per_hotkey_directive",
+            "named": true
+          },
+          {
+            "type": "member_access",
+            "named": true
+          },
+          {
+            "type": "module_directive",
+            "named": true
+          },
+          {
+            "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "postfix_operation",
+            "named": true
+          },
+          {
+            "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "requires_directive",
+            "named": true
+          },
+          {
+            "type": "return_statement",
+            "named": true
+          },
+          {
+            "type": "single_instance_directive",
+            "named": true
+          },
+          {
+            "type": "struct_declaration",
+            "named": true
+          },
+          {
+            "type": "struct_pack_directive",
+            "named": true
+          },
+          {
+            "type": "switch_statement",
+            "named": true
+          },
+          {
+            "type": "ternary_expression",
+            "named": true
+          },
+          {
+            "type": "throw_statement",
+            "named": true
+          },
+          {
+            "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "use_hook_directive",
+            "named": true
+          },
+          {
+            "type": "variable_declaration",
+            "named": true
+          },
+          {
+            "type": "warn_directive",
+            "named": true
+          },
+          {
+            "type": "while_statement",
             "named": true
           }
         ]
@@ -16854,7 +17278,23 @@
             "named": true
           },
           {
+            "type": "break_statement",
+            "named": true
+          },
+          {
+            "type": "call_statement",
+            "named": true
+          },
+          {
             "type": "catch_clause",
+            "named": true
+          },
+          {
+            "type": "class_declaration",
+            "named": true
+          },
+          {
+            "type": "clipboard_timeout_directive",
             "named": true
           },
           {
@@ -16862,7 +17302,19 @@
             "named": true
           },
           {
+            "type": "continue_statement",
+            "named": true
+          },
+          {
             "type": "dereference_operation",
+            "named": true
+          },
+          {
+            "type": "directive_comment",
+            "named": true
+          },
+          {
+            "type": "dll_load_directive",
             "named": true
           },
           {
@@ -16878,11 +17330,19 @@
             "named": true
           },
           {
+            "type": "error_stdout_directive",
+            "named": true
+          },
+          {
             "type": "explicit_concat_operation",
             "named": true
           },
           {
             "type": "exponent_operation",
+            "named": true
+          },
+          {
+            "type": "export_declaration",
             "named": true
           },
           {
@@ -16902,7 +17362,15 @@
             "named": true
           },
           {
+            "type": "for_statement",
+            "named": true
+          },
+          {
             "type": "function_call",
+            "named": true
+          },
+          {
+            "type": "function_declaration",
             "named": true
           },
           {
@@ -16910,7 +17378,23 @@
             "named": true
           },
           {
+            "type": "goto_statement",
+            "named": true
+          },
+          {
             "type": "hex_literal",
+            "named": true
+          },
+          {
+            "type": "hotif_directive",
+            "named": true
+          },
+          {
+            "type": "hotif_timeout_directive",
+            "named": true
+          },
+          {
+            "type": "hotstring_directive",
             "named": true
           },
           {
@@ -16918,7 +17402,23 @@
             "named": true
           },
           {
+            "type": "if_statement",
+            "named": true
+          },
+          {
             "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "import_directive",
+            "named": true
+          },
+          {
+            "type": "include_again_directive",
+            "named": true
+          },
+          {
+            "type": "include_directive",
             "named": true
           },
           {
@@ -16930,7 +17430,15 @@
             "named": true
           },
           {
+            "type": "input_level_directive",
+            "named": true
+          },
+          {
             "type": "integer_literal",
+            "named": true
+          },
+          {
+            "type": "label",
             "named": true
           },
           {
@@ -16942,7 +17450,27 @@
             "named": true
           },
           {
+            "type": "loop_statement",
+            "named": true
+          },
+          {
+            "type": "max_threads_buffer_directive",
+            "named": true
+          },
+          {
+            "type": "max_threads_directive",
+            "named": true
+          },
+          {
+            "type": "max_threads_per_hotkey_directive",
+            "named": true
+          },
+          {
             "type": "member_access",
+            "named": true
+          },
+          {
+            "type": "module_directive",
             "named": true
           },
           {
@@ -16951,6 +17479,10 @@
           },
           {
             "type": "multiplicative_operation",
+            "named": true
+          },
+          {
+            "type": "no_tray_icon_directive",
             "named": true
           },
           {
@@ -16982,7 +17514,31 @@
             "named": true
           },
           {
+            "type": "requires_directive",
+            "named": true
+          },
+          {
+            "type": "return_statement",
+            "named": true
+          },
+          {
+            "type": "single_instance_directive",
+            "named": true
+          },
+          {
             "type": "string_literal",
+            "named": true
+          },
+          {
+            "type": "struct_declaration",
+            "named": true
+          },
+          {
+            "type": "struct_pack_directive",
+            "named": true
+          },
+          {
+            "type": "switch_statement",
             "named": true
           },
           {
@@ -16994,11 +17550,19 @@
             "named": true
           },
           {
+            "type": "try_statement",
+            "named": true
+          },
+          {
             "type": "type_check_operation",
             "named": true
           },
           {
             "type": "unset",
+            "named": true
+          },
+          {
+            "type": "use_hook_directive",
             "named": true
           },
           {
@@ -17011,6 +17575,14 @@
           },
           {
             "type": "verbal_not_operation",
+            "named": true
+          },
+          {
+            "type": "warn_directive",
+            "named": true
+          },
+          {
+            "type": "while_statement",
             "named": true
           }
         ]
@@ -19022,6 +19594,10 @@
     "type": "wildcard",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "\n",
+    "named": false
   },
   {
     "type": "!",

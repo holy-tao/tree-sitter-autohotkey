@@ -98,6 +98,7 @@ export default grammar({
     [$._switch_clause_body],
     [$.case_clause],
     [$.struct_body],
+    [$._statement, $.try_statement]
   ],
 
   extras: $ => [
@@ -991,7 +992,7 @@ export default grammar({
       $.try,
       field("body", choice(
         seq(
-          $.block,
+          choice($.block, $._statement),
           repeat($.catch_clause),
           //FIXME else if is not allowed here
           optional($.else_statement),
@@ -1008,7 +1009,10 @@ export default grammar({
         seq("(", $._catch_params, ")"),
         $._catch_params
       ))),
-      field("body", $.block)
+      field("body", choice(
+        $.block,
+        seq($._newline, $._statement)
+      ))
     ),
 
     _catch_params: $ => choice(
@@ -1018,7 +1022,10 @@ export default grammar({
 
     finally_clause: $ => seq(
       $.finally,
-      field("body", $.block)
+      field("body", choice(
+        $.block, 
+        seq($._newline, $._statement)
+      ))
     ),
 
     switch_statement: $ => seq(

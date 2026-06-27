@@ -1028,6 +1028,137 @@ try {
           (integer_literal))))))
 
 ================================================================================
+Try-catch with no parentheses
+================================================================================
+
+try
+    thing := Fallible()
+catch
+    errored := true
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (function_call
+        (identifier)))
+    (catch_clause
+      (catch)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (boolean_literal)))))
+
+================================================================================
+Try-catch-finally with no parentheses
+================================================================================
+
+try
+    thing := Fallible()
+catch
+    errored := true
+finally
+    cleanup(errored)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (function_call
+        (identifier)))
+    (catch_clause
+      (catch)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (boolean_literal)))
+    (finally_clause
+      (finally)
+      (function_call
+        (identifier)
+        (arg_sequence
+          (identifier))))))
+
+================================================================================
+Try-catch-finally-else with no parentheses
+================================================================================
+
+try
+    thing := Fallible()
+catch
+    errored := true
+finally
+    cleanup(errored)
+else
+  errored := false
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (function_call
+        (identifier)))
+    (catch_clause
+      (catch)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (boolean_literal)))
+    (finally_clause
+      (finally)
+      (function_call
+        (identifier)
+        (arg_sequence
+          (identifier)))))
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (boolean_literal)))))
+
+================================================================================
+Block try with bare catch
+================================================================================
+
+try {
+    thing := Fallible()
+}
+catch
+    errored := true
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (function_call
+          (identifier))))
+    (catch_clause
+      (catch)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (boolean_literal)))))
+
+================================================================================
 Switch statement
 ================================================================================
 
