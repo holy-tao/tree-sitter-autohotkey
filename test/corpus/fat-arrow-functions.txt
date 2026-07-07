@@ -355,3 +355,55 @@ Fat-arrow function nested
         (additive_operation
           (identifier)
           (identifier))))))
+
+================================================================================
+Fat-arrow function with unparenthesized single identifier name
+================================================================================
+
+a => "aaaaa"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (fat_arrow_function
+    (identifier)
+    (arrow)
+    (string_literal)))
+
+================================================================================
+Fat-arrow function with unparenthesized single identifier name (docs example)
+================================================================================
+
+double := a => a * 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (fat_arrow_function
+      (identifier)
+      (arrow)
+      (multiplicative_operation
+        (identifier)
+        (integer_literal)))))
+
+================================================================================
+Unparenthesized fat-arrow functions can only have one param
+================================================================================
+
+fn := a, b => "aaaaa"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (identifier))
+    (fat_arrow_function
+      (identifier)
+      (arrow)
+      (string_literal))))

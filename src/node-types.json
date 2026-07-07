@@ -6770,6 +6770,10 @@
           {
             "type": "function_head",
             "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
           }
         ]
       }

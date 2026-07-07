@@ -2007,8 +2007,17 @@
             "type": "FIELD",
             "name": "head",
             "content": {
-              "type": "SYMBOL",
-              "name": "function_head"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "function_head"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                }
+              ]
             }
           },
           {

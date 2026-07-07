@@ -555,7 +555,10 @@ export default grammar({
 
     //#region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
-      field("head", $.function_head),
+      field("head", choice(
+        $.function_head,
+        $.identifier
+      )),
       $.arrow,
       field("body", $._single_expression)
     )),
