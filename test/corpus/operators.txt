@@ -545,3 +545,78 @@ result.%definition.name%prop := validatedValue
         (identifier)))
     (assignment_operator)
     (identifier)))
+
+================================================================================
+Binary operation as statement with function-call left operand
+================================================================================
+
+A() || b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (logical_or_operation
+    (function_call
+      (identifier))
+    (identifier)))
+
+================================================================================
+Statement binary operation chain keeps leftmost primary
+================================================================================
+
+A() || b || c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (logical_or_operation
+    (logical_or_operation
+      (function_call
+        (identifier))
+      (identifier))
+    (identifier)))
+
+================================================================================
+Statement operation with trailing lower-precedence operand
+================================================================================
+
+MyFunc() + 1
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (additive_operation
+    (function_call
+      (identifier))
+    (integer_literal)))
+
+================================================================================
+Statement operation with index-access left operand
+================================================================================
+
+obj[i] && x
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (logical_and_operation
+    (index_access
+      (identifier)
+      (arg_sequence
+        (identifier)))
+    (identifier)))
+
+================================================================================
+Ternary as statement requires primary condition
+================================================================================
+
+A() ? b : c
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (ternary_expression
+    (function_call
+      (identifier))
+    (identifier)
+    (identifier)))

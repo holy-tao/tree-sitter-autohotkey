@@ -2665,7 +2665,27 @@
       "required": false,
       "types": [
         {
+          "type": "additive_operation",
+          "named": true
+        },
+        {
           "type": "assignment_operation",
+          "named": true
+        },
+        {
+          "type": "bitshift_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_and_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_or_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_xor_operation",
           "named": true
         },
         {
@@ -2705,7 +2725,19 @@
           "named": true
         },
         {
+          "type": "equality_operation",
+          "named": true
+        },
+        {
           "type": "error_stdout_directive",
+          "named": true
+        },
+        {
+          "type": "explicit_concat_operation",
+          "named": true
+        },
+        {
+          "type": "exponent_operation",
           "named": true
         },
         {
@@ -2757,6 +2789,10 @@
           "named": true
         },
         {
+          "type": "implicit_concat_operation",
+          "named": true
+        },
+        {
           "type": "import_directive",
           "named": true
         },
@@ -2773,11 +2809,23 @@
           "named": true
         },
         {
+          "type": "inequality_operation",
+          "named": true
+        },
+        {
           "type": "input_level_directive",
           "named": true
         },
         {
           "type": "label",
+          "named": true
+        },
+        {
+          "type": "logical_and_operation",
+          "named": true
+        },
+        {
+          "type": "logical_or_operation",
           "named": true
         },
         {
@@ -2805,7 +2853,15 @@
           "named": true
         },
         {
+          "type": "multiplicative_operation",
+          "named": true
+        },
+        {
           "type": "no_tray_icon_directive",
+          "named": true
+        },
+        {
+          "type": "or_maybe_operation",
           "named": true
         },
         {
@@ -2814,6 +2870,14 @@
         },
         {
           "type": "prefix_operation",
+          "named": true
+        },
+        {
+          "type": "regex_match_operation",
+          "named": true
+        },
+        {
+          "type": "relational_operation",
           "named": true
         },
         {
@@ -2850,6 +2914,10 @@
         },
         {
           "type": "try_statement",
+          "named": true
+        },
+        {
+          "type": "type_check_operation",
           "named": true
         },
         {
@@ -2972,7 +3040,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -3012,7 +3100,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -3064,6 +3164,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -3080,11 +3184,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -3112,7 +3228,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -3121,6 +3245,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -3157,6 +3289,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -3404,7 +3540,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -3444,7 +3600,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -3496,6 +3664,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -3512,11 +3684,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -3544,7 +3728,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -3553,6 +3745,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -3589,6 +3789,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -3887,7 +4091,27 @@
       "required": false,
       "types": [
         {
+          "type": "additive_operation",
+          "named": true
+        },
+        {
           "type": "assignment_operation",
+          "named": true
+        },
+        {
+          "type": "bitshift_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_and_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_or_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_xor_operation",
           "named": true
         },
         {
@@ -3931,7 +4155,19 @@
           "named": true
         },
         {
+          "type": "equality_operation",
+          "named": true
+        },
+        {
           "type": "error_stdout_directive",
+          "named": true
+        },
+        {
+          "type": "explicit_concat_operation",
+          "named": true
+        },
+        {
+          "type": "exponent_operation",
           "named": true
         },
         {
@@ -3983,6 +4219,10 @@
           "named": true
         },
         {
+          "type": "implicit_concat_operation",
+          "named": true
+        },
+        {
           "type": "import_directive",
           "named": true
         },
@@ -3999,11 +4239,23 @@
           "named": true
         },
         {
+          "type": "inequality_operation",
+          "named": true
+        },
+        {
           "type": "input_level_directive",
           "named": true
         },
         {
           "type": "label",
+          "named": true
+        },
+        {
+          "type": "logical_and_operation",
+          "named": true
+        },
+        {
+          "type": "logical_or_operation",
           "named": true
         },
         {
@@ -4031,7 +4283,15 @@
           "named": true
         },
         {
+          "type": "multiplicative_operation",
+          "named": true
+        },
+        {
           "type": "no_tray_icon_directive",
+          "named": true
+        },
+        {
+          "type": "or_maybe_operation",
           "named": true
         },
         {
@@ -4040,6 +4300,14 @@
         },
         {
           "type": "prefix_operation",
+          "named": true
+        },
+        {
+          "type": "regex_match_operation",
+          "named": true
+        },
+        {
+          "type": "relational_operation",
           "named": true
         },
         {
@@ -4076,6 +4344,10 @@
         },
         {
           "type": "try_statement",
+          "named": true
+        },
+        {
+          "type": "type_check_operation",
           "named": true
         },
         {
@@ -4144,7 +4416,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -4184,7 +4476,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -4236,6 +4540,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -4252,11 +4560,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -4284,7 +4604,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -4293,6 +4621,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -4329,6 +4665,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -4858,7 +5198,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -4898,7 +5258,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -4950,6 +5322,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -4966,11 +5342,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -4998,7 +5386,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -5007,6 +5403,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -5043,6 +5447,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -6810,7 +7218,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -6850,7 +7278,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -6902,6 +7342,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -6918,11 +7362,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -6950,7 +7406,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -6959,6 +7423,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -6995,6 +7467,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -7049,7 +7525,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -7089,7 +7585,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -7141,6 +7649,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -7157,11 +7669,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -7189,7 +7713,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -7198,6 +7730,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -7234,6 +7774,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -9621,7 +10165,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -9661,7 +10225,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -9713,6 +10289,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -9729,11 +10309,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -9761,7 +10353,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -9770,6 +10370,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -9806,6 +10414,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -12037,7 +12649,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -12077,7 +12709,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -12129,6 +12773,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -12145,11 +12793,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -12177,7 +12837,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -12186,6 +12854,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -12222,6 +12898,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {
@@ -15784,7 +16464,27 @@
       "required": false,
       "types": [
         {
+          "type": "additive_operation",
+          "named": true
+        },
+        {
           "type": "assignment_operation",
+          "named": true
+        },
+        {
+          "type": "bitshift_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_and_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_or_operation",
+          "named": true
+        },
+        {
+          "type": "bitwise_xor_operation",
           "named": true
         },
         {
@@ -15824,7 +16524,19 @@
           "named": true
         },
         {
+          "type": "equality_operation",
+          "named": true
+        },
+        {
           "type": "error_stdout_directive",
+          "named": true
+        },
+        {
+          "type": "explicit_concat_operation",
+          "named": true
+        },
+        {
+          "type": "exponent_operation",
           "named": true
         },
         {
@@ -15884,6 +16596,10 @@
           "named": true
         },
         {
+          "type": "implicit_concat_operation",
+          "named": true
+        },
+        {
           "type": "import_directive",
           "named": true
         },
@@ -15900,11 +16616,23 @@
           "named": true
         },
         {
+          "type": "inequality_operation",
+          "named": true
+        },
+        {
           "type": "input_level_directive",
           "named": true
         },
         {
           "type": "label",
+          "named": true
+        },
+        {
+          "type": "logical_and_operation",
+          "named": true
+        },
+        {
+          "type": "logical_or_operation",
           "named": true
         },
         {
@@ -15932,7 +16660,15 @@
           "named": true
         },
         {
+          "type": "multiplicative_operation",
+          "named": true
+        },
+        {
           "type": "no_tray_icon_directive",
+          "named": true
+        },
+        {
+          "type": "or_maybe_operation",
           "named": true
         },
         {
@@ -15941,6 +16677,14 @@
         },
         {
           "type": "prefix_operation",
+          "named": true
+        },
+        {
+          "type": "regex_match_operation",
+          "named": true
+        },
+        {
+          "type": "relational_operation",
           "named": true
         },
         {
@@ -15981,6 +16725,10 @@
         },
         {
           "type": "try_statement",
+          "named": true
+        },
+        {
+          "type": "type_check_operation",
           "named": true
         },
         {
@@ -19183,7 +19931,27 @@
             "named": false
           },
           {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
             "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
             "named": true
           },
           {
@@ -19223,7 +19991,19 @@
             "named": true
           },
           {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
             "type": "error_stdout_directive",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
             "named": true
           },
           {
@@ -19275,6 +20055,10 @@
             "named": true
           },
           {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
             "type": "import_directive",
             "named": true
           },
@@ -19291,11 +20075,23 @@
             "named": true
           },
           {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
             "type": "input_level_directive",
             "named": true
           },
           {
             "type": "label",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
             "named": true
           },
           {
@@ -19323,7 +20119,15 @@
             "named": true
           },
           {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
             "type": "no_tray_icon_directive",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
             "named": true
           },
           {
@@ -19332,6 +20136,14 @@
           },
           {
             "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
             "named": true
           },
           {
@@ -19368,6 +20180,10 @@
           },
           {
             "type": "try_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
             "named": true
           },
           {

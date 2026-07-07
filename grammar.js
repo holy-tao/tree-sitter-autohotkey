@@ -43,6 +43,39 @@ const PREC = {
 };
 
 /**
+ * Binary operators, as (node, associativity, precedence, operator-token) tuples, kept in
+ * exact sync with the hand-written expression rules below. Used to synthesise statement-level
+ * "twins" (see `_statement_operation`) whose left operand is constrained to a
+ * `_primary_expression`. Per the Expression Statements docs
+ * (https://www.autohotkey.com/docs/v2/Language.htm#expression-statements), an operation is a
+ * legal statement only when it *starts with* a side-effecting primary (a call, `[]` access,
+ * assignment, `++`/`--`, `(`-expression or `%deref%`): `A() || b` is a statement but `a || b`
+ * is not. `implicit_concat_operation` and `ternary_expression` have distinct shapes and are
+ * twinned by hand rather than from this table.
+ *
+ * @typedef {{ node: string, assoc: "left" | "right", prec: number, op: (($: any) => RuleOrLiteral) }} StmtBinaryOp
+ * @type {StmtBinaryOp[]}
+ */
+const STMT_BINARY_OPS = [
+  { node: "additive_operation",        assoc: "left",  prec: PREC.ADDITIVE,         op: () => choice("+", "-") },
+  { node: "multiplicative_operation",  assoc: "left",  prec: PREC.MULTIPLICATIVE,   op: () => choice("*", "/", "//") },
+  { node: "relational_operation",      assoc: "left",  prec: PREC.RELATIONAL,       op: () => choice("<", ">", "<=", ">=") },
+  { node: "equality_operation",        assoc: "left",  prec: PREC.EQUALITY,         op: () => choice("=", "==") },
+  { node: "inequality_operation",      assoc: "left",  prec: PREC.INEQUALITY,       op: () => choice("!=", "!==") },
+  { node: "regex_match_operation",     assoc: "left",  prec: PREC.REGEX_MATCH,      op: () => token(prec(200, choice("~=", "!~="))) },
+  { node: "type_check_operation",      assoc: "left",  prec: PREC.CASE_INSENSITIVE, op: () => token(prec(PREC.KEYWORD, / is /i)) },
+  { node: "logical_and_operation",     assoc: "left",  prec: PREC.LOGICAL_AND,      op: () => choice("&&", token(prec(PREC.KEYWORD, /and/i))) },
+  { node: "logical_or_operation",      assoc: "left",  prec: PREC.LOGICAL_OR,       op: () => choice("||", token(prec(PREC.KEYWORD, /or/i))) },
+  { node: "bitwise_and_operation",     assoc: "left",  prec: PREC.BITWISE_AND,      op: () => "&" },
+  { node: "bitwise_xor_operation",     assoc: "left",  prec: PREC.BITWISE_XOR,      op: () => "^" },
+  { node: "bitwise_or_operation",      assoc: "left",  prec: PREC.BITWISE_OR,       op: () => "|" },
+  { node: "bitshift_operation",        assoc: "left",  prec: PREC.SHIFT,            op: $ => $.bitshift_operator },
+  { node: "explicit_concat_operation", assoc: "left",  prec: PREC.CONCAT,           op: () => token(/\.\s+/) },
+  { node: "exponent_operation",        assoc: "right", prec: PREC.EXPONENT,         op: () => "**" },
+  { node: "or_maybe_operation",        assoc: "left",  prec: PREC.OR_MAYBE,         op: () => "??" },
+];
+
+/**
  * NOTE: The closest thing AutoHotkey has to a formal specification is the "Language" doc: https://www.autohotkey.com/docs/v2/Language.htm
  * As the maintainer himself notes, "Gleaning the syntax from the C++ source code is probably futile, as it doesn't
  * use any kind of sane parsing strategy." (https://www.autohotkey.com/boards/viewtopic.php?t=105213)
@@ -84,7 +117,7 @@ export default grammar({
     [$._single_expression, $.default_param],
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
-    [$._single_expression, $._statement],
+    [$._single_expression, $._statement_expression],
     [$._exec_hotstring, $._statement],
     [$.member_access, $._member_dynamic_identifier],
     [$.dynamic_identifier],
@@ -126,7 +159,7 @@ export default grammar({
       $.struct_declaration,
       $.export_declaration,
       $.call_statement,  // call_statements only at statement level
-      $._primary_expression,
+      $._statement_expression,
       alias($.top_level_expression_sequence, $.expression_sequence),
       // blocks are allowed at the top level, though they don't do anything. The negative
       // dynamic precedence makes a bare block lose to a function_expression when a brace
@@ -139,8 +172,9 @@ export default grammar({
     ),
 
     top_level_expression_sequence: $ => seq(
-      // Exactly like expression_sequence, but first expression must be primary and no parentheses allowed
-      $._primary_expression,
+      // Exactly like expression_sequence, but the first element must be a valid statement
+      // expression and no surrounding parentheses are allowed.
+      $._statement_expression,
       repeat1(seq(",", $._single_expression))
     ),
 
@@ -193,6 +227,46 @@ export default grammar({
       $.function_call,        // Only parenthesized calls allowed in expressions
       $.throw_statement,      // in v2.1 throw is a function
     ),
+
+    // An expression usable as a statement
+    _statement_expression: $ => choice(
+      $._primary_expression,
+      $._statement_operation,
+    ),
+
+    _statement_operation: $ => choice(
+      ...STMT_BINARY_OPS.map(spec => alias($["_stmt_" + spec.node], $[spec.node])),
+      alias($._stmt_implicit_concat_operation, $.implicit_concat_operation),
+      alias($._stmt_ternary_expression, $.ternary_expression),
+    ),
+
+    // Statement-level twin of implicit_concat_operation (distinct shape: marker, no operator field).
+    _stmt_implicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
+      field("left", $._statement_expression),
+      $._implicit_concat_marker,
+      field("right", $._single_expression),
+    )),
+
+    // Statement-level twin of ternary_expression (distinct shape: condition/branch fields).
+    _stmt_ternary_expression: $ => prec.right(PREC.TERNARY, seq(
+      field("condition", $._statement_expression),
+      "?",
+      field("true_branch", $._single_expression),
+      ":",
+      field("false_branch", $._single_expression),
+    )),
+
+    // Statement-level twins of the STMT_BINARY_OPS operators, aliased back to their
+    // expression-rule names in `_statement_operation`. Same precedence/associativity/operator
+    // as their expression counterparts; only the left operand is constrained.
+    ...Object.fromEntries(STMT_BINARY_OPS.map(spec => [
+      "_stmt_" + spec.node,
+      $ => (spec.assoc === "right" ? prec.right : prec.left)(spec.prec, seq(
+        field("left", $._statement_expression),
+        field("operator", spec.op($)),
+        field("right", $._single_expression),
+      )),
+    ])),
 
     _single_expression: $ => choice(
       $._pairwise_operation,
