@@ -515,6 +515,51 @@ static bool is_last_element(TSLexer *lexer) {
   return is_eof(lexer) || is_eol(lexer->lookahead) || lexer->lookahead == ';';
 }
 
+/// @brief Determines whether the line following the current position begins with an expression
+///        "continuation operator", which per AHK's rules merges it with the line above rather than
+///        starting a new statement (see docs Scripts.htm, "Continuation operator": a line that
+///        starts with a comma or any other expression operator, except ++ and --, is joined to the
+///        previous line). Called only when EOL is otherwise valid and the current line has already
+///        ended, so suppressing EOL lets the expression continue onto the next line.
+///
+///        We deliberately handle only operators that cannot also begin a hotkey, hotstring or new
+///        statement. The hotkey modifier characters (^ ! # + < > ~ $ * &) are excluded, because a
+///        line such as `^c::action` is a hotkey, not a continuation - the interpreter gives hotkeys
+///        precedence over the continuation-operator merge. Doubled `&&`/`||` are safe since no
+///        hotkey begins with them, and the "," / "." keys are guarded against their `::` hotkeys.
+///
+/// @param lexer the lexer, positioned at the end of the current (already terminated) line
+/// @return true if the next line continues the current expression and EOL should be suppressed
+static bool starts_continuation_line(TSLexer *lexer) {
+  // Advance to the first non-blank character of the following line(s).
+  skip_whitespace(lexer);
+  if(is_eof(lexer))
+    return false;
+
+  switch(lexer->lookahead) {
+    case '&':   // logical-and "&&" (a lone "&" is a reference/hotkey character, so require two)
+      lexer->advance(lexer, false);
+      return lexer->lookahead == '&';
+    case '|':   // logical-or "||"
+      lexer->advance(lexer, false);
+      return lexer->lookahead == '|';
+    case ',':   // comma continuation, but not the "," key hotkey (",::")
+      lexer->advance(lexer, false);
+      return lexer->lookahead != ':';
+    case '.':   // member access / concatenation, but not a float (".5") or the "." hotkey (".::")
+      lexer->advance(lexer, false);
+      return !is_digit(lexer->lookahead) && lexer->lookahead != ':';
+    default:
+      if(starts_operator_keyword(lexer->lookahead)) {
+        // Word operators: a line may start with "and", "or" or "is" to continue the previous line.
+        char word[16] = {0};
+        skip_identifier(lexer, word, sizeof(word));
+        return strcaseeq_any(word, "and", "or", "is");
+      }
+      return false;
+  }
+}
+
 /// @brief Scans for a block comment. In AHK v2, block comments open with /* and close with */,
 ///        but the closing */ must be the LAST non-whitespace content on its line. A */ followed by
 ///        more content on the same line does NOT close the comment.
@@ -857,6 +902,12 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     lexer->mark_end(lexer);
 
     if(is_last_element(lexer)) {
+      // A following line that begins with an expression operator (e.g. `&&` on its own line)
+      // continues this line rather than ending it, so the statement does not terminate here.
+      if(starts_continuation_line(lexer)) {
+        return false;
+      }
+
       lexer->result_symbol = EOL;
       return true;
     }

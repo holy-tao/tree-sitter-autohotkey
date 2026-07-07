@@ -1,0 +1,139 @@
+================================================================================
+If condition continued by leading && operator
+================================================================================
+
+if a
+    && b
+    MsgBox()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (logical_and_operation
+      (identifier)
+      (identifier))
+    (function_call
+      (identifier))))
+
+================================================================================
+If condition continued by leading && operator with block body
+================================================================================
+
+if a
+    && b {
+    MsgBox()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (logical_and_operation
+      (identifier)
+      (identifier))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+If condition continued by leading || operator
+================================================================================
+
+if a
+    || b
+    MsgBox()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (logical_or_operation
+      (identifier)
+      (identifier))
+    (function_call
+      (identifier))))
+
+================================================================================
+If condition continued by leading word operator
+================================================================================
+
+if a
+    and b
+    or c
+    MsgBox()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (logical_or_operation
+      (logical_and_operation
+        (identifier)
+        (identifier))
+      (identifier))
+    (function_call
+      (identifier))))
+
+================================================================================
+Assignment continued by leading member access
+================================================================================
+
+x := obj
+    .foo()
+    .bar()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (member_access
+        (function_call
+          (member_access
+            (identifier)
+            (identifier)))
+        (identifier)))))
+
+================================================================================
+While condition continued by leading operator
+================================================================================
+
+while a
+    && b
+    MsgBox()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (logical_and_operation
+      (identifier)
+      (identifier))
+    (function_call
+      (identifier))))
+
+================================================================================
+Leading operator continuation does not merge a following hotkey
+================================================================================
+
+x := 1
+::btw::by the way
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement)))
