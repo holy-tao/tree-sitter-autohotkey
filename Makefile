@@ -1,6 +1,6 @@
 LANGUAGE_NAME := tree-sitter-autohotkey
 HOMEPAGE_URL := https://github.com/holy-tao/tree-sitter-autohotkey
-VERSION := 0.4.9
+VERSION := 0.4.10
 
 # repository
 SRC_DIR := src

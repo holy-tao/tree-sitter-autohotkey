@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-autohotkey",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "Tree-sitter grammar for AHK v2",
   "type": "module",
   "repository": {
