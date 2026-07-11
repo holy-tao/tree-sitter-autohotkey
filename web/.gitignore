@@ -1,0 +1,4 @@
+node_modules/
+dist/
+# Grammar wasm is a build artifact, produced by `npm run build:wasm`.
+public/*.wasm
