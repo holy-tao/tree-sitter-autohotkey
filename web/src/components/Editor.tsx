@@ -24,7 +24,7 @@ const editorTheme = EditorView.theme({
     fontFamily: '"Cascadia Code", "Consolas", ui-monospace, monospace',
   },
   ".cm-cursor, .cm-dropCursor": { borderLeftColor: "var(--text)" },
-  "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
+  "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
     { backgroundColor: "var(--selection)" },
   ".cm-gutters": {
     backgroundColor: "var(--editor-bg)",
