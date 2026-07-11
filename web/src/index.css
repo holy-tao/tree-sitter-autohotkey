@@ -18,6 +18,22 @@
   --selected-bg: rgba(34, 125, 114, 0.16);
   --hovered-bg: rgba(0, 0, 0, 0.05);
 
+  /* Syntax token colors (light). */
+  --tok-comment: #008000;
+  --tok-keyword: #0000ff;
+  --tok-directive: #af00db;
+  --tok-string: #a31515;
+  --tok-string-special: #0451a5;
+  --tok-number: #098658;
+  --tok-constant: #0000ff;
+  --tok-macro: #af00db;
+  --tok-function: #795e26;
+  --tok-type: #267f99;
+  --tok-property: #001080;
+  --tok-parameter: #001080;
+  --tok-builtin: #0070c1;
+  --tok-label: #811f3f;
+
   color-scheme: light dark;
   font-family:
     system-ui,
@@ -45,6 +61,22 @@
     --highlight: rgba(78, 201, 176, 0.25);
     --selected-bg: rgba(78, 201, 176, 0.18);
     --hovered-bg: rgba(255, 255, 255, 0.07);
+
+    /* Syntax token colors (dark). */
+    --tok-comment: #6a9955;
+    --tok-keyword: #569cd6;
+    --tok-directive: #c586c0;
+    --tok-string: #ce9178;
+    --tok-string-special: #ce9178;
+    --tok-number: #b5cea8;
+    --tok-constant: #569cd6;
+    --tok-macro: #c586c0;
+    --tok-function: #dcdcaa;
+    --tok-type: #4ec9b0;
+    --tok-property: #9cdcfe;
+    --tok-parameter: #9cdcfe;
+    --tok-builtin: #569cd6;
+    --tok-label: #d7ba7d;
   }
 }
 
@@ -68,4 +100,51 @@ body {
 .cm-node-highlight {
   background-color: var(--highlight);
   border-radius: 2px;
+}
+
+/* Syntax highlighting. Classes are cumulative (e.g. "tok-function tok-function-method"),
+   so a base color always applies and more specific kinds may refine it below. Emitted from
+   the grammar's queries/highlights.scm - see Editor.tsx. */
+.tok-comment {
+  color: var(--tok-comment);
+  font-style: italic;
+}
+.tok-keyword {
+  color: var(--tok-keyword);
+}
+.tok-keyword-directive {
+  color: var(--tok-directive);
+}
+.tok-string {
+  color: var(--tok-string);
+}
+.tok-string-special {
+  color: var(--tok-string-special);
+}
+.tok-number {
+  color: var(--tok-number);
+}
+.tok-constant {
+  color: var(--tok-constant);
+}
+.tok-constant-macro {
+  color: var(--tok-macro);
+}
+.tok-function {
+  color: var(--tok-function);
+}
+.tok-type {
+  color: var(--tok-type);
+}
+.tok-property {
+  color: var(--tok-property);
+}
+.tok-variable-parameter {
+  color: var(--tok-parameter);
+}
+.tok-variable-builtin {
+  color: var(--tok-builtin);
+}
+.tok-label {
+  color: var(--tok-label);
 }

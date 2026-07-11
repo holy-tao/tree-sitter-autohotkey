@@ -8,4 +8,9 @@ export default defineConfig({
   base: "/tree-sitter-autohotkey/",
   plugins: [react()],
   // web-tree-sitter ships a .wasm we import with `?url`; Vite handles it natively.
+  server: {
+    // We import ../../queries/highlights.scm?raw from the parent repo, so let the dev
+    // server read one level above web/. (Production builds via rollup aren't restricted.)
+    fs: { allow: [".."] },
+  },
 });

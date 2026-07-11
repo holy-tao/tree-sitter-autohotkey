@@ -1,10 +1,9 @@
 // Thin wrapper around web-tree-sitter: one-time init, grammar load, and a walk that
 // turns a parse Tree into a plain serializable model the React tree view can render
 // without touching the wasm-backed objects (which must not outlive a re-parse).
-import { Parser, Language, type TreeCursor } from "web-tree-sitter";
-// web-tree-sitter's runtime wasm; `?url` lets Vite fingerprint it and resolve it under
-// the GitHub Pages base path. The grammar wasm lives in public/ (copied by build:wasm).
+import { Parser, Language, Query, type TreeCursor } from "web-tree-sitter";
 import coreWasmUrl from "web-tree-sitter/web-tree-sitter.wasm?url";
+import highlightsQuery from "../../../queries/highlights.scm?raw";
 
 export interface Point {
   row: number;
@@ -29,12 +28,30 @@ export interface SyntaxNode {
   children: SyntaxNode[];
 }
 
-let parserPromise: Promise<Parser> | null = null;
+/** A resolved highlight span: `type` is the tree-sitter capture name (e.g. "function.method"). */
+export interface Highlight {
+  from: number;
+  to: number;
+  type: string;
+}
 
-/** Lazily initialize the wasm runtime + grammar and return a ready parser (singleton). */
-export function getParser(): Promise<Parser> {
-  if (!parserPromise) {
-    parserPromise = (async () => {
+/** The full result of a parse: the plain tree plus highlight spans (captures may overlap). */
+export interface ParseResult {
+  root: SyntaxNode;
+  highlights: Highlight[];
+}
+
+interface Grammar {
+  parser: Parser;
+  query: Query;
+}
+
+let grammarPromise: Promise<Grammar> | null = null;
+
+/** Lazily initialize the wasm runtime + grammar + highlight query (singleton). */
+function getGrammar(): Promise<Grammar> {
+  if (!grammarPromise) {
+    grammarPromise = (async () => {
       await Parser.init({ locateFile: () => coreWasmUrl });
 
       const grammarUrl = `${import.meta.env.BASE_URL}tree-sitter-autohotkey.wasm`;
@@ -42,22 +59,30 @@ export function getParser(): Promise<Parser> {
       const parser = new Parser();
 
       parser.setLanguage(language);
-      return parser;
+      const query = new Query(language, highlightsQuery);
+      return { parser, query };
     })();
   }
-  return parserPromise;
+  return grammarPromise;
 }
 
-/** Parse source and return the root node as a plain model. */
-export async function parse(source: string): Promise<SyntaxNode> {
-  const parser = await getParser();
+/** Parse source and return the root node as a plain model plus highlight spans. */
+export async function parse(source: string): Promise<ParseResult> {
+  const { parser, query } = await getGrammar();
   const tree = parser.parse(source);
 
   if (!tree) throw new Error("Parse failed: tree-sitter returned null");
 
   try {
     const counter = { n: 0 };
-    return walk(tree.walk(), counter);
+    const root = walk(tree.walk(), counter);
+    // Captures reference the wasm-backed tree, so pull out plain offsets before it's deleted.
+    const highlights = query.captures(tree.rootNode).map((c) => ({
+      from: c.node.startIndex,
+      to: c.node.endIndex,
+      type: c.name,
+    }));
+    return { root, highlights };
   } finally {
     tree.delete();
   }

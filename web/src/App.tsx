@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Editor, type HighlightRange } from "./components/Editor";
 import { TreeView } from "./components/TreeView";
-import { parse, type SyntaxNode } from "./lib/parser";
+import { parse, type Highlight, type SyntaxNode } from "./lib/parser";
 import { SAMPLE_AHK } from "./sample";
 import "./App.css";
 
@@ -10,6 +10,7 @@ const PARSE_DEBOUNCE_MS = 150;
 export function App() {
   const [source, setSource] = useState(SAMPLE_AHK);
   const [root, setRoot] = useState<SyntaxNode | null>(null);
+  const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showAnonymous, setShowAnonymous] = useState(false);
 
@@ -22,9 +23,10 @@ export function App() {
     const id = ++runId.current;
     const timer = setTimeout(async () => {
       try {
-        const tree = await parse(source);
+        const { root: tree, highlights: hl } = await parse(source);
         if (id === runId.current) {
           setRoot(tree);
+          setHighlights(hl);
           setError(null);
         }
       } catch (err) {
@@ -57,7 +59,7 @@ export function App() {
         <span className="app-subtitle">
           Parse tree playground · hover or click a node to highlight its source
         </span>
-        <a 
+        <a
           href="https://github.com/holy-tao/tree-sitter-autohotkey"
           target="_blank"
           rel="noopener noreferrer"
@@ -68,7 +70,12 @@ export function App() {
       </header>
       <main className="panes">
         <section className="pane pane-editor">
-          <Editor value={source} onChange={onChange} highlight={highlight} />
+          <Editor
+            value={source}
+            onChange={onChange}
+            highlight={highlight}
+            highlights={highlights}
+          />
         </section>
         <section className="pane pane-tree">
           <TreeView
