@@ -7,6 +7,7 @@ on:
       - web/**
       - grammar.json
       - src/**
+      - queries/**
       - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 
