@@ -19,11 +19,10 @@ esac
 cd "$(dirname "$0")/.."
 
 tree-sitter version --bump "$level"
+tree-sitter generate  # grammar version is baked into parser.c :(
 cargo generate-lockfile # tree-sitter updates Cargo.toml but not Cargo.lock
 
-version="$(tree-sitter version)"
-
 git ls-files -m | xargs git add
-git commit -m "Bump $version version"
+git commit -m "Bump $level version"
 
-echo "Bumped to $version and committed."
+echo "Bumped and committed."
