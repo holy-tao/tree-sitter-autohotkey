@@ -1,0 +1,72 @@
+name: Deploy Playground to Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - web/**
+      - grammar.json
+      - src/**
+      - .github/workflows/deploy-pages.yml
+  workflow_dispatch:
+
+# Allow the workflow to publish to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One concurrent deploy; don't cancel an in-progress publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Tree-sitter CLI
+        uses: tree-sitter/setup-action@v2
+        with:
+          install-lib: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      # The tree-sitter CLI (>=0.24) compiles the grammar to wasm with a bundled
+      # toolchain, so no Emscripten/Docker setup is needed here.
+      - name: Regenerate parser
+        run: tree-sitter generate
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Build site (compiles grammar wasm, then Vite build)
+        run: npm run build
+        working-directory: web
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
