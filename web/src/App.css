@@ -26,6 +26,10 @@
   font-size: 0.85rem;
 }
 
+.push-right {
+  margin-left: auto;
+}
+
 .panes {
   display: grid;
   grid-template-columns: 1fr 1fr;

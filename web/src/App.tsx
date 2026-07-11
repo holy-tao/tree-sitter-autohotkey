@@ -57,6 +57,14 @@ export function App() {
         <span className="app-subtitle">
           Parse tree playground · hover or click a node to highlight its source
         </span>
+        <a 
+          href="https://github.com/holy-tao/tree-sitter-autohotkey"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="push-right"
+        >
+          GitHub
+        </a>
       </header>
       <main className="panes">
         <section className="pane pane-editor">
