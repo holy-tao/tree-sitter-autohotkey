@@ -3,6 +3,10 @@ name: Publish to crates.io
 on:
   push:
     branches: [main]
+    paths:
+      - grammar.json
+      - src/**
+      - .github/workflows/test.yml
   workflow_dispatch:
 
 jobs:

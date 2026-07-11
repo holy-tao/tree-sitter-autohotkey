@@ -2,8 +2,16 @@ name: Test Grammar
 
 on:
   push:
+    paths:
+      - grammar.json
+      - src/**
+      - .github/workflows/test.yml
   pull_request:
     branches: [main]
+    paths:
+      - grammar.json
+      - src/**
+      - .github/workflows/test.yml
   workflow_dispatch:
 
 jobs:
