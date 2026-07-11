@@ -1,0 +1,71 @@
+/* Light palette is the default; the dark block below overrides it when the OS/browser
+   prefers dark. Both the app chrome and the CodeMirror editor (see Editor.tsx) read these
+   variables, so the two panes always share one scheme. */
+:root {
+  --bg: #ffffff;
+  --bg-panel: #f3f3f3;
+  --bg-toolbar: #eaeaea;
+  --border: #d4d4d4;
+  --text: #1f1f1f;
+  --text-dim: #6a6a6a;
+  --accent: #227d72;
+  --field: #0b6fc2;
+  --anonymous: #7a7a7a;
+  --error: #cd3131;
+  --editor-bg: #ffffff;
+  --selection: #add6ff;
+  --highlight: rgba(34, 125, 114, 0.2);
+  --selected-bg: rgba(34, 125, 114, 0.16);
+  --hovered-bg: rgba(0, 0, 0, 0.05);
+
+  color-scheme: light dark;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  font-size: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1e1e;
+    --bg-panel: #252526;
+    --bg-toolbar: #2d2d30;
+    --border: #3c3c3c;
+    --text: #d4d4d4;
+    --text-dim: #858585;
+    --accent: #4ec9b0;
+    --field: #9cdcfe;
+    --anonymous: #808080;
+    --error: #f14c4c;
+    --editor-bg: #1e1e1e;
+    --selection: #264f78;
+    --highlight: rgba(78, 201, 176, 0.25);
+    --selected-bg: rgba(78, 201, 176, 0.18);
+    --hovered-bg: rgba(255, 255, 255, 0.07);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Editor: highlight the source range for the hovered/selected tree node. */
+.cm-node-highlight {
+  background-color: var(--highlight);
+  border-radius: 2px;
+}

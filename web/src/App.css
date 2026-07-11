@@ -1,0 +1,166 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  background: var(--bg-toolbar);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.app-subtitle {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+.pane {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane-editor {
+  border-right: 1px solid var(--border);
+}
+
+/* CodeMirror fills the pane and scrolls internally. */
+.editor,
+.editor .cm-editor {
+  height: 100%;
+}
+
+.editor .cm-scroller {
+  overflow: auto;
+  font-family: "Cascadia Code", "Consolas", ui-monospace, monospace;
+}
+
+/* --- Tree view --- */
+.tree-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-panel);
+}
+
+.tree-toolbar {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.tree-toolbar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.tree-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 0.4rem 0;
+  font-family: "Cascadia Code", "Consolas", ui-monospace, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.tree-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  white-space: nowrap;
+  cursor: pointer;
+  padding-right: 0.75rem;
+}
+
+.tree-row:hover {
+  background: var(--hovered-bg);
+}
+
+.tree-row.hovered {
+  background: var(--hovered-bg);
+}
+
+.tree-row.selected {
+  background: var(--selected-bg);
+}
+
+.tree-toggle {
+  display: inline-block;
+  width: 1em;
+  color: var(--text-dim);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.tree-field {
+  color: var(--field);
+}
+
+.tree-type {
+  color: var(--accent);
+}
+
+.tree-row.anonymous .tree-type {
+  color: var(--anonymous);
+}
+
+.tree-row.error .tree-type {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.tree-flag {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.tree-pos {
+  color: var(--text-dim);
+  font-size: 0.9em;
+}
+
+.tree-error {
+  padding: 1rem;
+  color: var(--error);
+  white-space: pre-wrap;
+}
+
+.tree-loading {
+  padding: 1rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 720px) {
+  .panes {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .pane-editor {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
