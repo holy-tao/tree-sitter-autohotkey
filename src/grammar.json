@@ -5667,6 +5667,18 @@
         }
       }
     },
+    "global": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 9999,
+        "content": {
+          "type": "PATTERN",
+          "value": "global",
+          "flags": "i"
+        }
+      }
+    },
     "switch": {
       "type": "TOKEN",
       "content": {
@@ -6366,16 +6378,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 9999,
-                    "content": {
-                      "type": "PATTERN",
-                      "value": "global",
-                      "flags": "i"
-                    }
-                  }
+                  "type": "SYMBOL",
+                  "name": "global"
                 },
                 {
                   "type": "ALIAS",

@@ -6740,6 +6740,10 @@
           "named": true
         },
         {
+          "type": "global",
+          "named": true
+        },
+        {
           "type": "variable_declaration",
           "named": true
         }
@@ -20750,6 +20754,10 @@
   },
   {
     "type": "get",
+    "named": true
+  },
+  {
+    "type": "global",
     "named": true
   },
   {

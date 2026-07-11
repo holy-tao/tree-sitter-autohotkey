@@ -1164,6 +1164,7 @@ export default grammar({
     continue: $ => kwtok(/continue/i),
     as: $ => kwtok(/as/i),
     export: $ => kwtok(/Export/i),
+    global: $ => kwtok(/global/i),
     switch: $ => kwtok(/switch/i),
     case: $ => kwtok(/case/i),
     default: $ => kwtok(/default/i),
@@ -1317,7 +1318,7 @@ export default grammar({
         seq(
           // Note this isn't actually a scope identifier, just required for the interpreter
           // to distinguish between `export` as an export and `export` as a function name
-          kwtok(/global/i),
+          $.global,
           alias($._exported_variable, $.variable_declaration),
           repeat(seq(",", alias($._exported_variable, $.variable_declaration)))
         )

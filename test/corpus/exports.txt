@@ -126,6 +126,7 @@ export global MyVar
 (source_file
   (export_declaration
     (export)
+    (global)
     (variable_declaration
       (identifier))))
 
@@ -140,6 +141,7 @@ export global MyVar, MyOther := 1
 (source_file
   (export_declaration
     (export)
+    (global)
     (variable_declaration
       (identifier))
     (variable_declaration
@@ -209,6 +211,8 @@ class MyModule {
 
 -------------------------------------------------------------------------------
 
+
+
 ===============================================================================
 Export properties not allowed in classes
 :error
@@ -219,3 +223,5 @@ class MyModule {
 }
 
 -------------------------------------------------------------------------------
+
+
