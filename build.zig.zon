@@ -1,7 +1,7 @@
 .{
     .name = .tree_sitter_autohotkey,
     .fingerprint = 0xc3deb51be5722946,
-    .version = "0.5.0",
+    .version = "0.5.1",
     .dependencies = .{
         .tree_sitter = .{
             .url = "git+https://github.com/tree-sitter/zig-tree-sitter#b4b72c903e69998fc88e27e154a5e3cc9166551b",

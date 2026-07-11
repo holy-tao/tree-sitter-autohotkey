@@ -14,7 +14,7 @@
     }
   ],
   "metadata": {
-    "version": "0.5.0",
+    "version": "0.5.1",
     "license": "Unlicense",
     "description": "Tree-sitter grammar for AHK v2",
     "authors": [
