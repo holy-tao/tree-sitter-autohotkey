@@ -2,13 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Editor, type HighlightRange } from "./components/Editor";
 import { TreeView } from "./components/TreeView";
 import { parse, type Highlight, type SyntaxNode } from "./lib/parser";
+import LZString from "lz-string"
 import { SAMPLE_AHK } from "./sample";
 import "./App.css";
 
 const PARSE_DEBOUNCE_MS = 150;
 
 export function App() {
-  const [source, setSource] = useState(SAMPLE_AHK);
+  const [source, setSource] = useState("");
   const [root, setRoot] = useState<SyntaxNode | null>(null);
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -16,6 +17,29 @@ export function App() {
 
   const [hovered, setHovered] = useState<SyntaxNode | null>(null);
   const [selected, setSelected] = useState<SyntaxNode | null>(null);
+
+  // Read text off the 'src' query parameter if we have one
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const compressed = queryParams.get('src');
+    
+    if (compressed) {
+      try{
+        const decompressed = LZString.decompressFromEncodedURIComponent(compressed);
+        // It's not well documented, but compress returns null on failure
+        if (decompressed) {
+          setSource(decompressed);
+          return;
+        }
+      } catch (err) {
+        //...but decompress can also throw for truly corrupt data
+        console.error(err);
+      }
+    }
+
+    // No source or failed to decode
+    setSource(SAMPLE_AHK);
+  }, []);
 
   // Debounced, race-safe parsing: each run tags itself and only the latest applies.
   const runId = useRef(0);
@@ -34,6 +58,11 @@ export function App() {
           setError(err instanceof Error ? err.message : String(err));
         }
       }
+
+      // Save state in query param regardless of success, do not re-render or reload
+      const url = new URL(window.location.href);
+      url.searchParams.set("src", LZString.compressToEncodedURIComponent(source));
+      window.history.replaceState({}, "", url.toString());
     }, PARSE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
   }, [source]);
