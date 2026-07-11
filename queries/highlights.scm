@@ -4,37 +4,33 @@
 ; captures win over wider (parent) ones - the consumer is expected to resolve overlaps that way.
 
 ; --- Directives -------------------------------------------------------------
-; TODO: the leading `#Word` of a directive is a regex token so not addressable
-; in queries, they should get their own tokens and we should consistently
-; distinguish the parameters as well.
 [
-  (clipboard_timeout_directive)
-  (dll_load_directive)
-  (error_stdout_directive)
-  (hotif_directive)
-  (hotif_timeout_directive)
-  (hotstring_directive)
-  (import_directive)
-  (include_again_directive)
-  (include_directive)
-  (input_level_directive)
-  (max_threads_buffer_directive)
-  (max_threads_directive)
-  (max_threads_per_hotkey_directive)
-  (module_directive)
-  (no_tray_icon_directive)
-  (requires_directive)
-  (single_instance_directive)
-  (struct_pack_directive)
-  (use_hook_directive)
-  (warn_directive)
+  (directive_name)
+  (include_ignore_failure)
   (directive_comment)
 ] @keyword.directive
 
-(file_or_dir_name) @string.special.path
-(lib_name) @string.special.path
-(version_requirement) @string.special
-(directive_arguments) @string.special
+[
+  (file_or_dir_name)
+  (lib_name)
+  (requirement)
+  (version_requirement)
+  (warning_type)
+  (warning_mode)
+  (single_instance_mode)
+  (bitness)
+] @string
+
+(directive_comment arguments: (directive_arguments) @string)
+
+; Imports are complicated
+(import_directive module: (identifier) @type)
+(import_directive alias: (identifier) @type)
+; Not strictly correct, imports can be variables or functions
+(import_directive (export_name export: (identifier) @type))
+(import_directive (export_name alias: (identifier) @type))
+
+(module_directive name: (identifier) @type)
 
 ; --- Keywords ---------------------------------------------------------------
 [
