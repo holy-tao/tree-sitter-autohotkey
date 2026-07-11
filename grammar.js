@@ -808,8 +808,8 @@ export default grammar({
       "]"),
 
     _array_element_sequence: $ => seq(
-      $._single_expression,
-      repeat(seq(",", $._single_expression)),
+      $._arg,
+      repeat(seq(",", $._arg)),
       optional(",")
     ),
 

@@ -5760,6 +5760,10 @@
           "named": true
         },
         {
+          "type": "empty_arg",
+          "named": true
+        },
+        {
           "type": "equality_operation",
           "named": true
         },
