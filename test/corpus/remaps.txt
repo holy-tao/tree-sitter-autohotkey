@@ -95,6 +95,7 @@ a::b
 
 (source_file
   (input_level_directive
+    (directive_name)
     (integer_literal))
   (remap
     (remap_origin

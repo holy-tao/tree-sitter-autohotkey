@@ -334,8 +334,11 @@ class SemVer {
 
 (source_file
   (requires_directive
+    (directive_name)
+    (requirement)
     (version_requirement))
   (include_directive
+    (directive_name)
     (lib_name))
   (block_comment)
   (class_declaration

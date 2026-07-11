@@ -8,6 +8,7 @@ Warn with type and no mode
 
 (source_file
   (warn_directive
+    (directive_name)
     (warning_type)))
 
 ================================================================================
@@ -20,6 +21,7 @@ Warn with type and mode
 
 (source_file
   (warn_directive
+    (directive_name)
     (warning_type)
     (warning_mode)))
 
@@ -32,7 +34,8 @@ ErrorStdOut with no option
 --------------------------------------------------------------------------------
 
 (source_file
-  (error_stdout_directive))
+  (error_stdout_directive
+    (directive_name)))
 
 ================================================================================
 ErrorStdOut with quoted option
@@ -44,6 +47,7 @@ ErrorStdOut with quoted option
 
 (source_file
   (error_stdout_directive
+    (directive_name)
     (encoding_identifier)))
 
 ================================================================================
@@ -56,6 +60,7 @@ ErrorStdOut with unquoted option
 
 (source_file
   (error_stdout_directive
+    (directive_name)
     (encoding_identifier)))
 
 ================================================================================
@@ -68,6 +73,7 @@ ClipboardTimeout
 
 (source_file
   (clipboard_timeout_directive
+    (directive_name)
     (integer_literal)))
 
 ================================================================================
@@ -79,7 +85,8 @@ DllLoad with no argument
 --------------------------------------------------------------------------------
 
 (source_file
-  (dll_load_directive))
+  (dll_load_directive
+    (directive_name)))
 
 ================================================================================
 DllLoad with dll
@@ -91,6 +98,7 @@ DllLoad with dll
 
 (source_file
   (dll_load_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -103,6 +111,7 @@ DllLoad with variable
 
 (source_file
   (dll_load_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -115,6 +124,8 @@ Standard Requires
 
 (source_file
   (requires_directive
+    (directive_name)
+    (requirement)
     (version_requirement)))
 
 ================================================================================
@@ -127,6 +138,8 @@ Standard Requires with bitness
 
 (source_file
   (requires_directive
+    (directive_name)
+    (requirement)
     (version_requirement)
     (bitness)))
 
@@ -140,6 +153,8 @@ Requires with trailing +
 
 (source_file
   (requires_directive
+    (directive_name)
+    (requirement)
     (version_requirement)))
 
 ================================================================================
@@ -152,6 +167,8 @@ Requires with relational operator
 
 (source_file
   (requires_directive
+    (directive_name)
+    (requirement)
     (version_requirement)))
 
 ================================================================================
@@ -164,6 +181,8 @@ Requires with multiple version requirements
 
 (source_file
   (requires_directive
+    (directive_name)
+    (requirement)
     (version_requirement)
     (version_requirement)))
 
@@ -177,6 +196,7 @@ HotIf with function call
 
 (source_file
   (hotif_directive
+    (directive_name)
     (function_call
       (identifier)
       (arg_sequence
@@ -194,6 +214,7 @@ M::MsgBox("Hello!")
 
 (source_file
   (hotif_directive
+    (directive_name)
     (function_call
       (identifier)
       (arg_sequence
@@ -217,6 +238,7 @@ HotIf with simple check
 
 (source_file
   (hotif_directive
+    (directive_name)
     (equality_operation
       (identifier)
       (boolean_literal))))
@@ -233,6 +255,7 @@ HotIf with expression followed by ctrl hotkey
 
 (source_file
   (hotif_directive
+    directive: (directive_name)
     expression: (relational_operation
       left: (identifier)
       right: (integer_literal)))
@@ -252,7 +275,8 @@ HotIf with no expression (reset)
 --------------------------------------------------------------------------------
 
 (source_file
-  (hotif_directive))
+  (hotif_directive
+    (directive_name)))
 
 ================================================================================
 HotIfTimeout directive
@@ -264,6 +288,7 @@ HotIfTimeout directive
 
 (source_file
   (hotif_timeout_directive
+    (directive_name)
     (integer_literal)))
 
 ================================================================================
@@ -276,6 +301,7 @@ Hotstring NoMouse
 
 (source_file
   (hotstring_directive
+    (directive_name)
     (hotstring_no_mouse)))
 
 ================================================================================
@@ -288,6 +314,7 @@ Hotstring EndChars
 
 (source_file
   (hotstring_directive
+    (directive_name)
     (hotstring_end_chars)))
 
 ================================================================================
@@ -300,6 +327,7 @@ Hotstring with option sequence
 
 (source_file
   (hotstring_directive
+    (directive_name)
     (hotstring_option_sequence
       (hotstring_case_sensitive)
       (hotstring_raw)
@@ -315,6 +343,7 @@ Include with filepath
 
 (source_file
   (include_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -327,6 +356,7 @@ Include with quoted filepath
 
 (source_file
   (include_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -339,6 +369,7 @@ Include with ignore marker and filepath
 
 (source_file
   (include_directive
+    (directive_name)
     (include_ignore_failure)
     (file_or_dir_name)))
 
@@ -352,6 +383,7 @@ Include with library name
 
 (source_file
   (include_directive
+    (directive_name)
     (lib_name)))
 
 ================================================================================
@@ -364,6 +396,7 @@ Include with quoted library name
 
 (source_file
   (include_directive
+    (directive_name)
     (lib_name)))
 
 ================================================================================
@@ -376,6 +409,7 @@ Include with ignore marker and library name
 
 (source_file
   (include_directive
+    (directive_name)
     (include_ignore_failure)
     (lib_name)))
 
@@ -389,6 +423,7 @@ Include with filepath with space
 
 (source_file
   (include_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -401,6 +436,7 @@ Include with lib name with space
 
 (source_file
   (include_directive
+    (directive_name)
     (lib_name)))
 
 ================================================================================
@@ -413,6 +449,7 @@ Include with filepath with ignore marker and space
 
 (source_file
   (include_directive
+    (directive_name)
     (include_ignore_failure)
     (file_or_dir_name)))
 
@@ -426,6 +463,7 @@ Include with lib name with ignore marker and space
 
 (source_file
   (include_directive
+    (directive_name)
     (include_ignore_failure)
     (lib_name)))
 
@@ -439,6 +477,7 @@ IncludeAgain with filepath
 
 (source_file
   (include_again_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -451,6 +490,7 @@ IncludeAgain with quoted filepath
 
 (source_file
   (include_again_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -463,6 +503,7 @@ IncludeAgain with ignore marker and filepath
 
 (source_file
   (include_again_directive
+    (directive_name)
     (include_ignore_failure)
     (file_or_dir_name)))
 
@@ -476,6 +517,7 @@ IncludeAgain with library name
 
 (source_file
   (include_again_directive
+    (directive_name)
     (lib_name)))
 
 ================================================================================
@@ -488,6 +530,7 @@ IncludeAgain with quoted library name
 
 (source_file
   (include_again_directive
+    (directive_name)
     (lib_name)))
 
 ================================================================================
@@ -500,6 +543,7 @@ IncludeAgain with ignore marker and library name
 
 (source_file
   (include_again_directive
+    (directive_name)
     (include_ignore_failure)
     (lib_name)))
 
@@ -513,6 +557,7 @@ IncludeAgain with filepath with space
 
 (source_file
   (include_again_directive
+    (directive_name)
     (file_or_dir_name)))
 
 ================================================================================
@@ -525,6 +570,7 @@ IncludeAgain with lib name with space
 
 (source_file
   (include_again_directive
+    (directive_name)
     (lib_name)))
 
 ================================================================================
@@ -537,6 +583,7 @@ IncludeAgain with filepath with ignore marker and space
 
 (source_file
   (include_again_directive
+    (directive_name)
     (include_ignore_failure)
     (file_or_dir_name)))
 
@@ -550,6 +597,7 @@ IncludeAgain with lib name with ignore marker and space
 
 (source_file
   (include_again_directive
+    (directive_name)
     (include_ignore_failure)
     (lib_name)))
 
@@ -563,6 +611,7 @@ UseHook with boolean literal
 
 (source_file
   (use_hook_directive
+    (directive_name)
     (boolean_literal)))
 
 ================================================================================
@@ -575,6 +624,7 @@ UseHook with integer literal
 
 (source_file
   (use_hook_directive
+    (directive_name)
     (integer_literal)))
 
 ================================================================================
@@ -598,6 +648,7 @@ MaxThreads
 
 (source_file
   (max_threads_directive
+    (directive_name)
     (integer_literal)))
 
 ================================================================================
@@ -609,7 +660,8 @@ SingleInstance Bare
 --------------------------------------------------------------------------------
 
 (source_file
-  (single_instance_directive))
+  (single_instance_directive
+    (directive_name)))
 
 ===============================================================================
 SingleInstance Force
@@ -621,6 +673,7 @@ SingleInstance Force
 
 (source_file
   (single_instance_directive
+    (directive_name)
     (single_instance_mode)))
 
 ===============================================================================
@@ -633,6 +686,7 @@ SingleInstance Ignore
 
 (source_file
   (single_instance_directive
+    (directive_name)
     (single_instance_mode)))
 
 ===============================================================================
@@ -645,6 +699,7 @@ SingleInstance Prompt
 
 (source_file
   (single_instance_directive
+    (directive_name)
     (single_instance_mode)))
 
 ===============================================================================
@@ -657,6 +712,7 @@ SingleInstance Off
 
 (source_file
   (single_instance_directive
+    (directive_name)
     (single_instance_mode)))
 
 ===============================================================================
@@ -668,7 +724,8 @@ NoTrayIcon
 -------------------------------------------------------------------------------
 
 (source_file
-  (no_tray_icon_directive))
+  (no_tray_icon_directive
+    (directive_name)))
 
 ===============================================================================
 MaxThreadsPerHotkey
@@ -680,6 +737,7 @@ MaxThreadsPerHotkey
 
 (source_file
   (max_threads_per_hotkey_directive
+    (directive_name)
     (integer_literal)))
 
 ===============================================================================
@@ -691,7 +749,8 @@ MaxThreadsBuffer Bare
 -------------------------------------------------------------------------------
 
 (source_file
-  (max_threads_buffer_directive))
+  (max_threads_buffer_directive
+    (directive_name)))
 
 ===============================================================================
 MaxThreadsBuffer boolean literal
@@ -703,6 +762,7 @@ MaxThreadsBuffer boolean literal
 
 (source_file
   (max_threads_buffer_directive
+    (directive_name)
     (boolean_literal)))
 
 ===============================================================================
@@ -715,6 +775,7 @@ MaxThreadsBuffer integer literal
 
 (source_file
   (max_threads_buffer_directive
+    (directive_name)
     (integer_literal)))
 
 ===============================================================================
@@ -727,6 +788,7 @@ Bare Import
 
 (source_file
   (import_directive
+    (directive_name)
     (identifier)))
 
 ===============================================================================
@@ -739,6 +801,7 @@ Bare Import with String
 
 (source_file
   (import_directive
+    (directive_name)
     (string_literal)))
 
 ===============================================================================
@@ -751,6 +814,7 @@ String import with Re-Export
 
 (source_file
   (import_directive
+    directive: (directive_name)
     (export)
     module: (string_literal)))
 
@@ -764,6 +828,7 @@ Bare Import with Re-Export
 
 (source_file
   (import_directive
+    directive: (directive_name)
     (export)
     module: (identifier)))
 
@@ -777,6 +842,7 @@ Simple Import with Alias
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     (as)
     alias: (identifier)))
@@ -791,6 +857,7 @@ Aliased String Import
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (string_literal)
     (as)
     alias: (identifier)))
@@ -805,6 +872,7 @@ Import with Imported Name
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (export_name
       export: (identifier))))
@@ -819,6 +887,7 @@ Re-Export with Imported Name
 
 (source_file
   (import_directive
+    directive: (directive_name)
     (export)
     module: (identifier)
     name: (export_name
@@ -834,6 +903,7 @@ Import with Multiple Imported Names
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (export_name
       export: (identifier))
@@ -852,6 +922,7 @@ Import with Aliased Imported Name
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (export_name
       export: (identifier)
@@ -868,6 +939,7 @@ Import with Multiple Aliased Imported Names
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (export_name
       export: (identifier)
@@ -896,6 +968,7 @@ Import with Multiple Imported Names Multiline
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (string_literal)
     name: (export_name
       export: (identifier))
@@ -918,6 +991,7 @@ Import with Multiple Aliased Imported Names
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (export_name
       export: (identifier)
@@ -942,6 +1016,7 @@ Import with Module Alias and Imported Names
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     (as)
     alias: (identifier)
@@ -960,6 +1035,7 @@ Re-Export with Module Alias and Imported Names
 
 (source_file
   (import_directive
+    directive: (directive_name)
     (export)
     module: (identifier)
     (as)
@@ -980,10 +1056,12 @@ Multiple Successive Imports
 
 (source_file
   (import_directive
+    (directive_name)
     (identifier)
     (export_name
       (identifier)))
   (import_directive
+    (directive_name)
     (identifier)
     (export_name
       (identifier))
@@ -1000,6 +1078,7 @@ Wildcard Import
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (wildcard)))
 
@@ -1013,6 +1092,7 @@ Wildcard Import with Preceding Named Import
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (export_name
       export: (identifier))
@@ -1028,6 +1108,7 @@ Wildcard Import with Followed by Named Import
 
 (source_file
   (import_directive
+    directive: (directive_name)
     module: (identifier)
     name: (wildcard)
     name: (export_name
@@ -1043,6 +1124,7 @@ StructPack directive with packing size
 
 (source_file
   (struct_pack_directive
+    directive: (directive_name)
     pack: (integer_literal)))
 
 ===============================================================================
@@ -1054,7 +1136,8 @@ StructPack directive with no packing size
 -------------------------------------------------------------------------------
 
 (source_file
-  (struct_pack_directive))
+  (struct_pack_directive
+    (directive_name)))
 
 ===============================================================================
 StructPack directive with illegal size
@@ -1077,4 +1160,5 @@ Module directive
 
 (source_file
   (module_directive
+    (directive_name)
     (identifier)))

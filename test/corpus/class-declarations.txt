@@ -1119,6 +1119,7 @@ class C {
     (identifier)
     (class_body
       (hotif_directive
+        (directive_name)
         (boolean_literal))
       (method_declaration
         (identifier)

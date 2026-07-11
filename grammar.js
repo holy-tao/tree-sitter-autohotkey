@@ -140,6 +140,11 @@ export default grammar({
     $.block_comment
   ],
 
+  supertypes: $ => [
+    $._directive,
+    $._literal
+  ],
+
   rules: {
     source_file: $ => repeat($._top_level_statement),
 
@@ -1361,57 +1366,63 @@ export default grammar({
       $.warn_directive,
     ),
 
-    clipboard_timeout_directive: $ => seq(token(prec(PREC.KEYWORD, /#ClipboardTimeout/i)), $.integer_literal),
+    clipboard_timeout_directive: $ => seq(
+      directive_name($, /#ClipboardTimeout/i),
+      field("timeout", $.integer_literal)
+    ),
 
     dll_load_directive: $ => seq(
-      kwtok(/#DllLoad/i),
-      optional($.file_or_dir_name),
+      directive_name($, /#DllLoad/i),
+      optional(field("file", $.file_or_dir_name)),
       $._eol
     ),
 
     // https://www.autohotkey.com/docs/v2/lib/FileEncoding.htm
     error_stdout_directive: $ => seq(
-      kwtok(/#ErrorStdOut/i),
-      optional(alias(kwtok(/['"]?(utf-8(-raw)?|utf-16(-raw)?|cp\d+|\d+)['"]?/i), $.encoding_identifier)),
+      directive_name($, /#ErrorStdOut/i),
+      optional(field("encoding", alias(kwtok(/['"]?(utf-8(-raw)?|utf-16(-raw)?|cp\d+|\d+)['"]?/i), $.encoding_identifier))),
       $._eol
     ),
 
     requires_directive: $ => prec.right(seq(
-      kwtok(/#Requires/i),
-      kwtok(/AutoHotkey/i),
-      repeat($.version_requirement),
-      optional($.bitness),
+      directive_name($, /#Requires/i),
+      field("requirement", $.requirement),
+      repeat(field("version", $.version_requirement)),
+      optional(field("bitness", $.bitness)),
       $._eol
     )),
 
+    // This must be "AutoHotkey", but if we later support e.g. KeySharp, it'd be allowed here
+    requirement: $ => kwtok(/AutoHotkey/i),
+
     hotif_directive: $ => prec.right(seq(
-      kwtok(/#Hotif/i),
+      directive_name($, /#Hotif/i),
       optional(field("expression", $._single_expression)),
       $._eol
     )),
 
     hotif_timeout_directive: $ => seq(
-      kwtok(/#HotifTimeout/i),
-      $.integer_literal,
+      directive_name($, /#HotifTimeout/i),
+      field("timeout", $.integer_literal),
       $._eol
     ),
 
     hotstring_directive: $ => seq(
-      kwtok(/#Hotstring/i),
+      directive_name($, /#Hotstring/i),
       choice(
         alias(kwtok(/NoMouse/i), $.hotstring_no_mouse),
         seq(
           kwtok(/EndChars/i),
-          alias(token(/[^\s]{1,100}/), $.hotstring_end_chars)
+          field("end_chars", alias(token(/[^\s]{1,100}/), $.hotstring_end_chars))
         ),
-        alias(repeat1(choice($._hotstring_modifier, $.hotstring_execute)), $.hotstring_option_sequence)
+        field("options", alias(repeat1(choice($._hotstring_modifier, $.hotstring_execute)), $.hotstring_option_sequence))
       ),
       $._eol
     ),
 
     // https://www.autohotkey.com/docs/alpha/lib/_Import.htm
     import_directive: $ => prec.right(seq(
-      kwtok(/#Import/i),
+      directive_name($, /#Import/i),
       optional($.export),
       field("module", choice(
         $.identifier,
@@ -1437,87 +1448,87 @@ export default grammar({
         field("alias", $.identifier)
       ))
     ),
-    
+
     include_directive: $ => prec.left(seq(
-      kwtok(/#Include/i),
-      optional($.include_ignore_failure),
-      choice(
+      directive_name($, /#Include/i),
+      optional(field("ignore_failure", $.include_ignore_failure)),
+      field("path", choice(
         $.file_or_dir_name,
         $.lib_name
-      ),
+      )),
       $._eol
     )),
 
     include_again_directive: $ => prec.left(seq(
-      kwtok(/#IncludeAgain/i),
-      optional($.include_ignore_failure),
-      choice(
+      directive_name($, /#IncludeAgain/i),
+      optional(field("ignore_failure", $.include_ignore_failure)),
+      field("path", choice(
         $.file_or_dir_name,
         $.lib_name
-      ),
+      )),
       $._eol
     )),
 
     input_level_directive: $ => seq(
-      kwtok(/#InputLevel/i),
-      $.integer_literal,
+      directive_name($, /#InputLevel/i),
+      field("level", $.integer_literal),
       $._eol
     ),
 
-    module_directive: $ => seq(kwtok(/#Module/i), $.identifier, $._eol),
+    module_directive: $ => seq(directive_name($, /#Module/i), field("name", $.identifier), $._eol),
 
     use_hook_directive: $ => seq(
-      kwtok(/#UseHook/i),
-      choice(
-        $.boolean_literal, 
+      directive_name($, /#UseHook/i),
+      field("value", choice(
+        $.boolean_literal,
         alias(choice(token("0"), token("1")), $.integer_literal)
-      ),
+      )),
       $._eol,
     ),
 
     max_threads_directive: $ => seq(
-      kwtok(/#MaxThreads/i),
-      $.integer_literal,
+      directive_name($, /#MaxThreads/i),
+      field("value", $.integer_literal),
       $._eol
     ),
 
     max_threads_per_hotkey_directive: $ => seq(
-      kwtok(/#MaxThreadsPerHotkey/i),
-      $.integer_literal,
+      directive_name($, /#MaxThreadsPerHotkey/i),
+      field("value", $.integer_literal),
       $._eol
     ),
 
     max_threads_buffer_directive: $ => seq(
-      kwtok(/#MaxThreadsBuffer/i),
-      optional(choice(
-        $.boolean_literal, 
+      directive_name($, /#MaxThreadsBuffer/i),
+      optional(field("value", choice(
+        $.boolean_literal,
         alias(choice(token("0"), token("1")), $.integer_literal)
-      )),
+      ))),
       $._eol
     ),
 
     no_tray_icon_directive: $ => seq(
-      kwtok(/#NoTrayIcon/i),
+      directive_name($, /#NoTrayIcon/i),
       $._eol
     ),
 
     single_instance_directive: $ => seq(
-      kwtok(/#SingleInstance/i),
-      optional(alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode)),
+      directive_name($, /#SingleInstance/i),
+      optional(field("mode", alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode))),
       $._eol
     ),
 
     struct_pack_directive: $ => seq(
-      kwtok(/#StructPack/i),
+      directive_name($, /#StructPack/i),
       optional(field("pack", alias(/0|1|2|4|8/, $.integer_literal))),
       $._eol
     ),
 
     warn_directive: $ => seq(
-      kwtok(/#Warn/i),
+      directive_name($, /#Warn/i),
       optional(seq(
-        $.warning_type,
-        optional(seq(",", $.warning_mode))
+        field("type", $.warning_type),
+        optional(seq(",", field("mode", $.warning_mode)))
       )),
       $._eol
     ),
@@ -1793,6 +1804,19 @@ export default grammar({
  */
 function kwtok(pattern) {
   return token(prec(PREC.KEYWORD, pattern));
+}
+
+/**
+ * The leading `#Word` of a directive, exposed as a named `directive_name` node
+ * (under a `directive` field) so syntax-highlighting queries can capture it -
+ * a bare regex token is not addressable in queries. `$` is passed in because
+ * the alias target references a grammar symbol.
+ *
+ * @param {GrammarSymbols<string>} $
+ * @param {RegExp} pattern
+ */
+function directive_name($, pattern) {
+  return field("directive", alias(kwtok(pattern), $.directive_name));
 }
 
 /**

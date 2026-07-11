@@ -56,6 +56,7 @@ Persistent true
 (source_file
   (block_comment)
   (include_directive
+    (directive_name)
     (file_or_dir_name))
   (line_comment)
   (line_comment)

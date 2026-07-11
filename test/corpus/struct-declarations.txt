@@ -650,6 +650,7 @@ struct C {
     (identifier)
     (struct_body
       (struct_pack_directive
+        (directive_name)
         (integer_literal))
       (typed_property_declaration
         (identifier)
