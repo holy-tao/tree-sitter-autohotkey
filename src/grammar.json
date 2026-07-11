@@ -1941,16 +1941,8 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 9999,
-                "content": {
-                  "type": "PATTERN",
-                  "value": " is ",
-                  "flags": "i"
-                }
-              }
+              "type": "SYMBOL",
+              "name": "is"
             }
           },
           {
@@ -1962,6 +1954,18 @@
             }
           }
         ]
+      }
+    },
+    "is": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 9999,
+        "content": {
+          "type": "PATTERN",
+          "value": " is ",
+          "flags": "i"
+        }
       }
     },
     "logical_and_operation": {

@@ -418,9 +418,11 @@ export default grammar({
 
     type_check_operation: $ => prec.left(PREC.CASE_INSENSITIVE, seq(
       field("left", $._single_expression),
-      field("operator", token(prec(PREC.KEYWORD, / is /i))),
+      field("operator", $.is),
       field("right", $._single_expression)
     )),
+
+    is: $ => token(prec(PREC.KEYWORD, / is /i)),
 
     logical_and_operation: $ => prec.left(PREC.LOGICAL_AND, seq(
       field("left", $._single_expression),

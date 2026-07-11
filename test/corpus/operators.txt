@@ -92,6 +92,7 @@ result := a is b
     (assignment_operator)
     (type_check_operation
       (identifier)
+      (is)
       (identifier))))
 
 ================================================================================

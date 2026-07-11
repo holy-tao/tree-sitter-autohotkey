@@ -9982,6 +9982,11 @@
     }
   },
   {
+    "type": "is",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "key_identifier",
     "named": true,
     "fields": {}
@@ -15728,6 +15733,16 @@
           },
           {
             "type": "verbal_not_operation",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "is",
             "named": true
           }
         ]
