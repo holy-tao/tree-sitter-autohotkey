@@ -40,7 +40,7 @@
   (switch) (case) (default)
   (class) (extends)
   (get) (set)
-  (as) (in) (unset)
+  (as) (is) (in) (unset)
   (export) (struct) (global)
 ] @keyword
 
