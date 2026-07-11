@@ -6,7 +6,12 @@
 
 set -euo pipefail
 
-level="${1:-patch}"
+if ! git diff --exit-code --quiet; then
+    echo "Error: tracked files have been modified." >&2
+    exit 1
+fi
+
+level="${1:-error}"
 case "$level" in
   patch | minor | major) ;;
   *)
