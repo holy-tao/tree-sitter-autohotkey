@@ -16,6 +16,9 @@
 #define is_identifier_char(c) (is_alnum(c) || (c == '_'))
 #define is_eol(c) (c == '\r' || c == '\n' || c == '\0')
 #define is_whitespace(c) (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+// tolower() from <ctype.h> isn't in the symbol set available to Wasm parsers, and
+// every use here is on ASCII bytes (key names, identifiers), so roll our own.
+#define ascii_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? ((c) + 32) : (c))
 
 #define STRCASEEQ_ANY_1(s, a)          strcaseeq(s, a)
 #define STRCASEEQ_ANY_2(s, a, ...)     strcaseeq(s, a) || STRCASEEQ_ANY_1(s, __VA_ARGS__)
@@ -139,7 +142,7 @@ static inline bool skip_horizontal_ws(TSLexer *lexer) {
 /// @brief Case-insensitive string comparison
 static inline bool strcaseeq(const char *a, const char *b) {
   while (*a && *b) {
-    if (tolower(*a) != tolower(*b)){
+    if (ascii_tolower(*a) != ascii_tolower(*b)){
       return false;
     }
     a++; b++;
@@ -631,7 +634,7 @@ static bool is_remap_key(const char *key, int len) {
   // Single alphanumeric character is always a valid key (letter or digit key)
   if (len == 1) return is_alnum(key[0]);
 
-  switch (tolower(key[0])) {
+  switch (ascii_tolower(key[0])) {
     case 'a':
       return strcaseeq_any(key, "Alt", "AppsKey"); 
 
@@ -676,8 +679,8 @@ static bool is_remap_key(const char *key, int len) {
     case 'n':
       if (strcaseeq(key, "NumLock")) return true;
       // Numpad keys: Numpad0-9 and named variants
-      if (len >= 7 && tolower(key[1]) == 'u' && tolower(key[2]) == 'm' &&
-          tolower(key[3]) == 'p' && tolower(key[4]) == 'a' && tolower(key[5]) == 'd') {
+      if (len >= 7 && ascii_tolower(key[1]) == 'u' && ascii_tolower(key[2]) == 'm' &&
+          ascii_tolower(key[3]) == 'p' && ascii_tolower(key[4]) == 'a' && ascii_tolower(key[5]) == 'd') {
         const char *suffix = key + 6;
 
         if (len == 7 && is_digit(suffix[0])) return true;  // Numpad0-Numpad9
@@ -698,7 +701,7 @@ static bool is_remap_key(const char *key, int len) {
         return true;
       }
       // Sc scan codes: Sc followed by 3 hex digits
-      if (len == 5 && tolower(key[1]) == 'c') {
+      if (len == 5 && ascii_tolower(key[1]) == 'c') {
         return is_xdigit(key[2]) && is_xdigit(key[3]) && is_xdigit(key[4]);
       }
       return false;
@@ -714,7 +717,7 @@ static bool is_remap_key(const char *key, int len) {
         return true;
       }
       // Vk virtual key codes: Vk followed by 2 hex digits
-      if (len == 4 && tolower(key[1]) == 'k') {
+      if (len == 4 && ascii_tolower(key[1]) == 'k') {
         return is_xdigit(key[2]) && is_xdigit(key[3]);
       }
       return false;
