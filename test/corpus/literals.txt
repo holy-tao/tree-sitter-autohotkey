@@ -466,6 +466,42 @@ var := ["one", , "three", ]
         (string_literal)))))
 
 ================================================================================
+Array literal with expansion
+================================================================================
+
+var := ["one", "three", others*]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (string_literal)
+        (string_literal)
+        (identifier)
+        (array_expansion_marker)))))
+
+================================================================================
+Array literal with single expansion value
+================================================================================
+
+var := [values*]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (identifier)
+        (array_expansion_marker)))))
+
+================================================================================
 Empty object literal
 ================================================================================
 

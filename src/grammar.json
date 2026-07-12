@@ -3552,7 +3552,7 @@
               "type": "ALIAS",
               "content": {
                 "type": "SYMBOL",
-                "name": "_array_element_sequence"
+                "name": "arg_sequence"
               },
               "named": true,
               "value": "expression_sequence"
@@ -3565,43 +3565,6 @@
         {
           "type": "STRING",
           "value": "]"
-        }
-      ]
-    },
-    "_array_element_sequence": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "_arg"
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": ","
-              },
-              {
-                "type": "SYMBOL",
-                "name": "_arg"
-              }
-            ]
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": ","
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
         }
       ]
     },

@@ -806,14 +806,8 @@ export default grammar({
 
     array_literal: $ => seq(
       "[",
-      optional(alias($._array_element_sequence, $.expression_sequence)),
+      optional(alias($.arg_sequence, $.expression_sequence)),
       "]"),
-
-    _array_element_sequence: $ => seq(
-      $._arg,
-      repeat(seq(",", $._arg)),
-      optional(",")
-    ),
 
     object_literal: $ => seq("{", optional($._object_literal_member_sequence), "}"),
 

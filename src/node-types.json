@@ -5728,6 +5728,10 @@
           "named": true
         },
         {
+          "type": "array_expansion_marker",
+          "named": true
+        },
+        {
           "type": "assignment_operation",
           "named": true
         },
