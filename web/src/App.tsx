@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Editor, type HighlightRange } from "./components/Editor";
 import { TreeView } from "./components/TreeView";
-import { parse, type Highlight, type SyntaxNode } from "./lib/parser";
+import {
+  parse,
+  type Highlight,
+  type QueryResult,
+  type SyntaxNode,
+} from "./lib/parser";
 import { decodeSource, encodeSource } from "./lib/urlState";
 import { SAMPLE_AHK } from "./sample";
 import "./App.css";
@@ -10,8 +15,10 @@ const PARSE_DEBOUNCE_MS = 150;
 
 export function App() {
   const [source, setSource] = useState("");
+  const [query, setQuery] = useState("");
   const [root, setRoot] = useState<SyntaxNode | null>(null);
   const [highlights, setHighlights] = useState<Highlight[]>([]);
+  const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAnonymous, setShowAnonymous] = useState(false);
 
@@ -22,8 +29,11 @@ export function App() {
   // fragment (never sent to the server) sidesteps request-line length limits.
   useEffect(() => {
     const fragment = new URLSearchParams(window.location.hash.slice(1));
-    const encoded = fragment.get("src");
 
+    // The query is stored as a plain fragment value (short enough to need no compression).
+    setQuery(fragment.get("query") ?? "");
+
+    const encoded = fragment.get("src");
     if (encoded) {
       const decoded = decodeSource(encoded);
       if (decoded !== null) {
@@ -42,10 +52,11 @@ export function App() {
     const id = ++runId.current;
     const timer = setTimeout(async () => {
       try {
-        const { root: tree, highlights: hl } = await parse(source);
+        const { root: tree, highlights: hl, query: qr } = await parse(source, query);
         if (id === runId.current) {
           setRoot(tree);
           setHighlights(hl);
+          setQueryResult(qr);
           setError(null);
         }
       } catch (err) {
@@ -58,12 +69,14 @@ export function App() {
       // re-rendering or reloading.
       const fragment = new URLSearchParams(window.location.hash.slice(1));
       fragment.set("src", encodeSource(source));
+      if (query) fragment.set("query", query);
+      else fragment.delete("query");
       const url = new URL(window.location.href);
       url.hash = fragment.toString();
       window.history.replaceState({}, "", url.toString());
     }, PARSE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [source]);
+  }, [source, query]);
 
   // Editing invalidates the previously selected/hovered nodes (their ids are per-parse).
   const onChange = (value: string) => {
@@ -78,6 +91,13 @@ export function App() {
     () => (active ? { from: active.startIndex, to: active.endIndex } : null),
     [active],
   );
+
+  // Query outputs, with stable references so the editor doesn't re-dispatch every render.
+  const queryMatches = useMemo(
+    () => queryResult?.matches ?? [],
+    [queryResult],
+  );
+  const matchedIds = queryResult?.matchedIds ?? null;
 
   return (
     <div className="app">
@@ -102,6 +122,7 @@ export function App() {
             onChange={onChange}
             highlight={highlight}
             highlights={highlights}
+            queryMatches={queryMatches}
           />
         </section>
         <section className="pane pane-tree">
@@ -112,6 +133,10 @@ export function App() {
             onToggleAnonymous={setShowAnonymous}
             selectedId={selected?.id ?? null}
             hoveredId={hovered?.id ?? null}
+            matchedIds={matchedIds}
+            query={query}
+            onQueryChange={setQuery}
+            queryError={queryResult?.error ?? null}
             onHover={setHovered}
             onSelect={setSelected}
           />

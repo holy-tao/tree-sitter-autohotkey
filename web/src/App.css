@@ -68,6 +68,47 @@
   background: var(--bg-panel);
 }
 
+/* --- Query playground --- */
+.query-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-toolbar);
+}
+
+.query-label {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.query-input {
+  width: 100%;
+  resize: vertical;
+  padding: 0.35rem 0.5rem;
+  color: var(--text);
+  background: var(--editor-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-family: "Cascadia Code", "Consolas", ui-monospace, monospace;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.query-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.query-error {
+  color: var(--error);
+  font-family: "Cascadia Code", "Consolas", ui-monospace, monospace;
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+}
+
 .tree-toolbar {
   padding: 0.4rem 0.75rem;
   border-bottom: 1px solid var(--border);
@@ -110,6 +151,11 @@
 
 .tree-row.selected {
   background: var(--selected-bg);
+}
+
+.tree-row.matched {
+  background: var(--query-match);
+  box-shadow: inset 2px 0 0 var(--query-match-outline);
 }
 
 .tree-toggle {

@@ -9,6 +9,8 @@ interface TreeNodeProps {
   showAnonymous: boolean;
   selectedId: number | null;
   hoveredId: number | null;
+  /** Ids of nodes captured by the active query, or null when no query is active. */
+  matchedIds: Set<number> | null;
   onHover: (node: SyntaxNode | null) => void;
   onSelect: (node: SyntaxNode) => void;
 }
@@ -24,6 +26,7 @@ export function TreeNode({
   showAnonymous,
   selectedId,
   hoveredId,
+  matchedIds,
   onHover,
   onSelect,
 }: TreeNodeProps) {
@@ -37,6 +40,7 @@ export function TreeNode({
   const classes = ["tree-row"];
   if (node.id === selectedId) classes.push("selected");
   if (node.id === hoveredId) classes.push("hovered");
+  if (matchedIds?.has(node.id)) classes.push("matched");
   if (node.isError || node.isMissing) classes.push("error");
   else if (!node.isNamed) classes.push("anonymous");
 
@@ -76,6 +80,7 @@ export function TreeNode({
               showAnonymous={showAnonymous}
               selectedId={selectedId}
               hoveredId={hoveredId}
+              matchedIds={matchedIds}
               onHover={onHover}
               onSelect={onSelect}
             />

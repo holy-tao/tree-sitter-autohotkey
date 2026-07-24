@@ -17,6 +17,8 @@
   --highlight: rgba(34, 125, 114, 0.2);
   --selected-bg: rgba(34, 125, 114, 0.16);
   --hovered-bg: rgba(0, 0, 0, 0.05);
+  --query-match: rgba(224, 138, 0, 0.25);
+  --query-match-outline: rgba(224, 138, 0, 0.9);
 
   /* Syntax token colors (light). */
   --tok-comment: #008000;
@@ -61,6 +63,8 @@
     --highlight: rgba(78, 201, 176, 0.25);
     --selected-bg: rgba(78, 201, 176, 0.18);
     --hovered-bg: rgba(255, 255, 255, 0.07);
+    --query-match: rgba(229, 165, 71, 0.3);
+    --query-match-outline: rgba(229, 165, 71, 0.9);
 
     /* Syntax token colors (dark). */
     --tok-comment: #6a9955;
@@ -99,6 +103,14 @@ body {
 /* Editor: highlight the source range for the hovered/selected tree node. */
 .cm-node-highlight {
   background-color: var(--highlight);
+  border-radius: 2px;
+}
+
+/* Editor: highlight source ranges captured by the query playground. Outlined so it reads
+   distinctly from the hover highlight and the syntax colors. */
+.cm-query-match {
+  background-color: var(--query-match);
+  outline: 1px solid var(--query-match-outline);
   border-radius: 2px;
 }
 

@@ -35,18 +35,53 @@ export interface Highlight {
   type: string;
 }
 
+/** Result of running the user's playground query against a parse. */
+export interface QueryResult {
+  /** Query compile error message, or null if the query compiled. */
+  error: string | null;
+  /** Model-node ids (SyntaxNode.id) captured by the query, for tree emphasis. */
+  matchedIds: Set<number>;
+  /** Captured source spans for editor highlighting; `type` is the capture name. */
+  matches: Highlight[];
+}
+
 /** The full result of a parse: the plain tree plus highlight spans (captures may overlap). */
 export interface ParseResult {
   root: SyntaxNode;
   highlights: Highlight[];
+  /** Result of the user's playground query, or null when no query was supplied. */
+  query: QueryResult | null;
 }
 
 interface Grammar {
   parser: Parser;
+  language: Language;
   query: Query;
 }
 
 let grammarPromise: Promise<Grammar> | null = null;
+
+// Compiled user query, cached by its source text so identical re-parses don't recompile.
+let userQueryCache: { text: string; query: Query | null; error: string | null } | null = null;
+
+/** Compile (or reuse a cached) user query. Returns the query and any compile error. */
+function getUserQuery(
+  language: Language,
+  text: string,
+): { query: Query | null; error: string | null } {
+  if (!userQueryCache || userQueryCache.text !== text) {
+    try {
+      userQueryCache = { text, query: new Query(language, text), error: null };
+    } catch (err) {
+      userQueryCache = {
+        text,
+        query: null,
+        error: err instanceof Error ? err.message : String(err),
+      };
+    }
+  }
+  return userQueryCache;
+}
 
 /** Lazily initialize the wasm runtime + grammar + highlight query (singleton). */
 function getGrammar(): Promise<Grammar> {
@@ -60,36 +95,65 @@ function getGrammar(): Promise<Grammar> {
 
       parser.setLanguage(language);
       const query = new Query(language, highlightsQuery);
-      return { parser, query };
+      return { parser, language, query };
     })();
   }
   return grammarPromise;
 }
 
-/** Parse source and return the root node as a plain model plus highlight spans. */
-export async function parse(source: string): Promise<ParseResult> {
-  const { parser, query } = await getGrammar();
+/**
+ * Parse source and return the root node as a plain model plus highlight spans. When `queryText`
+ * is a non-empty query, it's run against the same tree and its result returned in `query`.
+ */
+export async function parse(
+  source: string,
+  queryText?: string,
+): Promise<ParseResult> {
+  const { parser, language, query } = await getGrammar();
   const tree = parser.parse(source);
 
   if (!tree) throw new Error("Parse failed: tree-sitter returned null");
 
   try {
     const counter = { n: 0 };
-    const root = walk(tree.walk(), counter);
+    // Maps each real tree-sitter node id to its per-parse model id, so query captures
+    // (which reference the wasm tree) can be mapped back onto the plain tree nodes.
+    const tsIdToModelId = new Map<number, number>();
+    const root = walk(tree.walk(), counter, tsIdToModelId);
     // Captures reference the wasm-backed tree, so pull out plain offsets before it's deleted.
     const highlights = query.captures(tree.rootNode).map((c) => ({
       from: c.node.startIndex,
       to: c.node.endIndex,
       type: c.name,
     }));
-    return { root, highlights };
+
+    let queryResult: QueryResult | null = null;
+    if (queryText && queryText.trim() !== "") {
+      const { query: userQuery, error } = getUserQuery(language, queryText);
+      const matchedIds = new Set<number>();
+      const matches: Highlight[] = [];
+      if (userQuery) {
+        for (const c of userQuery.captures(tree.rootNode)) {
+          const modelId = tsIdToModelId.get(c.node.id);
+          if (modelId !== undefined) matchedIds.add(modelId);
+          matches.push({ from: c.node.startIndex, to: c.node.endIndex, type: c.name });
+        }
+      }
+      queryResult = { error, matchedIds, matches };
+    }
+
+    return { root, highlights, query: queryResult };
   } finally {
     tree.delete();
   }
 }
 
 /** Depth-first cursor walk into the plain model. Cursor is positioned on the node on entry. */
-function walk(cursor: TreeCursor, counter: { n: number }): SyntaxNode {
+function walk(
+  cursor: TreeCursor,
+  counter: { n: number },
+  tsIdToModelId: Map<number, number>,
+): SyntaxNode {
   const node = cursor.currentNode;
   const model: SyntaxNode = {
     id: counter.n++,
@@ -104,10 +168,11 @@ function walk(cursor: TreeCursor, counter: { n: number }): SyntaxNode {
     endPosition: node.endPosition,
     children: [],
   };
+  tsIdToModelId.set(node.id, model.id);
 
   if (cursor.gotoFirstChild()) {
     do {
-      model.children.push(walk(cursor, counter));
+      model.children.push(walk(cursor, counter, tsIdToModelId));
     } while (cursor.gotoNextSibling());
     cursor.gotoParent();
   }

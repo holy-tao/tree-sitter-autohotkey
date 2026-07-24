@@ -155,11 +155,43 @@ const syntaxField = StateField.define<DecorationSet>({
   provide: (field) => EditorView.decorations.from(field),
 });
 
+// Query-match layer: paints every source range captured by the playground query. Distinct from
+// the hover highlight (single node) and syntax coloring, so matches stand out on their own.
+const setQueryMatches = StateEffect.define<Highlight[]>();
+
+const queryMatchMark = Decoration.mark({ class: "cm-query-match" });
+
+const queryMatchField = StateField.define<DecorationSet>({
+  create() {
+    return Decoration.none;
+  },
+  update(deco, tr) {
+    deco = deco.map(tr.changes);
+    for (const effect of tr.effects) {
+      if (effect.is(setQueryMatches)) {
+        const len = tr.state.doc.length;
+        // Captures may overlap; sort by start so the RangeSetBuilder gets ascending ranges.
+        const ranges = effect.value
+          .map((h) => ({ from: Math.min(h.from, len), to: Math.min(h.to, len) }))
+          .filter((r) => r.to > r.from)
+          .sort((a, b) => a.from - b.from || a.to - b.to);
+
+        const builder = new RangeSetBuilder<Decoration>();
+        for (const r of ranges) builder.add(r.from, r.to, queryMatchMark);
+        deco = builder.finish();
+      }
+    }
+    return deco;
+  },
+  provide: (field) => EditorView.decorations.from(field),
+});
+
 interface EditorProps {
   value: string;
   onChange: (value: string) => void;
   highlight: HighlightRange | null;
   highlights: Highlight[];
+  queryMatches: Highlight[];
 }
 
 export function Editor({
@@ -167,6 +199,7 @@ export function Editor({
   onChange,
   highlight,
   highlights,
+  queryMatches,
 }: EditorProps) {
   const ref = useRef<ReactCodeMirrorRef>(null);
 
@@ -189,6 +222,13 @@ export function Editor({
     view.dispatch({ effects: setSyntax.of(highlights) });
   }, [highlights]);
 
+  // Repaint query-match highlights whenever the active query's captures change.
+  useEffect(() => {
+    const view = ref.current?.view;
+    if (!view) return;
+    view.dispatch({ effects: setQueryMatches.of(queryMatches) });
+  }, [queryMatches]);
+
   return (
     <CodeMirror
       ref={ref}
@@ -199,6 +239,7 @@ export function Editor({
       extensions={[
         editorTheme,
         syntaxField,
+        queryMatchField,
         highlightField,
         EditorView.lineWrapping,
       ]}

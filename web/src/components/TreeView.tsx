@@ -1,7 +1,9 @@
-// Right pane: the scrollable s-expression tree plus its "show anonymous nodes" toggle.
+// Right pane: a tree-sitter query box, the scrollable s-expression tree, and a
+// "show anonymous nodes" toggle.
 import { useId } from "react";
 import type { SyntaxNode } from "../lib/parser";
 import { TreeNode } from "./TreeNode";
+import { QueryBox } from "./QueryBox";
 
 interface TreeViewProps {
   root: SyntaxNode | null;
@@ -11,6 +13,12 @@ interface TreeViewProps {
   onToggleAnonymous: (value: boolean) => void;
   selectedId: number | null;
   hoveredId: number | null;
+  /** Ids of nodes captured by the active query, or null when no query is active. */
+  matchedIds: Set<number> | null;
+  query: string;
+  onQueryChange: (value: string) => void;
+  /** Query compile error to display, or null. */
+  queryError: string | null;
   onHover: (node: SyntaxNode | null) => void;
   onSelect: (node: SyntaxNode) => void;
 }
@@ -25,6 +33,10 @@ export function TreeView({
   onToggleAnonymous,
   selectedId,
   hoveredId,
+  matchedIds,
+  query,
+  onQueryChange,
+  queryError,
   onHover,
   onSelect,
 }: TreeViewProps) {
@@ -32,6 +44,7 @@ export function TreeView({
 
   return (
     <div className="tree-view">
+      <QueryBox value={query} onChange={onQueryChange} error={queryError} />
       <div className="tree-toolbar">
         <label htmlFor={showAnonId}>
           <input
@@ -53,6 +66,7 @@ export function TreeView({
             showAnonymous={showAnonymous}
             selectedId={selectedId}
             hoveredId={hoveredId}
+            matchedIds={matchedIds}
             onHover={onHover}
             onSelect={onSelect}
           />
