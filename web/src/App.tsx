@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Editor, type HighlightRange } from "./components/Editor";
 import { TreeView } from "./components/TreeView";
 import { parse, type Highlight, type SyntaxNode } from "./lib/parser";
-import LZString from "lz-string"
+import { decodeSource, encodeSource } from "./lib/urlState";
 import { SAMPLE_AHK } from "./sample";
 import "./App.css";
 
@@ -18,22 +18,17 @@ export function App() {
   const [hovered, setHovered] = useState<SyntaxNode | null>(null);
   const [selected, setSelected] = useState<SyntaxNode | null>(null);
 
-  // Read text off the 'src' query parameter if we have one
+  // Read text off the 'src' key in the URL fragment if we have one. The
+  // fragment (never sent to the server) sidesteps request-line length limits.
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const compressed = queryParams.get('src');
-    
-    if (compressed) {
-      try{
-        const decompressed = LZString.decompressFromEncodedURIComponent(compressed);
-        // It's not well documented, but compress returns null on failure
-        if (decompressed) {
-          setSource(decompressed);
-          return;
-        }
-      } catch (err) {
-        //...but decompress can also throw for truly corrupt data
-        console.error(err);
+    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const encoded = fragment.get("src");
+
+    if (encoded) {
+      const decoded = decodeSource(encoded);
+      if (decoded !== null) {
+        setSource(decoded);
+        return;
       }
     }
 
@@ -59,9 +54,12 @@ export function App() {
         }
       }
 
-      // Save state in query param regardless of success, do not re-render or reload
+      // Save state in the URL fragment regardless of success, without
+      // re-rendering or reloading.
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      fragment.set("src", encodeSource(source));
       const url = new URL(window.location.href);
-      url.searchParams.set("src", LZString.compressToEncodedURIComponent(source));
+      url.hash = fragment.toString();
       window.history.replaceState({}, "", url.toString());
     }, PARSE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
