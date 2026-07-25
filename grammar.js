@@ -1202,9 +1202,8 @@ export default grammar({
     ),
 
     property_declaration: $ => seq(
-      //FIXME global and static aren't valid scope identifiers here
-      optional($.scope_identifier),
-      field("name", $.identifier),
+      optional(alias($.static, $.scope_identifier)),
+      field("name", choice($.identifier, alias($.static, $.identifier))),
       optional(seq("[", $.param_sequence, "]")),
       choice(
         // Property initializer: prop := value

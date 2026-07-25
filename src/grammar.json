@@ -5841,8 +5841,13 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "scope_identifier"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "static"
+              },
+              "named": true,
+              "value": "scope_identifier"
             },
             {
               "type": "BLANK"
@@ -5853,8 +5858,22 @@
           "type": "FIELD",
           "name": "name",
           "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "static"
+                },
+                "named": true,
+                "value": "identifier"
+              }
+            ]
           }
         },
         {

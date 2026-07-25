@@ -1153,3 +1153,112 @@ class C {
         (function_head)
         (function_body
           (block))))))
+
+================================================================================
+Class with property initializer named "static"
+================================================================================
+
+; Should not be parsed as a scope_identifier
+class Example { 
+    static := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Class with property initializer named "global"
+================================================================================
+
+; Should not be parsed as a scope_identifier
+class Example { 
+    global := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Class with property initializer named "local"
+================================================================================
+
+; Should not be parsed as a scope_identifier
+class Example { 
+    local := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Class with property initializer named "while"
+================================================================================
+
+; Shadowing keywords should be allowed here
+class Example { 
+    while := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Class with static property initializer named "static"
+================================================================================
+
+class Example { 
+    static static := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
