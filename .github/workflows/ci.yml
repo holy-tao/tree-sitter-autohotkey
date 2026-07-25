@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    paths:
+      - grammar.json
+      - src/**
+      - queries/**
+      - web/**
+      - .github/**
+  pull_request:
+    branches: [main]
+    paths:
+      - grammar.json
+      - src/**
+      - queries/**
+      - web/**
+      - .github/**
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Tree-sitter
+        uses: ./.github/actions/setup
+
+      - run: tree-sitter test
+
+  compile:
+    name: Compile and Upload Artifacts
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Tree-sitter
+        uses: ./.github/actions/setup
+
+      - run: tree-sitter build -o ./tree-sitter-autohotkey.dll
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Compiled Binary & Build Artifacts
+          path: |
+            ./tree-sitter-autohotkey.dll
+            ./src/
+
+  publish:
+    name: Publish to crates.io
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/publish.yml
+    secrets: inherit
+
+  deploy-pages:
+    name: Deploy Playground to Pages
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy-pages.yml

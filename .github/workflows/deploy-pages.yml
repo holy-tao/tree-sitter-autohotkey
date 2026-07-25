@@ -1,14 +1,9 @@
 name: Deploy Playground to Pages
 
+# Reusable workflow. Called by ci.yml after the test job passes on main; the
+# gating lives there. Also runnable on its own via workflow_dispatch.
 on:
-  push:
-    branches: [main]
-    paths:
-      - web/**
-      - grammar.json
-      - src/**
-      - queries/**
-      - .github/workflows/deploy-pages.yml
+  workflow_call:
   workflow_dispatch:
 
 # Allow the workflow to publish to GitHub Pages.
@@ -30,10 +25,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Set up Tree-sitter CLI
-        uses: tree-sitter/setup-action@v2
-        with:
-          install-lib: false
+      # The tree-sitter CLI (>=0.24) compiles the grammar to wasm with a bundled
+      # toolchain, so no Emscripten/Docker setup is needed here.
+      - name: Set up Tree-sitter
+        uses: ./.github/actions/setup
 
       - name: Set up Node
         uses: actions/setup-node@v7
@@ -41,11 +36,6 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: web/package-lock.json
-
-      # The tree-sitter CLI (>=0.24) compiles the grammar to wasm with a bundled
-      # toolchain, so no Emscripten/Docker setup is needed here.
-      - name: Regenerate parser
-        run: tree-sitter generate
 
       - name: Install web dependencies
         run: npm ci

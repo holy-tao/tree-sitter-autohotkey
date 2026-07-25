@@ -1,0 +1,18 @@
+name: Set up Tree-sitter
+description: Install the pinned Tree-sitter CLI and regenerate the parser from grammar.js.
+
+# The Tree-sitter CLI version is pinned here in ONE place for every workflow.
+# Bump it here and all of test / publish / deploy-pages follow.
+runs:
+  using: composite
+  steps:
+    - name: Set up Tree-sitter CLI
+      uses: tree-sitter/setup-action@v2
+      with:
+        install-lib: false
+        tree-sitter-ref: v0.26.11
+
+    # Regenerate so the committed artifacts can't drift from grammar.js.
+    - name: Regenerate parser
+      shell: bash
+      run: tree-sitter generate
