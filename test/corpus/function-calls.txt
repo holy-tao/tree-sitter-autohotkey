@@ -330,6 +330,69 @@ Critical
     (identifier)))
 
 ================================================================================
+Bare call statement does not swallow the next line
+================================================================================
+
+f() {
+    ExitApp
+    x := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (call_statement
+          (identifier))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+================================================================================
+Bare call statement before a closing brace
+================================================================================
+
+f() {
+    Reload
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (call_statement
+          (identifier))))))
+
+================================================================================
+Multiple bare call statements in a row
+================================================================================
+
+Send "a"
+ExitApp
+Reload
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (string_literal)))
+  (call_statement
+    (identifier))
+  (call_statement
+    (identifier)))
+
+================================================================================
 Multiplication is not confused for array expansion
 ================================================================================
 

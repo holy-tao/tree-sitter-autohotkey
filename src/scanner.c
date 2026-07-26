@@ -309,7 +309,7 @@ static bool is_optional_marker(TSLexer *lexer) {
 /// @param lexer the lexer
 /// @return true if an empty argument, false otherwise
 static bool is_empty_arg(TSLexer *lexer) {
-  skip_whitespace(lexer);
+  skip_horizontal_ws(lexer);
 
   // We don't track empty args for trailing commas because MsgBox("Hello",) is syntactically identical
   // to just MsgBox("Hello"). Also, it's kind of a nightmare
@@ -807,6 +807,10 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   if(valid_symbols[CONTINUATION_SECTION_START]) {
     lexer->mark_end(lexer);
 
+    // Captured *before* is_continuation_start runs, because on a CONT_NONE it advances the
+    // lexer past the newline
+    bool at_line_end = is_last_element(lexer);
+
     ContinuationResult cont = is_continuation_start(lexer);
     if(cont == CONT_YES) {
       lexer->result_symbol = CONTINUATION_SECTION_START;
@@ -815,13 +819,19 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     if(cont == CONT_PAREN_EXPR) {
       // A leading '(' began a parenthesized expression, not a continuation section. We have
       // already advanced the lexer past that '(', so we must NOT fall through to the
-      // function/method-def marker checks below — from the post-'(' position they would misread
+      // function/method-def marker checks below - from the post-'(' position they would misread
       // `(name(params) {` as a function declaration. Returning false discards our advances and
       // lets the internal lexer re-lex the '(' from the token boundary (e.g. so it can begin a
       // v2.1 function-expression IIFE like `(f(y) { ... })(x)`).
       return false;
     }
-    // CONT_NONE: no '(' was consumed; fall through to the remaining token checks.
+
+    // CONT_NONE: no continuation section here. If EOL is valid and the line has ended, the 
+    // statement ends here.
+    if(valid_symbols[EOL] && at_line_end && !starts_continuation_line(lexer)) {
+      lexer->result_symbol = EOL;
+      return true;
+    }
   }
 
   if(valid_symbols[CONTINUATION_NEWLINE]) {

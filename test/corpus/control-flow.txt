@@ -1234,12 +1234,11 @@ else
         (arg_sequence
           (identifier)))))
   (call_statement
+    (identifier))
+  (assignment_operation
     (identifier)
-    (arg_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (boolean_literal)))))
+    (assignment_operator)
+    (boolean_literal)))
 
 ================================================================================
 Block try with bare catch
