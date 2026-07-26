@@ -5924,6 +5924,10 @@
       "members": [
         {
           "type": "SYMBOL",
+          "name": "_class_decl_marker"
+        },
+        {
+          "type": "SYMBOL",
           "name": "class"
         },
         {
@@ -6420,6 +6424,10 @@
     "struct_declaration": {
       "type": "SEQ",
       "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_class_decl_marker"
+        },
         {
           "type": "SYMBOL",
           "name": "struct"
@@ -9614,6 +9622,10 @@
     {
       "type": "SYMBOL",
       "name": "_value_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_class_decl_marker"
     }
   ],
   "inline": [],

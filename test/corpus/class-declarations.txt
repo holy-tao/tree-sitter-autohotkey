@@ -1512,3 +1512,81 @@ class Example {
 --------------------------------------------------------------------------------
 
 
+
+================================================================================
+Reserved non-keywords class and struct as property and method names
+================================================================================
+
+class Example {
+  Class => this.m.Wrap(this)
+  struct[i] {
+    get => this.data[i]
+  }
+  static class := 2
+  struct() {
+    return 1
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (getter
+          (function_call
+            (member_access
+              (member_access
+                (identifier)
+                (identifier))
+              (identifier))
+            (arg_sequence
+              (identifier)))))
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (identifier))
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (index_access
+                (member_access
+                  (identifier)
+                  (identifier))
+                (arg_sequence
+                  (identifier)))))))
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (integer_literal))))))))
+
+================================================================================
+Class extends the built-in Class
+================================================================================
+
+class Nullable extends Class {
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (extends)
+    (identifier)
+    (class_body)))

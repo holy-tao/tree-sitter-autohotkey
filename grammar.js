@@ -109,6 +109,11 @@ export default grammar({
     $._otb_brace,
     // Zero-width marker emitted only when a value begins on the same line
     $._value_start,
+    // Zero-width marker emitted at statement start only when a real `class`/`struct`
+    // *declaration* follows (`class`/`struct` <name>), gating class_declaration /
+    // struct_declaration. Without it the keyword lexes as an ordinary identifier
+    // (`Class.ForName()`, `struct := 5`), since neither word is reserved. See scanner.c.
+    $._class_decl_marker,
   ],
 
   conflicts: $ => [
@@ -1209,6 +1214,7 @@ export default grammar({
     //#region Classes
 
     class_declaration: $ => seq(
+      $._class_decl_marker,
       $.class,
       field("name", $.identifier),
       optional(seq(
@@ -1305,6 +1311,7 @@ export default grammar({
     struct: $ => kwtok(/struct/i),
 
     struct_declaration: $ => seq(
+      $._class_decl_marker,
       $.struct,
       field("name", $.identifier),
       optional(seq(

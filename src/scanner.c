@@ -95,7 +95,8 @@ enum TokenType {
   REMAP_DOUBLE_COLON,
   EXPORT_DEF_MARKER,
   OTB_BRACE,
-  VALUE_START
+  VALUE_START,
+  CLASS_DECL_MARKER
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -195,19 +196,17 @@ static bool is_function_body_follows(TSLexer *lexer, bool block_only) {
   return false;
 }
 
-static bool is_function_declaration(TSLexer *lexer, bool method) {
-  // Skip any leading whitespace (including newlines)
-  skip_whitespace(lexer);
-
-  if (!is_identifier_char(lexer->lookahead)) {
-    return false;
-  }
-
-  char ident[16];
-  skip_identifier(lexer, ident, sizeof(ident));
-
+/// @brief Given `word` is the already-read leading identifier and the lexer is positioned
+///        immediately after it, determine whether a function/method head + body follows,
+///        handling an optional `static` prefix. Shared by is_function_declaration and the
+///        class/struct declaration-marker fall-through (both read the leading word first).
+/// @param lexer tree-sitter lexer, positioned right after `word`
+/// @param word the already-read leading identifier
+/// @param method true when scanning for a method (methods may shadow keywords; functions may not)
+/// @return true if a function head + body follows
+static bool function_body_follows_after_word(TSLexer *lexer, const char *word, bool method) {
   // Methods can be static, as can functions that aren't in the auto-execute section
-  if (strcaseeq(ident, "static")) {
+  if (strcaseeq(word, "static")) {
     if (!skip_horizontal_ws(lexer)) {
       return false;  // need space after static
     }
@@ -221,12 +220,26 @@ static bool is_function_declaration(TSLexer *lexer, bool method) {
       return false;
     }
   }
-  else if(!method && is_keyword(ident)) {
+  else if(!method && is_keyword(word)) {
     // Functions cannot shadow keywords (methods can)
     return false;
   }
 
   return is_function_body_follows(lexer, false);
+}
+
+static bool is_function_declaration(TSLexer *lexer, bool method) {
+  // Skip any leading whitespace (including newlines)
+  skip_whitespace(lexer);
+
+  if (!is_identifier_char(lexer->lookahead)) {
+    return false;
+  }
+
+  char ident[16];
+  skip_identifier(lexer, ident, sizeof(ident));
+
+  return function_body_follows_after_word(lexer, ident, method);
 }
 
 /// @brief Given the lexer is positioned immediately after the `export` keyword, determine whether a real
@@ -969,8 +982,41 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   // keyword itself is then lexed normally by the internal lexer.
   // We need to check this last.
   if (valid_symbols[FUNCTION_DEF_MARKER] || valid_symbols[METHOD_DEF_MARKER] ||
-      valid_symbols[EXPORT_DEF_MARKER]) {
+      valid_symbols[EXPORT_DEF_MARKER] || valid_symbols[CLASS_DECL_MARKER]) {
     lexer->mark_end(lexer);
+
+    // Class/struct declaration head: `class`/`struct` <ws> <name>. Neither word is reserved, so
+    // it is only a declaration when a name follows; `class(...)`/`struct(...)` fall through to the
+    // function/method check, and every other use (`class.x`, `struct := 5`, bare `class`) emits
+    // nothing so the word lexes as a plain identifier. Like the export path, this must resolve in one
+    // pass (reading the word advances the lexer), so it is gated on a cheap first-char test.
+    if (valid_symbols[CLASS_DECL_MARKER]) {
+      skip_whitespace(lexer);
+      if (lexer->lookahead == 'c' || lexer->lookahead == 'C' ||
+          lexer->lookahead == 's' || lexer->lookahead == 'S') {
+        char w[16];
+        int wl = skip_identifier(lexer, w, sizeof(w));
+
+        if (strcaseeq_any(w, "class", "struct") &&
+            skip_horizontal_ws(lexer) &&
+            (is_alpha(lexer->lookahead) || lexer->lookahead == '_')) {
+          lexer->result_symbol = CLASS_DECL_MARKER;
+          return true;
+        }
+
+        // Not a class/struct declaration. The word (e.g. `static`, or a function/method literally
+        // named with a c/s word) may still begin a function/method `name(...) { | =>`.
+        bool method = !valid_symbols[FUNCTION_DEF_MARKER] && valid_symbols[METHOD_DEF_MARKER];
+        if ((valid_symbols[FUNCTION_DEF_MARKER] || valid_symbols[METHOD_DEF_MARKER]) &&
+            function_body_follows_after_word(lexer, w, method)) {
+          lexer->result_symbol = valid_symbols[FUNCTION_DEF_MARKER]
+                                   ? FUNCTION_DEF_MARKER : METHOD_DEF_MARKER;
+          return true;
+        }
+
+        return false;
+      }
+    }
 
     // Only the export path needs to advance past the leading word before the function/method
     // check, so it has to fully resolve the declaration here. We gate it on a cheap first-char

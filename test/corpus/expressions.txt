@@ -393,3 +393,36 @@ v := obj.my%prop% + 1
           (dereference_operation
             (identifier))))
       (integer_literal))))
+
+================================================================================
+Non-reserved keywords class and struct as identifiers at statement start
+================================================================================
+
+Class.ForName("String")
+struct := 5
+struct.field := x
+y := Class
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (member_access
+      (identifier)
+      (identifier))
+    (arg_sequence
+      (string_literal)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (assignment_operation
+    (member_access
+      (identifier)
+      (identifier))
+    (assignment_operator)
+    (identifier))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (identifier)))
