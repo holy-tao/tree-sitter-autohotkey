@@ -137,3 +137,38 @@ x := 1
   (hotstring
     (hotstring_trigger)
     (hotstring_replacement)))
+
+================================================================================
+Call statement with implicit concat continued by leading dot concatenation
+================================================================================
+
+ToolTip "Sender: " sender.Dump()
+    . "kind: " kind " (" Map.Kinds[kind] ")"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (implicit_concat_operation
+          (implicit_concat_operation
+            (implicit_concat_operation
+              (explicit_concat_operation
+                (implicit_concat_operation
+                  (string_literal)
+                  (function_call
+                    (member_access
+                      (identifier)
+                      (identifier))))
+                (string_literal))
+              (identifier))
+            (string_literal))
+          (index_access
+            (member_access
+              (identifier)
+              (identifier))
+            (arg_sequence
+              (identifier))))
+        (string_literal)))))
