@@ -31,6 +31,30 @@ jobs:
 
       - run: tree-sitter test
 
+  soundness:
+    name: Fuzz Soundness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Tree-sitter
+        uses: ./.github/actions/setup
+
+      - name: Fetch Fuzz Testing Corpus
+        shell: bash
+        run: ./test/fuzz/fetch-corpus.sh
+
+      - name: Run Soundness Tests
+        shell: pwsh
+        run: .\test\fuzz\soundness.ps1
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Soundness Fuzz Test Report
+          path: |
+            ./test/fuzz/findings/
+
   compile:
     name: Compile and Upload Artifacts
     runs-on: windows-latest
