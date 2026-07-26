@@ -2323,6 +2323,30 @@ loop 10 {
           (string_literal))))))
 
 ================================================================================
+Continue with numeric loop label
+================================================================================
+
+loop 10 {
+  if(condition)
+    continue 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    head: (integer_literal)
+    body: (block
+      (if_statement
+        (if)
+        condition: (expression_sequence
+          (identifier))
+        body: (continue_statement
+          (continue)
+          looplabel: (integer_literal))))))
+
+================================================================================
 Continue followed by statement
 ================================================================================
 
@@ -2422,6 +2446,30 @@ loop 10 {
         (break_statement
           (break)
           (string_literal))))))
+
+================================================================================
+Break with numeric loop label
+================================================================================
+
+loop 10 {
+  if(condition)
+    break 3
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    head: (integer_literal)
+    body: (block
+      (if_statement
+        (if)
+        condition: (expression_sequence
+          (identifier))
+        body: (break_statement
+          (break)
+          looplabel: (integer_literal))))))
 
 ================================================================================
 Break followed by statement

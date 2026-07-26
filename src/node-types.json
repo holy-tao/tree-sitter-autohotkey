@@ -2588,6 +2588,10 @@
             "named": true
           },
           {
+            "type": "integer_literal",
+            "named": true
+          },
+          {
             "type": "string_literal",
             "named": true
           }
@@ -3690,6 +3694,10 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "integer_literal",
             "named": true
           },
           {

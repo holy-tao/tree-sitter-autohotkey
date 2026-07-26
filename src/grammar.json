@@ -4883,17 +4883,8 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "identifier"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "string_literal"
-                  }
-                ]
+                "type": "SYMBOL",
+                "name": "_loop_label"
               },
               {
                 "type": "BLANK"
@@ -4917,23 +4908,31 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "identifier"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "string_literal"
-                  }
-                ]
+                "type": "SYMBOL",
+                "name": "_loop_label"
               },
               {
                 "type": "BLANK"
               }
             ]
           }
+        }
+      ]
+    },
+    "_loop_label": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "string_literal"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "integer_literal"
         }
       ]
     },

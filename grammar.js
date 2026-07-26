@@ -1048,12 +1048,18 @@ export default grammar({
 
     break_statement: $ => seq(
       $.break,
-      field('looplabel', optional(choice($.identifier, $.string_literal))),  // optional label target
+      field('looplabel', optional($._loop_label)),  // optional label target
     ),
 
     continue_statement: $ => seq(
       $.continue,
-      field('looplabel', optional(choice($.identifier, $.string_literal))),  // optional label target
+      field('looplabel', optional($._loop_label)),  // optional label target
+    ),
+
+    _loop_label: $ => choice(
+      $.identifier,
+      $.string_literal,
+      $.integer_literal,
     ),
 
     // Like return, the thrown value is gated by _value_start so it can't cross a newline. The
