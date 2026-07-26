@@ -1177,6 +1177,90 @@ class Example {
         (integer_literal)))))
 
 ================================================================================
+Class with numeric property names
+================================================================================
+
+class Example {
+    0 := 1
+    static 42 := 2
+    1 => this.x
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    name: (identifier)
+    body: (class_body
+      (property_declaration
+        name: (identifier)
+        (assignment_operator)
+        value: (integer_literal))
+      (property_declaration
+        (scope_identifier)
+        name: (identifier)
+        (assignment_operator)
+        value: (integer_literal))
+      (property_declaration
+        name: (identifier)
+        (getter
+          (member_access
+            object: (identifier)
+            member: (identifier)))))))
+
+================================================================================
+Class with numeric property with bracket parameters
+================================================================================
+
+class Example {
+    1[arg] {
+      get => String(arg)
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (identifier))
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (identifier))))))))))
+
+================================================================================
+Class with numeric method name
+================================================================================
+
+class Example {
+    0zero() => "Can't do this at the top level"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (string_literal))))))
+
+================================================================================
 Class with property initializer named "global"
 ================================================================================
 

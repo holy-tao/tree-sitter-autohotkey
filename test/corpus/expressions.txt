@@ -285,6 +285,56 @@ result := &%"ref"%
         (string_literal)))))
 
 ================================================================================
+Member access with numeric property name
+================================================================================
+
+y := R.1
+z := match.0
+w := obj.0()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (identifier)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (identifier)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (member_access
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Leading-dot float is not member access
+================================================================================
+
+x := .5
+y := 1.5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (float_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (float_literal)))
+
+================================================================================
 Chained member access with dynamic identifiers on both sides
 ================================================================================
 

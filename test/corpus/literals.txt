@@ -533,6 +533,29 @@ obj := { one: 1 }
         (integer_literal)))))
 
 ================================================================================
+Object literal with numeric keys
+================================================================================
+
+obj := { 0: 1, 40000: 3, if: 4 }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (object_literal
+      (object_literal_member
+        (identifier)
+        (integer_literal))
+      (object_literal_member
+        (identifier)
+        (integer_literal))
+      (object_literal_member
+        (identifier)
+        (integer_literal)))))
+
+================================================================================
 Object literal with dynamic identifier member
 ================================================================================
 

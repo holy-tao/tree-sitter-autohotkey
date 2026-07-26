@@ -694,12 +694,82 @@ struct Example {
 (source_file
   (struct_declaration
     (struct)
-    (identifier)
-    (struct_body
+    name: (identifier)
+    body: (struct_body
       (property_declaration
-        (identifier)
+        name: (identifier)
         (assignment_operator)
-        (integer_literal)
-        (identifier)
+        value: (integer_literal)
+        name: (identifier)
         (assignment_operator)
-        (integer_literal)))))
+        value: (integer_literal)))))
+
+================================================================================
+Struct with numeric property declarations
+================================================================================
+
+struct NumericKey {
+    1: IntPtr
+    2: Int32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    name: (identifier)
+    body: (struct_body
+      (typed_property_declaration
+        name: (identifier)
+        type: (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        name: (identifier)
+        type: (type_specifier
+          (identifier))))))
+
+================================================================================
+Struct with comma-delimited numeric property declarations
+================================================================================
+
+struct NumericKey {
+    1: IntPtr, 2: Int32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    name: (identifier)
+    body: (struct_body
+      (typed_property_declaration
+        name: (identifier)
+        type: (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        name: (identifier)
+        type: (type_specifier
+          (identifier))))))
+
+================================================================================
+Struct with numeric method name
+================================================================================
+
+struct Example {
+    0zero() => "Can't do this at the top level"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    name: (identifier)
+    body: (struct_body
+      (method_declaration
+        name: (identifier)
+        head: (function_head)
+        body: (function_body
+          (string_literal))))))

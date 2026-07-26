@@ -489,6 +489,7 @@ export default grammar({
       ".",
       field("member", choice(
         $.identifier,
+        alias($._numeric_property_name, $.identifier),
         $.dereference_operation,
         alias($._member_dynamic_identifier, $.dynamic_identifier),
       ))
@@ -712,7 +713,10 @@ export default grammar({
     method_declaration: $ => seq(
       $._method_def_marker,
       optional($.scope_identifier),
-      field("name", $.identifier),
+      field("name", choice(
+        $.identifier,
+        alias($._numeric_property_name, $.identifier)
+      )),
       field("head", $.function_head),
       field("body", $.function_body)
     ),
@@ -790,7 +794,9 @@ export default grammar({
     integer_literal: $ => token(/([0-9]+)/),
 
     float_literal: $ => choice(
-      token(/[0-9]*\.[0-9]+/),                  // standard
+      token(/[0-9]+\.[0-9]+/),                  // standard, leading digit (e.g. 1.5)
+      // Leading-dot float. Lower prec than member_access so `obj.5` lexes as member access to property `5`
+      token(prec(-1, /\.[0-9]+/)),
       token(/\d+(?:\.\d+)?(?:[eE][+-]?\d+)/)    // scientific notation, incl. e.g 1e-5
     ),
 
@@ -821,13 +827,22 @@ export default grammar({
     ),
 
     object_literal_member: $ => seq(
-      field("key", choice($.identifier, $.dynamic_identifier, $.dereference_operation)),
+      field("key", choice(
+        $.identifier,
+        alias($._numeric_property_name, $.identifier),
+        $.dynamic_identifier,
+        $.dereference_operation
+      )),
       ":",
       field("value", $._single_expression)),
 
     //#endregion
 
     identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
+
+    // AHK allows property and method names, but not variable names, to begin with a digit
+    // https://www.autohotkey.com/docs/alpha/Concepts.htm#names
+    _numeric_property_name: $ => token(/[0-9][a-zA-Z0-9_]*/),
 
     // Note: not strictly "modifiers" because declaring one can switch a function into assume-local/global mode
     scope_identifier: $ => token(
@@ -1221,6 +1236,7 @@ export default grammar({
       field("name",
         choice(
           $.identifier,
+          alias($._numeric_property_name, $.identifier), // property names may begin with a digit
           alias($.static, $.identifier), // "static" is a valid property name
           alias($._qualified_property_name, $.member_access)
         )),
@@ -1232,6 +1248,7 @@ export default grammar({
           repeat(seq(",",
             field("name", choice(
               $.identifier,
+              alias($._numeric_property_name, $.identifier),
               alias($._qualified_property_name, $.member_access)
             )),
             optional($._initializer)))
@@ -1251,7 +1268,10 @@ export default grammar({
         alias($._qualified_property_name, $.member_access)
       )),
       ".",
-      field("member", $.identifier)
+      field("member", choice(
+        $.identifier,
+        alias($._numeric_property_name, $.identifier)
+      ))
     )),
 
     //Interestingly, property bodies are allowed to be empty, the interpreter just skips them
@@ -1310,7 +1330,10 @@ export default grammar({
     ),
 
     typed_property_declaration: $ => prec.right(seq(
-      field("name", $.identifier),
+      field("name", choice(
+        $.identifier,
+        alias($._numeric_property_name, $.identifier)
+      )),
       ":",
       field("type", $.type_specifier),
       optional($._initializer)
