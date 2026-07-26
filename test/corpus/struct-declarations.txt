@@ -773,3 +773,96 @@ struct Example {
         head: (function_head)
         body: (function_body
           (string_literal))))))
+
+================================================================================
+Struct property with getter and setter
+================================================================================
+
+struct Example { 
+    prop {
+        get {
+            return x
+        }
+        set {
+            x := value
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (block
+                (return_statement
+                  (return)
+                  (identifier)))))
+          (setter
+            (set)
+            (function_body
+              (block
+                (assignment_operation
+                  (identifier)
+                  (assignment_operator)
+                  (identifier))))))))))
+
+================================================================================
+Struct property with setter before getter
+================================================================================
+
+struct Example { 
+    prop {
+      set => a
+      get => b
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    name: (identifier)
+    body: (struct_body
+      (property_declaration
+        name: (identifier)
+        (property_declaration_block
+          (setter
+            (set)
+            (function_body
+              (identifier)))
+          (getter
+            (get)
+            (function_body
+              (identifier))))))))
+
+================================================================================
+Empty struct property declaration
+================================================================================
+
+struct Example { 
+    prop {
+      ; Why is this allowed?
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (line_comment))))))

@@ -473,6 +473,58 @@ class Example {
                   (identifier))))))))))
 
 ================================================================================
+Class property with setter before getter
+================================================================================
+
+class Example { 
+    prop {
+      set => a
+      get => b
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    name: (identifier)
+    body: (class_body
+      (property_declaration
+        name: (identifier)
+        (property_declaration_block
+          (setter
+            (set)
+            (function_body
+              (identifier)))
+          (getter
+            (get)
+            (function_body
+              (identifier))))))))
+
+================================================================================
+Empty class property declaration
+================================================================================
+
+class Example { 
+    prop {
+      ; Why is this allowed?
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (property_declaration_block
+          (line_comment))))))
+
+================================================================================
 Static class property with getter and setter
 ================================================================================
 

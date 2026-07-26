@@ -1289,8 +1289,10 @@ export default grammar({
     // Interestingly, property bodies are allowed to be empty, the interpreter just skips them
     property_declaration_block: $ => seq(
       '{',
-      optional($.getter),
-      optional($.setter),
+      optional(choice(
+        seq($.getter, optional($.setter)),
+        seq($.setter, optional($.getter)),
+      )),
       '}',
     ),
 
