@@ -52,8 +52,23 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: Soundness Fuzz Test Report
-          path: |
-            ./test/fuzz/findings/
+          path: ./test/fuzz/findings/
+
+  fuzz-parser:
+    name: Fuzz Parser
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Fetch Fuzz Testing Corpus
+        shell: bash
+        run: ./test/fuzz/fetch-corpus.sh
+
+      - name: Fuzz Parser
+        uses: tree-sitter/fuzz-action@v4
+        with:
+          corpus: ./test/fuzz/corpus
 
   compile:
     name: Compile and Upload Artifacts
