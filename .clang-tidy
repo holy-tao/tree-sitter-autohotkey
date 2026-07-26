@@ -1,0 +1,32 @@
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  cert-*,
+  misc-*,
+  performance-*,
+  readability-inconsistent-declaration-parameter-name,
+  readability-misleading-indentation,
+  readability-non-const-parameter,
+  readability-redundant-control-flow,
+  -bugprone-easily-swappable-parameters,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
+  -misc-include-cleaner,
+  -misc-unused-parameters,
+  -misc-use-internal-linkage,
+
+# Rationale for the disabled checks above:
+#   easily-swappable-parameters  - flags every (lexer, buf, len) helper; noise.
+#   insecureAPI.DeprecatedOr...  - demands the MSVC _s buffer APIs, which are
+#                                  not portable and not available to Wasm.
+#   include-cleaner              - IWYU-style churn over parser.h internals.
+#   unused-parameters            - the external-scanner ABI fixes the signatures
+#                                  of create/destroy/reset/serialize/deserialize
+#                                  whether or not we use every argument.
+#   use-internal-linkage         - the tree_sitter_autohotkey_external_scanner_*
+#                                  entry points must have external linkage.
+
+WarningsAsErrors: '*'
+
+# Report only on scanner.c itself, never the vendored src/tree_sitter/*.h.
+HeaderFilterRegex: '$^'
