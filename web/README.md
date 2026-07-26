@@ -1,16 +1,17 @@
 # tree-sitter-autohotkey playground
 
-Client-react demo of the grammar, takes AHK v2.0 or v2.1 source code and presents an
-interactive parse tree on theright. Parsing runs entirely in the browser via the WebAssembly
--compiled grammar.
+Client-react demo of the grammar, takes AHK v2.0 or v2.1 source code and presents
+an interactive parse tree on theright. Parsing runs entirely in the browser via
+the WebAssembly-compiled grammar.
 
 ## Stack
 
 - React / vite / TypeScript, like everything else these days.
-- [web-tree-sitter](https://www.npmjs.com/package/web-tree-sitter) loads the grammar wasm and parses
-  in-browser. Pinned to `0.26.10` to match the `tree-sitter` CLI's parser ABI; these must stay in sync.
-- [CodeMirror 6](https://codemirror.net/) (`@uiw/react-codemirror`) for editing and source-code
-  interaction.
+- [web-tree-sitter](https://www.npmjs.com/package/web-tree-sitter) loads the grammar
+  wasm and parses in-browser. Pinned to `0.26.10` to match the `tree-sitter` CLI's
+  parser ABI; these must stay in sync.
+- [CodeMirror 6](https://codemirror.net/) (`@uiw/react-codemirror`) for editing
+  and source-code interaction.
 
 ## Local development
 

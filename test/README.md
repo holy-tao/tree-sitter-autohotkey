@@ -4,27 +4,31 @@ This directory contains corpus tests for the AutoHotkey v2 grammar.
 
 ## File Organization
 
-- **directives.txt** - Directive statements (#Requires, #Include, #HotIf, #DllLoad, etc.)
-- **assignments.txt** - Assignment operations with all operators (`:=`, `+=`, `-=`, `*=`, etc.)
+- **directives.txt** - Directive statements (#Requires, #Include, #HotIf, #DllLoad,
+  etc.)
+- **assignments.txt** - Assignment operations with all operators (`:=`, `+=`,
+  `-=`, `*=`, etc.)
 - **literals.txt** - Literal values:
   - Numeric: integers, floats, hex (0xFF)
   - Strings: double-quoted, single-quoted, with escapes
   - Boolean: true/false (case-insensitive)
   - Unset keyword
-- **expressions.txt** - Expression sequences and compositions (parenthesized, multiline, comma-separated)
+- **expressions.txt** - Expression sequences and compositions (parenthesized,
+  multiline, comma-separated)
 - **operators.txt** - All operator types:
   - Math: `+`, `-`, `*`, `/`, `//`
   - Logical: `&&`, `and`, `||`, `or`
   - Bitwise: `&`, `|`, `^`
   - Comparison: `>`, `<`, `>=`, `<=`, `=`, `==`, `!=`, `!==`, `is`
   - Prefix/Postfix: `++`, `--`
-- **variables.txt** - Variable declarations with scope identifiers (global, local, static)
+- **variables.txt** - Variable declarations with scope identifiers (global,
+  local, static)
 
 ## Test Format
 
 Each test follows the standard tree-sitter corpus format:
 
-```
+```text
 ================================================================================
 Descriptive Test Name
 ================================================================================
