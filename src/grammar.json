@@ -5872,6 +5872,15 @@
                 },
                 "named": true,
                 "value": "identifier"
+              },
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_qualified_property_name"
+                },
+                "named": true,
+                "value": "member_access"
               }
             ]
           }
@@ -5924,8 +5933,22 @@
                         "type": "FIELD",
                         "name": "name",
                         "content": {
-                          "type": "SYMBOL",
-                          "name": "identifier"
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "identifier"
+                            },
+                            {
+                              "type": "ALIAS",
+                              "content": {
+                                "type": "SYMBOL",
+                                "name": "_qualified_property_name"
+                              },
+                              "named": true,
+                              "value": "member_access"
+                            }
+                          ]
                         }
                       },
                       {
@@ -5970,6 +5993,49 @@
           ]
         }
       ]
+    },
+    "_qualified_property_name": {
+      "type": "PREC_LEFT",
+      "value": 220,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "object",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "_qualified_property_name"
+                  },
+                  "named": true,
+                  "value": "member_access"
+                }
+              ]
+            }
+          },
+          {
+            "type": "STRING",
+            "value": "."
+          },
+          {
+            "type": "FIELD",
+            "name": "member",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
+          }
+        ]
+      }
     },
     "property_declaration_block": {
       "type": "SEQ",

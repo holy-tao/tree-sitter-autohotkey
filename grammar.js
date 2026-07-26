@@ -1203,19 +1203,41 @@ export default grammar({
 
     property_declaration: $ => seq(
       optional(alias($.static, $.scope_identifier)),
-      field("name", choice($.identifier, alias($.static, $.identifier))),
+      field("name",
+        choice(
+          $.identifier,
+          alias($.static, $.identifier), // "static" is a valid property name
+          alias($._qualified_property_name, $.member_access)
+        )),
       optional(seq("[", $.param_sequence, "]")),
       choice(
         seq(
           $._initializer,
           // only the first property is *required* to be initialized
-          repeat(seq(",", field("name", $.identifier), optional($._initializer)))
+          repeat(seq(",",
+            field("name", choice(
+              $.identifier,
+              alias($._qualified_property_name, $.member_access)
+            )),
+            optional($._initializer)))
         ),
         // getter-only shorthand: prop => 42
         seq("=>", alias($._single_expression, $.getter)),
         $.property_declaration_block
       )
     ),
+
+    // A dotted chain of literal identifiers (`x.y`, `Prototype.sharedValue`,
+    // `a.b.c`) used as a property-declaration target. Must be literal identifiers, so
+    // far narrower scope than a typical member_acess
+    _qualified_property_name: $ => prec.left(PREC.MEMBER_ACCESS, seq(
+      field("object", choice(
+        $.identifier,
+        alias($._qualified_property_name, $.member_access)
+      )),
+      ".",
+      field("member", $.identifier)
+    )),
 
     //Interestingly, property bodies are allowed to be empty, the interpreter just skips them
     property_declaration_block: $ => seq(

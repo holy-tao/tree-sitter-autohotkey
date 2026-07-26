@@ -12813,6 +12813,10 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "member_access",
+            "named": true
           }
         ]
       },

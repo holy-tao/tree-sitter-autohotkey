@@ -1334,3 +1334,97 @@ class Example {
         (assignment_operator)
         (integer_literal)
         (identifier)))))
+
+================================================================================
+Static property member initializer
+================================================================================
+
+class Example {
+    static Prototype.sharedValue := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (member_access
+          (identifier)
+          (identifier))
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Instance property member initializer with nested chain
+================================================================================
+
+class Example {
+    a := {b: {}}
+    a.b.c := 3
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (object_literal
+          (object_literal_member
+            (identifier)
+            (object_literal))))
+      (property_declaration
+        (member_access
+          (member_access
+            (identifier)
+            (identifier))
+          (identifier))
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Comma-delimited declaration with member initializer
+================================================================================
+
+class Example {
+    static x := {}, x.y := 42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (assignment_operator)
+        (object_literal)
+        (member_access
+          (identifier)
+          (identifier))
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Property member initializer rejects dynamic member
+:error
+================================================================================
+
+class Example {
+    a.%b% := 1
+}
+
+--------------------------------------------------------------------------------
+
+
