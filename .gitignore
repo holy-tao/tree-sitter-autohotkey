@@ -41,6 +41,9 @@ zig-out/
 *.obj
 *.o
 
+# Fetched fuzzing corpus (not committed; regenerate with test/fuzz/fetch-corpus.sh)
+test/fuzz/corpus/
+
 # Archives
 *.tar.gz
 *.tgz
