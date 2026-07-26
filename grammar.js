@@ -983,11 +983,12 @@ export default grammar({
           $._single_expression
         ),
         choice(
-          // Specialized loops - no top-level parentheses allowed
-          prec(1, seq($.parse, $._single_expression, optional(seq(",", $._single_expression)), optional(seq(",", $._single_expression)))),
-          prec(1, seq($.read, $._single_expression, optional(seq(",", $._single_expression)))),
-          prec(1, seq($.files, $._single_expression, optional(seq(",", $._single_expression)))),
-          prec(1, seq($.reg, $._single_expression, optional(seq(",", $._single_expression))))
+          // Specialized loops - no top-level parentheses allowed. Any argument may
+          // be omitted (e.g. `loop parse , "abc"`), so each slot is optional.
+          prec(1, seq($.parse, optional($._single_expression), optional(seq(",", optional($._single_expression))), optional(seq(",", optional($._single_expression))))),
+          prec(1, seq($.read, optional($._single_expression), optional(seq(",", optional($._single_expression))))),
+          prec(1, seq($.files, optional($._single_expression), optional(seq(",", optional($._single_expression))))),
+          prec(1, seq($.reg, optional($._single_expression), optional(seq(",", optional($._single_expression)))))
         )
       ))),
       field("body", choice(
@@ -1061,9 +1062,14 @@ export default grammar({
       optional(field("else_block", $.else_statement))
     )),
 
-    _for_params: $ => choice(
-      seq(field("iterator", $.identifier), $.in, field("iterable", $._single_expression)),
-      seq(field("iterator", $.identifier), ",", field("iterator", $.identifier), $.in, field("iterable", $._single_expression))
+    // AHK lets either loop variable be omitted: `for in x`, `for , v in x`,
+    // `for k, in x`, and `for , in x` are all legal. Each iterator slot and the
+    // separating comma are independently optional.
+    _for_params: $ => seq(
+      optional(field("iterator", $.identifier)),
+      optional(seq(",", optional(field("iterator", $.identifier)))),
+      $.in,
+      field("iterable", $._single_expression)
     ),
 
     try_statement: $ => prec.right(PREC.DEFAULT, seq(

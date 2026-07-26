@@ -6863,7 +6863,7 @@
       },
       "iterator": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "identifier",

@@ -762,6 +762,117 @@ for (key, value in object) {
         (identifier)))))
 
 ================================================================================
+For loop both variables omitted
+================================================================================
+
+for in collection {
+    count++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (in)
+    (identifier)
+    (block
+      (postfix_operation
+        (identifier)))))
+
+================================================================================
+For loop first variable omitted
+================================================================================
+
+for , value in collection {
+    result := value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (identifier)
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))))
+
+================================================================================
+For loop second variable omitted
+================================================================================
+
+for key, in object {
+    result := key
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (identifier)
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))))
+
+================================================================================
+For loop both variables omitted with comma
+================================================================================
+
+for , in collection {
+    count++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (in)
+    (identifier)
+    (block
+      (postfix_operation
+        (identifier)))))
+
+================================================================================
+For loop first variable omitted no braces
+================================================================================
+
+for , k in Map(1, 'Read', 4, 'OOB')
+    FileAppend(k "`n", "*")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (for)
+    (identifier)
+    (in)
+    (function_call
+      (identifier)
+      (arg_sequence
+        (integer_literal)
+        (string_literal)
+        (integer_literal)
+        (string_literal)))
+    (function_call
+      (identifier)
+      (arg_sequence
+        (implicit_concat_operation
+          (identifier)
+          (string_literal))
+        (string_literal)))))
+
+================================================================================
 Try-catch
 ================================================================================
 
@@ -1518,6 +1629,25 @@ loop parse content, "`n" {
     (loop)
     (parse)
     (identifier)
+    (string_literal)
+    (block
+      (postfix_operation
+        (identifier)))))
+
+================================================================================
+Loop parse first argument omitted
+================================================================================
+
+loop parse , "`n" {
+    lines++
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (parse)
     (string_literal)
     (block
       (postfix_operation
