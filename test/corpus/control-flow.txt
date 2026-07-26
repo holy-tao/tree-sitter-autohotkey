@@ -1480,6 +1480,97 @@ switch (true) {
           (identifier))))))
 
 ================================================================================
+Switch with omitted value
+================================================================================
+
+switch {
+    case (variable < 10):
+        return variable
+    default:
+        return 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (switch_body
+      (case_clause
+        (case)
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (integer_literal)))
+        (return_statement
+          (return)
+          (identifier)))
+      (default_clause
+        (default)
+        (return_statement
+          (return)
+          (integer_literal))))))
+
+================================================================================
+Switch with case-sense argument
+================================================================================
+
+switch value, 0 {
+    case "a":
+        result := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (identifier)
+    (integer_literal)
+    (switch_body
+      (case_clause
+        (case)
+        (string_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+================================================================================
+Switch with value and string case-sense argument
+================================================================================
+
+switch key, "Off" {
+    case "a", "b":
+        result := 1
+    default:
+        result := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (identifier)
+    (string_literal)
+    (switch_body
+      (case_clause
+        (case)
+        (string_literal)
+        (string_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal)))
+      (default_clause
+        (default)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+================================================================================
 Nested if statements
 ================================================================================
 

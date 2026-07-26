@@ -14469,9 +14469,171 @@
           }
         ]
       },
+      "case_sense": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "_literal",
+            "named": true
+          },
+          {
+            "type": "additive_operation",
+            "named": true
+          },
+          {
+            "type": "assignment_operation",
+            "named": true
+          },
+          {
+            "type": "bitshift_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_and_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_or_operation",
+            "named": true
+          },
+          {
+            "type": "bitwise_xor_operation",
+            "named": true
+          },
+          {
+            "type": "continuation_section",
+            "named": true
+          },
+          {
+            "type": "dereference_operation",
+            "named": true
+          },
+          {
+            "type": "dynamic_identifier",
+            "named": true
+          },
+          {
+            "type": "equality_operation",
+            "named": true
+          },
+          {
+            "type": "explicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "exponent_operation",
+            "named": true
+          },
+          {
+            "type": "expression_sequence",
+            "named": true
+          },
+          {
+            "type": "fat_arrow_function",
+            "named": true
+          },
+          {
+            "type": "function_call",
+            "named": true
+          },
+          {
+            "type": "function_expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "implicit_concat_operation",
+            "named": true
+          },
+          {
+            "type": "index_access",
+            "named": true
+          },
+          {
+            "type": "inequality_operation",
+            "named": true
+          },
+          {
+            "type": "logical_and_operation",
+            "named": true
+          },
+          {
+            "type": "logical_or_operation",
+            "named": true
+          },
+          {
+            "type": "member_access",
+            "named": true
+          },
+          {
+            "type": "multiplicative_operation",
+            "named": true
+          },
+          {
+            "type": "optional_expression",
+            "named": true
+          },
+          {
+            "type": "or_maybe_operation",
+            "named": true
+          },
+          {
+            "type": "postfix_operation",
+            "named": true
+          },
+          {
+            "type": "prefix_operation",
+            "named": true
+          },
+          {
+            "type": "regex_match_operation",
+            "named": true
+          },
+          {
+            "type": "relational_operation",
+            "named": true
+          },
+          {
+            "type": "ternary_expression",
+            "named": true
+          },
+          {
+            "type": "throw_statement",
+            "named": true
+          },
+          {
+            "type": "type_check_operation",
+            "named": true
+          },
+          {
+            "type": "variable_declaration",
+            "named": true
+          },
+          {
+            "type": "varref_operation",
+            "named": true
+          },
+          {
+            "type": "verbal_not_operation",
+            "named": true
+          }
+        ]
+      },
       "head": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "(",

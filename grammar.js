@@ -1112,20 +1112,25 @@ export default grammar({
       ))
     ),
 
+    // SwitchValue and CaseSense are both optional (`Switch [SwitchValue, CaseSense]`):
     switch_statement: $ => seq(
       $.switch,
-      field("head", $._single_expression),
+      optional(seq(
+        field("head", $._single_expression),
+        optional(seq(",", field("case_sense", $._single_expression)))
+      )),
       field("body", $.switch_body)
     ),
 
-    switch_body: $ => seq(
+    // prec(1): after `switch`, a `{` always starts the body (never an object literal)
+    switch_body: $ => prec(1, seq(
       "{",
       repeat(choice(
         $.case_clause,
         $.default_clause
       )),
       "}"
-    ),
+    )),
 
     // Separate recursive rule for switch clause bodies.
     // Using repeat($._statement) here would merge LALR states with block, causing
