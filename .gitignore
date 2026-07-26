@@ -44,6 +44,9 @@ zig-out/
 # Fetched fuzzing corpus (not committed; regenerate with test/fuzz/fetch-corpus.sh)
 test/fuzz/corpus/
 
+# Soundness-harness findings (regenerate with test/fuzz/soundness.ps1)
+test/fuzz/findings/
+
 # Archives
 *.tar.gz
 *.tgz
