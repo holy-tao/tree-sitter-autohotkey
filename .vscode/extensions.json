@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    // grammar.js -- reads eslint.config.js
+    "dbaeumer.vscode-eslint",
+    // *.md -- reads .markdownlint-cli2.jsonc
+    "DavidAnson.vscode-markdownlint",
+    // src/scanner.c -- runs the checks in .clang-tidy on save
+    "ms-vscode.cpptools",
+    "EditorConfig.EditorConfig"
+  ]
+}

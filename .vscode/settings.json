@@ -1,0 +1,39 @@
+{
+  // `.clang-tidy` is YAML, but VS Code guesses Markdown from the leading `#`
+  // comments and the markdownlint extension then reports bogus problems in it.
+  "files.associations": {
+    ".clang-tidy": "yaml",
+    ".markdownlint-cli2.jsonc": "jsonc"
+  },
+
+  "eslint.enable": true,
+  "eslint.useFlatConfig": true,
+  // `auto` lets the root config own grammar.js while web/ keeps using its own.
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
+  "markdownlint.run": "onType",
+  "markdownlint.configFile": "${workspaceFolder}/.markdownlint-cli2.jsonc",
+
+  // The tree-sitter CLI compiles the parser for us, so this is the only place
+  // scanner.c's compiler/analyzer diagnostics ever show up.
+  "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+  "C_Cpp.codeAnalysis.runAutomatically": true,
+  "C_Cpp.codeAnalysis.clangTidy.useBuildPath": false,
+  "C_Cpp.codeAnalysis.exclude": {
+    "**/src/parser.c": true
+  },
+  "C_Cpp.default.cStandard": "c11",
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/src"
+  ],
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.markdownlint": "explicit"
+  },
+  "[markdown]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.markdownlint": "explicit"
+    }
+  }
+}
