@@ -1,0 +1,17 @@
+# Seed corpus sources for the AHK grammar fuzzers.
+#
+# One repo per line, in the form:
+#     owner/repo              (uses the repo's default branch)
+#     owner/repo@branch       (pins a specific branch, tag, or commit)
+#
+# Blank lines and lines starting with '#' are ignored.
+
+thqby/ahk2_lib
+Descolada/UIA-v2
+Descolada/OCR
+Descolada/Acc-v2
+nperovic/GuiEnhancerKit
+holy-tao/ahk-utils
+holy-tao/ahkcollections
+lexikos/winrt.ahk@alpha
+0w0Demonic/AquaHotkey
