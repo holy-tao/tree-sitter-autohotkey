@@ -9,13 +9,13 @@
 
 // tree-sitter characters are of type int32_t, <ctypes> expects chars, so we roll our own macros
 
-#define is_alpha(c) ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+#define is_alpha(c) (((c) >= 'a' && (c) <= 'z') || ((c) >= 'A' && (c) <= 'Z'))
 #define is_digit(c) ((c) >= '0' && (c) <= '9')
 #define is_xdigit(c) (is_digit(c) || ((c) >= 'a' && (c) <= 'f') || ((c) >= 'A' && (c) <= 'F'))
 #define is_alnum(c) (is_alpha(c) || is_digit(c))
-#define is_identifier_char(c) (is_alnum(c) || (c == '_'))
-#define is_eol(c) (c == '\r' || c == '\n' || c == '\0')
-#define is_whitespace(c) (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+#define is_identifier_char(c) (is_alnum(c) || ((c) == '_'))
+#define is_eol(c) ((c) == '\r' || (c) == '\n' || (c) == '\0')
+#define is_whitespace(c) ((c) == ' ' || (c) == '\t' || (c) == '\n' || (c) == '\r')
 // tolower() from <ctype.h> isn't in the symbol set available to Wasm parsers, and
 // every use here is on ASCII bytes (key names, identifiers), so roll our own.
 #define ascii_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? ((c) + 32) : (c))
@@ -45,18 +45,18 @@
     (_STRCASEEQ_ANY_N(__VA_ARGS__, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)(s, __VA_ARGS__))
 
 /// Skips all whitespace, including newlines
-#define skip_whitespace(lexer)  while (is_whitespace(lexer->lookahead)) { \
-                                  lexer->advance(lexer, true);            \
+#define skip_whitespace(lexer)  while (is_whitespace((lexer)->lookahead)) { \
+                                  (lexer)->advance(lexer, true);            \
                                 }
 
 // Skip characters until we hit a whitespace character or eof
-#define skip_to_whitespace(lexer) while(!is_whitespace(lexer->lookahead) && !is_eof(lexer)) {     \
-                                    lexer->advance(lexer, false);                                 \
+#define skip_to_whitespace(lexer) while(!is_whitespace((lexer)->lookahead) && !is_eof(lexer)) { \
+                                    (lexer)->advance(lexer, false);                             \
                                   }
 
-#define skip_eol(lexer) while(is_eol(lexer->lookahead)) { lexer->advance(lexer, true); }
+#define skip_eol(lexer) while(is_eol((lexer)->lookahead)) { (lexer)->advance(lexer, true); }
 
-#define is_eof(lexer) (lexer->eof(lexer))
+#define is_eof(lexer) ((lexer)->eof(lexer))
 
 /// Check to see if a character is a hotkey modifier symbol
 #define is_hotkey_modifier(c) ((c) && strchr("^!#+<>~$", c))
@@ -391,7 +391,7 @@ static bool is_implicit_concatenation(TSLexer *lexer) {
     // Check to see if this is an operator keyword
     if(starts_operator_keyword(lexer->lookahead)) {
       char ident[4];
-      int len = skip_identifier(lexer, ident, sizeof(ident));
+      skip_identifier(lexer, ident, sizeof(ident));
 
       if(is_operator_keyword(ident)) {
         return false;
@@ -454,7 +454,7 @@ static ContinuationResult is_continuation_start(TSLexer* lexer) {
       case 'j':
       case 'J':
         //Join - ensure the first 4 characters are "join" and skip past the rest
-        int id_chars = skip_identifier(lexer, opt, 5);
+        skip_identifier(lexer, opt, 5);
         if(!strcaseeq(opt, "join")) {
           return CONT_PAREN_EXPR;
         }
@@ -995,7 +995,7 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
       if (lexer->lookahead == 'c' || lexer->lookahead == 'C' ||
           lexer->lookahead == 's' || lexer->lookahead == 'S') {
         char w[16];
-        int wl = skip_identifier(lexer, w, sizeof(w));
+        skip_identifier(lexer, w, sizeof(w));
 
         if (strcaseeq_any(w, "class", "struct") &&
             skip_horizontal_ws(lexer) &&
