@@ -57,33 +57,33 @@ const PREC = {
  * @type {StmtBinaryOp[]}
  */
 const STMT_BINARY_OPS = [
-  { node: "additive_operation",        assoc: "left",  prec: PREC.ADDITIVE,         op: () => choice("+", "-") },
-  { node: "multiplicative_operation",  assoc: "left",  prec: PREC.MULTIPLICATIVE,   op: () => choice("*", "/", "//") },
-  { node: "relational_operation",      assoc: "left",  prec: PREC.RELATIONAL,       op: () => choice("<", ">", "<=", ">=") },
-  { node: "equality_operation",        assoc: "left",  prec: PREC.EQUALITY,         op: () => choice("=", "==") },
-  { node: "inequality_operation",      assoc: "left",  prec: PREC.INEQUALITY,       op: () => choice("!=", "!==") },
-  { node: "regex_match_operation",     assoc: "left",  prec: PREC.REGEX_MATCH,      op: () => token(prec(200, choice("~=", "!~="))) },
-  { node: "type_check_operation",      assoc: "left",  prec: PREC.CASE_INSENSITIVE, op: () => token(prec(PREC.KEYWORD, / is /i)) },
-  { node: "logical_and_operation",     assoc: "left",  prec: PREC.LOGICAL_AND,      op: () => choice("&&", token(prec(PREC.KEYWORD, /and/i))) },
-  { node: "logical_or_operation",      assoc: "left",  prec: PREC.LOGICAL_OR,       op: () => choice("||", token(prec(PREC.KEYWORD, /or/i))) },
-  { node: "bitwise_and_operation",     assoc: "left",  prec: PREC.BITWISE_AND,      op: () => "&" },
-  { node: "bitwise_xor_operation",     assoc: "left",  prec: PREC.BITWISE_XOR,      op: () => "^" },
-  { node: "bitwise_or_operation",      assoc: "left",  prec: PREC.BITWISE_OR,       op: () => "|" },
-  { node: "bitshift_operation",        assoc: "left",  prec: PREC.SHIFT,            op: $ => $.bitshift_operator },
-  { node: "explicit_concat_operation", assoc: "left",  prec: PREC.CONCAT,           op: () => token(/\.\s+/) },
-  { node: "exponent_operation",        assoc: "right", prec: PREC.EXPONENT,         op: () => "**" },
-  { node: "or_maybe_operation",        assoc: "left",  prec: PREC.OR_MAYBE,         op: () => "??" },
+  {node: 'additive_operation',        assoc: 'left',  prec: PREC.ADDITIVE,         op: () => choice('+', '-')},
+  {node: 'multiplicative_operation',  assoc: 'left',  prec: PREC.MULTIPLICATIVE,   op: () => choice('*', '/', '//')},
+  {node: 'relational_operation',      assoc: 'left',  prec: PREC.RELATIONAL,       op: () => choice('<', '>', '<=', '>=')},
+  {node: 'equality_operation',        assoc: 'left',  prec: PREC.EQUALITY,         op: () => choice('=', '==')},
+  {node: 'inequality_operation',      assoc: 'left',  prec: PREC.INEQUALITY,       op: () => choice('!=', '!==')},
+  {node: 'regex_match_operation',     assoc: 'left',  prec: PREC.REGEX_MATCH,      op: () => token(prec(200, choice('~=', '!~=')))},
+  {node: 'type_check_operation',      assoc: 'left',  prec: PREC.CASE_INSENSITIVE, op: () => token(prec(PREC.KEYWORD, / is /i))},
+  {node: 'logical_and_operation',     assoc: 'left',  prec: PREC.LOGICAL_AND,      op: () => choice('&&', token(prec(PREC.KEYWORD, /and/i)))},
+  {node: 'logical_or_operation',      assoc: 'left',  prec: PREC.LOGICAL_OR,       op: () => choice('||', token(prec(PREC.KEYWORD, /or/i)))},
+  {node: 'bitwise_and_operation',     assoc: 'left',  prec: PREC.BITWISE_AND,      op: () => '&'},
+  {node: 'bitwise_xor_operation',     assoc: 'left',  prec: PREC.BITWISE_XOR,      op: () => '^'},
+  {node: 'bitwise_or_operation',      assoc: 'left',  prec: PREC.BITWISE_OR,       op: () => '|'},
+  {node: 'bitshift_operation',        assoc: 'left',  prec: PREC.SHIFT,            op: $ => $.bitshift_operator},
+  {node: 'explicit_concat_operation', assoc: 'left',  prec: PREC.CONCAT,           op: () => token(/\.\s+/)},
+  {node: 'exponent_operation',        assoc: 'right', prec: PREC.EXPONENT,         op: () => '**'},
+  {node: 'or_maybe_operation',        assoc: 'left',  prec: PREC.OR_MAYBE,         op: () => '??'},
 ];
 
 /**
  * NOTE: The closest thing AutoHotkey has to a formal specification is the "Language" doc: https://www.autohotkey.com/docs/v2/Language.htm
  * As the maintainer himself notes, "Gleaning the syntax from the C++ source code is probably futile, as it doesn't
  * use any kind of sane parsing strategy." (https://www.autohotkey.com/boards/viewtopic.php?t=105213)
- * 
+ *
  * Good luck!
  */
 export default grammar({
-  name: "autohotkey",
+  name: 'autohotkey',
 
   word: $ => $.identifier,
 
@@ -138,18 +138,18 @@ export default grammar({
     [$._switch_clause_body],
     [$.case_clause],
     [$.struct_body],
-    [$._statement, $.try_statement]
+    [$._statement, $.try_statement],
   ],
 
   extras: $ => [
     /\s/,
     $.line_comment,
-    $.block_comment
+    $.block_comment,
   ],
 
   supertypes: $ => [
     $._directive,
-    $._literal
+    $._literal,
   ],
 
   rules: {
@@ -180,14 +180,14 @@ export default grammar({
       prec.dynamic(-10, $.block),
       $.label,
       $._control_flow_statement,
-      $._loop_flow_statement
+      $._loop_flow_statement,
     ),
 
     top_level_expression_sequence: $ => seq(
       // Exactly like expression_sequence, but the first element must be a valid statement
       // expression and no surrounding parentheses are allowed.
       $._statement_expression,
-      repeat1(seq(",", $._single_expression))
+      repeat1(seq(',', $._single_expression)),
     ),
 
     // NOTE: this is actually more permissive than the AHK interpreter, which doesn't allow block comments inline
@@ -198,13 +198,13 @@ export default grammar({
     line_comment: $ => prec(PREC.COMMENT, choice(token(';'), token(/;[^@\r\n][^\r\n]*/))),
 
     directive_comment: $ => prec(PREC.COMMENT, seq(
-      token(";@"),
-      field("directive", alias(/[^\r\n\s]*/i, $.directive_identifier)),
-      optional(field("arguments", alias(/[^\r\n]*/, $.directive_arguments))),
-      $._eol
+      token(';@'),
+      field('directive', alias(/[^\r\n\s]*/i, $.directive_identifier)),
+      optional(field('arguments', alias(/[^\r\n]*/, $.directive_arguments))),
+      $._eol,
     )),
 
-    //#region General Expressions
+    //# region General Expressions
 
     _control_flow_statement: $ => choice(
       $.return_statement,
@@ -214,12 +214,12 @@ export default grammar({
       $.loop_statement,
       $.switch_statement,
       $.try_statement,
-      $.goto_statement
+      $.goto_statement,
     ),
 
     _loop_flow_statement: $ => prec(2, choice(
       $.break_statement,
-      $.continue_statement
+      $.continue_statement,
     )),
 
     // "Expression statements" in the docs
@@ -247,36 +247,36 @@ export default grammar({
     ),
 
     _statement_operation: $ => choice(
-      ...STMT_BINARY_OPS.map(spec => alias($["_stmt_" + spec.node], $[spec.node])),
+      ...STMT_BINARY_OPS.map(spec => alias($['_stmt_' + spec.node], $[spec.node])),
       alias($._stmt_implicit_concat_operation, $.implicit_concat_operation),
       alias($._stmt_ternary_expression, $.ternary_expression),
     ),
 
     // Statement-level twin of implicit_concat_operation (distinct shape: marker, no operator field).
     _stmt_implicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
-      field("left", $._statement_expression),
+      field('left', $._statement_expression),
       $._implicit_concat_marker,
-      field("right", $._single_expression),
+      field('right', $._single_expression),
     )),
 
     // Statement-level twin of ternary_expression (distinct shape: condition/branch fields).
     _stmt_ternary_expression: $ => prec.right(PREC.TERNARY, seq(
-      field("condition", $._statement_expression),
-      "?",
-      field("true_branch", $._single_expression),
-      ":",
-      field("false_branch", $._single_expression),
+      field('condition', $._statement_expression),
+      '?',
+      field('true_branch', $._single_expression),
+      ':',
+      field('false_branch', $._single_expression),
     )),
 
     // Statement-level twins of the STMT_BINARY_OPS operators, aliased back to their
     // expression-rule names in `_statement_operation`. Same precedence/associativity/operator
     // as their expression counterparts; only the left operand is constrained.
     ...Object.fromEntries(STMT_BINARY_OPS.map(spec => [
-      "_stmt_" + spec.node,
-      $ => (spec.assoc === "right" ? prec.right : prec.left)(spec.prec, seq(
-        field("left", $._statement_expression),
-        field("operator", spec.op($)),
-        field("right", $._single_expression),
+      '_stmt_' + spec.node,
+      $ => (spec.assoc === 'right' ? prec.right : prec.left)(spec.prec, seq(
+        field('left', $._statement_expression),
+        field('operator', spec.op($)),
+        field('right', $._single_expression),
       )),
     ])),
 
@@ -298,41 +298,41 @@ export default grammar({
 
     expression_sequence: $ => prec(PREC.COMMA, seq(
       $._single_expression,
-      repeat(seq(",", $._single_expression))
+      repeat(seq(',', $._single_expression)),
     )),
 
     // FIXME some declarations are contextually illegal - you can't delcare local variables in the auto-execute
     // section, for example. We may not be able to detect those with pure grammar rules
     variable_declaration: $ => seq(
-      field("scope", $.scope_identifier),
-      field("name", $.identifier)
+      field('scope', $.scope_identifier),
+      field('name', $.identifier),
     ),
 
     ternary_expression: $ => prec.right(PREC.TERNARY, seq(
-      field("condition", $._single_expression),
-      "?",
-      field("true_branch", $._single_expression),
-      ":",
-      field("false_branch", $._single_expression)
+      field('condition', $._single_expression),
+      '?',
+      field('true_branch', $._single_expression),
+      ':',
+      field('false_branch', $._single_expression),
     )),
 
-    //#endregion
+    //# endregion
 
-    //#region Operators
+    //# region Operators
     assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
-      field("left", $._single_expression),
+      field('left', $._single_expression),
       $.assignment_operator,
-      field("right", $._single_expression)
+      field('right', $._single_expression),
     )),
 
     dereference_operation: $ => prec.left(PREC.DEREFERENCE, seq(
-      "%", field("operand", $._single_expression), "%"
+      '%', field('operand', $._single_expression), '%',
     )),
 
     // Maybe more accurately a "reference operation", since in v2.1 these can produce PropRefs
     // or invoke __ref
     varref_operation: $ => prec.right(PREC.PREFIX + 5, seq(
-      "&", field("operand", $._single_expression)
+      '&', field('operand', $._single_expression),
     )),
 
     // Any expression like left <op> right (e.g. 2 + 2, true != false)
@@ -353,151 +353,151 @@ export default grammar({
       $.explicit_concat_operation,
       $.implicit_concat_operation,
       $.exponent_operation,
-      $.or_maybe_operation
+      $.or_maybe_operation,
     ),
 
     implicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
-      field("left", $._single_expression),
+      field('left', $._single_expression),
       $._implicit_concat_marker,
-      field("right", $._single_expression)
+      field('right', $._single_expression),
     )),
 
     // Postfix increment/decrement
     postfix_operation: $ => prec.left(PREC.POSTFIX, seq(
-      field("operand", choice($.identifier, $.dynamic_identifier, $._primary_expression)),
-      field("operator", choice(
-        token.immediate("++"),
-        token.immediate("--")
-      ))
+      field('operand', choice($.identifier, $.dynamic_identifier, $._primary_expression)),
+      field('operator', choice(
+        token.immediate('++'),
+        token.immediate('--'),
+      )),
     )),
 
     // Prefix increment/decrement and high-precedence unary operators
     prefix_operation: $ => prec.right(PREC.PREFIX, seq(
-      field("operator", choice(
-        "++", "--",     // prefix increment/decrement
-        "!", "~",       // logical NOT, bitwise NOT
-        "+", "-"        // unary plus, unary minus
+      field('operator', choice(
+        '++', '--',     // prefix increment/decrement
+        '!', '~',       // logical NOT, bitwise NOT
+        '+', '-',        // unary plus, unary minus
       )),
-      field("operand", $._single_expression)
+      field('operand', $._single_expression),
     )),
 
     // Verbal NOT operator (lower precedence than !)
     verbal_not_operation: $ => prec.right(PREC.LOGICAL_NOT, seq(
-      field("operator", token(prec(PREC.KEYWORD, /not/i))),
-      field("operand", $._single_expression)
+      field('operator', token(prec(PREC.KEYWORD, /not/i))),
+      field('operand', $._single_expression),
     )),
 
     additive_operation: $ => prec.left(PREC.ADDITIVE, seq(
-      field("left", $._single_expression),
-      field("operator", choice("+", "-")),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', choice('+', '-')),
+      field('right', $._single_expression),
     )),
 
     multiplicative_operation: $ => prec.left(PREC.MULTIPLICATIVE, seq(
-      field("left", $._single_expression),
-      field("operator", choice("*", "/", "//")),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', choice('*', '/', '//')),
+      field('right', $._single_expression),
     )),
 
     relational_operation: $ => prec.left(PREC.RELATIONAL, seq(
-      field("left", $._single_expression),
-      field("operator", choice("<", ">", "<=", ">=")),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', choice('<', '>', '<=', '>=')),
+      field('right', $._single_expression),
     )),
 
     equality_operation: $ => prec.left(PREC.EQUALITY, seq(
-      field("left", $._single_expression),
-      field("operator", choice("=", "==")),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', choice('=', '==')),
+      field('right', $._single_expression),
     )),
 
     inequality_operation: $ => prec.left(PREC.INEQUALITY, seq(
-      field("left", $._single_expression),
-      field("operator", choice("!=", "!==")),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', choice('!=', '!==')),
+      field('right', $._single_expression),
     )),
 
     regex_match_operation: $ => prec.left(PREC.REGEX_MATCH, seq(
-      field("left", $._single_expression),
-      field("operator", token(prec(200, choice("~=", "!~=")))),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', token(prec(200, choice('~=', '!~=')))),
+      field('right', $._single_expression),
     )),
 
     type_check_operation: $ => prec.left(PREC.CASE_INSENSITIVE, seq(
-      field("left", $._single_expression),
-      field("operator", $.is),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', $.is),
+      field('right', $._single_expression),
     )),
 
     is: $ => token(prec(PREC.KEYWORD, / is /i)),
 
     logical_and_operation: $ => prec.left(PREC.LOGICAL_AND, seq(
-      field("left", $._single_expression),
-      field("operator", choice("&&", token(prec(PREC.KEYWORD, /and/i)))),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', choice('&&', token(prec(PREC.KEYWORD, /and/i)))),
+      field('right', $._single_expression),
     )),
 
     logical_or_operation: $ => prec.left(PREC.LOGICAL_OR, seq(
-      field("left", $._single_expression),
-      field("operator", choice("||", token(prec(PREC.KEYWORD, /or/i)))),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', choice('||', token(prec(PREC.KEYWORD, /or/i)))),
+      field('right', $._single_expression),
     )),
 
     bitwise_and_operation: $ => prec.left(PREC.BITWISE_AND, seq(
-      field("left", $._single_expression),
-      field("operator", "&"),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', '&'),
+      field('right', $._single_expression),
     )),
 
     bitwise_xor_operation: $ => prec.left(PREC.BITWISE_XOR, seq(
-      field("left", $._single_expression),
-      field("operator", "^"),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', '^'),
+      field('right', $._single_expression),
     )),
 
     bitwise_or_operation: $ => prec.left(PREC.BITWISE_OR, seq(
-      field("left", $._single_expression),
-      field("operator", "|"),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', '|'),
+      field('right', $._single_expression),
     )),
 
     bitshift_operation: $ => prec.left(PREC.SHIFT, seq(
-      field("left", $._single_expression),
-      field("operator", $.bitshift_operator),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', $.bitshift_operator),
+      field('right', $._single_expression),
     )),
 
     explicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
-      field("left", $._single_expression),
+      field('left', $._single_expression),
       // Turns out preceding whitespace is totally irrelevant for disambiguating member access from concatenation
       // `obj .prop` is member access, `obj . prop` is concatenation
       // Although `obj. prop` is a syntax error, and this parses it as concatenation
-      field("operator", token(/\.\s+/)),
-      field("right", $._single_expression)
+      field('operator', token(/\.\s+/)),
+      field('right', $._single_expression),
     )),
 
     exponent_operation: $ => prec.right(PREC.EXPONENT, seq(
-      field("left", $._single_expression),
-      field("operator", "**"),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', '**'),
+      field('right', $._single_expression),
     )),
 
     // "unset-coalescing"; the docs call this the or-maybe operator so I'm going with that
     or_maybe_operation: $ => prec.left(PREC.OR_MAYBE, seq(
-      field("left", $._single_expression),
-      field("operator", "??"),
-      field("right", $._single_expression)
+      field('left', $._single_expression),
+      field('operator', '??'),
+      field('right', $._single_expression),
     )),
 
     member_access: $ => prec(PREC.MEMBER_ACCESS, seq(
-      field("object", $._single_expression),
-      ".",
-      field("member", choice(
+      field('object', $._single_expression),
+      '.',
+      field('member', choice(
         $.identifier,
         alias($._numeric_property_name, $.identifier),
         $.dereference_operation,
         alias($._member_dynamic_identifier, $.dynamic_identifier),
-      ))
+      )),
     )),
 
     // A combination of identifiers and derefs, such as `a%b%`
@@ -510,14 +510,14 @@ export default grammar({
         $.dereference_operation,
         repeat(choice(
           $.identifier,
-          $.dereference_operation))
+          $.dereference_operation)),
       ),
       seq(
         $.dereference_operation,
         repeat1(choice(
           $.identifier,
-          $.dereference_operation
-        ))
+          $.dereference_operation,
+        )),
       ),
     )),
 
@@ -529,14 +529,14 @@ export default grammar({
         $.dereference_operation,
         repeat(choice(
           $.identifier,
-          $.dereference_operation))
+          $.dereference_operation)),
       ),
       seq(
         $.dereference_operation,
         repeat1(choice(
           $.identifier,
-          $.dereference_operation
-        ))
+          $.dereference_operation,
+        )),
       ),
     ))),
 
@@ -546,7 +546,7 @@ export default grammar({
     // The operand is restricted to the things that can legally precede `?`:
     // a variable, a property/member access, an index access, or a call.
     optional_expression: $ => prec.right(PREC.MAYBE, seq(
-      field("operand", choice(
+      field('operand', choice(
         $.identifier,
         $.member_access,
         $.index_access,
@@ -554,102 +554,102 @@ export default grammar({
         // A parenthesized sub-expression may also be made optional: `(a ?? b)?.c`
         $._parenthesized_expression,
       )),
-      $.optional_marker
+      $.optional_marker,
     )),
 
     // Hidden so `(expr)` still surfaces its inner expression_sequence directly,
     // exactly as before. Shared by _primary_expression and optional_expression.
-    _parenthesized_expression: $ => seq("(", $.expression_sequence, ")"),
+    _parenthesized_expression: $ => seq('(', $.expression_sequence, ')'),
 
-    assignment_operator: $ => 
-      choice( ":=", "+=", "-=", "*=", "/=", "//=", ".=", "|=", "&=", "^=", ">>=", "<<=", ">>>=", "??="),
+    assignment_operator: $ =>
+      choice( ':=', '+=', '-=', '*=', '/=', '//=', '.=', '|=', '&=', '^=', '>>=', '<<=', '>>>=', '??='),
 
-    bitshift_operator: $ => choice("<<", ">>", ">>>"),
+    bitshift_operator: $ => choice('<<', '>>', '>>>'),
 
-    arrow: $ => "=>",
-    
+    arrow: $ => '=>',
+
     boolean_comparison_operator: $ => token(
-      prec(PREC.KEYWORD, 
-        choice("&&", /and/i, "||", /or/i
-    ))),
+      prec(PREC.KEYWORD,
+        choice('&&', /and/i, '||', /or/i,
+        ))),
 
-    //#endregion
+    //# endregion
 
-    //#region Function-like
+    //# region Function-like
 
     // Maybe "subscript access", the docs call it index access
     // See https://www.autohotkey.com/docs/v2/Variables.htm#square-brackets
     index_access: $ => prec(PREC.OVERRIDE, seq(
-      field("object", $._single_expression),
-      token.immediate("["),
-      field("arguments", optional($.arg_sequence)),
-      "]"
+      field('object', $._single_expression),
+      token.immediate('['),
+      field('arguments', optional($.arg_sequence)),
+      ']',
     )),
 
     // MsgBox("Hello", "Example", "IconI OK")
     // Can be used in expressions
     function_call: $ => prec(PREC.OVERRIDE, seq(
-      field("function", $._single_expression),
-      token.immediate("("),
-      field("arguments", optional($.arg_sequence)),
-      ")"
+      field('function', $._single_expression),
+      token.immediate('('),
+      field('arguments', optional($.arg_sequence)),
+      ')',
     )),
 
     // MsgBox "Hello", "Example", "IconI OK"
     // Can only be used as a statement (not in expressions)
     call_statement: $ => prec.right(PREC.OVERRIDE, seq(
       // Only simple identifiers and object members for command-style
-      field("function", choice(
+      field('function', choice(
         $.identifier,
-        $.member_access
+        $.member_access,
       )),
-      field("arguments", optional($.arg_sequence)),
-      $._eol
+      field('arguments', optional($.arg_sequence)),
+      $._eol,
     )),
 
     _arg: $ => choice(
       $._single_expression,
-      $.empty_arg
+      $.empty_arg,
     ),
 
     arg_sequence: $ => prec.right(choice(
       // Args without expansion
       seq(
         $._arg,
-        repeat(seq(",", $._arg)),
+        repeat(seq(',', $._arg)),
         /**
          * A trailing comma is allowed but ignored - you can test this
          *    Function(params*) => MsgBox(params.length)
          *    Function(1,) ; "1"
          */
-        optional(",")
+        optional(','),
       ),
       // Single arg with expansion
       seq(
         prec.right($._single_expression),
-        $.array_expansion_marker
+        $.array_expansion_marker,
       ),
       // Multiple args with last one having expansion
       seq(
         $._arg,
-        repeat(seq(",", $._arg)),
-        ",",
+        repeat(seq(',', $._arg)),
+        ',',
         $._single_expression,
-        $.array_expansion_marker
-      )
+        $.array_expansion_marker,
+      ),
     )),
 
     // array_expansion_marker is produced by the external scanner, which disambiguates
     // it from the multiplication operator by looking ahead for ')' or ']'
 
-    //#region Function Declarations
+    //# region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
-      field("head", choice(
+      field('head', choice(
         $.function_head,
-        $.identifier
+        $.identifier,
       )),
       $.arrow,
-      field("body", $._single_expression)
+      field('body', $._single_expression),
     )),
 
     // v2.1 (alpha.3+): a function defined within an expression. Unlike the statement-level
@@ -675,12 +675,12 @@ export default grammar({
       prec.dynamic(-1, seq(
         $._function_expression_head,
         $._otb_brace,
-        field("body", $.block)
+        field('body', $.block),
       )),
       prec.dynamic(-20, seq(
         $._function_expression_head,
-        field("body", $.block)
-      ))
+        field('body', $.block),
+      )),
     ),
 
     // The name + parameter list shared by both function-expression body forms. The named form's
@@ -688,53 +688,53 @@ export default grammar({
     // token and GLR can keep both alive until the trailing `{` decides; the anonymous form uses
     // a normal `(` (which may be separated by whitespace).
     _function_expression_head: $ => choice(
-      field("head", $.function_head),
+      field('head', $.function_head),
       seq(
-        field("name", $.identifier),
-        field("head", alias($._immediate_function_head, $.function_head))
-      )
+        field('name', $.identifier),
+        field('head', alias($._immediate_function_head, $.function_head)),
+      ),
     ),
 
     // Like function_head but with an immediate `(` so `name(...)` lexes the same as a call.
     _immediate_function_head: $ => seq(
-      token.immediate("("),
+      token.immediate('('),
       optional(choice($.wildcard, $.param_sequence)),
-      ")"
+      ')',
     ),
 
     // FIXME global functions cannot be static (can't be static to the auto-execute section)
     // but methods and nested functions (even nested inside global functions) can.
     // FIXME static is the only valid scope identifier for function declarations, but
-    // using an alias makes tree-sitter fail to resolve the conflict between the 
+    // using an alias makes tree-sitter fail to resolve the conflict between the
     // $scope_identifier $identifier sequence
     function_declaration: $ => seq(
       $._function_def_marker,
       optional($.scope_identifier),
-      field("name", $.identifier),
-      field("head", $.function_head),
-      field("body", $.function_body)
+      field('name', $.identifier),
+      field('head', $.function_head),
+      field('body', $.function_body),
     ),
 
     method_declaration: $ => seq(
       $._method_def_marker,
       optional($.scope_identifier),
-      field("name", choice(
+      field('name', choice(
         $.identifier,
-        alias($._numeric_property_name, $.identifier)
+        alias($._numeric_property_name, $.identifier),
       )),
-      field("head", $.function_head),
-      field("body", $.function_body)
+      field('head', $.function_head),
+      field('body', $.function_body),
     ),
 
     function_body: $ => choice(
       $.block,
-      seq("=>", $._single_expression),
+      seq('=>', $._single_expression),
     ),
 
     function_head: $ => seq(
-      "(", 
-      optional(choice($.wildcard, $.param_sequence)), 
-      ")"
+      '(',
+      optional(choice($.wildcard, $.param_sequence)),
+      ')',
     ),
 
     // "formal parameter list"
@@ -744,41 +744,41 @@ export default grammar({
       // One or more regular params, optionally followed by a variadic or wildcard: (a, b, rest*)
       seq(
         choice($._param, $.byref_param),
-        repeat(seq(",", choice($._param, $.byref_param))),
+        repeat(seq(',', choice($._param, $.byref_param))),
         optional(choice(
-          seq(",", $.variadic_param),
-          seq(",", $.wildcard)
-        ))
-      )
+          seq(',', $.variadic_param),
+          seq(',', $.wildcard),
+        )),
+      ),
     ),
 
     _param: $ => choice(
       $.identifier,
       $.optional_param,
-      $.default_param
+      $.default_param,
     ),
 
     // A parameter may be marked optional with the maybe operator (name?). Unlike a
     // general optional_expression, a parameter name is only ever a bare identifier.
     // Shares PREC.MAYBE with optional_expression so the reduce/reduce on `(a?)`
     // is a genuine conflict resolved by GLR (see conflicts), not by precedence.
-    optional_param: $ => prec.right(PREC.MAYBE, seq(field("name", $.identifier), $.optional_marker)),
+    optional_param: $ => prec.right(PREC.MAYBE, seq(field('name', $.identifier), $.optional_marker)),
 
-    default_param: $ => seq(field("name", $.identifier), $._initializer),
-      
+    default_param: $ => seq(field('name', $.identifier), $._initializer),
+
     _initializer: $ => seq(
-      alias(":=", $.assignment_operator),
-      field("value", $._single_expression)),
+      alias(':=', $.assignment_operator),
+      field('value', $._single_expression)),
 
-    byref_param: $ => seq("&", field("param", $._param)),
+    byref_param: $ => seq('&', field('param', $._param)),
 
-    variadic_param: $ => seq(field("name", $.identifier), $.wildcard),
+    variadic_param: $ => seq(field('name', $.identifier), $.wildcard),
 
-    wildcard: $ => "*",
+    wildcard: $ => '*',
 
-    //#endregion
+    //# endregion
 
-    //#region Literals
+    //# region Literals
     _literal: $ => choice(
       $._numeric_literal,
       $.boolean_literal,
@@ -787,13 +787,13 @@ export default grammar({
       $.array_literal,
       $.object_literal,
       // Unset legality is contextual but where it is legal we should treat it as a literal
-      $.unset
+      $.unset,
     ),
 
     _numeric_literal: $ => choice(
       $.integer_literal,      // ints
       $.float_literal,        // floats
-      $.hex_literal          // hex numbers
+      $.hex_literal,          // hex numbers
     ),
 
     integer_literal: $ => token(/([0-9]+)/),
@@ -802,46 +802,46 @@ export default grammar({
       token(/[0-9]+\.[0-9]+/),                  // standard, leading digit (e.g. 1.5)
       // Leading-dot float. Lower prec than member_access so `obj.5` lexes as member access to property `5`
       token(prec(-1, /\.[0-9]+/)),
-      token(/\d+(?:\.\d+)?(?:[eE][+-]?\d+)/)    // scientific notation, incl. e.g 1e-5
+      token(/\d+(?:\.\d+)?(?:[eE][+-]?\d+)/),    // scientific notation, incl. e.g 1e-5
     ),
 
     hex_literal: $ => token(/0[xX][0-9a-fA-F]+/),
 
 
     boolean_literal: $ => token(
-      prec(PREC.KEYWORD, choice(/true/i, /false/i))
+      prec(PREC.KEYWORD, choice(/true/i, /false/i)),
     ),
 
     string_literal: $ => choice(
       token(/"([^"\r\n]|`[^\r\n\t])*"/),
-      token(/'([^'\r\n]|`[^\r\n\t])*'/)
+      token(/'([^'\r\n]|`[^\r\n\t])*'/),
     ),
 
     array_literal: $ => seq(
-      "[",
+      '[',
       optional(alias($.arg_sequence, $.expression_sequence)),
-      "]"),
+      ']'),
 
-    object_literal: $ => seq("{", optional($._object_literal_member_sequence), "}"),
+    object_literal: $ => seq('{', optional($._object_literal_member_sequence), '}'),
 
     _object_literal_member_sequence: $ => seq(
       $.object_literal_member,
-      repeat(seq(",", $.object_literal_member)),
+      repeat(seq(',', $.object_literal_member)),
       // like arg sequences, trailing commas allowed and ignored
-      optional(",")
+      optional(','),
     ),
 
     object_literal_member: $ => seq(
-      field("key", choice(
+      field('key', choice(
         $.identifier,
         alias($._numeric_property_name, $.identifier),
         $.dynamic_identifier,
-        $.dereference_operation
+        $.dereference_operation,
       )),
-      ":",
-      field("value", $._single_expression)),
+      ':',
+      field('value', $._single_expression)),
 
-    //#endregion
+    //# endregion
 
     identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
 
@@ -854,14 +854,14 @@ export default grammar({
       prec(PREC.KEYWORD, choice(
         /static/i,
         /local/i,
-        /global/i
-    ))),
+        /global/i,
+      ))),
 
-    //#region Continuation Sections
+    //# region Continuation Sections
 
     multiline_string_literal: $ => choice(
       $._double_quote_str_multiline,
-      $._single_quote_str_multiline
+      $._single_quote_str_multiline,
     ),
 
     // Separate recursive rule for continuation section bodies (same reason as _block_body)
@@ -873,11 +873,11 @@ export default grammar({
         // Comments always allowed because we can't filter for them in statements :(
         alias(repeat($._continuation_opt_any), $.continuation_option_sequence),
         $._continuation_newline,
-        optional($._continuation_body)
+        optional($._continuation_body),
       ),
-      token(prec.left(1, ')'))
+      token(prec.left(1, ')')),
     ),
-    
+
     _double_quote_str_multiline: $ => seq(
       '"',
       $._continuation_section_start,
@@ -886,42 +886,42 @@ export default grammar({
           // With comments allowed
           alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
           $._continuation_newline,
-          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence))
+          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence)),
         ),
         seq(
           // Comments not allowed
           alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
           $._continuation_newline,
-          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence))
-        )
+          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence)),
+        ),
       ),
-      token(prec.left(1, ')"'))
+      token(prec.left(1, ')"')),
     ),
 
     _single_quote_str_multiline: $ => seq(
-      "'",
+      '\'',
       $._continuation_section_start,
       choice(
         seq(
           // With comments allowed
           alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
           $._continuation_newline,
-          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence))
+          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence)),
         ),
         seq(
           // Comments not allowed
           alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
           $._continuation_newline,
-          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence))
-        )
+          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence)),
+        ),
       ),
-      token(prec.left(1, ")'"))
+      token(prec.left(1, ')\'')),
     ),
 
     _continuation_opt_seq_comments: $ => seq(
       repeat($._continuation_opt_except_comments),
       $.continuation_allow_comments,
-      repeat($._continuation_opt_except_comments)
+      repeat($._continuation_opt_except_comments),
     ),
 
     _continuation_opt_any: $ => choice(
@@ -930,22 +930,22 @@ export default grammar({
       $.continuation_ltrim_off,
       $.continuation_rtrim_off,
       $.continuation_no_escape,
-      $.continuation_allow_comments
+      $.continuation_allow_comments,
     ),
 
     _continuation_opt_except_comments: $ => choice(
-        $.continuation_join,
-        $.continuation_ltrim,
-        $.continuation_ltrim_off,
-        $.continuation_rtrim_off,
-        $.continuation_no_escape
+      $.continuation_join,
+      $.continuation_ltrim,
+      $.continuation_ltrim_off,
+      $.continuation_rtrim_off,
+      $.continuation_no_escape,
     ),
 
     _multiline_str_seq_no_comments: $ => repeat1(
       seq(
         optional(alias($.anything, $.multiline_string_line)),
-        $._continuation_newline
-      )
+        $._continuation_newline,
+      ),
     ),
 
     _multiline_str_seq_comments: $ => repeat1(
@@ -954,8 +954,8 @@ export default grammar({
         // !BUG whitespace to the left of the comment is not trimmed - can result in extra nodes for comments on
         // !    lines without preceding text
         optional(alias(/[^\r\n;]+/, $.multiline_string_line)),
-        $._continuation_newline
-      )
+        $._continuation_newline,
+      ),
     ),
 
     continuation_join: $ => token(prec(PREC.KEYWORD, /join[^\r\n\s]{0,15}/i)),
@@ -964,11 +964,11 @@ export default grammar({
     continuation_ltrim_off: $ => token(prec(PREC.KEYWORD, /LTrim0/i)),
     continuation_rtrim_off: $ => token(prec(PREC.KEYWORD, /RTrim0/i)),
     continuation_allow_comments: $ => token(prec(PREC.KEYWORD, /Comments|Comment|Com|C/i)),
-    continuation_no_escape: $ => token(prec(PREC.KEYWORD, "`")),
+    continuation_no_escape: $ => token(prec(PREC.KEYWORD, '`')),
 
-    //#endregion
+    //# endregion
 
-    //#region Control Flow
+    //# region Control Flow
 
     // higher precedence than object_literal
     // Separate recursive rule for block bodies (prevents LALR state merging with
@@ -976,184 +976,184 @@ export default grammar({
     _block_body: $ => seq($._statement, optional($._block_body)),
 
     block: $ => seq(
-      "{", optional($._block_body), "}"
+      '{', optional($._block_body), '}',
     ),
 
     if_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.if,
-      field("condition", $._single_expression),
-      field("body", choice(
+      field('condition', $._single_expression),
+      field('body', choice(
         seq($._eol, $._statement), // bare statement requires newline
-        $.block, 
+        $.block,
       )),
-      field("else_block", repeat($.else_statement))
+      field('else_block', repeat($.else_statement)),
     )),
 
     else_statement: $ => prec.right(PREC.DEFAULT+1, seq(
       $.else,
-      field("body", choice(
+      field('body', choice(
         $.if_statement,
-        choice($.block, $._statement)                                    // else ... (with or without braces)
-      ))
+        choice($.block, $._statement),                                    // else ... (with or without braces)
+      )),
     )),
 
     loop_statement: $ => prec.right(seq(
       $.loop,
-      optional(field("head", choice(
+      optional(field('head', choice(
         choice(
-          seq(token("("), $._single_expression, token(")")),
-          $._single_expression
+          seq(token('('), $._single_expression, token(')')),
+          $._single_expression,
         ),
         choice(
           // Specialized loops - no top-level parentheses allowed. Any argument may
           // be omitted (e.g. `loop parse , "abc"`), so each slot is optional.
-          prec(1, seq($.parse, optional($._single_expression), optional(seq(",", optional($._single_expression))), optional(seq(",", optional($._single_expression))))),
-          prec(1, seq($.read, optional($._single_expression), optional(seq(",", optional($._single_expression))))),
-          prec(1, seq($.files, optional($._single_expression), optional(seq(",", optional($._single_expression))))),
-          prec(1, seq($.reg, optional($._single_expression), optional(seq(",", optional($._single_expression)))))
-        )
+          prec(1, seq($.parse, optional($._single_expression), optional(seq(',', optional($._single_expression))), optional(seq(',', optional($._single_expression))))),
+          prec(1, seq($.read, optional($._single_expression), optional(seq(',', optional($._single_expression))))),
+          prec(1, seq($.files, optional($._single_expression), optional(seq(',', optional($._single_expression))))),
+          prec(1, seq($.reg, optional($._single_expression), optional(seq(',', optional($._single_expression))))),
+        ),
       ))),
-      field("body", choice(
+      field('body', choice(
         // bare statement requires a newline
         seq($._eol, $._statement),
-        $.block
+        $.block,
       )),
-      optional(field("until_block", $.until_statement))
+      optional(field('until_block', $.until_statement)),
     )),
 
     until_statement: $ => seq(
-      $.until, 
-      field("condition", $._single_expression)
+      $.until,
+      field('condition', $._single_expression),
     ),
 
     return_statement: $ => prec.right(PREC.DEFAULT,
       seq(
         $.return,
-        optional(seq($._value_start, field("value", $._single_expression)))
-      )
+        optional(seq($._value_start, field('value', $._single_expression))),
+      ),
     ),
 
     while_statement: $ => seq(
       $.while,
-      field("condition", choice(
-        seq(token("("), $._single_expression, token(")")),
-        $._single_expression
+      field('condition', choice(
+        seq(token('('), $._single_expression, token(')')),
+        $._single_expression,
       )),
       // A direct block body (rather than routing through $._statement -> $.block) keeps the
       // brace body unpenalized so it wins over reading the condition as an anonymous
       // function_expression whose block would otherwise be taken as the loop body. The bare
       // statement form requires a preceding newline, mirroring loop_statement.
-      field("body", choice($.block, seq($._eol, $._statement))),
+      field('body', choice($.block, seq($._eol, $._statement))),
     ),
 
     break_statement: $ => seq(
       $.break,
-      field("looplabel", optional(choice($.identifier, $.string_literal)))  // optional label target
+      field('looplabel', optional(choice($.identifier, $.string_literal))),  // optional label target
     ),
 
     continue_statement: $ => seq(
       $.continue,
-      field("looplabel", optional(choice($.identifier, $.string_literal)))  // optional label target
+      field('looplabel', optional(choice($.identifier, $.string_literal))),  // optional label target
     ),
 
     // Like return, the thrown value is gated by _value_start so it can't cross a newline. The
     // value is optional: a bare `throw` re-throws the current exception (valid AHK v2).
     throw_statement: $ => prec.right(seq(
       $.throw,
-      optional(seq($._value_start, field("thrown", $._single_expression)))
+      optional(seq($._value_start, field('thrown', $._single_expression))),
     )),
 
     goto_statement: $ => seq(
       $.goto,
-      field("label", $._single_expression)
+      field('label', $._single_expression),
     ),
 
     label: $ => prec(-1, seq(
-      field("name", $.identifier),
-      token.immediate(":")
+      field('name', $.identifier),
+      token.immediate(':'),
     )),
 
     for_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.for,
-      field("head", choice(
+      field('head', choice(
         // Parenthesized form: for (var in expr) or for (key, val in expr)
-        seq("(", $._for_params, ")"),
-        $._for_params
+        seq('(', $._for_params, ')'),
+        $._for_params,
       )),
       // Direct block body (see while_statement) so the brace body is not penalized against an
       // anonymous function_expression in the iterable; bare statement requires a newline.
-      field("body", choice($.block, seq($._eol, $._statement))),
-      optional(field("else_block", $.else_statement))
+      field('body', choice($.block, seq($._eol, $._statement))),
+      optional(field('else_block', $.else_statement)),
     )),
 
     // AHK lets either loop variable be omitted: `for in x`, `for , v in x`,
     // `for k, in x`, and `for , in x` are all legal. Each iterator slot and the
     // separating comma are independently optional.
     _for_params: $ => seq(
-      optional(field("iterator", $.identifier)),
-      optional(seq(",", optional(field("iterator", $.identifier)))),
+      optional(field('iterator', $.identifier)),
+      optional(seq(',', optional(field('iterator', $.identifier)))),
       $.in,
-      field("iterable", $._single_expression)
+      field('iterable', $._single_expression),
     ),
 
     try_statement: $ => prec.right(PREC.DEFAULT, seq(
       $.try,
-      field("body", choice(
+      field('body', choice(
         seq(
           choice($.block, $._statement),
           repeat($.catch_clause),
-          //FIXME else if is not allowed here
+          // FIXME else if is not allowed here
           optional($.else_statement),
-          optional($.finally_clause)
+          optional($.finally_clause),
         ),
         // try x := 1 / 0
-        $._single_expression
-      ))
+        $._single_expression,
+      )),
     )),
 
     catch_clause: $ => seq(
       $.catch,
-      field("head", optional(choice(
-        seq("(", $._catch_params, ")"),
-        $._catch_params
+      field('head', optional(choice(
+        seq('(', $._catch_params, ')'),
+        $._catch_params,
       ))),
-      field("body", choice(
+      field('body', choice(
         $.block,
-        seq($._newline, $._statement)
-      ))
+        seq($._newline, $._statement),
+      )),
     ),
 
     _catch_params: $ => choice(
-      seq(field("type", $.identifier), optional(seq($.as, field("variable", $.identifier)))),
-      seq($.as, field("variable", $.identifier)),
+      seq(field('type', $.identifier), optional(seq($.as, field('variable', $.identifier)))),
+      seq($.as, field('variable', $.identifier)),
     ),
 
     finally_clause: $ => seq(
       $.finally,
-      field("body", choice(
-        $.block, 
-        seq($._newline, $._statement)
-      ))
+      field('body', choice(
+        $.block,
+        seq($._newline, $._statement),
+      )),
     ),
 
     // SwitchValue and CaseSense are both optional (`Switch [SwitchValue, CaseSense]`):
     switch_statement: $ => seq(
       $.switch,
       optional(seq(
-        field("head", $._single_expression),
-        optional(seq(",", field("case_sense", $._single_expression)))
+        field('head', $._single_expression),
+        optional(seq(',', field('case_sense', $._single_expression))),
       )),
-      field("body", $.switch_body)
+      field('body', $.switch_body),
     ),
 
     // prec(1): after `switch`, a `{` always starts the body (never an object literal)
     switch_body: $ => prec(1, seq(
-      "{",
+      '{',
       repeat(choice(
         $.case_clause,
-        $.default_clause
+        $.default_clause,
       )),
-      "}"
+      '}',
     )),
 
     // Separate recursive rule for switch clause bodies.
@@ -1164,10 +1164,10 @@ export default grammar({
 
     case_clause: $ => seq(
       alias($.identifier, $.case),
-      field("value", $._single_expression),
-      repeat(seq(",", field("value", $._single_expression))),  // multiple values
-      token(":"),
-      field("body", optional($._switch_clause_body))
+      field('value', $._single_expression),
+      repeat(seq(',', field('value', $._single_expression))),  // multiple values
+      token(':'),
+      field('body', optional($._switch_clause_body)),
     ),
 
     default_clause: $ => seq(
@@ -1176,7 +1176,7 @@ export default grammar({
       // The colon is consumed as part of this token. Uses a named hidden rule so the
       // resulting node range correctly excludes preceding whitespace.
       alias($._default_clause_kw, $.default),
-      field("body", $._switch_clause_body)
+      field('body', $._switch_clause_body),
     ),
 
     // Named hidden rule for "default:" — see default_clause comment.
@@ -1209,83 +1209,83 @@ export default grammar({
     files: $ => kwtok(/files/i),
     reg: $ => kwtok(/reg/i),
 
-    //#endregion
+    //# endregion
 
-    //#region Classes
+    //# region Classes
 
     class_declaration: $ => seq(
       $._class_decl_marker,
       $.class,
-      field("name", $.identifier),
+      field('name', $.identifier),
       optional(seq(
         $.extends,
-        field("superclass", choice($.identifier, $.member_access))
+        field('superclass', choice($.identifier, $.member_access)),
       )),
-      field("body", $.class_body)
+      field('body', $.class_body),
     ),
 
     class_body: $ => seq(
-      "{",
+      '{',
       repeat(choice(
         $.directive_comment,
         $._directive,
         $.method_declaration,
         $.class_declaration,
         $.struct_declaration,
-        $.property_declaration
+        $.property_declaration,
       )),
-      "}"
+      '}',
     ),
 
     property_declaration: $ => seq(
       optional(alias($.static, $.scope_identifier)),
-      field("name",
+      field('name',
         choice(
           $.identifier,
           alias($._numeric_property_name, $.identifier), // property names may begin with a digit
           alias($.static, $.identifier), // "static" is a valid property name
-          alias($._qualified_property_name, $.member_access)
+          alias($._qualified_property_name, $.member_access),
         )),
-      optional(seq("[", $.param_sequence, "]")),
+      optional(seq('[', $.param_sequence, ']')),
       choice(
         seq(
           $._initializer,
           // only the first property is *required* to be initialized
-          repeat(seq(",",
-            field("name", choice(
+          repeat(seq(',',
+            field('name', choice(
               $.identifier,
               alias($._numeric_property_name, $.identifier),
-              alias($._qualified_property_name, $.member_access)
+              alias($._qualified_property_name, $.member_access),
             )),
-            optional($._initializer)))
+            optional($._initializer))),
         ),
         // getter-only shorthand: prop => 42
-        seq("=>", alias($._single_expression, $.getter)),
-        $.property_declaration_block
-      )
+        seq('=>', alias($._single_expression, $.getter)),
+        $.property_declaration_block,
+      ),
     ),
 
     // A dotted chain of literal identifiers (`x.y`, `Prototype.sharedValue`,
     // `a.b.c`) used as a property-declaration target. Must be literal identifiers, so
     // far narrower scope than a typical member_acess
     _qualified_property_name: $ => prec.left(PREC.MEMBER_ACCESS, seq(
-      field("object", choice(
+      field('object', choice(
         $.identifier,
-        alias($._qualified_property_name, $.member_access)
+        alias($._qualified_property_name, $.member_access),
       )),
-      ".",
-      field("member", choice(
+      '.',
+      field('member', choice(
         $.identifier,
-        alias($._numeric_property_name, $.identifier)
-      ))
+        alias($._numeric_property_name, $.identifier),
+      )),
     )),
 
-    //Interestingly, property bodies are allowed to be empty, the interpreter just skips them
+    // Interestingly, property bodies are allowed to be empty, the interpreter just skips them
     property_declaration_block: $ => seq(
-      "{",
+      '{',
       optional($.getter),
       optional($.setter),
-      "}"
+      '}',
     ),
 
     getter: $ => seq($.get, $.function_body),
@@ -1298,7 +1298,7 @@ export default grammar({
     set: $ => kwtok(/set/i),
     static: $ => kwtok(/static/i),
 
-    //#endregion
+    //# endregion
 
     unset: $ => kwtok(/unset/i),
 
@@ -1313,16 +1313,16 @@ export default grammar({
     struct_declaration: $ => seq(
       $._class_decl_marker,
       $.struct,
-      field("name", $.identifier),
+      field('name', $.identifier),
       optional(seq(
         $.extends,
-        field("superclass", choice($.identifier, $.member_access))
+        field('superclass', choice($.identifier, $.member_access)),
       )),
-      field("body", $.struct_body)
+      field('body', $.struct_body),
     ),
 
     struct_body: $ => seq(
-      "{",
+      '{',
       repeat(choice(
         $.directive_comment,
         $._directive,
@@ -1331,22 +1331,22 @@ export default grammar({
         $.struct_declaration,
         $.property_declaration,
         // Multiple typed properties can be declared on one line
-        repeat1(seq($.typed_property_declaration, optional(",")))
+        repeat1(seq($.typed_property_declaration, optional(','))),
       )),
-      "}"
+      '}',
     ),
 
     typed_property_declaration: $ => prec.right(seq(
-      field("name", choice(
+      field('name', choice(
         $.identifier,
-        alias($._numeric_property_name, $.identifier)
+        alias($._numeric_property_name, $.identifier),
       )),
-      ":",
-      field("type", $.type_specifier),
-      optional($._initializer)
+      ':',
+      field('type', $.type_specifier),
+      optional($._initializer),
     )),
 
-    // Docs say that type specifiers have very specific rules but I think they're outdated, integer literals don't 
+    // Docs say that type specifiers have very specific rules but I think they're outdated, integer literals don't
     // work in alpha.30. General idea is that it must be an expression evaluating to a Class that fulfils certain
     // properties (basically, is a struct), with caveats. No top-level dereference operations, for example.
     // https://www.autohotkey.com/docs/alpha/Structs.htm#type-specs
@@ -1358,14 +1358,14 @@ export default grammar({
       $.member_access,
       $.index_access,
       $.function_call,
-      seq("(", $.expression_sequence, ")"),
+      seq('(', $.expression_sequence, ')'),
     )),
 
     // #endregion Structs
 
     // #region Exports
 
-        // https://www.autohotkey.com/docs/alpha/lib/Export.htm
+    // https://www.autohotkey.com/docs/alpha/lib/Export.htm
     // `export [default] <function|class|struct definition>` or `export global <var list>`.
     // Only global names can be exported; a method cannot be exported (only its class/struct),
     // which falls out naturally because export is a statement-level construct and
@@ -1379,30 +1379,30 @@ export default grammar({
       choice(
         seq(
           optional($.default),
-          field("declaration", choice(
+          field('declaration', choice(
             $.function_declaration,
             $.class_declaration,
-            $.struct_declaration
-          ))
+            $.struct_declaration,
+          )),
         ),
         seq(
           // Note this isn't actually a scope identifier, just required for the interpreter
           // to distinguish between `export` as an export and `export` as a function name
           $.global,
           alias($._exported_variable, $.variable_declaration),
-          repeat(seq(",", alias($._exported_variable, $.variable_declaration)))
-        )
-      )
+          repeat(seq(',', alias($._exported_variable, $.variable_declaration))),
+        ),
+      ),
     ),
 
     _exported_variable: $ => seq(
-      field("name", $.identifier),
-      optional($._initializer)
+      field('name', $.identifier),
+      optional($._initializer),
     ),
 
     // #endregion Exports
 
-    //#region Directives
+    //# region Directives
 
     // Directives - note that these tend to have very specific requirements for their parameters
     // when they exist. Read the docs carefully
@@ -1433,28 +1433,28 @@ export default grammar({
 
     clipboard_timeout_directive: $ => seq(
       directive_name($, /#ClipboardTimeout/i),
-      field("timeout", $.integer_literal)
+      field('timeout', $.integer_literal),
     ),
 
     dll_load_directive: $ => seq(
       directive_name($, /#DllLoad/i),
-      optional(field("file", $.file_or_dir_name)),
-      $._eol
+      optional(field('file', $.file_or_dir_name)),
+      $._eol,
     ),
 
     // https://www.autohotkey.com/docs/v2/lib/FileEncoding.htm
     error_stdout_directive: $ => seq(
       directive_name($, /#ErrorStdOut/i),
-      optional(field("encoding", alias(kwtok(/['"]?(utf-8(-raw)?|utf-16(-raw)?|cp\d+|\d+)['"]?/i), $.encoding_identifier))),
-      $._eol
+      optional(field('encoding', alias(kwtok(/['"]?(utf-8(-raw)?|utf-16(-raw)?|cp\d+|\d+)['"]?/i), $.encoding_identifier))),
+      $._eol,
     ),
 
     requires_directive: $ => prec.right(seq(
       directive_name($, /#Requires/i),
-      field("requirement", $.requirement),
-      repeat(field("version", $.version_requirement)),
-      optional(field("bitness", $.bitness)),
-      $._eol
+      field('requirement', $.requirement),
+      repeat(field('version', $.version_requirement)),
+      optional(field('bitness', $.bitness)),
+      $._eol,
     )),
 
     // This must be "AutoHotkey", but if we later support e.g. KeySharp, it'd be allowed here
@@ -1462,14 +1462,14 @@ export default grammar({
 
     hotif_directive: $ => prec.right(seq(
       directive_name($, /#Hotif/i),
-      optional(field("expression", $._single_expression)),
-      $._eol
+      optional(field('expression', $._single_expression)),
+      $._eol,
     )),
 
     hotif_timeout_directive: $ => seq(
       directive_name($, /#HotifTimeout/i),
-      field("timeout", $.integer_literal),
-      $._eol
+      field('timeout', $.integer_literal),
+      $._eol,
     ),
 
     hotstring_directive: $ => seq(
@@ -1478,175 +1478,175 @@ export default grammar({
         alias(kwtok(/NoMouse/i), $.hotstring_no_mouse),
         seq(
           kwtok(/EndChars/i),
-          field("end_chars", alias(token(/[^\s]{1,100}/), $.hotstring_end_chars))
+          field('end_chars', alias(token(/[^\s]{1,100}/), $.hotstring_end_chars)),
         ),
-        field("options", alias(repeat1(choice($._hotstring_modifier, $.hotstring_execute)), $.hotstring_option_sequence))
+        field('options', alias(repeat1(choice($._hotstring_modifier, $.hotstring_execute)), $.hotstring_option_sequence)),
       ),
-      $._eol
+      $._eol,
     ),
 
     // https://www.autohotkey.com/docs/alpha/lib/_Import.htm
     import_directive: $ => prec.right(seq(
       directive_name($, /#Import/i),
       optional($.export),
-      field("module", choice(
+      field('module', choice(
         $.identifier,
-        $.string_literal
+        $.string_literal,
       )),
       optional(seq(
         $.as,
-        field("alias", $.identifier),
+        field('alias', $.identifier),
       )),
-      field("name", optional(seq(
-        "{",
+      field('name', optional(seq(
+        '{',
         // Note strictly speaking, wildcard is only legal once in an import list
-        repeat1(seq(choice($.export_name, $.wildcard), optional(","))),
-        "}"
+        repeat1(seq(choice($.export_name, $.wildcard), optional(','))),
+        '}',
       ))),
-      $._eol
+      $._eol,
     )),
 
     export_name: $ => seq(
-      field("export", $.identifier),
+      field('export', $.identifier),
       optional(seq(
         $.as,
-        field("alias", $.identifier)
-      ))
+        field('alias', $.identifier),
+      )),
     ),
 
     include_directive: $ => prec.left(seq(
       directive_name($, /#Include/i),
-      optional(field("ignore_failure", $.include_ignore_failure)),
-      field("path", choice(
+      optional(field('ignore_failure', $.include_ignore_failure)),
+      field('path', choice(
         $.file_or_dir_name,
-        $.lib_name
+        $.lib_name,
       )),
-      $._eol
+      $._eol,
     )),
 
     include_again_directive: $ => prec.left(seq(
       directive_name($, /#IncludeAgain/i),
-      optional(field("ignore_failure", $.include_ignore_failure)),
-      field("path", choice(
+      optional(field('ignore_failure', $.include_ignore_failure)),
+      field('path', choice(
         $.file_or_dir_name,
-        $.lib_name
+        $.lib_name,
       )),
-      $._eol
+      $._eol,
     )),
 
     input_level_directive: $ => seq(
       directive_name($, /#InputLevel/i),
-      field("level", $.integer_literal),
-      $._eol
+      field('level', $.integer_literal),
+      $._eol,
     ),
 
-    module_directive: $ => seq(directive_name($, /#Module/i), field("name", $.identifier), $._eol),
+    module_directive: $ => seq(directive_name($, /#Module/i), field('name', $.identifier), $._eol),
 
     use_hook_directive: $ => seq(
       directive_name($, /#UseHook/i),
-      field("value", choice(
+      field('value', choice(
         $.boolean_literal,
-        alias(choice(token("0"), token("1")), $.integer_literal)
+        alias(choice(token('0'), token('1')), $.integer_literal),
       )),
       $._eol,
     ),
 
     max_threads_directive: $ => seq(
       directive_name($, /#MaxThreads/i),
-      field("value", $.integer_literal),
-      $._eol
+      field('value', $.integer_literal),
+      $._eol,
     ),
 
     max_threads_per_hotkey_directive: $ => seq(
       directive_name($, /#MaxThreadsPerHotkey/i),
-      field("value", $.integer_literal),
-      $._eol
+      field('value', $.integer_literal),
+      $._eol,
     ),
 
     max_threads_buffer_directive: $ => seq(
       directive_name($, /#MaxThreadsBuffer/i),
-      optional(field("value", choice(
+      optional(field('value', choice(
         $.boolean_literal,
-        alias(choice(token("0"), token("1")), $.integer_literal)
+        alias(choice(token('0'), token('1')), $.integer_literal),
       ))),
-      $._eol
+      $._eol,
     ),
 
     no_tray_icon_directive: $ => seq(
       directive_name($, /#NoTrayIcon/i),
-      $._eol
+      $._eol,
     ),
 
     single_instance_directive: $ => seq(
       directive_name($, /#SingleInstance/i),
-      optional(field("mode", alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode))),
-      $._eol
+      optional(field('mode', alias(kwtok(/Force|Ignore|Prompt|Off/i), $.single_instance_mode))),
+      $._eol,
     ),
 
     struct_pack_directive: $ => seq(
       directive_name($, /#StructPack/i),
-      optional(field("pack", alias(/0|1|2|4|8/, $.integer_literal))),
-      $._eol
+      optional(field('pack', alias(/0|1|2|4|8/, $.integer_literal))),
+      $._eol,
     ),
 
     warn_directive: $ => seq(
       directive_name($, /#Warn/i),
       optional(seq(
-        field("type", $.warning_type),
-        optional(seq(",", field("mode", $.warning_mode)))
+        field('type', $.warning_type),
+        optional(seq(',', field('mode', $.warning_mode))),
       )),
-      $._eol
+      $._eol,
     ),
 
     warning_type: $ => kwtok(/VarUnset|LocalSameAsGlobal|Unreachable|All/i),
     warning_mode: $ => kwtok(/MsgBox|StdOut|OutputDebug|Off/i),
     version_requirement: $ => kwtok(/(|<=|>=|>|<)?[vV]?[^\r\n\t ]+[\+]?/i),
 
-    include_ignore_failure: $ => token(prec.right(PREC.KEYWORD, "*i")),
+    include_ignore_failure: $ => token(prec.right(PREC.KEYWORD, '*i')),
     file_or_dir_name: $ => token(prec.right(PREC.KEYWORD, /['"]?[^\r\n\s<>\*\?"]+[^\r\n<>\*\?"]*[^\r\n<>\*\?"]*['"]?/i)),
     lib_name: $ => token(prec.right(PREC.KEYWORD, /['"]?<[^\r\n\s<>\*\?"]+[^\r\n<>\*\?"]*[^\r\n<>\*\?"]*>['"]?/i)),
 
     bitness: $ => token(prec(PREC.KEYWORD + 1, /32-bit|64-bit/i)),
 
-    //#endregion
+    //# endregion
 
-    //#region Hotstrings
+    //# region Hotstrings
     // See: https://www.autohotkey.com/docs/v2/Hotstrings.htm
     // See also KeySharp's ANTLR grammmar: https://github.com/Descolada/keysharp/blob/master/Keysharp.Core/Scripting/Parser/Antlr/MainLexer.g4#L60
     hotstring: $ => choice(
       $._replacement_hotstring,
-      $._exec_hotstring
+      $._exec_hotstring,
     ),
 
     _replacement_hotstring: $ => prec.right(seq(
-        ":",
-        field("modifiers", alias(repeat($._hotstring_modifier), $.hotstring_option_sequence)),
-        token.immediate(":"),
-        field("trigger", $.hotstring_trigger),
-        token.immediate("::"),
-        field("body", optional(choice(
-          // blocks and function declarations are allowed, but calls can't be on the same line
-          $.block,
-          $.function_declaration,
-          $.hotstring_replacement,
-        )))
+      ':',
+      field('modifiers', alias(repeat($._hotstring_modifier), $.hotstring_option_sequence)),
+      token.immediate(':'),
+      field('trigger', $.hotstring_trigger),
+      token.immediate('::'),
+      field('body', optional(choice(
+        // blocks and function declarations are allowed, but calls can't be on the same line
+        $.block,
+        $.function_declaration,
+        $.hotstring_replacement,
+      ))),
     )),
 
     _exec_hotstring: $ => prec.right(seq(
-        ":",
-        field("modifiers", alias($._hotstring_opt_seq_exec, $.hotstring_option_sequence)),
-        ikwtok(":"),
-        field("trigger", $.hotstring_trigger),
-        ikwtok("::"),
-        field("body", optional(choice(
-          // Can't have literal replacements, can have statements on the same line
-          $.block,
-          $._single_expression,
-          repeat1($._statement)
-        )))
+      ':',
+      field('modifiers', alias($._hotstring_opt_seq_exec, $.hotstring_option_sequence)),
+      ikwtok(':'),
+      field('trigger', $.hotstring_trigger),
+      ikwtok('::'),
+      field('body', optional(choice(
+        // Can't have literal replacements, can have statements on the same line
+        $.block,
+        $._single_expression,
+        repeat1($._statement),
+      ))),
     )),
 
-    _double_colon: $ => token("::"),
+    _double_colon: $ => token('::'),
 
     // Used in hotstrings - can match any non-whitespace, non-colon characters
     hotstring_trigger: $ => token(/[^\s:]+/),
@@ -1657,7 +1657,7 @@ export default grammar({
     _hotstring_opt_seq_exec: $ => seq(
       repeat($._hotstring_modifier),
       $.hotstring_execute,
-      repeat($._hotstring_modifier)
+      repeat($._hotstring_modifier),
     ),
 
     _hotstring_modifier: $ => choice(
@@ -1673,7 +1673,7 @@ export default grammar({
       $.hotstring_suspend,
       $.hotstring_send_mode,
       $.hotstring_text_mode,
-      $.hotstring_reset
+      $.hotstring_reset,
       // hotstring_space handled separately as its own hotstring pattern
     ),
 
@@ -1707,51 +1707,51 @@ export default grammar({
       optional(repeat(/[ \t]/)),
       optional('-'),
       optional(repeat(/[ \t]/)),
-      /[0-9]+/
+      /[0-9]+/,
     )),
 
     // Pn - thread priority
     hotstring_priority: $ => token(/[pP][0-9]+/),
 
-    //#endregion
+    //# endregion
 
-    //#region Hotkeys
+    //# region Hotkeys
     // See https://www.autohotkey.com/docs/v2/Hotkeys.htm
 
     // Higher precedence than label to ensure :: is recognized before :
     // Using identifier here allows tree-sitter to resolve conflicts automatically
     hotkey: $ => prec.right(PREC.OVERRIDE, seq(
-      field("trigger", $.hotkey_trigger),
+      field('trigger', $.hotkey_trigger),
       $._hotkey_double_colon,
-      field("body", optional(choice(
+      field('body', optional(choice(
         $._single_expression,
         $.function_declaration,
         $.block,
         $._hotkey_alttabcommand,
-        $.call_statement
-      )))
+        $.call_statement,
+      ))),
     )),
 
     // Remaps are effectively preprocessor directives, so they beat everything in precedence. Even
     // if you have a function shadowing a remapped key, the remap wins.
     // See: https://www.autohotkey.com/docs/v2/misc/Remap.htm
     remap: $ => prec(PREC.OVERRIDE, seq(
-      field("origin", $.remap_origin),
+      field('origin', $.remap_origin),
       $._remap_double_colon,
-      field("destination", $.remap_destination),
-      $._eol
+      field('destination', $.remap_destination),
+      $._eol,
     )),
 
     hotkey_trigger: $ => prec.right(PREC.KEYWORD, seq(
       seq(
         repeat($._hotkey_meta_modifier),
         $._hotkey_trigger_identifier,
-        optional($.hotkey_up)
+        optional($.hotkey_up),
       ),
       optional(repeat(seq(
         $.hotkey_and,
-        $.hotkey_trigger
-      )))
+        $.hotkey_trigger,
+      ))),
     )),
 
     // Remap trigger: like hotkey_trigger but modifier chars (^, !, #, +, <, >)
@@ -1767,15 +1767,15 @@ export default grammar({
       seq(
         repeat1($._hotkey_modifier),
         choice(
-          alias(token("{"), $.key_identifier),
+          alias(token('{'), $.key_identifier),
           alias(token(/\S/), $.key_identifier),
           alias($.integer_literal, $.key_identifier),
           alias($.identifier, $.key_identifier),
-        )
+        ),
       ),
       // key only (including modifier chars as literal keys)
       choice(
-        alias(token("{"), $.key_identifier),
+        alias(token('{'), $.key_identifier),
         alias(token(/\S/), $.key_identifier),
         alias($.integer_literal, $.key_identifier),
         alias($.identifier, $.key_identifier),
@@ -1791,7 +1791,7 @@ export default grammar({
     // Similar to hotkey trigger except only a single key is allowed
     remap_destination: $ => prec.right(PREC.KEYWORD, choice(
       $._hotkey_trigger_identifier,
-      alias(token("`{"), $.key_identifier)   // Open braces must be escaped as remap targets
+      alias(token('`{'), $.key_identifier),   // Open braces must be escaped as remap targets
     )),
 
     // special modifiers must precede all others and are invalid in some cases
@@ -1817,12 +1817,12 @@ export default grammar({
         // optional modifier(s) + key
         repeat($._hotkey_modifier),
         choice(
-          alias(token("{"), $.key_identifier),        // force conflict resolution w/blocks
+          alias(token('{'), $.key_identifier),        // force conflict resolution w/blocks
           alias(token(/\S/), $.key_identifier),       // single non-word chars (}, ), etc.)
           alias($.integer_literal, $.key_identifier), // digit keys (0-9)
-          alias($.identifier, $.key_identifier)       // word-like keys (letters, named keys)
-        )
-      )
+          alias($.identifier, $.key_identifier),       // word-like keys (letters, named keys)
+        ),
+      ),
     )),
 
     hotkey_win: $ => token('#'),
@@ -1840,13 +1840,13 @@ export default grammar({
     hotkey_up: $ => token.immediate(prec(PREC.KEYWORD, / [uU][pP]/)),
 
     // These are only valid as hotkey operations and must immediately follow the double-colon
-    //See: https://www.autohotkey.com/docs/v2/Hotkeys.htm#alttab
+    // See: https://www.autohotkey.com/docs/v2/Hotkeys.htm#alttab
     _hotkey_alttabcommand: $ => choice(
-        $.hotkey_alttab,
-        $.hotkey_shiftalttab,
-        $.hotkey_alttabmenu,
-        $.hotkey_alttabandmenu,
-        $.hotkey_alttabmenudismiss
+      $.hotkey_alttab,
+      $.hotkey_shiftalttab,
+      $.hotkey_alttabmenu,
+      $.hotkey_alttabandmenu,
+      $.hotkey_alttabmenudismiss,
     ),
 
     hotkey_alttab: $ => token.immediate(prec(PREC.KEYWORD, /AltTab/i)),
@@ -1855,13 +1855,13 @@ export default grammar({
     hotkey_alttabandmenu: $ => token.immediate(prec(PREC.KEYWORD, /AltTabAndMenu/i)),
     hotkey_alttabmenudismiss: $ => token.immediate(prec(PREC.KEYWORD, /AltTabMenuDismiss/i)),
 
-    //#endregion
+    //# endregion
 
     // Matches anything (up to a newline)
     anything: $ => /[^\r\n]*/,
 
-    _newline: $ => "\n"
-  }
+    _newline: $ => '\n',
+  },
 });
 
 /**
@@ -1881,12 +1881,12 @@ function kwtok(pattern) {
  * @param {RegExp} pattern
  */
 function directive_name($, pattern) {
-  return field("directive", alias(kwtok(pattern), $.directive_name));
+  return field('directive', alias(kwtok(pattern), $.directive_name));
 }
 
 /**
  * Alias for `token.immediate(prec(PREC.KEYWORD, pattern))`
- * 
+ *
  * @param {RuleOrLiteral} pattern
  */
 function ikwtok(pattern) {
