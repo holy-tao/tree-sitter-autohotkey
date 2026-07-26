@@ -1,21 +1,35 @@
 name: CI
 
+# NOTE: GitHub Actions does not support YAML anchors, so the two `paths` lists
+# below have to be kept in sync by hand.
 on:
   push:
     paths:
-      - grammar.json
+      - grammar.js
       - src/**
       - queries/**
       - web/**
       - .github/**
+      - "**/*.md"
+      - eslint.config.js
+      - .markdownlint-cli2.jsonc
+      - .clang-tidy
+      - Makefile
+      - package.json
   pull_request:
     branches: [main]
     paths:
-      - grammar.json
+      - grammar.js
       - src/**
       - queries/**
       - web/**
       - .github/**
+      - "**/*.md"
+      - eslint.config.js
+      - .markdownlint-cli2.jsonc
+      - .clang-tidy
+      - Makefile
+      - package.json
   workflow_dispatch:
 
 jobs:
@@ -30,6 +44,45 @@ jobs:
         uses: ./.github/actions/setup
 
       - run: tree-sitter test
+
+  # Independent of `test` in both directions: a lint failure never stops the test
+  # suite from running, but it does gate `publish` / `deploy-pages` below.
+  #
+  # Needs no tree-sitter setup -- eslint reads grammar.js directly, and the
+  # headers scanner.c includes are committed under src/tree_sitter/.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install lint dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Install clang-tidy
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy
+
+      # Each linter runs even if an earlier one failed, so one push surfaces
+      # every problem instead of one at a time.
+      - name: ESLint (grammar.js)
+        if: ${{ !cancelled() }}
+        run: npm run lint:js
+
+      - name: markdownlint
+        if: ${{ !cancelled() }}
+        run: npm run lint:md
+
+      - name: Compiler warnings (src/scanner.c)
+        if: ${{ !cancelled() }}
+        run: make lint-c
 
   soundness:
     name: Fuzz Soundness
@@ -92,14 +145,14 @@ jobs:
 
   publish:
     name: Publish to crates.io
-    needs: test
+    needs: [test, lint]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/publish.yml
     secrets: inherit
 
   deploy-pages:
     name: Deploy Playground to Pages
-    needs: test
+    needs: [test, lint]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     permissions:
       contents: read

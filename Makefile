@@ -24,6 +24,18 @@ OBJS := $(patsubst %.c,%.o,$(PARSER) $(EXTRAS))
 ARFLAGS ?= rcs
 override CFLAGS += -I$(SRC_DIR) -std=c11 -fPIC
 
+# lint tooling
+ESLINT ?= ./node_modules/.bin/eslint
+MDLINT ?= ./node_modules/.bin/markdownlint-cli2
+CLANG_TIDY ?= clang-tidy
+
+# -isystem (not -I) so the vendored src/tree_sitter/*.h don't report warnings.
+# -Wno-unused-parameter: the external-scanner ABI fixes the signatures of the
+# create/destroy/reset/serialize/deserialize entry points, several of which are
+# necessarily stubs here.
+SCANNER_LINT_CFLAGS := -std=c11 -isystem $(SRC_DIR) \
+	-Wall -Wextra -Wshadow -Wconversion -Wno-unused-parameter
+
 # ABI versioning
 SONAME_MAJOR = $(shell sed -n 's/\#define LANGUAGE_VERSION //p' $(PARSER))
 SONAME_MINOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -39,6 +51,9 @@ ifneq ($(findstring darwin,$(MACHINE)),)
 else ifneq ($(findstring mingw32,$(MACHINE)),)
 	SOEXT = dll
 	LINKSHARED += -s -shared -Wl,--out-implib,lib$(LANGUAGE_NAME).dll.a
+	# A stock LLVM install on Windows has no default sysroot, so clang-tidy can't
+	# find <stdlib.h> unless we point it at the mingw triple.
+	TIDY_TARGET := --target=x86_64-w64-mingw32
 else
 	SOEXT = so
 	SOEXTVER_MAJOR = $(SOEXT).$(SONAME_MAJOR)
@@ -112,4 +127,27 @@ clean:
 test:
 	$(TS) test
 
-.PHONY: all install uninstall clean test
+# Linting. `lint` is what CI runs; `lint-fix` applies every autofix available.
+#
+# scanner.c is compiled by the tree-sitter CLI during normal development, so we
+# never see its compiler warnings -- lint-c does a warnings-only syntax check to
+# get them back, then runs clang-tidy (see .clang-tidy) for the deeper analysis.
+# parser.c is generated and deliberately not linted.
+lint: lint-js lint-md lint-c
+
+lint-js:
+	$(ESLINT) .
+
+lint-md:
+	$(MDLINT)
+
+lint-c:
+	$(CC) -fsyntax-only $(SCANNER_LINT_CFLAGS) $(SRC_DIR)/scanner.c
+	$(CLANG_TIDY) $(SRC_DIR)/scanner.c -- $(TIDY_TARGET) $(SCANNER_LINT_CFLAGS)
+
+lint-fix:
+	$(ESLINT) . --fix
+	$(MDLINT) --fix
+	$(CLANG_TIDY) --fix $(SRC_DIR)/scanner.c -- $(TIDY_TARGET) $(SCANNER_LINT_CFLAGS)
+
+.PHONY: all install uninstall clean test lint lint-js lint-md lint-c lint-fix
