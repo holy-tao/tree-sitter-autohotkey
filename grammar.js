@@ -1206,8 +1206,11 @@ export default grammar({
       field("name", choice($.identifier, alias($.static, $.identifier))),
       optional(seq("[", $.param_sequence, "]")),
       choice(
-        // Property initializer: prop := value
-        $._initializer,
+        seq(
+          $._initializer,
+          // only the first property is *required* to be initialized
+          repeat(seq(",", field("name", $.identifier), optional($._initializer)))
+        ),
         // getter-only shorthand: prop => 42
         seq("=>", alias($._single_expression, $.getter)),
         $.property_declaration_block

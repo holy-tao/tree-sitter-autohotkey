@@ -1262,3 +1262,75 @@ class Example {
         (identifier)
         (assignment_operator)
         (integer_literal)))))
+
+================================================================================
+Class with comma-delimited static property declarations
+================================================================================
+
+class Example {
+    static a := 1, b := 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (assignment_operator)
+        (integer_literal)
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Class with comma-delimited instance property declarations
+================================================================================
+
+class Example {
+    a := 1, b := 2, c := 3
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal)
+        (identifier)
+        (assignment_operator)
+        (integer_literal)
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Class with comma-delimited properties, trailing bare name
+================================================================================
+
+class Example {
+    static a := 1, b
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (assignment_operator)
+        (integer_literal)
+        (identifier)))))

@@ -680,3 +680,26 @@ struct C {
         (identifier)
         (type_specifier
           (identifier))))))
+
+================================================================================
+Struct with comma-delimited untyped property initializers
+================================================================================
+
+struct Example {
+    a := 1, b := 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (struct)
+    (identifier)
+    (struct_body
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal)
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
