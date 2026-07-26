@@ -107,6 +107,8 @@ export default grammar({
     // skipping horizontal whitespace, no intervening newline). Used to enforce the OTB
     // requirement on unenclosed function-expression bodies. See scanner.c.
     $._otb_brace,
+    // Zero-width marker emitted only when a value begins on the same line
+    $._value_start,
   ],
 
   conflicts: $ => [
@@ -1006,8 +1008,8 @@ export default grammar({
 
     return_statement: $ => prec.right(PREC.DEFAULT,
       seq(
-        $.return, 
-        optional(field("value", $._single_expression))
+        $.return,
+        optional(seq($._value_start, field("value", $._single_expression)))
       )
     ),
 
@@ -1034,9 +1036,11 @@ export default grammar({
       field("looplabel", optional(choice($.identifier, $.string_literal)))  // optional label target
     ),
 
+    // Like return, the thrown value is gated by _value_start so it can't cross a newline. The
+    // value is optional: a bare `throw` re-throws the current exception (valid AHK v2).
     throw_statement: $ => prec.right(seq(
       $.throw,
-      field("thrown", $._single_expression)
+      optional(seq($._value_start, field("thrown", $._single_expression)))
     )),
 
     goto_statement: $ => seq(

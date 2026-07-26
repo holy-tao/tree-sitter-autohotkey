@@ -207,19 +207,19 @@ OnClick(wParam, lParam, msgNum, hwnd) {
                 (identifier)
                 (identifier))))
           (return_statement
-            (return)
-            (function_call
-              (identifier)
-              (arg_sequence
-                (empty_arg)
-                (empty_arg)
-                (empty_arg)
-                (assignment_operation
-                  (varref_operation
-                    (identifier))
-                  (assignment_operator)
-                  (string_literal))
-                (integer_literal)))))
+            (return)))
+        (function_call
+          (identifier)
+          (arg_sequence
+            (empty_arg)
+            (empty_arg)
+            (empty_arg)
+            (assignment_operation
+              (varref_operation
+                (identifier))
+              (assignment_operator)
+              (string_literal))
+            (integer_literal)))
         (if_statement
           (if)
           (expression_sequence

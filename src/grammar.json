@@ -4724,12 +4724,21 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "FIELD",
-                "name": "value",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "_single_expression"
-                }
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "_value_start"
+                  },
+                  {
+                    "type": "FIELD",
+                    "name": "value",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_single_expression"
+                    }
+                  }
+                ]
               },
               {
                 "type": "BLANK"
@@ -4889,12 +4898,29 @@
             "name": "throw"
           },
           {
-            "type": "FIELD",
-            "name": "thrown",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_single_expression"
-            }
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "_value_start"
+                  },
+                  {
+                    "type": "FIELD",
+                    "name": "thrown",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_single_expression"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
@@ -9488,6 +9514,10 @@
     {
       "type": "SYMBOL",
       "name": "_otb_brace"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_value_start"
     }
   ],
   "inline": [],

@@ -94,7 +94,8 @@ enum TokenType {
   HOTKEY_DOUBLE_COLON,
   REMAP_DOUBLE_COLON,
   EXPORT_DEF_MARKER,
-  OTB_BRACE
+  OTB_BRACE,
+  VALUE_START
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -761,6 +762,21 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
 
     if (lexer->lookahead == '{') {
       lexer->result_symbol = OTB_BRACE;
+      return true;
+    }
+  }
+
+  // VALUE_START: zero-width marker emitted only when a value begins on the SAME line. Prevents
+  // return / throw statements from binding arguments on new lines.
+  if (valid_symbols[VALUE_START]) {
+    lexer->mark_end(lexer);
+
+    while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+      lexer->advance(lexer, true);
+    }
+
+    if (!is_eol(lexer->lookahead) && !is_eof(lexer) && !strchr(";}", lexer->lookahead)) {
+      lexer->result_symbol = VALUE_START;
       return true;
     }
   }

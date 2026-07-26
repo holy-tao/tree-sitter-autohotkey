@@ -61,6 +61,146 @@ return 1
     (integer_literal)))
 
 ================================================================================
+Bare return does not swallow the next line
+================================================================================
+
+f() {
+    if cond
+        return
+    buf := Buffer(size), tp := this._tp
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (if_statement
+          (if)
+          (identifier)
+          (return_statement
+            (return)))
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier)
+              (arg_sequence
+                (identifier))))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (member_access
+              (identifier)
+              (identifier))))))))
+
+================================================================================
+Bare return before a closing brace
+================================================================================
+
+f() {
+    return
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (return_statement
+          (return))))))
+
+================================================================================
+Bare return does not swallow the following case
+================================================================================
+
+switch x {
+case 1:
+    return
+case 2:
+    y := 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    (identifier)
+    (switch_body
+      (case_clause
+        (case)
+        (integer_literal)
+        (return_statement
+          (return)))
+      (case_clause
+        (case)
+        (integer_literal)
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+================================================================================
+Bare throw re-throws (no value)
+================================================================================
+
+f() {
+    throw
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (throw_statement
+          (throw))))))
+
+================================================================================
+Bare throw does not swallow the next line
+================================================================================
+
+f() {
+    if x
+        throw
+    y := 1, z := 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (if_statement
+          (if)
+          (identifier)
+          (throw_statement
+            (throw)))
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal)))))))
+
+================================================================================
 Return with arithmetic statement
 ================================================================================
 
