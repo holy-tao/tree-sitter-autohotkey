@@ -598,10 +598,16 @@ export default grammar({
     // MsgBox "Hello", "Example", "IconI OK"
     // Can only be used as a statement (not in expressions)
     call_statement: $ => prec.right(PREC.OVERRIDE, seq(
-      // Only simple identifiers and object members for command-style
+      // Only simple identifiers and object members for command-style.
+      // `true`/`false` are built-in variables (lexed as boolean_literal), so a bare
+      // `false` on a line is a command-style call of that variable - the interpreter
+      // parses it as `false()` (a runtime error, but syntactically valid). Bare numeric
+      // and string literals, by contrast, are load-time errors ("does not contain a
+      // recognized action") and are correctly rejected.
       field('function', choice(
         $.identifier,
         $.member_access,
+        $.boolean_literal,
       )),
       field('arguments', optional($.arg_sequence)),
       $._eol,

@@ -2652,6 +2652,10 @@
         "required": true,
         "types": [
           {
+            "type": "boolean_literal",
+            "named": true
+          },
+          {
             "type": "identifier",
             "named": true
           },
