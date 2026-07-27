@@ -467,9 +467,10 @@ while (i < 10) {
 (source_file
   (while_statement
     (while)
-    (relational_operation
-      (identifier)
-      (integer_literal))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (integer_literal)))
     (block
       (postfix_operation
         (identifier)))))
@@ -505,7 +506,8 @@ loop (5) {
 (source_file
   (loop_statement
     (loop)
-    (integer_literal)
+    (expression_sequence
+      (integer_literal))
     (block
       (postfix_operation
         (identifier)))))
@@ -1824,7 +1826,8 @@ while (running) {
 (source_file
   (while_statement
     (while)
-    (identifier)
+    (expression_sequence
+      (identifier))
     (block
       (for_statement
         (for)
@@ -1968,6 +1971,217 @@ until (x > 10)
           (integer_literal))))))
 
 ================================================================================
+Loop with a braceless body followed by until
+================================================================================
+
+loop
+    if (x)
+        y()
+until (done)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (if_statement
+      (if)
+      (expression_sequence
+        (identifier))
+      (function_call
+        (identifier)))
+    (until_statement
+      (until)
+      (expression_sequence
+        (identifier)))))
+
+================================================================================
+Loop with else (zero-iterations clause)
+================================================================================
+
+loop 5 {
+    b()
+} else {
+    c()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (integer_literal)
+    (block
+      (function_call
+        (identifier)))
+    (else_statement
+      (else)
+      (block
+        (function_call
+          (identifier))))))
+
+================================================================================
+While with else (zero-iterations clause)
+================================================================================
+
+while (a < 5) {
+    b()
+} else {
+    c()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (integer_literal)))
+    (block
+      (function_call
+        (identifier)))
+    (else_statement
+      (else)
+      (block
+        (function_call
+          (identifier))))))
+
+================================================================================
+While else binds to nearest loop (dangling else)
+================================================================================
+
+while (a)
+    while (b)
+        c()
+    else
+        d()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (expression_sequence
+      (identifier))
+    (while_statement
+      (while)
+      (expression_sequence
+        (identifier))
+      (function_call
+        (identifier))
+      (else_statement
+        (else)
+        (function_call
+          (identifier))))))
+
+================================================================================
+Loop count starting with a parenthesized expression
+================================================================================
+
+Loop (a - b) + 1 {
+    x()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (additive_operation
+      (expression_sequence
+        (additive_operation
+          (identifier)
+          (identifier)))
+      (integer_literal))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+While condition starting with a parenthesized assignment, braceless body
+================================================================================
+
+while (n := f()) = 5 && g()
+    x()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (logical_and_operation
+      (equality_operation
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier))))
+        (integer_literal))
+      (function_call
+        (identifier)))
+    (function_call
+      (identifier))))
+
+================================================================================
+Loop Reg with key and mode arguments
+================================================================================
+
+Loop Reg, 'HKLM', 'K' {
+    x()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (reg)
+    (string_literal)
+    (string_literal)
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+Loop Files with pattern and mode, no leading comma
+================================================================================
+
+Loop Files '*.txt', 'R'
+    x()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (files)
+    (string_literal)
+    (string_literal)
+    (function_call
+      (identifier))))
+
+================================================================================
+Loop Parse with an omitted middle argument
+================================================================================
+
+Loop Parse, str,, ' '
+    x()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (parse)
+    (identifier)
+    (string_literal)
+    (function_call
+      (identifier))))
+
+================================================================================
 If without braces (single statement)
 ================================================================================
 
@@ -2000,9 +2214,10 @@ while (i < 10)
 (source_file
   (while_statement
     (while)
-    (relational_operation
-      (identifier)
-      (integer_literal))
+    (expression_sequence
+      (relational_operation
+        (identifier)
+        (integer_literal)))
     (postfix_operation
       (identifier))))
 
@@ -2044,7 +2259,8 @@ loop 5 { }
     (block))
   (while_statement
     (while)
-    (identifier)
+    (expression_sequence
+      (identifier))
     (block))
   (loop_statement
     (loop)

@@ -10919,6 +10919,16 @@
           }
         ]
       },
+      "else_block": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "else_statement",
+            "named": true
+          }
+        ]
+      },
       "head": {
         "multiple": true,
         "required": false,
@@ -17498,6 +17508,16 @@
           },
           {
             "type": "verbal_not_operation",
+            "named": true
+          }
+        ]
+      },
+      "else_block": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "else_statement",
             "named": true
           }
         ]

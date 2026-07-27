@@ -1000,17 +1000,12 @@ export default grammar({
     loop_statement: $ => prec.right(seq(
       $.loop,
       optional(field('head', choice(
+        $._single_expression,
         choice(
-          seq(token('('), $._single_expression, token(')')),
-          $._single_expression,
-        ),
-        choice(
-          // Specialized loops - no top-level parentheses allowed. Any argument may
-          // be omitted (e.g. `loop parse , "abc"`), so each slot is optional.
-          prec(1, seq($.parse, optional($._single_expression), optional(seq(',', optional($._single_expression))), optional(seq(',', optional($._single_expression))))),
-          prec(1, seq($.read, optional($._single_expression), optional(seq(',', optional($._single_expression))))),
-          prec(1, seq($.files, optional($._single_expression), optional(seq(',', optional($._single_expression))))),
-          prec(1, seq($.reg, optional($._single_expression), optional(seq(',', optional($._single_expression))))),
+          loop_subcommand($.parse, $._single_expression, 3),
+          loop_subcommand($.read, $._single_expression, 2),
+          loop_subcommand($.files, $._single_expression, 2),
+          loop_subcommand($.reg, $._single_expression, 2),
         ),
       ))),
       field('body', choice(
@@ -1018,7 +1013,11 @@ export default grammar({
         seq($._eol, $._statement),
         $.block,
       )),
-      optional(field('until_block', $.until_statement)),
+      // `until` and `else` are mutually exclusive
+      optional(choice(
+        field('until_block', $.until_statement),
+        field('else_block', $.else_statement),
+      )),
     )),
 
     until_statement: $ => seq(
@@ -1033,18 +1032,16 @@ export default grammar({
       ),
     ),
 
-    while_statement: $ => seq(
+    while_statement: $ => prec.right(seq(
       $.while,
-      field('condition', choice(
-        seq(token('('), $._single_expression, token(')')),
-        $._single_expression,
-      )),
+      field('condition', $._single_expression),
       // A direct block body (rather than routing through $._statement -> $.block) keeps the
       // brace body unpenalized so it wins over reading the condition as an anonymous
       // function_expression whose block would otherwise be taken as the loop body. The bare
       // statement form requires a preceding newline, mirroring loop_statement.
       field('body', choice($.block, seq($._eol, $._statement))),
-    ),
+      optional(field('else_block', $.else_statement)),
+    )),
 
     break_statement: $ => seq(
       $.break,
@@ -1877,6 +1874,23 @@ export default grammar({
  */
 function kwtok(pattern) {
   return token(prec(PREC.KEYWORD, pattern));
+}
+
+/**
+ * A specialized `Loop` sub-command (`Reg`/`Files`/`Read`/`Parse`) followed by up
+ * to `count` comma-separated arguments.
+ *
+ * @param {RuleOrLiteral} keyword  the sub-command rule (`$.reg`, `$.files`, ...)
+ * @param {Rule} expr              the argument rule (`$._single_expression`)
+ * @param {number} count           maximum number of arguments the sub-command takes
+ */
+function loop_subcommand(keyword, expr, count) {
+  return prec(1, seq(
+    keyword,
+    optional(','),
+    optional(expr),
+    ...Array.from({length: count - 1}, () => optional(seq(',', optional(expr)))),
+  ));
 }
 
 /**

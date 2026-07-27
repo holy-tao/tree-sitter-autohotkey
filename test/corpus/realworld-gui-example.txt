@@ -71,7 +71,8 @@ OnClick(wParam, lParam, msgNum, hwnd) {
       (integer_literal)))
   (loop_statement
     (loop)
-    (identifier)
+    (expression_sequence
+      (identifier))
     (block
       (assignment_operation
         (identifier)
@@ -79,7 +80,8 @@ OnClick(wParam, lParam, msgNum, hwnd) {
         (identifier))
       (loop_statement
         (loop)
-        (identifier)
+        (expression_sequence
+          (identifier))
         (block
           (assignment_operation
             (identifier)
