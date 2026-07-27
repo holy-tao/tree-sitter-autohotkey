@@ -633,8 +633,9 @@ static bool scan_block_comment(TSLexer *lexer) {
     lexer->advance(lexer, false);
   }
 
-  // EOF without a valid closing */
-  return false;
+  // The interpreter allows block comments to be unterminated at EOF
+  lexer->mark_end(lexer);
+  return true;
 }
 
 /// @brief Checks if an identifier is a valid AHK key name for remap destinations.
