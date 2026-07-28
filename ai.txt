@@ -1,0 +1,5 @@
+Grammar is about 90% hand-written, roughly 10% generated using primarily Claude
+Opus 4.8 for various bug fixes. 100% of the css is AI-generated, I hate css,
+maybe 40% of the typescript in the demo is AI generated. Note also that most of
+the build scripts, everything under ./bindings/, and src/parser.c are generated
+by tree-sitter.
