@@ -1411,6 +1411,78 @@ catch
         (boolean_literal)))))
 
 ================================================================================
+Try one-liner with finally one-liner
+================================================================================
+
+try return f(x)
+finally x += y
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (return_statement
+      (return)
+      (function_call
+        (identifier)
+        (arg_sequence
+          (identifier))))
+    (finally_clause
+      (finally)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier)))))
+
+================================================================================
+Finally one-liner after braceless try body
+================================================================================
+
+try
+    thing := Fallible()
+finally cleanup()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (function_call
+        (identifier)))
+    (finally_clause
+      (finally)
+      (function_call
+        (identifier)))))
+
+================================================================================
+Finally one-liner after block try body
+================================================================================
+
+try {
+    thing := Fallible()
+} finally cleanup()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (function_call
+          (identifier))))
+    (finally_clause
+      (finally)
+      (function_call
+        (identifier)))))
+
+================================================================================
 Switch statement
 ================================================================================
 

@@ -5421,17 +5421,8 @@
                 "name": "block"
               },
               {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "_newline"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "_statement"
-                  }
-                ]
+                "type": "SYMBOL",
+                "name": "_statement"
               }
             ]
           }
@@ -9618,6 +9609,10 @@
     [
       "_statement",
       "try_statement"
+    ],
+    [
+      "_statement",
+      "finally_clause"
     ]
   ],
   "precedences": [],
