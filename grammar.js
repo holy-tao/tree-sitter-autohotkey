@@ -137,7 +137,9 @@ export default grammar({
     [$._single_expression, $._function_expression_head],
     [$._switch_clause_body],
     [$.case_clause],
-    [$.struct_body],
+    // class_body and struct_body share `_class_body_members`; the run of same-line typed
+    // property declarations (`x: i8, y: i8`) needs GLR to decide where each run ends.
+    [$.class_body],
     [$._statement, $.try_statement],
     [$._statement, $.finally_clause],
   ],
@@ -1236,18 +1238,7 @@ export default grammar({
       field('body', $.class_body),
     ),
 
-    class_body: $ => seq(
-      '{',
-      repeat(choice(
-        $.directive_comment,
-        $._directive,
-        $.method_declaration,
-        $.class_declaration,
-        $.struct_declaration,
-        $.property_declaration,
-      )),
-      '}',
-    ),
+    class_body: $ => seq('{', _class_body_members($), '}'),
 
     property_declaration: $ => seq(
       optional(alias($.static, $.scope_identifier)),
@@ -1335,20 +1326,7 @@ export default grammar({
       field('body', $.struct_body),
     ),
 
-    struct_body: $ => seq(
-      '{',
-      repeat(choice(
-        $.directive_comment,
-        $._directive,
-        $.method_declaration,
-        $.class_declaration,
-        $.struct_declaration,
-        $.property_declaration,
-        // Multiple typed properties can be declared on one line
-        repeat1(seq($.typed_property_declaration, optional(','))),
-      )),
-      '}',
-    ),
+    struct_body: $ => seq('{', _class_body_members($), '}'),
 
     typed_property_declaration: $ => prec.right(seq(
       field('name', choice(
@@ -1899,6 +1877,25 @@ function loop_subcommand(keyword, expr, count) {
     optional(','),
     optional(expr),
     ...Array.from({length: count - 1}, () => optional(seq(',', optional(expr)))),
+  ));
+}
+
+/**
+ * The members shared by `class_body` and `struct_body` (classes can have typed
+ * properties).
+ *
+ * @param {GrammarSymbols<string>} $
+ */
+function _class_body_members($) {
+  return repeat(choice(
+    $.directive_comment,
+    $._directive,
+    $.method_declaration,
+    $.class_declaration,
+    $.struct_declaration,
+    $.property_declaration,
+    // Multiple typed properties can be declared on one line
+    repeat1(seq($.typed_property_declaration, optional(','))),
   ));
 }
 
