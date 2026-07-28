@@ -6036,6 +6036,30 @@
               {
                 "type": "SYMBOL",
                 "name": "property_declaration"
+              },
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "typed_property_declaration"
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": ","
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -9604,7 +9628,7 @@
       "case_clause"
     ],
     [
-      "struct_body"
+      "class_body"
     ],
     [
       "_statement",

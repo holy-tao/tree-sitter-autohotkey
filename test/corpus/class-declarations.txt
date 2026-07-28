@@ -1642,3 +1642,71 @@ class Nullable extends Class {
     (extends)
     (identifier)
     (class_body)))
+
+================================================================================
+Class with typed properties (not just structs)
+================================================================================
+
+class C {
+    x: Int32
+    y: Float64 := 1.0
+    Method() {
+        return this.x
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))
+        (assignment_operator)
+        (float_literal))
+      (method_declaration
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (member_access
+                (identifier)
+                (identifier)))))))))
+
+================================================================================
+Class with multiple typed properties on one line
+================================================================================
+
+class C {
+    a: i8, b: i8, c: Int32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))

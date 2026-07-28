@@ -3358,6 +3358,10 @@
         {
           "type": "struct_declaration",
           "named": true
+        },
+        {
+          "type": "typed_property_declaration",
+          "named": true
         }
       ]
     }
