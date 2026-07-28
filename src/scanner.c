@@ -336,17 +336,26 @@ static bool is_empty_arg(TSLexer *lexer) {
 #define is_expression_start(c) ((c) && (is_identifier_char(c) || strchr("_\"'(+-%", c)))
 
 /// @brief Determines whether this is implicit concatenation. As a side effect, may call `lexer->mark_end`. Definitely
-///        calls it if it returns true. 
+///        calls it if it returns true.
 /// @param lexer the lexer
+/// @param allow_newline when true, the whitespace separating the two operands may include
+///        newlines. For use in continuation-by-enclosure contexts
 /// @return true if implicit concatenation, false otherwise
-static bool is_implicit_concatenation(TSLexer *lexer) {
+static bool is_implicit_concatenation(TSLexer *lexer, bool allow_newline) {
 
-  // Must be followed by whitespace
-  if(!skip_horizontal_ws(lexer)) {
+  // Must be followed by whitespace. When newlines are allowed to separate the operands, they are
+  // skipped with advance(false) so the marker still starts right after the left operand.
+  bool skipped = false;
+  while (lexer->lookahead == ' ' || lexer->lookahead == '\t' ||
+         (allow_newline && (lexer->lookahead == '\n' || lexer->lookahead == '\r'))) {
+    lexer->advance(lexer, false);
+    skipped = true;
+  }
+  if(!skipped) {
     return false;
   }
 
-  // Cannot hit EOL (or EOF)
+  // Cannot hit EOL (or EOF). When allow_newline is set, any newline was already consumed above.
   if(is_eol(lexer->lookahead) || is_eof(lexer)) {
     return false;
   }
@@ -808,7 +817,12 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   if(valid_symbols[IMPLICIT_CONCAT_MARKER]) {
     lexer->mark_end(lexer);
 
-    if(is_implicit_concatenation(lexer)) {
+    // Newlines are only allowed in continuation-by-enclosure contexts, which we detect based
+    // on symbol validity
+    // https://www.autohotkey.com/docs/alpha/Scripts.htm#continuation-expr
+    bool allow_newline = (valid_symbols[ARRAY_EXPANSION_MARKER] || valid_symbols[EMPTY_ARG]) &&
+                         !valid_symbols[EOL];
+    if(is_implicit_concatenation(lexer, allow_newline)) {
       lexer->result_symbol = IMPLICIT_CONCAT_MARKER;
       return true;
     }

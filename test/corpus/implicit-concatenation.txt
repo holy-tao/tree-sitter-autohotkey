@@ -177,3 +177,108 @@ MsgBox(2 + 2 4 + 4)
         (additive_operation
           (integer_literal)
           (integer_literal))))))
+
+================================================================================
+Implicit concatenation across a newline inside call parentheses
+================================================================================
+
+Run(a
+	b)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Implicit concatenation of parenthesized continuation lines in a call
+================================================================================
+
+Run(CliEscape(path) ' --port=' this.Port
+	(profile ? ' --dir=' profile : '')
+	(flags ? ' ' flags : '') tail, , , &PID)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (implicit_concat_operation
+          (implicit_concat_operation
+            (implicit_concat_operation
+              (implicit_concat_operation
+                (function_call
+                  (identifier)
+                  (arg_sequence
+                    (identifier)))
+                (string_literal))
+              (member_access
+                (identifier)
+                (identifier)))
+            (expression_sequence
+              (ternary_expression
+                (identifier)
+                (implicit_concat_operation
+                  (string_literal)
+                  (identifier))
+                (string_literal))))
+          (expression_sequence
+            (ternary_expression
+              (identifier)
+              (implicit_concat_operation
+                (string_literal)
+                (identifier))
+              (string_literal))))
+        (identifier))
+      (empty_arg)
+      (empty_arg)
+      (varref_operation
+        (identifier)))))
+
+================================================================================
+Implicit concatenation across newlines in an array literal
+================================================================================
+
+x := [a
+	b
+	c]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (implicit_concat_operation
+          (implicit_concat_operation
+            (identifier)
+            (identifier))
+          (identifier))))))
+
+================================================================================
+Newline does not concatenate two separate statements
+================================================================================
+
+foo a
+bar b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (identifier)))
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (identifier))))
