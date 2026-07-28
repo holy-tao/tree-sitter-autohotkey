@@ -139,6 +139,7 @@ export default grammar({
     [$.case_clause],
     [$.struct_body],
     [$._statement, $.try_statement],
+    [$._statement, $.finally_clause],
   ],
 
   extras: $ => [
@@ -1137,11 +1138,13 @@ export default grammar({
       seq($.as, field('variable', $.identifier)),
     ),
 
+    // Unlike catch, finally has no head, so its body statement can sit on the same line as the
+    // keyword (`finally x += y`) as well as on the next line. Mirror try's one-liner body.
     finally_clause: $ => seq(
       $.finally,
       field('body', choice(
         $.block,
-        seq($._newline, $._statement),
+        $._statement,
       )),
     ),
 
