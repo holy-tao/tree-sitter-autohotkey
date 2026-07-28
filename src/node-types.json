@@ -3286,21 +3286,33 @@
             "named": false
           },
           {
+            "type": ",",
+            "named": false
+          },
+          {
             "type": "as",
             "named": true
           },
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "member_access",
+            "named": true
           }
         ]
       },
       "type": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "member_access",
             "named": true
           }
         ]

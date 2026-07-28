@@ -1136,8 +1136,18 @@ export default grammar({
     ),
 
     _catch_params: $ => choice(
-      seq(field('type', $.identifier), optional(seq($.as, field('variable', $.identifier)))),
+      seq(
+        field('type', $._catch_class_name),
+        repeat(seq(',', field('type', $._catch_class_name))),
+        optional(seq($.as, field('variable', $.identifier))),
+      ),
       seq($.as, field('variable', $.identifier)),
+    ),
+
+    // Catch type can be nested, but must resolve at load-time.
+    _catch_class_name: $ => choice(
+      $.identifier,
+      alias($._qualified_property_name, $.member_access),
     ),
 
     // Unlike catch, finally has no head, so its body statement can sit on the same line as the
@@ -1269,8 +1279,8 @@ export default grammar({
     ),
 
     // A dotted chain of literal identifiers (`x.y`, `Prototype.sharedValue`,
-    // `a.b.c`) used as a property-declaration target. Must be literal identifiers, so
-    // far narrower scope than a typical member_acess
+    // `a.b.c`) used as a property-declaration target or a `catch` class name. Must be
+    // literal identifiers, so far narrower scope than a typical member_acess
     _qualified_property_name: $ => prec.left(PREC.MEMBER_ACCESS, seq(
       field('object', choice(
         $.identifier,
