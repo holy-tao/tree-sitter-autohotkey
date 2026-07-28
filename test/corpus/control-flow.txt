@@ -1483,6 +1483,146 @@ try {
         (identifier)))))
 
 ================================================================================
+Catch with a comma-delimited class list
+================================================================================
+
+try {
+    x()
+} catch ValueError, TypeError {
+    y()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (function_call
+        (identifier)))
+    (catch_clause
+      (catch)
+      (identifier)
+      (identifier)
+      (block
+        (function_call
+          (identifier))))))
+
+================================================================================
+Catch with a comma-delimited class list and an alias
+================================================================================
+
+try {
+    x()
+} catch ValueError, TypeError as e {
+    y()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (function_call
+        (identifier)))
+    (catch_clause
+      (catch)
+      (identifier)
+      (identifier)
+      (as)
+      (identifier)
+      (block
+        (function_call
+          (identifier))))))
+
+================================================================================
+Catch with a dotted (qualified) class name
+================================================================================
+
+try {
+    x()
+} catch MyNamespace.MyError as e {
+    y()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (function_call
+        (identifier)))
+    (catch_clause
+      (catch)
+      (member_access
+        (identifier)
+        (identifier))
+      (as)
+      (identifier)
+      (block
+        (function_call
+          (identifier))))))
+
+================================================================================
+Braceless catch with a dotted class name and newline body
+================================================================================
+
+try this.reconnect()
+catch WebSocket.Error
+    this.__Delete()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (function_call
+      (member_access
+        (identifier)
+        (identifier)))
+    (catch_clause
+      (catch)
+      (member_access
+        (identifier)
+        (identifier))
+      (function_call
+        (member_access
+          (identifier)
+          (identifier))))))
+
+================================================================================
+Parenthesized catch with a class list
+================================================================================
+
+try {
+    x()
+} catch (ValueError, MyLib.MyError as e) {
+    y()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (try_statement
+    (try)
+    (block
+      (function_call
+        (identifier)))
+    (catch_clause
+      (catch)
+      (identifier)
+      (member_access
+        (identifier)
+        (identifier))
+      (as)
+      (identifier)
+      (block
+        (function_call
+          (identifier))))))
+
+================================================================================
 Switch statement
 ================================================================================
 
