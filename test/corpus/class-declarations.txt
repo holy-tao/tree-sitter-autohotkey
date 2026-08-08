@@ -1860,3 +1860,130 @@ class C {
         (identifier)
         (type_specifier
           (identifier))))))
+
+================================================================================
+Class with typed properties spaced around the colon
+================================================================================
+
+class mdBufferlike {
+    ptr : IntPtr
+    size : u32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))
+
+================================================================================
+Class with a spaced typed property alongside a method
+================================================================================
+
+class mdToken {
+    t : u32
+    __new(value := 0) {
+        this.t := value
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (method_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (default_param
+              (identifier)
+              (assignment_operator)
+              (integer_literal))))
+        (function_body
+          (block
+            (assignment_operation
+              (member_access
+                (identifier)
+                (identifier))
+              (assignment_operator)
+              (identifier))))))))
+
+================================================================================
+Class with multiple spaced typed properties on one line
+================================================================================
+
+class C {
+    a : i8, b : i8, c : Int32
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier)))
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))))))
+
+================================================================================
+Spaced typed property with an initializer
+================================================================================
+
+class C {
+    size : u32 := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (typed_property_declaration
+        (identifier)
+        (type_specifier
+          (identifier))
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Static typed property declaration is an error
+:error
+================================================================================
+
+class C {
+    static x : Int32
+}
+
+--------------------------------------------------------------------------------
+
+
