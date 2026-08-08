@@ -28,3 +28,8 @@ for index, value in ["a", "b", "c"] {
     OutputDebug(value)
 }
 `;
+
+export const ERROR_AHK = `
+; Failed to decompress source code
+; Check the console for details
+`;
