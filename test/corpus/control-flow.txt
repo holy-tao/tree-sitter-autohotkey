@@ -2338,6 +2338,209 @@ while (n := f()) = 5 && g()
       (identifier))))
 
 ================================================================================
+While condition starting with a parenthesized assignment, block body
+================================================================================
+
+while (n := f()) = 5 && g() {
+    x()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (logical_and_operation
+      (equality_operation
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier))))
+        (integer_literal))
+      (function_call
+        (identifier)))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+While condition starting with a parenthesized assignment, brace on the next line
+================================================================================
+
+while (n := f()) = 5 && g()
+{
+    x()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (logical_and_operation
+      (equality_operation
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier))))
+        (integer_literal))
+      (function_call
+        (identifier)))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+While condition of a parenthesized variable continued by a comparison
+================================================================================
+
+while (n) = 5
+    x()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (equality_operation
+      (expression_sequence
+        (identifier))
+      (integer_literal))
+    (function_call
+      (identifier))))
+
+================================================================================
+While condition with two parenthesized assignments
+================================================================================
+
+while (a := f()) = 1 && (b := g()) = 2
+    x()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (logical_and_operation
+      (equality_operation
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier))))
+        (integer_literal))
+      (equality_operation
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier))))
+        (integer_literal)))
+    (function_call
+      (identifier))))
+
+================================================================================
+While with a parenthesized assignment condition in a class method
+================================================================================
+
+class C {
+    static m() {
+        while (err := f(a, b)) = 4317 && A_Index < 60
+            Sleep(15)
+        if err
+            q.RemoveAt(1), this.onError(err)
+        return err
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (method_declaration
+        (scope_identifier)
+        (identifier)
+        (function_head)
+        (function_body
+          (block
+            (while_statement
+              (while)
+              (logical_and_operation
+                (equality_operation
+                  (expression_sequence
+                    (assignment_operation
+                      (identifier)
+                      (assignment_operator)
+                      (function_call
+                        (identifier)
+                        (arg_sequence
+                          (identifier)
+                          (identifier)))))
+                  (integer_literal))
+                (relational_operation
+                  (identifier)
+                  (integer_literal)))
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (integer_literal))))
+            (if_statement
+              (if)
+              (identifier)
+              (expression_sequence
+                (function_call
+                  (member_access
+                    (identifier)
+                    (identifier))
+                  (arg_sequence
+                    (integer_literal)))
+                (function_call
+                  (member_access
+                    (identifier)
+                    (identifier))
+                  (arg_sequence
+                    (identifier)))))
+            (return_statement
+              (return)
+              (identifier))))))))
+
+================================================================================
+Until condition starting with a parenthesized assignment
+================================================================================
+
+loop {
+    x()
+} until (n := f()) > 0
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (block
+      (function_call
+        (identifier)))
+    (until_statement
+      (until)
+      (relational_operation
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (function_call
+              (identifier))))
+        (integer_literal)))))
+
+================================================================================
 Loop Reg with key and mode arguments
 ================================================================================
 
