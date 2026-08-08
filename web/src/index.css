@@ -1,6 +1,8 @@
 /* Light palette is the default; the dark block below overrides it when the OS/browser
-   prefers dark. Both the app chrome and the CodeMirror editor (see Editor.tsx) read these
-   variables, so the two panes always share one scheme. */
+   prefers dark, unless the user has explicitly picked a theme (data-theme, set by the
+   toggle in App.tsx) -- an explicit choice always wins over the system preference. Both
+   the app chrome and the CodeMirror editor (see Editor.tsx) read these variables, so the
+   two panes always share one scheme. */
 :root {
   --bg: #ffffff;
   --bg-panel: #f3f3f3;
@@ -46,8 +48,16 @@
   font-size: 14px;
 }
 
+/* Native form controls / scrollbars follow the explicit choice too, when there is one. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #1e1e1e;
     --bg-panel: #252526;
     --bg-toolbar: #2d2d30;
@@ -82,6 +92,43 @@
     --tok-builtin: #569cd6;
     --tok-label: #d7ba7d;
   }
+}
+
+/* Explicit dark selection: same palette as above, applied regardless of system preference. */
+:root[data-theme="dark"] {
+  --bg: #1e1e1e;
+  --bg-panel: #252526;
+  --bg-toolbar: #2d2d30;
+  --border: #3c3c3c;
+  --text: #d4d4d4;
+  --text-dim: #858585;
+  --accent: #4ec9b0;
+  --field: #9cdcfe;
+  --anonymous: #808080;
+  --error: #f14c4c;
+  --editor-bg: #1e1e1e;
+  --selection: #264f78;
+  --highlight: rgba(78, 201, 176, 0.25);
+  --selected-bg: rgba(78, 201, 176, 0.18);
+  --hovered-bg: rgba(255, 255, 255, 0.07);
+  --query-match: rgba(229, 165, 71, 0.3);
+  --query-match-outline: rgba(229, 165, 71, 0.9);
+
+  /* Syntax token colors (dark). */
+  --tok-comment: #6a9955;
+  --tok-keyword: #569cd6;
+  --tok-directive: #c586c0;
+  --tok-string: #ce9178;
+  --tok-string-special: #ce9178;
+  --tok-number: #b5cea8;
+  --tok-constant: #569cd6;
+  --tok-macro: #c586c0;
+  --tok-function: #dcdcaa;
+  --tok-type: #4ec9b0;
+  --tok-property: #9cdcfe;
+  --tok-parameter: #9cdcfe;
+  --tok-builtin: #569cd6;
+  --tok-label: #d7ba7d;
 }
 
 * {

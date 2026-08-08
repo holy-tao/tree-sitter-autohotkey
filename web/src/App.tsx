@@ -21,6 +21,9 @@ const MIN_SPLIT = 0.3;
 const MAX_SPLIT = 0.85;
 const clampSplit = (ratio: number) => Math.min(MAX_SPLIT, Math.max(MIN_SPLIT, ratio));
 
+type Theme = "system" | "light" | "dark";
+const THEMES: Theme[] = ["system", "light", "dark"];
+
 export function App() {
   const [source, setSource] = useState("");
   const [query, setQuery] = useState("");
@@ -30,6 +33,7 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [showAnonymous, setShowAnonymous] = useLocalStorageState("showAnonymous", false);
   const [showSourceRanges, setShowSourceRanges] = useLocalStorageState("showSourceRanges", false);
+  const [theme, setTheme] = useLocalStorageState<Theme>("theme", "system");
 
   const [hovered, setHovered] = useState<SyntaxNode | null>(null);
   const [selected, setSelected] = useState<SyntaxNode | null>(null);
@@ -62,6 +66,13 @@ export function App() {
     else return;
     e.preventDefault();
   };
+
+  // Reflect the chosen theme onto the root element; index.css keys its light/dark
+  // variable overrides off this attribute (falling back to the OS preference when unset).
+  useEffect(() => {
+    if (theme === "system") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   // Read text off the 'src' key in the URL fragment if we have one. The
   // fragment (never sent to the server) sidesteps request-line length limits.
@@ -149,11 +160,23 @@ export function App() {
         <span className="app-subtitle">
           Parse tree playground · hover or click a node to highlight its source
         </span>
+        <div className="theme-toggle push-right" role="group" aria-label="Color theme">
+          {THEMES.map((t) => (
+            <button
+              key={t}
+              type="button"
+              className={theme === t ? "active" : ""}
+              aria-pressed={theme === t}
+              onClick={() => setTheme(t)}
+            >
+              {t[0].toUpperCase() + t.slice(1)}
+            </button>
+          ))}
+        </div>
         <a
           href="https://github.com/holy-tao/tree-sitter-autohotkey"
           target="_blank"
           rel="noopener noreferrer"
-          className="push-right"
         >
           GitHub
         </a>
