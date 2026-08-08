@@ -1259,7 +1259,9 @@ export default grammar({
           alias($.static, $.identifier), // "static" is a valid property name
           alias($._qualified_property_name, $.member_access),
         )),
-      optional(seq('[', $.param_sequence, ']')),
+      // Unlike function_head, the brackets may not be empty ("Empty [] not permitted"),
+      // but they may hold a lone anonymous variadic marker (`__Item[*]`).
+      optional(seq('[', choice($.wildcard, $.param_sequence), ']')),
       choice(
         seq(
           $._initializer,

@@ -791,6 +791,156 @@ class Example {
               (identifier))))))))
 
 ================================================================================
+Class property with an anonymous variadic argument
+================================================================================
+
+class Example {
+    __Item[*] {
+        get => Example.Throw("get")
+        set => Example.Throw("set")
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (wildcard)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (function_call
+                (member_access
+                  (identifier)
+                  (identifier))
+                (arg_sequence
+                  (string_literal)))))
+          (setter
+            (set)
+            (function_body
+              (function_call
+                (member_access
+                  (identifier)
+                  (identifier))
+                (arg_sequence
+                  (string_literal))))))))))
+
+================================================================================
+Class property with an anonymous variadic argument using getter-only shorthand
+================================================================================
+
+class Example {
+    __Item[*] => 42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (wildcard)
+        (getter
+          (integer_literal))))))
+
+================================================================================
+Static class property with an anonymous variadic argument
+================================================================================
+
+class Example {
+    static __Item[*] {
+        get => 1
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (wildcard)
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (integer_literal))))))))
+
+================================================================================
+Class property with a named variadic argument
+================================================================================
+
+class Example {
+    __Item[args*] {
+        get => args.Length
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (variadic_param
+            (identifier)
+            (wildcard)))
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (member_access
+                (identifier)
+                (identifier)))))))))
+
+================================================================================
+Class property with a trailing wildcard after named arguments
+================================================================================
+
+class Example {
+    __Item[a, &b, *] {
+        get => a
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (identifier)
+          (byref_param
+            (identifier))
+          (wildcard))
+        (property_declaration_block
+          (getter
+            (get)
+            (function_body
+              (identifier))))))))
+
+================================================================================
 Property declaration with mixed getter and setter styles
 ================================================================================
 
