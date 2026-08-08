@@ -32,7 +32,7 @@
 
 .panes {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: var(--split, 50%) 6px 1fr;
   flex: 1;
   min-height: 0;
 }
@@ -45,8 +45,16 @@
   flex-direction: column;
 }
 
-.pane-editor {
-  border-right: 1px solid var(--border);
+.pane-divider {
+  cursor: col-resize;
+  background: var(--border);
+  touch-action: none;
+}
+
+.pane-divider:hover,
+.pane-divider:focus-visible {
+  background: var(--accent);
+  outline: none;
 }
 
 /* CodeMirror fills the pane and scrolls internally. */
@@ -211,7 +219,9 @@
     grid-template-rows: 1fr 1fr;
   }
   .pane-editor {
-    border-right: none;
     border-bottom: 1px solid var(--border);
+  }
+  .pane-divider {
+    display: none;
   }
 }

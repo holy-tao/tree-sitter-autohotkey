@@ -13,6 +13,13 @@ import "./App.css";
 
 const PARSE_DEBOUNCE_MS = 150;
 
+// Fraction of pane width given to the editor. The tree view needs less
+// horizontal space than code, so the draggable range favors the editor.
+const DEFAULT_SPLIT = 0.6;
+const MIN_SPLIT = 0.3;
+const MAX_SPLIT = 0.85;
+const clampSplit = (ratio: number) => Math.min(MAX_SPLIT, Math.max(MIN_SPLIT, ratio));
+
 export function App() {
   const [source, setSource] = useState("");
   const [query, setQuery] = useState("");
@@ -25,6 +32,35 @@ export function App() {
 
   const [hovered, setHovered] = useState<SyntaxNode | null>(null);
   const [selected, setSelected] = useState<SyntaxNode | null>(null);
+
+  const [split, setSplit] = useState(DEFAULT_SPLIT);
+  const panesRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
+
+  const onDividerPointerDown = (e: React.PointerEvent) => {
+    draggingRef.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onDividerPointerMove = (e: React.PointerEvent) => {
+    if (!draggingRef.current || !panesRef.current) return;
+    const rect = panesRef.current.getBoundingClientRect();
+    setSplit(clampSplit((e.clientX - rect.left) / rect.width));
+  };
+
+  const onDividerPointerUp = (e: React.PointerEvent) => {
+    draggingRef.current = false;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+  };
+
+  const onDividerKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") setSplit((r) => clampSplit(r - 0.02));
+    else if (e.key === "ArrowRight") setSplit((r) => clampSplit(r + 0.02));
+    else if (e.key === "Home") setSplit(MIN_SPLIT);
+    else if (e.key === "End") setSplit(MAX_SPLIT);
+    else return;
+    e.preventDefault();
+  };
 
   // Read text off the 'src' key in the URL fragment if we have one. The
   // fragment (never sent to the server) sidesteps request-line length limits.
@@ -121,7 +157,11 @@ export function App() {
           GitHub
         </a>
       </header>
-      <main className="panes">
+      <main
+        className="panes"
+        ref={panesRef}
+        style={{ "--split": `${split * 100}%` } as React.CSSProperties}
+      >
         <section className="pane pane-editor">
           <Editor
             value={source}
@@ -132,6 +172,20 @@ export function App() {
             scrollTo={scrollTo}
           />
         </section>
+        <div
+          className="pane-divider"
+          role="separator"
+          aria-orientation="vertical"
+          aria-valuenow={Math.round(split * 100)}
+          aria-valuemin={Math.round(MIN_SPLIT * 100)}
+          aria-valuemax={Math.round(MAX_SPLIT * 100)}
+          aria-label="Resize editor and tree panes"
+          tabIndex={0}
+          onPointerDown={onDividerPointerDown}
+          onPointerMove={onDividerPointerMove}
+          onPointerUp={onDividerPointerUp}
+          onKeyDown={onDividerKeyDown}
+        />
         <section className="pane pane-tree">
           <TreeView
             root={root}
