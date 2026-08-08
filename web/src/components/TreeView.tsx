@@ -11,6 +11,9 @@ interface TreeViewProps {
   /** If true, show anonymous (_-prefixed) nodes */
   showAnonymous: boolean;
   onToggleAnonymous: (value: boolean) => void;
+  /** If true, shows source ranges in the tree */
+  showSourceRanges: boolean;
+  onToggleSourceRanges: (value: boolean) => void;
   selectedId: number | null;
   hoveredId: number | null;
   /** Ids of nodes captured by the active query, or null when no query is active. */
@@ -31,6 +34,8 @@ export function TreeView({
   error,
   showAnonymous,
   onToggleAnonymous,
+  showSourceRanges,
+  onToggleSourceRanges,
   selectedId,
   hoveredId,
   matchedIds,
@@ -41,6 +46,7 @@ export function TreeView({
   onSelect,
 }: TreeViewProps) {
   const showAnonId = useId();
+  const showRangesId = useId();
 
   return (
     <div className="tree-view">
@@ -55,6 +61,15 @@ export function TreeView({
           />
           Show anonymous nodes
         </label>
+        <label htmlFor={showRangesId}>
+          <input
+            id={showRangesId}
+            type="checkbox"
+            checked={showSourceRanges}
+            onChange={(e) => onToggleSourceRanges(e.target.checked)}
+          />
+          Show source ranges
+        </label>
       </div>
       <div className="tree-scroll" onMouseLeave={() => onHover(null)}>
         {error ? (
@@ -64,6 +79,7 @@ export function TreeView({
             node={root}
             depth={0}
             showAnonymous={showAnonymous}
+            showSourceRanges={showSourceRanges}
             selectedId={selectedId}
             hoveredId={hoveredId}
             matchedIds={matchedIds}
