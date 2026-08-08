@@ -7,10 +7,10 @@ import {
   type QueryResult,
   type SyntaxNode,
 } from "./lib/parser";
-import { decodeSource, encodeSource } from "./lib/urlState";
-import { SAMPLE_AHK } from "./sample";
+import { SAMPLE_AHK, ERROR_AHK } from "./sample";
 import "./App.css";
 import useLocalStorageState from "./hooks/useLocalStorageState";
+import useCompressedUrlHashState from "./hooks/useUrlHashState";
 
 const PARSE_DEBOUNCE_MS = 150;
 
@@ -25,8 +25,8 @@ type Theme = "system" | "light" | "dark";
 const THEMES: Theme[] = ["system", "light", "dark"];
 
 export function App() {
-  const [source, setSource] = useState("");
-  const [query, setQuery] = useState("");
+  const [source, setSource] = useCompressedUrlHashState<string>("src", SAMPLE_AHK, ERROR_AHK);
+  const [query, setQuery] = useCompressedUrlHashState<string>("query", "");
   const [root, setRoot] = useState<SyntaxNode | null>(null);
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
@@ -74,27 +74,6 @@ export function App() {
     else document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  // Read text off the 'src' key in the URL fragment if we have one. The
-  // fragment (never sent to the server) sidesteps request-line length limits.
-  useEffect(() => {
-    const fragment = new URLSearchParams(window.location.hash.slice(1));
-
-    // The query is stored as a plain fragment value (short enough to need no compression).
-    setQuery(fragment.get("query") ?? "");
-
-    const encoded = fragment.get("src");
-    if (encoded) {
-      const decoded = decodeSource(encoded);
-      if (decoded !== null) {
-        setSource(decoded);
-        return;
-      }
-    }
-
-    // No source or failed to decode
-    setSource(SAMPLE_AHK);
-  }, []);
-
   // Debounced, race-safe parsing: each run tags itself and only the latest applies.
   const runId = useRef(0);
   useEffect(() => {
@@ -113,16 +92,6 @@ export function App() {
           setError(err instanceof Error ? err.message : String(err));
         }
       }
-
-      // Save state in the URL fragment regardless of success, without
-      // re-rendering or reloading.
-      const fragment = new URLSearchParams(window.location.hash.slice(1));
-      fragment.set("src", encodeSource(source));
-      if (query) fragment.set("query", query);
-      else fragment.delete("query");
-      const url = new URL(window.location.href);
-      url.hash = fragment.toString();
-      window.history.replaceState({}, "", url.toString());
     }, PARSE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
   }, [source, query]);

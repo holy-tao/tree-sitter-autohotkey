@@ -1,4 +1,5 @@
 import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
+import { getDefault, type DefaultOrDefaultProvider } from "./common";
 
 /**
  * A wrapper around React's `useState` that persists the value in
@@ -8,20 +9,16 @@ import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
  */
 export default function useLocalStorageState<T>(
     key: string, 
-    defaultValue: T | (() => T)
-): [T, Dispatch<SetStateAction<T>>] {
-    const getDefaultValue = () => typeof(defaultValue) === "function" 
-        ? (defaultValue as (() => T))()
-        : defaultValue;
-    
+    defaultValue: DefaultOrDefaultProvider<T>
+): [T, Dispatch<SetStateAction<T>>] {    
     const [value, setValue] = useState(() => {
         try {
             const saved = localStorage.getItem(key);
-            return saved ? JSON.parse(saved) : getDefaultValue();
+            return saved ? JSON.parse(saved) : getDefault(defaultValue);
         } 
         catch (error) {
             console.error("Error reading localStorage key:", key, error);
-            return getDefaultValue();
+            return getDefault(defaultValue);
         }
     });
 
