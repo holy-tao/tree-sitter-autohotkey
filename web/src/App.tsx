@@ -93,6 +93,11 @@ export function App() {
     [active],
   );
 
+  const scrollTo = useMemo<HighlightRange | null>(
+    () => (selected ? { from: selected.startIndex, to: selected.endIndex } : null),
+    [selected],
+  );
+
   // Query outputs, with stable references so the editor doesn't re-dispatch every render.
   const queryMatches = useMemo(
     () => queryResult?.matches ?? [],
@@ -124,6 +129,7 @@ export function App() {
             highlight={highlight}
             highlights={highlights}
             queryMatches={queryMatches}
+            scrollTo={scrollTo}
           />
         </section>
         <section className="pane pane-tree">
