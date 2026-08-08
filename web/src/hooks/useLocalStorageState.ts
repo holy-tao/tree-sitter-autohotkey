@@ -6,7 +6,10 @@ import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
  * lookup key must be provided.
  * @param initial The default value, if none has been persisted 
  */
-export default function useLocalStorageState<T>(key: string, defaultValue: T | (() => T)): [T, Dispatch<SetStateAction<T>>] {
+export default function useLocalStorageState<T>(
+    key: string, 
+    defaultValue: T | (() => T)
+): [T, Dispatch<SetStateAction<T>>] {
     const getDefaultValue = () => typeof(defaultValue) === "function" 
         ? (defaultValue as (() => T))()
         : defaultValue;
