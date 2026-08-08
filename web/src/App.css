@@ -30,6 +30,36 @@
   margin-left: auto;
 }
 
+.theme-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.theme-toggle button {
+  padding: 0.2rem 0.55rem;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.theme-toggle button:last-child {
+  border-right: none;
+}
+
+.theme-toggle button:hover {
+  color: var(--text);
+}
+
+.theme-toggle button.active {
+  background: var(--accent);
+  color: var(--bg-toolbar);
+}
+
 .panes {
   display: grid;
   grid-template-columns: var(--split, 50%) 6px 1fr;
