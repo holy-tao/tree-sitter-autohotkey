@@ -21,6 +21,7 @@ export function App() {
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAnonymous, setShowAnonymous] = useState(false);
+  const [showSourceRanges, setShowSourceRanges] = useState(false);
 
   const [hovered, setHovered] = useState<SyntaxNode | null>(null);
   const [selected, setSelected] = useState<SyntaxNode | null>(null);
@@ -131,6 +132,8 @@ export function App() {
             error={error}
             showAnonymous={showAnonymous}
             onToggleAnonymous={setShowAnonymous}
+            showSourceRanges={showSourceRanges}
+            onToggleSourceRanges={setShowSourceRanges}
             selectedId={selected?.id ?? null}
             hoveredId={hovered?.id ?? null}
             matchedIds={matchedIds}

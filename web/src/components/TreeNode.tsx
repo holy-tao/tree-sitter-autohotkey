@@ -7,6 +7,8 @@ interface TreeNodeProps {
   node: SyntaxNode;
   depth: number;
   showAnonymous: boolean;
+  /** Whether to show source ranges in the node */
+  showSourceRanges: boolean;
   selectedId: number | null;
   hoveredId: number | null;
   /** Ids of nodes captured by the active query, or null when no query is active. */
@@ -24,6 +26,7 @@ export function TreeNode({
   node,
   depth,
   showAnonymous,
+  showSourceRanges,
   selectedId,
   hoveredId,
   matchedIds,
@@ -67,7 +70,7 @@ export function TreeNode({
         )}
         <span className="tree-type">{node.type}</span>
         {node.isMissing && <span className="tree-flag"> MISSING</span>}
-        <span className="tree-pos">{formatPoint(node)}</span>
+        {showSourceRanges && <span className="tree-pos">{formatPoint(node)}</span>}
       </div>
 
       {hasChildren && !collapsed && (
@@ -78,6 +81,7 @@ export function TreeNode({
               node={child}
               depth={depth + 1}
               showAnonymous={showAnonymous}
+              showSourceRanges={showSourceRanges}
               selectedId={selectedId}
               hoveredId={hoveredId}
               matchedIds={matchedIds}
