@@ -13040,6 +13040,10 @@
         {
           "type": "scope_identifier",
           "named": true
+        },
+        {
+          "type": "wildcard",
+          "named": true
         }
       ]
     }
