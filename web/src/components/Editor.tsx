@@ -192,6 +192,8 @@ interface EditorProps {
   highlight: HighlightRange | null;
   highlights: Highlight[];
   queryMatches: Highlight[];
+  /** Set when a tree node is clicked (not hovered) -- scrolls the range into view. */
+  scrollTo: HighlightRange | null;
 }
 
 export function Editor({
@@ -200,6 +202,7 @@ export function Editor({
   highlight,
   highlights,
   queryMatches,
+  scrollTo,
 }: EditorProps) {
   const ref = useRef<ReactCodeMirrorRef>(null);
 
@@ -214,6 +217,21 @@ export function Editor({
       : null;
     view.dispatch({ effects: setHighlight.of(clamped) });
   }, [highlight]);
+
+  // Clicking a tree node smooth-scrolls its source into view, centered. Driven by
+  // scrollDOM.scrollTo (rather than CodeMirror's own scrollIntoView effect, which jumps
+  // instantly) so the motion is animated.
+  useEffect(() => {
+    const view = ref.current?.view;
+    if (!view || !scrollTo) return;
+
+    const pos = Math.min(scrollTo.from, view.state.doc.length);
+    const block = view.lineBlockAt(pos);
+    const scroller = view.scrollDOM;
+    const target = block.top - scroller.clientHeight / 2 + block.height / 2;
+    
+    scroller.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+  }, [scrollTo]);
 
   // Repaint syntax highlighting whenever a new parse produces fresh captures.
   useEffect(() => {
