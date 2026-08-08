@@ -10,6 +10,7 @@ import {
 import { decodeSource, encodeSource } from "./lib/urlState";
 import { SAMPLE_AHK } from "./sample";
 import "./App.css";
+import useLocalStorageState from "./hooks/useLocalStorageState";
 
 const PARSE_DEBOUNCE_MS = 150;
 
@@ -27,13 +28,13 @@ export function App() {
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showAnonymous, setShowAnonymous] = useState(false);
-  const [showSourceRanges, setShowSourceRanges] = useState(false);
+  const [showAnonymous, setShowAnonymous] = useLocalStorageState("showAnonymous", false);
+  const [showSourceRanges, setShowSourceRanges] = useLocalStorageState("showSourceRanges", false);
 
   const [hovered, setHovered] = useState<SyntaxNode | null>(null);
   const [selected, setSelected] = useState<SyntaxNode | null>(null);
 
-  const [split, setSplit] = useState(DEFAULT_SPLIT);
+  const [split, setSplit] = useLocalStorageState("split", DEFAULT_SPLIT);
   const panesRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
 
