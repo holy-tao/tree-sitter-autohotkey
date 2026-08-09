@@ -680,10 +680,6 @@ static bool starts_continuation_line(TSLexer *lexer, bool *is_comma) {
   switch(c) {
     case 0:     // EOF
       return false;
-    case '&':   // logical-and "&&" (a lone "&" is a reference/hotkey character, so require two)
-      return lexer->lookahead == '&';
-    case '|':   // logical-or "||"
-      return lexer->lookahead == '|';
     case '.':   // member access / concatenation, but not a float (".5") or the "." hotkey (".::")
       return !is_digit(lexer->lookahead) && lexer->lookahead != ':';
     case ',':   // comma continuation
@@ -702,6 +698,8 @@ static bool starts_continuation_line(TSLexer *lexer, bool *is_comma) {
     case '*':   // multiplication / "**"        - also the wildcard hotkey prefix
     case '<':   // "<", "<=", "<<"              - also the left-modifier hotkey prefix
     case '>':   // ">", ">=", ">>", ">>>"       - also the right-modifier hotkey prefix
+    case '&':   // bitwise-and "&", logical-and "&&", reference "&x" - also the "&" hotkey ("&::")
+    case '|':   // bitwise-or "|", logical-or "||"                   - also the "|" hotkey ("|::")
       return !line_defines_hotkey(lexer);
     default:
       if(starts_operator_keyword(c)) {
