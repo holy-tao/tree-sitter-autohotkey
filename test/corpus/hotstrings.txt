@@ -859,3 +859,71 @@ ExitApp
         (string_literal))))
   (call_statement
     (identifier)))
+
+================================================================================
+Hotstring after an expression statement is not a ternary continuation
+================================================================================
+
+x := 1
+::btw::by the way
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (hotstring
+    (hotstring_trigger)
+    (hotstring_replacement)))
+
+================================================================================
+Execution hotstring with options after an expression statement
+================================================================================
+
+x := 1
+:*X:btw::f()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_asterisk)
+      (hotstring_execute))
+    (hotstring_trigger)
+    (function_call
+      (identifier))))
+
+================================================================================
+Symbol-key hotkey after an execution hotstring body
+================================================================================
+
+:X:btw::a := 1
+^+c::MsgBox "a"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_execute))
+    (hotstring_trigger)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal)))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (key_identifier))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
