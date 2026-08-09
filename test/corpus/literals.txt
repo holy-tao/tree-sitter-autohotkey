@@ -466,6 +466,100 @@ var := ["one", , "three", ]
         (string_literal)))))
 
 ================================================================================
+Array literal with empty initializer on own line
+================================================================================
+
+var := [
+  "one",
+  ,
+  "three",
+]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (string_literal)
+        (empty_arg)
+        (string_literal)))))
+
+================================================================================
+Array literal with consecutive empty initializers on their own lines
+================================================================================
+
+var := [
+  "one",
+  ,
+  ,
+  "four"
+]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (string_literal)
+        (empty_arg)
+        (empty_arg)
+        (string_literal)))))
+
+================================================================================
+Array literal with leading-comma elements and trailing comments
+================================================================================
+
+var := [
+    , 'ptr'   ; user context
+    , 'str'   ; family name
+    , 'hresult'
+]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (empty_arg)
+        (string_literal)
+        (line_comment)
+        (string_literal)
+        (line_comment)
+        (string_literal)))))
+
+================================================================================
+Array literal empty initializer does not consume a newline-separated operand
+================================================================================
+
+var := [
+  "one",
+  "two"
+  "three"
+]
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (string_literal)
+        (implicit_concat_operation
+          (string_literal)
+          (string_literal))))))
+
+================================================================================
 Array literal with expansion
 ================================================================================
 
