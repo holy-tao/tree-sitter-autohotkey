@@ -133,7 +133,7 @@ export default grammar({
     // A leading name in an expression position may reduce to an expression (becoming a
     // function_call) or be the name of a named function_expression; keep both parses alive
     // until the trailing `{` (or its absence) decides which it is.
-    [$._single_expression, $._function_expression_head],
+    [$._single_expression, $._function_expression_head, $._fat_arrow_function_head],
     [$._switch_clause_body],
     [$.case_clause],
     // class_body and struct_body share `_class_body_members`; the run of same-line typed
@@ -654,13 +654,24 @@ export default grammar({
 
     //# region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
-      field('head', choice(
-        $.function_head,
-        $.identifier,
-      )),
+      $._fat_arrow_function_head,
       $.arrow,
       field('body', $._single_expression),
     )),
+
+    _fat_arrow_function_head: $ => choice(
+      // named fat arrow function: `Sum(a, b) => a + b`
+      seq(
+        field('name', $.identifier),
+        field('head', alias($._immediate_function_head, $.function_head)),
+      ),
+      // anonymous
+      field('head', choice(
+        $.function_head, // (a, b) => a + b
+        $.identifier, // parentheses optional if only one arg, e.g. `a => a + 1`
+      )),
+    ),
+
 
     // v2.1 (alpha.3+): a function defined within an expression. Unlike the statement-level
     // function_declaration, this is markerless — it is disambiguated from a function_call by

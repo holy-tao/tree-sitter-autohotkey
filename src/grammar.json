@@ -2939,21 +2939,8 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "FIELD",
-            "name": "head",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "function_head"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "identifier"
-                }
-              ]
-            }
+            "type": "SYMBOL",
+            "name": "_fat_arrow_function_head"
           },
           {
             "type": "SYMBOL",
@@ -2969,6 +2956,54 @@
           }
         ]
       }
+    },
+    "_fat_arrow_function_head": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "head",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_immediate_function_head"
+                },
+                "named": true,
+                "value": "function_head"
+              }
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "head",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "function_head"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
+          }
+        }
+      ]
     },
     "function_expression": {
       "type": "CHOICE",
@@ -9776,7 +9811,8 @@
     ],
     [
       "_single_expression",
-      "_function_expression_head"
+      "_function_expression_head",
+      "_fat_arrow_function_head"
     ],
     [
       "_switch_clause_body"

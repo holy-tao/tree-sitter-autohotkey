@@ -407,3 +407,50 @@ fn := a, b => "aaaaa"
       (identifier)
       (arrow)
       (string_literal))))
+
+================================================================================
+Named fat arrow function in expression location
+================================================================================
+
+sumfn := Sum(a, b) => a + b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (fat_arrow_function
+      name: (identifier)
+      head: (function_head
+        (param_sequence
+          (identifier)
+          (identifier)))
+      (arrow)
+      body: (additive_operation
+        left: (identifier)
+        right: (identifier)))))
+
+================================================================================
+Named fat arrow function in expression location with variadic args
+================================================================================
+
+sumfn := Sum(args*) => args.length
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    left: (identifier)
+    (assignment_operator)
+    right: (fat_arrow_function
+      name: (identifier)
+      head: (function_head
+        (param_sequence
+          (variadic_param
+            name: (identifier)
+            (wildcard))))
+      (arrow)
+      body: (member_access
+        object: (identifier)
+        member: (identifier)))))
