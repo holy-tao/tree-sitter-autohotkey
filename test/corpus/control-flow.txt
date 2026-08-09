@@ -597,7 +597,7 @@ throw(Error("Invalid value"))
 (source_file
   (throw_statement
     (throw)
-    (expression_sequence
+    (arg_sequence
       (function_call
         (identifier)
         (arg_sequence
@@ -625,7 +625,7 @@ myVar := IsInteger(val) ? val : throw(TypeError("Expected a String"))
       true_branch: (identifier)
       false_branch: (throw_statement
         (throw)
-        thrown: (expression_sequence
+        arguments: (arg_sequence
           (function_call
             function: (identifier)
             arguments: (arg_sequence
@@ -654,11 +654,224 @@ Cleanup() => (
           function: (identifier))
         (throw_statement
           (throw)
-          thrown: (expression_sequence
+          arguments: (arg_sequence
             (function_call
               function: (identifier)
               arguments: (arg_sequence
                 (string_literal)))))))))
+
+================================================================================
+Throw with an empty argument list
+================================================================================
+
+; v2.1: a re-throw spelled as a zero-argument call
+throw()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (throw_statement
+    (throw)))
+
+================================================================================
+Throw with several arguments
+================================================================================
+
+throw(Error("a"), Error("b"))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (throw_statement
+    (throw)
+    (arg_sequence
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal)))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Throw with a trailing comma in the argument list
+================================================================================
+
+; v2.1 only - v2.0's parentheses are a plain expression, which rejects this
+throw(Error("a"),)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (throw_statement
+    (throw)
+    (arg_sequence
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Throw with an unset argument
+================================================================================
+
+; v2.1 only, for the same reason as the trailing comma
+throw(unset)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (throw_statement
+    (throw)
+    (arg_sequence
+      (unset))))
+
+================================================================================
+Throw with a spaced parenthesized value
+================================================================================
+
+; The space makes this the command-style form with a parenthesized value,
+; not an argument list - cf. function_call vs. call_statement
+throw (Error("x"))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (line_comment)
+  (throw_statement
+    (throw)
+    (expression_sequence
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Throw with an argument list spanning lines
+================================================================================
+
+F() {
+    return throw(
+        Error("test")
+    )
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (return_statement
+          (return)
+          (throw_statement
+            (throw)
+            (arg_sequence
+              (function_call
+                (identifier)
+                (arg_sequence
+                  (string_literal))))))))))
+
+================================================================================
+Throw with a leading-dot float value
+================================================================================
+
+throw .5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (throw_statement
+    (throw)
+    (float_literal)))
+
+================================================================================
+Throw referenced as a value
+================================================================================
+
+; v2.1: Throw is a function, so it can be referenced, bound and passed around
+f := throw
+g := throw.Bind(Error("x"))
+h := (throw)
+arr := [throw]
+Callback(throw, 2)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (throw_statement
+      (throw)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (function_call
+      (member_access
+        (throw_statement
+          (throw))
+        (identifier))
+      (arg_sequence
+        (function_call
+          (identifier)
+          (arg_sequence
+            (string_literal))))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (expression_sequence
+      (throw_statement
+        (throw))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (array_literal
+      (expression_sequence
+        (throw_statement
+          (throw)))))
+  (function_call
+    (identifier)
+    (arg_sequence
+      (throw_statement
+        (throw))
+      (integer_literal))))
+
+================================================================================
+Fat arrow function whose body calls throw
+================================================================================
+
+Make() => throw()
+Die() => throw(Error("boom"))
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (throw_statement
+        (throw))))
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (throw_statement
+        (throw)
+        (arg_sequence
+          (function_call
+            (identifier)
+            (arg_sequence
+              (string_literal))))))))
 
 ================================================================================
 Goto and label

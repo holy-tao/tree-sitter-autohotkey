@@ -5008,12 +5008,49 @@
                     "name": "_value_start"
                   },
                   {
-                    "type": "FIELD",
-                    "name": "thrown",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "_single_expression"
-                    }
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "IMMEDIATE_TOKEN",
+                            "content": {
+                              "type": "STRING",
+                              "value": "("
+                            }
+                          },
+                          {
+                            "type": "FIELD",
+                            "name": "arguments",
+                            "content": {
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "SYMBOL",
+                                  "name": "arg_sequence"
+                                },
+                                {
+                                  "type": "BLANK"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "STRING",
+                            "value": ")"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "FIELD",
+                        "name": "thrown",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "_single_expression"
+                        }
+                      }
+                    ]
                   }
                 ]
               },

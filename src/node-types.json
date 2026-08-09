@@ -15275,6 +15275,16 @@
     "type": "throw_statement",
     "named": true,
     "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "arg_sequence",
+            "named": true
+          }
+        ]
+      },
       "thrown": {
         "multiple": true,
         "required": false,

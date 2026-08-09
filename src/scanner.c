@@ -950,7 +950,17 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
       lexer->advance(lexer, true);
     }
 
-    if (!is_eol(lexer->lookahead) && !is_eof(lexer) && !strchr(";}", lexer->lookahead)) {
+    bool value_possible = !is_eol(lexer->lookahead) && !is_eof(lexer) &&
+                          !strchr(";})],", lexer->lookahead);
+
+    // A leading `.` is a value only as a float (`throw .5`); as member access it needs a
+    // preceding object, so e.g. `throw.Bind(e)` is `throw` *referenced* and then indexed.
+    if (value_possible && lexer->lookahead == '.') {
+      lexer->advance(lexer, false);
+      value_possible = is_digit(lexer->lookahead);
+    }
+
+    if (value_possible) {
       lexer->result_symbol = VALUE_START;
       return true;
     }
