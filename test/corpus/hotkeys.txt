@@ -453,3 +453,187 @@ Hotkey with many modifiers
         (identifier)
         (assignment_operator)
         (integer_literal)))))
+
+================================================================================
+Hotkey with a comma-sequence inline body
+================================================================================
+
+^+c::a := b, ToolTip(c), Sleep(2000)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (key_identifier))
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (identifier)))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (integer_literal))))))
+
+================================================================================
+Hotkey comma-sequence body starting with a function call
+================================================================================
+
+^+c::ToolTip("copied"), Sleep(1)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (key_identifier))
+    (expression_sequence
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal)))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (integer_literal))))))
+
+================================================================================
+Hotkey comma-sequence body with a scoped declaration
+================================================================================
+
+#a::global w += 1, h += 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_win)
+      (key_identifier))
+    (expression_sequence
+      (assignment_operation
+        (variable_declaration
+          (scope_identifier)
+          (identifier))
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Hotkey comma-sequence body with a ternary element
+================================================================================
+
+F1::a := 1, b ? c() : d()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (key_identifier))
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (ternary_expression
+        (identifier)
+        (function_call
+          (identifier))
+        (function_call
+          (identifier))))))
+
+================================================================================
+Hotkey with up modifier and a comma-sequence body
+================================================================================
+
+F1 up::a := 1, b := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (key_identifier)
+      (hotkey_up))
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Hotkey comma-sequence body ends at the newline
+================================================================================
+
+F1::a := 1, b := 2
+F2::MsgBox "done"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (key_identifier))
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))))
+  (hotkey
+    (hotkey_trigger
+      (key_identifier))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
+
+================================================================================
+Hotkey comma-sequence body mixing assignment and calls
+================================================================================
+
+^+c::A_Clipboard := text, ToolTip("OCR text copied!"), Sleep(2000), ToolTip()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (key_identifier))
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal)))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (integer_literal)))
+      (function_call
+        (identifier)))))
