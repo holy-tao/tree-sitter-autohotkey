@@ -1729,6 +1729,7 @@ export default grammar({
       $._hotkey_double_colon,
       field('body', optional(choice(
         $._single_expression,
+        alias($.top_level_expression_sequence, $.expression_sequence),
         $.function_declaration,
         $.block,
         $._hotkey_alttabcommand,

@@ -8981,6 +8981,15 @@
                       "name": "_single_expression"
                     },
                     {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "top_level_expression_sequence"
+                      },
+                      "named": true,
+                      "value": "expression_sequence"
+                    },
+                    {
                       "type": "SYMBOL",
                       "name": "function_declaration"
                     },
