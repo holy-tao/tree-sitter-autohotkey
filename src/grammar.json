@@ -2407,6 +2407,15 @@
                       "name": "identifier"
                     },
                     {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_numeric_property_name"
+                      },
+                      "named": true,
+                      "value": "identifier"
+                    },
+                    {
                       "type": "SYMBOL",
                       "name": "dereference_operation"
                     }
@@ -2430,6 +2439,15 @@
                     {
                       "type": "SYMBOL",
                       "name": "identifier"
+                    },
+                    {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_numeric_property_name"
+                      },
+                      "named": true,
+                      "value": "identifier"
                     },
                     {
                       "type": "SYMBOL",
@@ -2456,8 +2474,22 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "identifier"
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    },
+                    {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_numeric_property_name"
+                      },
+                      "named": true,
+                      "value": "identifier"
+                    }
+                  ]
                 },
                 {
                   "type": "SYMBOL",
@@ -2471,6 +2503,15 @@
                       {
                         "type": "SYMBOL",
                         "name": "identifier"
+                      },
+                      {
+                        "type": "ALIAS",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "_numeric_property_name"
+                        },
+                        "named": true,
+                        "value": "identifier"
                       },
                       {
                         "type": "SYMBOL",
@@ -2496,6 +2537,15 @@
                       {
                         "type": "SYMBOL",
                         "name": "identifier"
+                      },
+                      {
+                        "type": "ALIAS",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "_numeric_property_name"
+                        },
+                        "named": true,
+                        "value": "identifier"
                       },
                       {
                         "type": "SYMBOL",

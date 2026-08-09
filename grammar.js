@@ -514,12 +514,15 @@ export default grammar({
         $.dereference_operation,
         repeat(choice(
           $.identifier,
+          // Non-leading parts *can* start with a digit, e.g. `%var%2trailingtext`
+          alias($._numeric_property_name, $.identifier),
           $.dereference_operation)),
       ),
       seq(
         $.dereference_operation,
         repeat1(choice(
           $.identifier,
+          alias($._numeric_property_name, $.identifier),
           $.dereference_operation,
         )),
       ),
@@ -529,16 +532,19 @@ export default grammar({
     // so tree-sitter sees a real GLR conflict instead of resolving via precedence
     _member_dynamic_identifier: $ => prec.dynamic(1, prec.right(PREC.MEMBER_ACCESS, choice(
       seq(
-        $.identifier,
+        // Unlike variable names, property names may also *start* with a digit (`obj.2a%k%`)
+        choice($.identifier, alias($._numeric_property_name, $.identifier)),
         $.dereference_operation,
         repeat(choice(
           $.identifier,
+          alias($._numeric_property_name, $.identifier),
           $.dereference_operation)),
       ),
       seq(
         $.dereference_operation,
         repeat1(choice(
           $.identifier,
+          alias($._numeric_property_name, $.identifier),
           $.dereference_operation,
         )),
       ),
