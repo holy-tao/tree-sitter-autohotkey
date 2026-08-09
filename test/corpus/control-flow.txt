@@ -2541,6 +2541,208 @@ loop {
         (integer_literal)))))
 
 ================================================================================
+While condition of two parenthesized groups joined by ||, block body
+================================================================================
+
+while ((A_TickCount - startTime) < timeOut) || (timeOut = -1) {
+    x()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (logical_or_operation
+      (expression_sequence
+        (relational_operation
+          (expression_sequence
+            (additive_operation
+              (identifier)
+              (identifier)))
+          (identifier)))
+      (expression_sequence
+        (equality_operation
+          (identifier)
+          (prefix_operation
+            (integer_literal)))))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+While condition of two parenthesized groups joined by ||, braceless body
+================================================================================
+
+while (i < 2) || (i = -1)
+    x()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (while_statement
+    (while)
+    (logical_or_operation
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal)))
+      (expression_sequence
+        (equality_operation
+          (identifier)
+          (prefix_operation
+            (integer_literal)))))
+    (function_call
+      (identifier))))
+
+================================================================================
+While condition joined by || after a braceless try if-body
+================================================================================
+
+if this.ReloadButtonDescription
+    try legacyPattern := this.ReloadButton.LegacyIAccessiblePattern
+while ((A_TickCount - startTime) < timeOut) || (timeOut = -1) {
+    x()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (member_access
+      (identifier)
+      (identifier))
+    (try_statement
+      (try)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (member_access
+          (member_access
+            (identifier)
+            (identifier))
+          (identifier)))))
+  (while_statement
+    (while)
+    (logical_or_operation
+      (expression_sequence
+        (relational_operation
+          (expression_sequence
+            (additive_operation
+              (identifier)
+              (identifier)))
+          (identifier)))
+      (expression_sequence
+        (equality_operation
+          (identifier)
+          (prefix_operation
+            (integer_literal)))))
+    (block
+      (function_call
+        (identifier)))))
+
+================================================================================
+Braceless while condition joined by || after a braceless try if-body
+================================================================================
+
+if a
+    try p := q
+while (i < 5) || (i = -1)
+    x()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (identifier)
+    (try_statement
+      (try)
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier))))
+  (while_statement
+    (while)
+    (logical_or_operation
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal)))
+      (expression_sequence
+        (equality_operation
+          (identifier)
+          (prefix_operation
+            (integer_literal)))))
+    (function_call
+      (identifier))))
+
+================================================================================
+If condition of two parenthesized groups joined by ||
+================================================================================
+
+if ((A_TickCount - startTime) < timeOut) || (timeOut = -1)
+    x()
+else
+    y()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (if_statement
+    (if)
+    (logical_or_operation
+      (expression_sequence
+        (relational_operation
+          (expression_sequence
+            (additive_operation
+              (identifier)
+              (identifier)))
+          (identifier)))
+      (expression_sequence
+        (equality_operation
+          (identifier)
+          (prefix_operation
+            (integer_literal)))))
+    (function_call
+      (identifier))
+    (else_statement
+      (else)
+      (function_call
+        (identifier)))))
+
+================================================================================
+Until condition of two parenthesized groups joined by ||
+================================================================================
+
+loop
+    k += 1
+until (k > 2) || (k = -1)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (loop_statement
+    (loop)
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (integer_literal))
+    (until_statement
+      (until)
+      (logical_or_operation
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (integer_literal)))
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (prefix_operation
+              (integer_literal))))))))
+
+================================================================================
 Loop Reg with key and mode arguments
 ================================================================================
 
