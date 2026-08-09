@@ -710,3 +710,152 @@ Non-exec hotstring with function declaration
             (identifier)
             (arg_sequence
               (identifier))))))))
+
+================================================================================
+Execution hotstring with a comma-sequence inline body
+================================================================================
+
+:X:btw::a := b, ToolTip(c), Sleep(2000)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_execute))
+    (hotstring_trigger)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (identifier)))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (integer_literal))))))
+
+================================================================================
+Execution hotstring comma-sequence body starting with a function call
+================================================================================
+
+:X:brb::ToolTip("copied"), Sleep(1)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_execute))
+    (hotstring_trigger)
+    (expression_sequence
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal)))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (integer_literal))))))
+
+================================================================================
+Execution hotstring comma-sequence body with a ternary element
+================================================================================
+
+:X:tern::a := 1, b ? c() : d()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_execute))
+    (hotstring_trigger)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (ternary_expression
+        (identifier)
+        (function_call
+          (identifier))
+        (function_call
+          (identifier))))))
+
+================================================================================
+Execution hotstring comma-sequence body with options around the X
+================================================================================
+
+:*X?:omg::a := 1, b := 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_asterisk)
+      (hotstring_execute)
+      (hotstring_question))
+    (hotstring_trigger)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal)))))
+
+================================================================================
+Execution hotstring comma-sequence body ends at the newline
+================================================================================
+
+:X:btw::a := 1, b := 2
+MsgBox "next"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_execute))
+    (hotstring_trigger)
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (integer_literal))))
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (string_literal))))
+
+================================================================================
+Execution hotstring inline call statement does not swallow the next line
+================================================================================
+
+:X:hi::MsgBox "hi"
+ExitApp
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotstring
+    (hotstring_option_sequence
+      (hotstring_execute))
+    (hotstring_trigger)
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal))))
+  (call_statement
+    (identifier)))
