@@ -59,21 +59,43 @@
           "name": "export_declaration"
         },
         {
-          "type": "SYMBOL",
-          "name": "call_statement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_statement_expression"
-        },
-        {
-          "type": "ALIAS",
+          "type": "PREC_DYNAMIC",
+          "value": -1,
           "content": {
             "type": "SYMBOL",
-            "name": "top_level_expression_sequence"
-          },
-          "named": true,
-          "value": "expression_sequence"
+            "name": "call_statement"
+          }
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_statement_expression"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_eol"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "top_level_expression_sequence"
+              },
+              "named": true,
+              "value": "expression_sequence"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_eol"
+            }
+          ]
         },
         {
           "type": "PREC_DYNAMIC",
@@ -8469,17 +8491,35 @@
                       "name": "block"
                     },
                     {
-                      "type": "SYMBOL",
-                      "name": "_single_expression"
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "_single_expression"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_eol"
+                        }
+                      ]
                     },
                     {
-                      "type": "ALIAS",
-                      "content": {
-                        "type": "SYMBOL",
-                        "name": "top_level_expression_sequence"
-                      },
-                      "named": true,
-                      "value": "expression_sequence"
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "ALIAS",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "top_level_expression_sequence"
+                          },
+                          "named": true,
+                          "value": "expression_sequence"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_eol"
+                        }
+                      ]
                     },
                     {
                       "type": "SYMBOL",
@@ -8987,17 +9027,35 @@
                   "type": "CHOICE",
                   "members": [
                     {
-                      "type": "SYMBOL",
-                      "name": "_single_expression"
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "_single_expression"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_eol"
+                        }
+                      ]
                     },
                     {
-                      "type": "ALIAS",
-                      "content": {
-                        "type": "SYMBOL",
-                        "name": "top_level_expression_sequence"
-                      },
-                      "named": true,
-                      "value": "expression_sequence"
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "ALIAS",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "top_level_expression_sequence"
+                          },
+                          "named": true,
+                          "value": "expression_sequence"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_eol"
+                        }
+                      ]
                     },
                     {
                       "type": "SYMBOL",

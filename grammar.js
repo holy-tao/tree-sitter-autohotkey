@@ -172,9 +172,11 @@ export default grammar({
       $.class_declaration,
       $.struct_declaration,
       $.export_declaration,
-      $.call_statement,  // call_statements only at statement level
-      $._statement_expression,
-      alias($.top_level_expression_sequence, $.expression_sequence),
+      // call_statements only at statement level.
+      prec.dynamic(-1, $.call_statement),
+      // Trailing `_eol` prevents expression statements from running into the next line.
+      seq($._statement_expression, $._eol),
+      seq(alias($.top_level_expression_sequence, $.expression_sequence), $._eol),
       // blocks are allowed at the top level, though they don't do anything. The negative
       // dynamic precedence makes a bare block lose to a function_expression when a brace
       // follows an expression on the same line (`cb := worker() { ... }` is a function
@@ -1644,8 +1646,8 @@ export default grammar({
       field('body', optional(choice(
         // Can't have literal replacements, can have a statement on the same line.
         $.block,
-        $._single_expression,
-        alias($.top_level_expression_sequence, $.expression_sequence),
+        seq($._single_expression, $._eol),
+        seq(alias($.top_level_expression_sequence, $.expression_sequence), $._eol),
         $.function_declaration,
         $.call_statement,
       ))),
@@ -1729,8 +1731,8 @@ export default grammar({
       field('trigger', $.hotkey_trigger),
       $._hotkey_double_colon,
       field('body', optional(choice(
-        $._single_expression,
-        alias($.top_level_expression_sequence, $.expression_sequence),
+        seq($._single_expression, $._eol),
+        seq(alias($.top_level_expression_sequence, $.expression_sequence), $._eol),
         $.function_declaration,
         $.block,
         $._hotkey_alttabcommand,

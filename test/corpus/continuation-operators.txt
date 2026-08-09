@@ -172,3 +172,179 @@ ToolTip "Sender: " sender.Dump()
             (arg_sequence
               (identifier))))
         (string_literal)))))
+
+================================================================================
+Expression statement continued by a leading arithmetic operator
+================================================================================
+
+x := 1
+    * 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiplicative_operation
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Expression statement continued by a leading division operator
+================================================================================
+
+x := 8
+    / 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (multiplicative_operation
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Expression statement continued by a leading comparison operator
+================================================================================
+
+x := 3
+    < 2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (relational_operation
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Expression statement continued by leading ternary branches
+================================================================================
+
+x := 1
+    ? 7
+    : 8
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (ternary_expression
+      (integer_literal)
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Leading ++ starts a new statement rather than continuing
+================================================================================
+
+x := 1
+++x
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (prefix_operation
+    (identifier)))
+
+================================================================================
+Leading -- starts a new statement rather than continuing
+================================================================================
+
+x := 3
+--x
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (prefix_operation
+    (identifier)))
+
+================================================================================
+Continuation operator after a trailing line comment
+================================================================================
+
+x := "a"  ; note
+    . "b"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (explicit_concat_operation
+      (string_literal)
+      (line_comment)
+      (string_literal))))
+
+================================================================================
+Continuation operator after a whole-line block comment
+:skip
+================================================================================
+
+x := "a"
+    /* note */
+    . "b"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (explicit_concat_operation
+      (string_literal)
+      (block_comment)
+      (string_literal))))
+
+
+================================================================================
+Method named And does not continue the previous line
+================================================================================
+
+class P {
+    ;@region Members
+
+    And(Other) {
+        return Other
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (directive_comment
+        (directive_identifier)
+        (directive_arguments))
+      (method_declaration
+        (identifier)
+        (function_head
+          (param_sequence
+            (identifier)))
+        (function_body
+          (block
+            (return_statement
+              (return)
+              (identifier))))))))

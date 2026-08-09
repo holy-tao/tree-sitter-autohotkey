@@ -541,6 +541,101 @@ static bool is_last_element(TSLexer *lexer) {
   return is_eof(lexer) || is_eol(lexer->lookahead) || lexer->lookahead == ';';
 }
 
+/// @brief Skips whitespace (including newlines), line comments and block comments, then consumes
+///        and returns the first character of actual code. Comments are grammar `extras`, so a
+///        lookahead that wants to inspect "the next real character" has to step over them.
+///
+/// @param lexer the lexer
+/// @return the first code character, already consumed; 0 at EOF
+static int32_t next_code_char(TSLexer *lexer) {
+  for (;;) {
+    while (is_whitespace(lexer->lookahead))
+      lexer->advance(lexer, false);
+
+    if (is_eof(lexer))
+      return 0;
+
+    if (lexer->lookahead == ';') {
+      while (!is_eol(lexer->lookahead) && !is_eof(lexer))
+        lexer->advance(lexer, false);
+      continue;
+    }
+
+    if (lexer->lookahead == '/') {
+      lexer->advance(lexer, false);
+      if (lexer->lookahead != '*')
+        return '/';  // a lone '/' is the division operator, not a comment
+      lexer->advance(lexer, false);
+
+      while (!is_eof(lexer)) {
+        if (lexer->lookahead != '*') {
+          lexer->advance(lexer, false);
+          continue;
+        }
+        lexer->advance(lexer, false);
+        if (lexer->lookahead == '/') {
+          lexer->advance(lexer, false);
+          break;
+        }
+      }
+      continue;
+    }
+
+    int32_t c = lexer->lookahead;
+    lexer->advance(lexer, false);
+    return c;
+  }
+}
+
+/// @brief Scans the rest of the current line for an unquoted "::", i.e. decides whether the line
+///        defines a hotkey (or remap). This is what lets the hotkey-modifier characters
+///        (`* + - < >`) also act as continuation operators.
+///
+/// @param lexer the lexer, positioned anywhere on the line being tested
+/// @return true if an unquoted "::" appears before the end of the line
+static bool line_defines_hotkey(TSLexer *lexer) {
+  while (!is_eol(lexer->lookahead) && !is_eof(lexer)) {
+    int32_t c = lexer->lookahead;
+
+    if (c == '"' || c == '\'') {
+      lexer->advance(lexer, false);
+      while (!is_eol(lexer->lookahead) && !is_eof(lexer) && lexer->lookahead != c) {
+        if (lexer->lookahead == '`')
+          lexer->advance(lexer, false);  // escape: the next character is literal
+        lexer->advance(lexer, false);
+      }
+      if (lexer->lookahead == c)
+        lexer->advance(lexer, false);
+      continue;
+    }
+
+    if (c == ':') {
+      lexer->advance(lexer, false);
+      if (lexer->lookahead == ':')
+        return true;
+      continue;
+    }
+
+    lexer->advance(lexer, false);
+  }
+
+  return false;
+}
+
+/// @brief Decides whether a leading ':' opens a hotstring definition rather than continuing a
+///        ternary from the previous line.
+///
+/// @param lexer the lexer, positioned just *after* the ':' (see next_code_char's contract)
+/// @return true if the line looks like a hotstring definition
+static bool starts_hotstring(TSLexer *lexer) {
+  while (is_alnum(lexer->lookahead) || lexer->lookahead == ' ' ||
+         lexer->lookahead == '*' || lexer->lookahead == '?' || lexer->lookahead == '-') {
+    lexer->advance(lexer, false);
+  }
+
+  return lexer->lookahead == ':';
+}
+
 /// @brief Determines whether the line following the current position begins with an expression
 ///        "continuation operator", which per AHK's rules merges it with the line above rather than
 ///        starting a new statement (see docs Scripts.htm, "Continuation operator": a line that
@@ -548,39 +643,50 @@ static bool is_last_element(TSLexer *lexer) {
 ///        previous line). Called only when EOL is otherwise valid and the current line has already
 ///        ended, so suppressing EOL lets the expression continue onto the next line.
 ///
-///        We deliberately handle only operators that cannot also begin a hotkey, hotstring or new
-///        statement. The hotkey modifier characters (^ ! # + < > ~ $ * &) are excluded, because a
-///        line such as `^c::action` is a hotkey, not a continuation - the interpreter gives hotkeys
-///        precedence over the continuation-operator merge. Doubled `&&`/`||` are safe since no
-///        hotkey begins with them, and the "," / "." keys are guarded against their `::` hotkeys.
 ///
 /// @param lexer the lexer, positioned at the end of the current (already terminated) line
 /// @return true if the next line continues the current expression and EOL should be suppressed
 static bool starts_continuation_line(TSLexer *lexer) {
-  // Advance to the first non-blank character of the following line(s).
-  skip_whitespace(lexer);
-  if(is_eof(lexer))
-    return false;
+  // Advance to the first non-blank, non-comment character of the following line(s). Comments are
+  // grammar `extras`, so they may sit between the operand and the continuation operator.
+  // NOTE: next_code_char *consumes* what it returns, so `lexer->lookahead` below is the character
+  // after the operator - which is exactly what each case needs to test.
+  int32_t c = next_code_char(lexer);
 
-  switch(lexer->lookahead) {
+  switch(c) {
+    case 0:     // EOF
+      return false;
     case '&':   // logical-and "&&" (a lone "&" is a reference/hotkey character, so require two)
-      lexer->advance(lexer, false);
       return lexer->lookahead == '&';
     case '|':   // logical-or "||"
-      lexer->advance(lexer, false);
       return lexer->lookahead == '|';
-    case ',':   // comma continuation, but not the "," key hotkey (",::")
-      lexer->advance(lexer, false);
-      return lexer->lookahead != ':';
     case '.':   // member access / concatenation, but not a float (".5") or the "." hotkey (".::")
-      lexer->advance(lexer, false);
       return !is_digit(lexer->lookahead) && lexer->lookahead != ':';
+    case ',':   // comma continuation
+    case '?':   // ternary true-branch, and or-maybe "??"
+    case '/':   // division "/" and "//" ("/*" was already eaten as a comment by next_code_char)
+    case '=':   // comparison "=" and "=="
+      // ':' means the operator is actually the hotkey definition (",::", "?::", "/::", "=::")
+      return lexer->lookahead != ':';
+    case ':':   // ternary false-branch, but not a hotstring definition
+      return !starts_hotstring(lexer);
+    case '+':   // addition, but "++" is the documented exception - it starts a new statement
+    case '-':   // subtraction, likewise "--"
+      if (lexer->lookahead == c)
+        return false;
+      return !line_defines_hotkey(lexer);
+    case '*':   // multiplication / "**"        - also the wildcard hotkey prefix
+    case '<':   // "<", "<=", "<<"              - also the left-modifier hotkey prefix
+    case '>':   // ">", ">=", ">>", ">>>"       - also the right-modifier hotkey prefix
+      return !line_defines_hotkey(lexer);
     default:
-      if(starts_operator_keyword(lexer->lookahead)) {
+      if(starts_operator_keyword(c)) {
         // Word operators: a line may start with "and", "or" or "is" to continue the previous line.
         char word[16] = {0};
-        skip_identifier(lexer, word, sizeof(word));
-        return strcaseeq_any(word, "and", "or", "is");
+        word[0] = (char)c;  // next_code_char already consumed the word's first letter
+        skip_identifier(lexer, word + 1, sizeof(word) - 1);
+        return (lexer->lookahead == ' ' || lexer->lookahead == '\t') &&
+               strcaseeq_any(word, "and", "or", "is");
       }
       return false;
   }

@@ -637,3 +637,109 @@ Hotkey comma-sequence body mixing assignment and calls
           (integer_literal)))
       (function_call
         (identifier)))))
+
+================================================================================
+Symbol-key hotkey after an expression statement is not a continuation
+================================================================================
+x := 1
+^+c::MsgBox "a"
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (key_identifier))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
+
+================================================================================
+Consecutive symbol-key hotkeys
+================================================================================
+^+::MsgBox "a"
+^-::MsgBox "b"
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal))))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (key_identifier))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
+
+================================================================================
+Symbol-key hotkey after a hotkey with an expression body
+================================================================================
+Down::global h -= 1
+^+c::A_Clipboard := text, ToolTip("copied")
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (key_identifier))
+    (assignment_operation
+      (variable_declaration
+        (scope_identifier)
+        (identifier))
+      (assignment_operator)
+      (integer_literal)))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_ctrl)
+      (hotkey_shift)
+      (key_identifier))
+    (expression_sequence
+      (assignment_operation
+        (identifier)
+        (assignment_operator)
+        (identifier))
+      (function_call
+        (identifier)
+        (arg_sequence
+          (string_literal))))))
+
+================================================================================
+Symbol-key hotkey after a comma-sequence statement
+================================================================================
+a := b, f()
+<^>+c::MsgBox "a"
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (identifier))
+    (function_call
+      (identifier)))
+  (hotkey
+    (hotkey_trigger
+      (hotkey_left)
+      (hotkey_ctrl)
+      (hotkey_right)
+      (hotkey_shift)
+      (key_identifier))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
