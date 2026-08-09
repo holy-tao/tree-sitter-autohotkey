@@ -395,6 +395,93 @@ v := obj.my%prop% + 1
       (integer_literal))))
 
 ================================================================================
+Dynamic identifier with digit-leading trailing part
+================================================================================
+
+a := %var%2
+b := %var%2trailingtext
+c := my%var%2more%var%3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (dynamic_identifier
+      (dereference_operation
+        (identifier))
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (dynamic_identifier
+      (dereference_operation
+        (identifier))
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (dynamic_identifier
+      (identifier)
+      (dereference_operation
+        (identifier))
+      (identifier)
+      (dereference_operation
+        (identifier))
+      (identifier))))
+
+================================================================================
+Dynamic member access with digit-leading parts
+================================================================================
+
+v := obj.%prop%2trailing
+obj.%prop%2trailing := 1
+w := obj.2a%prop%
+x := obj.my%prop%2more
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (dereference_operation
+          (identifier))
+        (identifier))))
+  (assignment_operation
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (dereference_operation
+          (identifier))
+        (identifier)))
+    (assignment_operator)
+    (integer_literal))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (identifier)
+        (dereference_operation
+          (identifier)))))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (member_access
+      (identifier)
+      (dynamic_identifier
+        (identifier)
+        (dereference_operation
+          (identifier))
+        (identifier)))))
+
+================================================================================
 Non-reserved keywords class and struct as identifiers at statement start
 ================================================================================
 
