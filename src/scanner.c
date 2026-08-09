@@ -107,10 +107,11 @@ void tree_sitter_autohotkey_external_scanner_deserialize(void *payload, const ch
 
 /// @brief Skips an identifier, returning its length and putting up to the first `buf_size` characters of it into
 ///        `buf` for later comparison.
+///
 /// @param lexer the lexer
 /// @param buf buffer in which to store characters. Can be null (but `buf_size` must be 0)
 /// @param buf_size size of `buf` in characters
-/// @return the total number of characters skipped
+/// @return the total number of characters skipped, which may exceed `buf_size - 1`
 static int skip_identifier(TSLexer *lexer, char *buf, int buf_size) {
   int len = 0;
   while (is_identifier_char(lexer->lookahead)) {
@@ -121,8 +122,8 @@ static int skip_identifier(TSLexer *lexer, char *buf, int buf_size) {
     lexer->advance(lexer, false);
   }
 
-  if (buf && len < buf_size)
-    buf[len] = '\0';
+  if (buf && buf_size > 0)
+    buf[len < buf_size ? len : buf_size - 1] = '\0';
 
   return len;
 }
@@ -321,9 +322,20 @@ static bool is_optional_marker(TSLexer *lexer) {
 /// @brief Determines whether the currenty token is an empty arg. Call mark_end before
 ///        calling this
 /// @param lexer the lexer
+/// @param allow_newline when true, the comma that delimits the empty arg may be on a later
+///        line, e.g. in
+///            [
+///              "one",
+///              ,
+///              "three"
+///            ]
 /// @return true if an empty argument, false otherwise
-static bool is_empty_arg(TSLexer *lexer) {
-  skip_horizontal_ws(lexer);
+static bool is_empty_arg(TSLexer *lexer, bool allow_newline) {
+  if (allow_newline) {
+    skip_whitespace(lexer);
+  } else {
+    skip_horizontal_ws(lexer);
+  }
 
   // We don't track empty args for trailing commas because MsgBox("Hello",) is syntactically identical
   // to just MsgBox("Hello"). Also, it's kind of a nightmare
@@ -399,10 +411,10 @@ static bool is_implicit_concatenation(TSLexer *lexer, bool allow_newline) {
 
     // Check to see if this is an operator keyword
     if(starts_operator_keyword(lexer->lookahead)) {
-      char ident[4];
-      skip_identifier(lexer, ident, sizeof(ident));
+      char ident[16];
+      int len = skip_identifier(lexer, ident, sizeof(ident));
 
-      if(is_operator_keyword(ident)) {
+      if(len < (int)sizeof(ident) && is_operator_keyword(ident)) {
         return false;
       }
     }
@@ -645,13 +657,21 @@ static bool starts_hotstring(TSLexer *lexer) {
 ///
 ///
 /// @param lexer the lexer, positioned at the end of the current (already terminated) line
+/// @param is_comma out (may be NULL): set to true when the continuation operator is a ','. At a
+///        position where an argument is expected, such a comma also delimits an empty argument -
+///        see the EMPTY_ARG handling in the scan function.
 /// @return true if the next line continues the current expression and EOL should be suppressed
-static bool starts_continuation_line(TSLexer *lexer) {
+static bool starts_continuation_line(TSLexer *lexer, bool *is_comma) {
   // Advance to the first non-blank, non-comment character of the following line(s). Comments are
   // grammar `extras`, so they may sit between the operand and the continuation operator.
   // NOTE: next_code_char *consumes* what it returns, so `lexer->lookahead` below is the character
   // after the operator - which is exactly what each case needs to test.
   int32_t c = next_code_char(lexer);
+
+  if (is_comma) {
+    // A ',' followed by ':' is the ",::" hotkey definition, not a continuation (see below).
+    *is_comma = (c == ',' && lexer->lookahead != ':');
+  }
 
   switch(c) {
     case 0:     // EOF
@@ -863,6 +883,28 @@ static bool is_remap_key(const char *key, int len) {
   }
 }
 
+/// @brief Emit an empty arg for an unenclosed argument list continued by a leading comma.
+///            Foo "one",
+///            ,
+///            , "four"
+///        Normally, call statement argument lists are assumed to be one line, but a trailing
+///        comma meets line continuation requirements I guess.
+///
+///        `lexer->mark_end` must already have been called at the scan's start position - the
+///        emitted token is zero-width there, not at the comma.
+/// @param lexer the lexer
+/// @param valid_symbols the scan's valid_symbols
+/// @param leading_comma whether starts_continuation_line reported a ',' continuation operator
+/// @return true if EMPTY_ARG was emitted, false if the caller should keep suppressing EOL
+static bool emit_empty_arg_for_continuation(TSLexer *lexer, const bool *valid_symbols, bool leading_comma) {
+  if (!leading_comma || !valid_symbols[EMPTY_ARG]) {
+    return false;
+  }
+
+  lexer->result_symbol = EMPTY_ARG;
+  return true;
+}
+
 /// @brief Main scan function. See https://tree-sitter.github.io/tree-sitter/creating-parsers/4-external-scanners.html#scan
 /// @param payload no touching
 /// @param lexer the lexer, see the link above
@@ -910,11 +952,17 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
+  // Newlines are only allowed to separate an operand from what follows it in
+  // continuation-by-enclosure contexts, which we detect based on symbol validity.
+  // https://www.autohotkey.com/docs/alpha/Scripts.htm#continuation-expr
+  bool enclosed = (valid_symbols[ARRAY_EXPANSION_MARKER] || valid_symbols[EMPTY_ARG]) &&
+                  !valid_symbols[EOL];
+
   // Check for empty arg
   if(valid_symbols[EMPTY_ARG]) {
     lexer->mark_end(lexer);
 
-    if (is_empty_arg(lexer)) {
+    if (is_empty_arg(lexer, enclosed)) {
       lexer->result_symbol = EMPTY_ARG;
       return true;
     }
@@ -923,12 +971,7 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
   if(valid_symbols[IMPLICIT_CONCAT_MARKER]) {
     lexer->mark_end(lexer);
 
-    // Newlines are only allowed in continuation-by-enclosure contexts, which we detect based
-    // on symbol validity
-    // https://www.autohotkey.com/docs/alpha/Scripts.htm#continuation-expr
-    bool allow_newline = (valid_symbols[ARRAY_EXPANSION_MARKER] || valid_symbols[EMPTY_ARG]) &&
-                         !valid_symbols[EOL];
-    if(is_implicit_concatenation(lexer, allow_newline)) {
+    if(is_implicit_concatenation(lexer, enclosed)) {
       lexer->result_symbol = IMPLICIT_CONCAT_MARKER;
       return true;
     }
@@ -976,11 +1019,19 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
       return false;
     }
 
-    // CONT_NONE: no continuation section here. If EOL is valid and the line has ended, the 
+    // CONT_NONE: no continuation section here. If EOL is valid and the line has ended, the
     // statement ends here.
-    if(valid_symbols[EOL] && at_line_end && !starts_continuation_line(lexer)) {
-      lexer->result_symbol = EOL;
-      return true;
+    if(valid_symbols[EOL] && at_line_end) {
+      bool leading_comma = false;
+
+      if(!starts_continuation_line(lexer, &leading_comma)) {
+        lexer->result_symbol = EOL;
+        return true;
+      }
+
+      if(emit_empty_arg_for_continuation(lexer, valid_symbols, leading_comma)) {
+        return true;
+      }
     }
   }
 
@@ -1067,8 +1118,9 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     if(is_last_element(lexer)) {
       // A following line that begins with an expression operator (e.g. `&&` on its own line)
       // continues this line rather than ending it, so the statement does not terminate here.
-      if(starts_continuation_line(lexer)) {
-        return false;
+      bool leading_comma = false;
+      if(starts_continuation_line(lexer, &leading_comma)) {
+        return emit_empty_arg_for_continuation(lexer, valid_symbols, leading_comma);
       }
 
       lexer->result_symbol = EOL;

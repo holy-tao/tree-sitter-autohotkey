@@ -282,3 +282,89 @@ bar b
     (identifier)
     (arg_sequence
       (identifier))))
+
+================================================================================
+Word operator suppresses implicit concatenation
+================================================================================
+
+x := "a" and b
+y := "a" or b
+z := "a" is b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (logical_and_operation
+      (string_literal)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (logical_or_operation
+      (string_literal)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (type_check_operation
+      (string_literal)
+      (is)
+      (identifier))))
+
+================================================================================
+Reserved word "contains" suppresses implicit concatenation
+:error
+================================================================================
+
+x := "a" contains b
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Identifier merely starting with a word operator still concatenates
+================================================================================
+
+a := "Kind: " notificationKind
+b := "Os: " android
+c := "Ref: " ornament
+d := "Loc: " island
+e := "Box: " container
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (implicit_concat_operation
+      (string_literal)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (implicit_concat_operation
+      (string_literal)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (implicit_concat_operation
+      (string_literal)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (implicit_concat_operation
+      (string_literal)
+      (identifier)))
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (implicit_concat_operation
+      (string_literal)
+      (identifier))))

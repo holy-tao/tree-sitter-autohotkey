@@ -100,6 +100,59 @@ Function ,
       (empty_arg))))
 
 ================================================================================
+Function call empty argument on its own line
+================================================================================
+
+Function("First",
+    ,
+    "Third")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (string_literal)
+      (empty_arg)
+      (string_literal))))
+
+================================================================================
+Call statement empty argument on a leading-comma continuation line
+================================================================================
+
+Function "First",
+    ,
+    , "Fourth"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (string_literal)
+      (empty_arg)
+      (empty_arg)
+      (string_literal))))
+
+================================================================================
+Leading-comma continuation of a call statement is not an empty argument
+================================================================================
+
+MsgBox "First"
+    , "Second"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (string_literal)
+      (string_literal))))
+
+================================================================================
 Call statement with multiple arguments
 ================================================================================
 
