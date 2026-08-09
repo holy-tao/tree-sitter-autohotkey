@@ -125,7 +125,6 @@ export default grammar({
     [$._single_expression, $.variadic_param],
     [$._single_expression, $.dynamic_identifier],
     [$._single_expression, $._statement_expression],
-    [$._exec_hotstring, $._statement],
     [$.member_access, $._member_dynamic_identifier],
     [$.dynamic_identifier],
     [$.break_statement],
@@ -1643,10 +1642,12 @@ export default grammar({
       field('trigger', $.hotstring_trigger),
       ikwtok('::'),
       field('body', optional(choice(
-        // Can't have literal replacements, can have statements on the same line
+        // Can't have literal replacements, can have a statement on the same line.
         $.block,
         $._single_expression,
-        repeat1($._statement),
+        alias($.top_level_expression_sequence, $.expression_sequence),
+        $.function_declaration,
+        $.call_statement,
       ))),
     )),
 

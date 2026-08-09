@@ -8209,10 +8209,6 @@
             "named": false
           },
           {
-            "type": "_directive",
-            "named": true
-          },
-          {
             "type": "_literal",
             "named": true
           },
@@ -8245,15 +8241,7 @@
             "named": true
           },
           {
-            "type": "break_statement",
-            "named": true
-          },
-          {
             "type": "call_statement",
-            "named": true
-          },
-          {
-            "type": "class_declaration",
             "named": true
           },
           {
@@ -8261,15 +8249,7 @@
             "named": true
           },
           {
-            "type": "continue_statement",
-            "named": true
-          },
-          {
             "type": "dereference_operation",
-            "named": true
-          },
-          {
-            "type": "directive_comment",
             "named": true
           },
           {
@@ -8289,19 +8269,11 @@
             "named": true
           },
           {
-            "type": "export_declaration",
-            "named": true
-          },
-          {
             "type": "expression_sequence",
             "named": true
           },
           {
             "type": "fat_arrow_function",
-            "named": true
-          },
-          {
-            "type": "for_statement",
             "named": true
           },
           {
@@ -8317,19 +8289,11 @@
             "named": true
           },
           {
-            "type": "goto_statement",
-            "named": true
-          },
-          {
             "type": "hotstring_replacement",
             "named": true
           },
           {
             "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "if_statement",
             "named": true
           },
           {
@@ -8345,19 +8309,11 @@
             "named": true
           },
           {
-            "type": "label",
-            "named": true
-          },
-          {
             "type": "logical_and_operation",
             "named": true
           },
           {
             "type": "logical_or_operation",
-            "named": true
-          },
-          {
-            "type": "loop_statement",
             "named": true
           },
           {
@@ -8393,27 +8349,11 @@
             "named": true
           },
           {
-            "type": "return_statement",
-            "named": true
-          },
-          {
-            "type": "struct_declaration",
-            "named": true
-          },
-          {
-            "type": "switch_statement",
-            "named": true
-          },
-          {
             "type": "ternary_expression",
             "named": true
           },
           {
             "type": "throw_statement",
-            "named": true
-          },
-          {
-            "type": "try_statement",
             "named": true
           },
           {
@@ -8430,10 +8370,6 @@
           },
           {
             "type": "verbal_not_operation",
-            "named": true
-          },
-          {
-            "type": "while_statement",
             "named": true
           }
         ]

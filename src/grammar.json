@@ -8473,11 +8473,21 @@
                       "name": "_single_expression"
                     },
                     {
-                      "type": "REPEAT1",
+                      "type": "ALIAS",
                       "content": {
                         "type": "SYMBOL",
-                        "name": "_statement"
-                      }
+                        "name": "top_level_expression_sequence"
+                      },
+                      "named": true,
+                      "value": "expression_sequence"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "function_declaration"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "call_statement"
                     }
                   ]
                 },
@@ -9651,10 +9661,6 @@
     [
       "_single_expression",
       "_statement_expression"
-    ],
-    [
-      "_exec_hotstring",
-      "_statement"
     ],
     [
       "member_access",
