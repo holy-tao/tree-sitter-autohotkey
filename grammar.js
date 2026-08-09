@@ -1069,11 +1069,18 @@ export default grammar({
       $.integer_literal,
     ),
 
-    // Like return, the thrown value is gated by _value_start so it can't cross a newline. The
-    // value is optional: a bare `throw` re-throws the current exception (valid AHK v2).
+    // Throw is a keyword in v2.0 and a built-in function in v2.1, we need to support
+    // both semantics.
     throw_statement: $ => prec.right(seq(
       $.throw,
-      optional(seq($._value_start, field('thrown', $._single_expression))),
+      optional(seq($._value_start, choice(
+        seq(
+          token.immediate('('),
+          field('arguments', optional($.arg_sequence)),
+          ')',
+        ),
+        field('thrown', $._single_expression),
+      ))),
     )),
 
     goto_statement: $ => seq(

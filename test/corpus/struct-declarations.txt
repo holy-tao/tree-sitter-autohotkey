@@ -418,7 +418,7 @@ struct LoadedHModule {
             (identifier)
             (throw_statement
               (throw)
-              (expression_sequence
+              (arg_sequence
                 (function_call
                   (identifier)
                   (arg_sequence
