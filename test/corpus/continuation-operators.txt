@@ -315,7 +315,6 @@ x := "a"
       (block_comment)
       (string_literal))))
 
-
 ================================================================================
 Method named And does not continue the previous line
 ================================================================================
@@ -348,3 +347,94 @@ class P {
             (return_statement
               (return)
               (identifier))))))))
+
+================================================================================
+Expression statement continued by a leading bitwise-or operator
+================================================================================
+
+x := i
+    | 4
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (bitwise_or_operation
+      (identifier)
+      (integer_literal))))
+
+================================================================================
+Expression statement continued by a leading bitwise-and operator
+================================================================================
+
+x := 7
+    & 3
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (bitwise_and_operation
+      (integer_literal)
+      (integer_literal))))
+
+================================================================================
+Bitshift chain continued by leading bitwise-or operators
+================================================================================
+
+i := (a & 0x1f) << 24
+    | b << 16
+    | c << 8
+    | d
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (bitwise_or_operation
+      (bitwise_or_operation
+        (bitwise_or_operation
+          (bitshift_operation
+            (expression_sequence
+              (bitwise_and_operation
+                (identifier)
+                (hex_literal)))
+            (bitshift_operator)
+            (integer_literal))
+          (bitshift_operation
+            (identifier)
+            (bitshift_operator)
+            (integer_literal)))
+        (bitshift_operation
+          (identifier)
+          (bitshift_operator)
+          (integer_literal)))
+      (identifier))))
+
+================================================================================
+Leading bitwise-or continuation does not merge a following hotkey
+================================================================================
+
+x := 1
+|::MsgBox "pipe"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (assignment_operation
+    (identifier)
+    (assignment_operator)
+    (integer_literal))
+  (hotkey
+    (hotkey_trigger
+      (key_identifier))
+    (call_statement
+      (identifier)
+      (arg_sequence
+        (string_literal)))))
