@@ -211,6 +211,83 @@ var := "line1``line2"
     (string_literal)))
 
 ================================================================================
+Two strings ending in an escaped backtick on one line
+================================================================================
+
+StrReplace(LVData[2], "``", "````")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (index_access
+        (identifier)
+        (arg_sequence
+          (integer_literal)))
+      (string_literal)
+      (string_literal))))
+
+================================================================================
+Escaped backtick before the closing quote, followed by another string
+================================================================================
+
+a := "x``", b := "y"
+c := 'x``', d := 'y'
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal)))
+  (expression_sequence
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal))))
+
+================================================================================
+Escaped quote does not terminate the string
+================================================================================
+
+a := "x`"y", b := "z"
+c := 'x`'y', d := 'z'
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression_sequence
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal)))
+  (expression_sequence
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal))
+    (assignment_operation
+      (identifier)
+      (assignment_operator)
+      (string_literal))))
+
+================================================================================
 Empty double-quoted string
 ================================================================================
 

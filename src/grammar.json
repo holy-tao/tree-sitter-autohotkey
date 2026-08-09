@@ -3671,14 +3671,14 @@
           "type": "TOKEN",
           "content": {
             "type": "PATTERN",
-            "value": "\"([^\"\\r\\n]|`[^\\r\\n\\t])*\""
+            "value": "\"([^\"`\\r\\n]|`[^\\r\\n\\t])*\""
           }
         },
         {
           "type": "TOKEN",
           "content": {
             "type": "PATTERN",
-            "value": "'([^'\\r\\n]|`[^\\r\\n\\t])*'"
+            "value": "'([^'`\\r\\n]|`[^\\r\\n\\t])*'"
           }
         }
       ]
