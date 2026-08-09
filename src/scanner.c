@@ -54,7 +54,11 @@
                                     (lexer)->advance(lexer, false);                             \
                                   }
 
-#define skip_eol(lexer) while(is_eol((lexer)->lookahead)) { (lexer)->advance(lexer, true); }
+// `is_eol` deliberately counts '\0' as a line ending, but at EOF `advance` is a no-op and the
+// lookahead stays 0 forever - so the EOF check is what terminates this loop, not the predicate.
+#define skip_eol(lexer) while(is_eol((lexer)->lookahead) && !is_eof(lexer)) { \
+                          (lexer)->advance(lexer, true);                      \
+                        }
 
 #define is_eof(lexer) ((lexer)->eof(lexer))
 
