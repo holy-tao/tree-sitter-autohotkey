@@ -6259,13 +6259,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "ALIAS",
-              "content": {
-                "type": "SYMBOL",
-                "name": "static"
-              },
-              "named": true,
-              "value": "scope_identifier"
+              "type": "SYMBOL",
+              "name": "scope_identifier"
             },
             {
               "type": "BLANK"
@@ -6295,7 +6290,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "static"
+                  "name": "scope_identifier"
                 },
                 "named": true,
                 "value": "identifier"
@@ -6634,18 +6629,6 @@
         "content": {
           "type": "PATTERN",
           "value": "set",
-          "flags": "i"
-        }
-      }
-    },
-    "static": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 9999,
-        "content": {
-          "type": "PATTERN",
-          "value": "static",
           "flags": "i"
         }
       }
