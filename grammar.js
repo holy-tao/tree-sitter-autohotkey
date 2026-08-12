@@ -1276,12 +1276,13 @@ export default grammar({
     class_body: $ => seq('{', _class_body_members($), '}'),
 
     property_declaration: $ => seq(
-      optional(alias($.static, $.scope_identifier)),
+      optional($.scope_identifier),
       field('name',
         choice(
           $.identifier,
           alias($._numeric_property_name, $.identifier), // property names may begin with a digit
-          alias($.static, $.identifier), // "static" is a valid property name
+          // "static" (and "local"/"global") are valid property names
+          alias($.scope_identifier, $.identifier),
           alias($._qualified_property_name, $.member_access),
         )),
       // Unlike function_head, the brackets may not be empty ("Empty [] not permitted"),
@@ -1338,7 +1339,6 @@ export default grammar({
     extends: $ => kwtok(/extends/i),
     get: $ => kwtok(/get/i),
     set: $ => kwtok(/set/i),
-    static: $ => kwtok(/static/i),
 
     //# endregion
 

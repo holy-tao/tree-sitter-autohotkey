@@ -1987,3 +1987,47 @@ class C {
 --------------------------------------------------------------------------------
 
 
+
+================================================================================
+Class with property whose name starts with "scope identifier"
+================================================================================
+
+class Example {
+    StaticAssert => 602
+    static StaticAssert => 602
+    staticky := 1
+    static globalish := 2
+    localizer[i] => i
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (class)
+    (identifier)
+    (class_body
+      (property_declaration
+        (identifier)
+        (getter
+          (integer_literal)))
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (getter
+          (integer_literal)))
+      (property_declaration
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (property_declaration
+        (scope_identifier)
+        (identifier)
+        (assignment_operator)
+        (integer_literal))
+      (property_declaration
+        (identifier)
+        (param_sequence
+          (identifier))
+        (getter
+          (identifier))))))
