@@ -161,15 +161,16 @@ Persistent true
             (identifier)
             (identifier)))
         (arrow)
-        (expression_sequence
-          (function_call
-            (identifier)
-            (arg_sequence
-              (string_literal)))
-          (function_call
-            (identifier)
-            (arg_sequence
-              (boolean_literal)))))))
+        (parenthesized_expression
+          (expression_sequence
+            (function_call
+              (identifier)
+              (arg_sequence
+                (string_literal)))
+            (function_call
+              (identifier)
+              (arg_sequence
+                (boolean_literal))))))))
   (function_call
     (member_access
       (identifier)
@@ -181,22 +182,23 @@ Persistent true
             (identifier)
             (identifier)))
         (arrow)
-        (expression_sequence
-          (function_call
-            (identifier)
-            (arg_sequence
-              (implicit_concat_operation
-                (string_literal)
-                (function_call
-                  (identifier)
-                  (arg_sequence
-                    (member_access
-                      (identifier)
-                      (identifier)))))))
-          (function_call
-            (identifier)
-            (arg_sequence
-              (boolean_literal)))))))
+        (parenthesized_expression
+          (expression_sequence
+            (function_call
+              (identifier)
+              (arg_sequence
+                (implicit_concat_operation
+                  (string_literal)
+                  (function_call
+                    (identifier)
+                    (arg_sequence
+                      (member_access
+                        (identifier)
+                        (identifier)))))))
+            (function_call
+              (identifier)
+              (arg_sequence
+                (boolean_literal))))))))
   (function_call
     (member_access
       (identifier)
@@ -208,19 +210,20 @@ Persistent true
             (identifier)
             (identifier)))
         (arrow)
-        (expression_sequence
-          (function_call
-            (identifier)
-            (arg_sequence
-              (implicit_concat_operation
-                (string_literal)
-                (member_access
-                  (identifier)
-                  (identifier)))))
-          (function_call
-            (identifier)
-            (arg_sequence
-              (boolean_literal)))))))
+        (parenthesized_expression
+          (expression_sequence
+            (function_call
+              (identifier)
+              (arg_sequence
+                (implicit_concat_operation
+                  (string_literal)
+                  (member_access
+                    (identifier)
+                    (identifier)))))
+            (function_call
+              (identifier)
+              (arg_sequence
+                (boolean_literal))))))))
   (line_comment)
   (assignment_operation
     (identifier)

@@ -410,10 +410,11 @@ Function(arg1, arg2) {
       (block
         (return_statement
           (return)
-          (expression_sequence
-            (additive_operation
-              (identifier)
-              (identifier))))))))
+          (parenthesized_expression
+            (expression_sequence
+              (additive_operation
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Function with optional argument

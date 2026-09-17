@@ -330,8 +330,9 @@ result := (a + b) * c
     left: (identifier)
     operator: (assignment_operator)
     right: (multiplicative_operation
-      left: (expression_sequence
-        (additive_operation
-          left: (identifier)
-          right: (identifier)))
+      left: (parenthesized_expression
+        (expression_sequence
+          (additive_operation
+            left: (identifier)
+            right: (identifier))))
       right: (identifier))))

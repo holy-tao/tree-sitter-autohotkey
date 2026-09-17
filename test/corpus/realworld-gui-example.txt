@@ -71,8 +71,9 @@ OnClick(wParam, lParam, msgNum, hwnd) {
       (integer_literal)))
   (loop_statement
     (loop)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (block
       (assignment_operation
         (identifier)
@@ -80,8 +81,9 @@ OnClick(wParam, lParam, msgNum, hwnd) {
         (identifier))
       (loop_statement
         (loop)
-        (expression_sequence
-          (identifier))
+        (parenthesized_expression
+          (expression_sequence
+            (identifier)))
         (block
           (assignment_operation
             (identifier)
@@ -104,29 +106,35 @@ OnClick(wParam, lParam, msgNum, hwnd) {
               (arg_sequence
                 (string_literal)
                 (additive_operation
-                  (expression_sequence
-                    (multiplicative_operation
-                      (expression_sequence
-                        (additive_operation
-                          (identifier)
-                          (integer_literal)))
-                      (identifier)))
-                  (expression_sequence
-                    (multiplicative_operation
-                      (identifier)
-                      (identifier))))
+                  (parenthesized_expression
+                    (expression_sequence
+                      (multiplicative_operation
+                        (parenthesized_expression
+                          (expression_sequence
+                            (additive_operation
+                              (identifier)
+                              (integer_literal))))
+                        (identifier))))
+                  (parenthesized_expression
+                    (expression_sequence
+                      (multiplicative_operation
+                        (identifier)
+                        (identifier)))))
                 (additive_operation
-                  (expression_sequence
-                    (multiplicative_operation
-                      (expression_sequence
-                        (additive_operation
-                          (identifier)
-                          (integer_literal)))
-                      (identifier)))
-                  (expression_sequence
-                    (multiplicative_operation
-                      (identifier)
-                      (identifier)))))))
+                  (parenthesized_expression
+                    (expression_sequence
+                      (multiplicative_operation
+                        (parenthesized_expression
+                          (expression_sequence
+                            (additive_operation
+                              (identifier)
+                              (integer_literal))))
+                        (identifier))))
+                  (parenthesized_expression
+                    (expression_sequence
+                      (multiplicative_operation
+                        (identifier)
+                        (identifier))))))))
           (function_call
             (member_access
               (identifier)
@@ -170,17 +178,20 @@ OnClick(wParam, lParam, msgNum, hwnd) {
         (arg_sequence
           (string_literal)
           (additive_operation
-            (expression_sequence
-              (multiplicative_operation
-                (identifier)
-                (identifier)))
-            (expression_sequence
-              (multiplicative_operation
-                (expression_sequence
-                  (additive_operation
-                    (identifier)
-                    (integer_literal)))
-                (identifier))))))))
+            (parenthesized_expression
+              (expression_sequence
+                (multiplicative_operation
+                  (identifier)
+                  (identifier))))
+            (parenthesized_expression
+              (expression_sequence
+                (multiplicative_operation
+                  (parenthesized_expression
+                    (expression_sequence
+                      (additive_operation
+                        (identifier)
+                        (integer_literal))))
+                  (identifier)))))))))
   (function_declaration
     (identifier)
     (function_head
@@ -194,20 +205,22 @@ OnClick(wParam, lParam, msgNum, hwnd) {
         (line_comment)
         (if_statement
           (if)
-          (expression_sequence
-            (logical_or_operation
-              (prefix_operation
-                (expression_sequence
-                  (assignment_operation
-                    (identifier)
-                    (assignment_operator)
-                    (function_call
-                      (identifier)
-                      (arg_sequence
-                        (identifier))))))
-              (inequality_operation
-                (identifier)
-                (identifier))))
+          (parenthesized_expression
+            (expression_sequence
+              (logical_or_operation
+                (prefix_operation
+                  (parenthesized_expression
+                    (expression_sequence
+                      (assignment_operation
+                        (identifier)
+                        (assignment_operator)
+                        (function_call
+                          (identifier)
+                          (arg_sequence
+                            (identifier)))))))
+                (inequality_operation
+                  (identifier)
+                  (identifier)))))
           (return_statement
             (return)))
         (function_call
@@ -224,10 +237,11 @@ OnClick(wParam, lParam, msgNum, hwnd) {
             (integer_literal)))
         (if_statement
           (if)
-          (expression_sequence
-            (equality_operation
-              (identifier)
-              (string_literal)))
+          (parenthesized_expression
+            (expression_sequence
+              (equality_operation
+                (identifier)
+                (string_literal))))
           (block
             (function_call
               (identifier)

@@ -761,10 +761,11 @@ class Example {
             (function_body
               (additive_operation
                 (identifier)
-                (expression_sequence
-                  (multiplicative_operation
-                    (identifier)
-                    (identifier)))))))))))
+                (parenthesized_expression
+                  (expression_sequence
+                    (multiplicative_operation
+                      (identifier)
+                      (identifier))))))))))))
 
 ================================================================================
 Class property with arguments using getter-only shorthand
@@ -787,10 +788,11 @@ class Example {
           (identifier)
           (identifier))
         (getter
-          (expression_sequence
-            (multiplicative_operation
-              (identifier)
-              (identifier))))))))
+          (parenthesized_expression
+            (expression_sequence
+              (multiplicative_operation
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Class property with an anonymous variadic argument

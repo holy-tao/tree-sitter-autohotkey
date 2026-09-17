@@ -152,15 +152,19 @@ export default grammar({
   // Supertypes collapse the type unions in node-types.json and give consumers a single handle
   // for a whole category of node instead of an n-way enumeration.
   //
-  // Two obvious candidates are not eligible. `_statement` is not a pure choice of symbols (it
-  // has `seq(...)` and `prec.dynamic(...)` alternatives), and `_single_expression` /
-  // `_primary_expression` reach `_parenthesized_expression`, which is hidden and has three
-  // visible children ('(', the sequence, ')') - a supertype must always have exactly one.
-  // Making parenthesized expressions a visible node would unblock both.
+  // `_statement` is not eligible: a supertype must be a pure choice of symbols, and it has
+  // `seq(...)` and `prec.dynamic(...)` alternatives. An `expression_statement` wrapper would
+  // unblock it.
+  //
+  // The expression supertypes require `parenthesized_expression` to be visible - a supertype
+  // must contribute exactly one visible child, and a hidden paren rule contributes three
+  // ('(', the sequence, ')').
   supertypes: $ => [
     $._directive,
     $._literal,
     $._numeric_literal,
+    $._single_expression,
+    $._primary_expression,
     $._param,
   ],
 
@@ -246,7 +250,7 @@ export default grammar({
       $.ternary_expression,
       $.prefix_operation,
       $.postfix_operation,
-      $._parenthesized_expression,
+      $.parenthesized_expression,
       $.member_access,
       $.index_access,
       $.continuation_section,
@@ -608,14 +612,12 @@ export default grammar({
         $.index_access,
         $.function_call,
         // A parenthesized sub-expression may also be made optional: `(a ?? b)?.c`
-        $._parenthesized_expression,
+        $.parenthesized_expression,
       )),
       $.optional_marker,
     )),
 
-    // Hidden so `(expr)` still surfaces its inner expression_sequence directly,
-    // exactly as before. Shared by _primary_expression and optional_expression.
-    _parenthesized_expression: $ => seq('(', $.expression_sequence, ')'),
+    parenthesized_expression: $ => seq('(', $.expression_sequence, ')'),
 
     assignment_operator: $ =>
       choice( ':=', '+=', '-=', '*=', '/=', '//=', '.=', '|=', '&=', '^=', '>>=', '<<=', '>>>=', '??='),

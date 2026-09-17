@@ -299,7 +299,8 @@ x := (var?)
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (optional_expression
-        (identifier)
-        (optional_marker)))))
+    (parenthesized_expression
+      (expression_sequence
+        (optional_expression
+          (identifier)
+          (optional_marker))))))

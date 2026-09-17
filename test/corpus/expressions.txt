@@ -56,16 +56,17 @@ var := (
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (string_literal))
-      (identifier))))
+    (parenthesized_expression
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))
+        (identifier)))))
 
 ================================================================================
 Multiline expression sequence
@@ -83,16 +84,17 @@ var := (
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (string_literal))
-      (identifier))))
+    (parenthesized_expression
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (string_literal))
+        (identifier)))))
 
 ================================================================================
 Variable reference simple
@@ -122,10 +124,11 @@ v := &(a * b)
     (identifier)
     (assignment_operator)
     (varref_operation
-      (expression_sequence
-        (multiplicative_operation
-          (identifier)
-          (identifier))))))
+      (parenthesized_expression
+        (expression_sequence
+          (multiplicative_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Nested parenthesized expression
@@ -139,13 +142,15 @@ result := (a + (b * c))
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (additive_operation
-        (identifier)
-        (expression_sequence
-          (multiplicative_operation
-            (identifier)
-            (identifier)))))))
+    (parenthesized_expression
+      (expression_sequence
+        (additive_operation
+          (identifier)
+          (parenthesized_expression
+            (expression_sequence
+              (multiplicative_operation
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Assignment with empty array literal
@@ -177,10 +182,11 @@ arr := [1, "two", (1 + 2)]
       (arg_sequence
         (integer_literal)
         (string_literal)
-        (expression_sequence
-          (additive_operation
-            (integer_literal)
-            (integer_literal)))))))
+        (parenthesized_expression
+          (expression_sequence
+            (additive_operation
+              (integer_literal)
+              (integer_literal))))))))
 
 ================================================================================
 Assignment with object literal
@@ -220,10 +226,11 @@ obj := {
               (identifier)
               (identifier)))
           (arrow)
-          (expression_sequence
-            (additive_operation
-              (identifier)
-              (identifier))))))))
+          (parenthesized_expression
+            (expression_sequence
+              (additive_operation
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Dereference expression sequence
@@ -238,19 +245,20 @@ result := %(a := "part", b := "part", a . b)%
     (identifier)
     (assignment_operator)
     (dereference_operation
-      (expression_sequence
-        (assignment_operation
-          (identifier)
-          (assignment_operator)
-          (string_literal))
-        (assignment_operation
-          (identifier)
-          (assignment_operator)
-          (string_literal))
-        (explicit_concat_operation
-          (identifier)
-          (concat_operator)
-          (identifier))))))
+      (parenthesized_expression
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (string_literal))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (string_literal))
+          (explicit_concat_operation
+            (identifier)
+            (concat_operator)
+            (identifier)))))))
 
 ================================================================================
 Dereference expression as operand

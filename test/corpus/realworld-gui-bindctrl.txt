@@ -171,10 +171,11 @@ static BindCtrls(*) {
       (block
         (switch_statement
           (switch)
-          (expression_sequence
-            (member_access
-              (identifier)
-              (identifier)))
+          (parenthesized_expression
+            (expression_sequence
+              (member_access
+                (identifier)
+                (identifier))))
           (switch_body
             (default_clause
               (default)

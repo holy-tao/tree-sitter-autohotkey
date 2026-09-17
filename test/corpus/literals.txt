@@ -429,16 +429,17 @@ var := [
           (identifier)
           (assignment_operator)
           (integer_literal))
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (additive_operation
+                (integer_literal)
+                (integer_literal)))
             (additive_operation
-              (integer_literal)
-              (integer_literal)))
-          (additive_operation
-            (identifier)
-            (integer_literal)))))))
+              (identifier)
+              (integer_literal))))))))
 
 ================================================================================
 Array literal with numbers
@@ -816,18 +817,19 @@ obj := {
         (string_literal))
       (object_literal_member
         (identifier)
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (integer_literal))
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (integer_literal))
-          (additive_operation
-            (identifier)
-            (identifier)))))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Object literal with array

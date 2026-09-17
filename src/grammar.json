@@ -310,7 +310,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_parenthesized_expression"
+          "name": "parenthesized_expression"
         },
         {
           "type": "SYMBOL",
@@ -2659,7 +2659,7 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "_parenthesized_expression"
+                  "name": "parenthesized_expression"
                 }
               ]
             }
@@ -2671,7 +2671,7 @@
         ]
       }
     },
-    "_parenthesized_expression": {
+    "parenthesized_expression": {
       "type": "SEQ",
       "members": [
         {
@@ -10100,6 +10100,8 @@
     "_directive",
     "_literal",
     "_numeric_literal",
+    "_single_expression",
+    "_primary_expression",
     "_param"
   ],
   "reserved": {}

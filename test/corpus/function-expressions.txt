@@ -100,15 +100,16 @@ if foo := (bar() {
     condition: (assignment_operation
       left: (identifier)
       operator: (assignment_operator)
-      right: (expression_sequence
-        (function_expression
-          name: (identifier)
-          head: (function_head)
-          body: (block
-            (call_statement
-              function: (identifier)
-              arguments: (arg_sequence
-                (string_literal)))))))
+      right: (parenthesized_expression
+        (expression_sequence
+          (function_expression
+            name: (identifier)
+            head: (function_head)
+            body: (block
+              (call_statement
+                function: (identifier)
+                arguments: (arg_sequence
+                  (string_literal))))))))
     body: (block
       (call_statement
         function: (identifier)
@@ -127,19 +128,20 @@ Function expression defined and immediately invoked
 
 (source_file
   (function_call
-    (expression_sequence
-      (function_expression
-        (identifier)
-        (function_head
-          (param_sequence
-            (identifier)))
-        (block
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (additive_operation
+    (parenthesized_expression
+      (expression_sequence
+        (function_expression
+          (identifier)
+          (function_head
+            (param_sequence
+              (identifier)))
+          (block
+            (assignment_operation
               (identifier)
-              (integer_literal))))))
+              (assignment_operator)
+              (additive_operation
+                (identifier)
+                (integer_literal)))))))
     (arg_sequence
       (identifier))))
 
@@ -301,8 +303,9 @@ if (x) {
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (block
       (function_call
         (identifier)))))

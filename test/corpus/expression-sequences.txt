@@ -49,12 +49,13 @@ var := (one := 1, one)
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (identifier))))
+    (parenthesized_expression
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (identifier)))))
 
 ================================================================================
 Multiline parenthesized expression sequence as assignment
@@ -70,15 +71,16 @@ var := (
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+    (parenthesized_expression
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Parenthesized expression sequence with math
@@ -92,14 +94,15 @@ var := (two := 2, two + two)
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (additive_operation
-        (identifier)
-        (identifier)))))
+    (parenthesized_expression
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (additive_operation
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Expression sequence as math operand
@@ -115,18 +118,19 @@ val := 2 + (one := 1, two := 2, one + two)
     (assignment_operator)
     (additive_operation
       (integer_literal)
-      (expression_sequence
-        (assignment_operation
-          (identifier)
-          (assignment_operator)
-          (integer_literal))
-        (assignment_operation
-          (identifier)
-          (assignment_operator)
-          (integer_literal))
-        (additive_operation
-          (identifier)
-          (identifier))))))
+      (parenthesized_expression
+        (expression_sequence
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (assignment_operation
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (additive_operation
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Top-level expression sequences must start with primary expressions

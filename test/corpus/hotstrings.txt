@@ -109,10 +109,11 @@ Execution hotstring with function declaration
         (block
           (if_statement
             (if)
-            (expression_sequence
-              (equality_operation
-                (identifier)
-                (string_literal)))
+            (parenthesized_expression
+              (expression_sequence
+                (equality_operation
+                  (identifier)
+                  (string_literal))))
             (call_statement
               (identifier)
               (arg_sequence
@@ -121,10 +122,11 @@ Execution hotstring with function declaration
               (else)
               (if_statement
                 (if)
-                (expression_sequence
-                  (equality_operation
-                    (identifier)
-                    (string_literal)))
+                (parenthesized_expression
+                  (expression_sequence
+                    (equality_operation
+                      (identifier)
+                      (string_literal))))
                 (call_statement
                   (identifier)
                   (arg_sequence
