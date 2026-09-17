@@ -174,7 +174,7 @@ arr := [1, "two", (1 + 2)]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (integer_literal)
         (string_literal)
         (expression_sequence

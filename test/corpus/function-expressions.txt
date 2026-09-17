@@ -212,7 +212,7 @@ handlers := [first() {
     left: (identifier)
     operator: (assignment_operator)
     right: (array_literal
-      (expression_sequence
+      elements: (arg_sequence
         (function_expression
           name: (identifier)
           head: (function_head)

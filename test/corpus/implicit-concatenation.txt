@@ -257,7 +257,7 @@ x := [a
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (implicit_concat_operation
           (implicit_concat_operation
             (identifier)

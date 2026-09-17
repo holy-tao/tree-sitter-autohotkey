@@ -835,7 +835,7 @@ Callback(throw, 2)
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (throw_statement
           (throw)))))
   (function_call

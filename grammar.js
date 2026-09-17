@@ -868,9 +868,12 @@ export default grammar({
       token(/'([^'`\r\n]|`[^\r\n\t])*'/),
     ),
 
+    // The elements are an arg_sequence rather than an expression_sequence: an array literal
+    // takes exactly what an argument list takes, including elided elements (`[1,,3]`) and a
+    // trailing array expansion (`[a, rest*]`), neither of which is an expression.
     array_literal: $ => seq(
       '[',
-      optional(alias($.arg_sequence, $.expression_sequence)),
+      field('elements', optional($.arg_sequence)),
       ']'),
 
     object_literal: $ => seq('{', optional($._object_literal_member_sequence), '}'),

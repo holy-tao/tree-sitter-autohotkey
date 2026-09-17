@@ -803,16 +803,17 @@
   {
     "type": "array_literal",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "expression_sequence",
-          "named": true
-        }
-      ]
+    "fields": {
+      "elements": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "arg_sequence",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -5665,10 +5666,6 @@
           "named": true
         },
         {
-          "type": "array_expansion_operation",
-          "named": true
-        },
-        {
           "type": "assignment_operation",
           "named": true
         },
@@ -5698,10 +5695,6 @@
         },
         {
           "type": "dynamic_identifier",
-          "named": true
-        },
-        {
-          "type": "empty_arg",
           "named": true
         },
         {

@@ -210,7 +210,7 @@ arr := [x > 5? "big" : "small", other]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (ternary_expression
           (relational_operation
             (identifier)
@@ -426,12 +426,12 @@ result := flag? [1, 2, 3] : [4, 5, 6]
     (ternary_expression
       (identifier)
       (array_literal
-        (expression_sequence
+        (arg_sequence
           (integer_literal)
           (integer_literal)
           (integer_literal)))
       (array_literal
-        (expression_sequence
+        (arg_sequence
           (integer_literal)
           (integer_literal)
           (integer_literal))))))

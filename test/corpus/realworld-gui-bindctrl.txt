@@ -47,7 +47,7 @@ static BindCtrls(*) {
             (arg_sequence
               (string_literal)
               (array_literal
-                (expression_sequence
+                (arg_sequence
                   (string_literal)
                   (string_literal)
                   (string_literal)
