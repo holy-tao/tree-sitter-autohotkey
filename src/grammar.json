@@ -2926,21 +2926,8 @@
             ]
           },
           {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "PREC_RIGHT",
-                "value": 0,
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "_single_expression"
-                }
-              },
-              {
-                "type": "SYMBOL",
-                "name": "array_expansion_marker"
-              }
-            ]
+            "type": "SYMBOL",
+            "name": "array_expansion_operation"
           },
           {
             "type": "SEQ",
@@ -2971,13 +2958,30 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "_single_expression"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "array_expansion_marker"
+                "name": "array_expansion_operation"
               }
             ]
+          }
+        ]
+      }
+    },
+    "array_expansion_operation": {
+      "type": "PREC_RIGHT",
+      "value": 200,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "operand",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_single_expression"
+            }
+          },
+          {
+            "type": "SYMBOL",
+            "name": "array_expansion_marker"
           }
         ]
       }

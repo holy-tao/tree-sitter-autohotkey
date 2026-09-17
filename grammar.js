@@ -640,23 +640,28 @@ export default grammar({
          */
         optional(','),
       ),
+      // Only the *last* argument may be expanded, hence the separate alternatives rather
+      // than admitting array_expansion_operation as an ordinary `_arg`. They share the
+      // `_arg (',' _arg)*` prefix with the branch above so that LALR can defer the decision
+      // to the marker itself.
       // Single arg with expansion
-      seq(
-        prec.right($._single_expression),
-        $.array_expansion_marker,
-      ),
+      $.array_expansion_operation,
       // Multiple args with last one having expansion
       seq(
         $._arg,
         repeat(seq(',', $._arg)),
         ',',
-        $._single_expression,
-        $.array_expansion_marker,
+        $.array_expansion_operation,
       ),
     )),
 
-    // array_expansion_marker is produced by the external scanner, which disambiguates
-    // it from the multiplication operator by looking ahead for ')' or ']'
+    // Postfix `*`, which expands an iterable into the enclosing argument list or array
+    // literal. array_expansion_marker is produced by the external scanner, which
+    // disambiguates it from the multiplication operator by looking ahead for ')' or ']'.
+    array_expansion_operation: $ => prec.right(PREC.POSTFIX, seq(
+      field('operand', $._single_expression),
+      $.array_expansion_marker,
+    )),
 
     //# region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(

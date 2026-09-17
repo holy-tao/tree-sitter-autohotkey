@@ -54,8 +54,9 @@ for key, value in myMap
                 (function_call
                   (identifier)
                   (arg_sequence
-                    (identifier)
-                    (array_expansion_marker)))))
+                    (array_expansion_operation
+                      (identifier)
+                      (array_expansion_marker))))))
             (object_literal_member
               (identifier)
               (fat_arrow_function
@@ -127,8 +128,9 @@ for key, value in myMap
                 (function_call
                   (identifier)
                   (arg_sequence
-                    (identifier)
-                    (array_expansion_marker))))))))))
+                    (array_expansion_operation
+                      (identifier)
+                      (array_expansion_marker)))))))))))
   (assignment_operation
     (identifier)
     (assignment_operator)

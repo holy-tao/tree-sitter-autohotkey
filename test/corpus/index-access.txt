@@ -81,8 +81,9 @@ val := arr[arg1*]
     (index_access
       (identifier)
       (arg_sequence
-        (identifier)
-        (array_expansion_marker)))))
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Index access with multiple arguments and array expansion
@@ -100,8 +101,9 @@ val := arr[arg1, arg2*]
       (identifier)
       (arg_sequence
         (identifier)
-        (identifier)
-        (array_expansion_marker)))))
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Index access with arg with assignment

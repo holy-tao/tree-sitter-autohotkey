@@ -652,8 +652,9 @@ var := ["one", "three", others*]
       (expression_sequence
         (string_literal)
         (string_literal)
-        (identifier)
-        (array_expansion_marker)))))
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Array literal with single expansion value
@@ -669,8 +670,9 @@ var := [values*]
     (assignment_operator)
     (array_literal
       (expression_sequence
-        (identifier)
-        (array_expansion_marker)))))
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Empty object literal
