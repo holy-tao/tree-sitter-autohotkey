@@ -3459,6 +3459,21 @@
     }
   },
   {
+    "type": "continuation_line_sequence",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "continuation_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "continuation_option_sequence",
     "named": true,
     "fields": {},
@@ -3502,203 +3517,11 @@
       "required": false,
       "types": [
         {
-          "type": "_directive",
-          "named": true
-        },
-        {
-          "type": "additive_operation",
-          "named": true
-        },
-        {
-          "type": "assignment_operation",
-          "named": true
-        },
-        {
-          "type": "bitshift_operation",
-          "named": true
-        },
-        {
-          "type": "bitwise_and_operation",
-          "named": true
-        },
-        {
-          "type": "bitwise_or_operation",
-          "named": true
-        },
-        {
-          "type": "bitwise_xor_operation",
-          "named": true
-        },
-        {
-          "type": "block",
-          "named": true
-        },
-        {
-          "type": "break_statement",
-          "named": true
-        },
-        {
-          "type": "call_statement",
-          "named": true
-        },
-        {
-          "type": "class_declaration",
+          "type": "continuation_line_sequence",
           "named": true
         },
         {
           "type": "continuation_option_sequence",
-          "named": true
-        },
-        {
-          "type": "continuation_section",
-          "named": true
-        },
-        {
-          "type": "continue_statement",
-          "named": true
-        },
-        {
-          "type": "directive_comment",
-          "named": true
-        },
-        {
-          "type": "equality_operation",
-          "named": true
-        },
-        {
-          "type": "explicit_concat_operation",
-          "named": true
-        },
-        {
-          "type": "exponent_operation",
-          "named": true
-        },
-        {
-          "type": "export_declaration",
-          "named": true
-        },
-        {
-          "type": "expression_sequence",
-          "named": true
-        },
-        {
-          "type": "fat_arrow_function",
-          "named": true
-        },
-        {
-          "type": "for_statement",
-          "named": true
-        },
-        {
-          "type": "function_call",
-          "named": true
-        },
-        {
-          "type": "function_declaration",
-          "named": true
-        },
-        {
-          "type": "function_expression",
-          "named": true
-        },
-        {
-          "type": "goto_statement",
-          "named": true
-        },
-        {
-          "type": "if_statement",
-          "named": true
-        },
-        {
-          "type": "implicit_concat_operation",
-          "named": true
-        },
-        {
-          "type": "index_access",
-          "named": true
-        },
-        {
-          "type": "inequality_operation",
-          "named": true
-        },
-        {
-          "type": "label",
-          "named": true
-        },
-        {
-          "type": "logical_and_operation",
-          "named": true
-        },
-        {
-          "type": "logical_or_operation",
-          "named": true
-        },
-        {
-          "type": "loop_statement",
-          "named": true
-        },
-        {
-          "type": "member_access",
-          "named": true
-        },
-        {
-          "type": "multiplicative_operation",
-          "named": true
-        },
-        {
-          "type": "or_maybe_operation",
-          "named": true
-        },
-        {
-          "type": "postfix_operation",
-          "named": true
-        },
-        {
-          "type": "prefix_operation",
-          "named": true
-        },
-        {
-          "type": "regex_match_operation",
-          "named": true
-        },
-        {
-          "type": "relational_operation",
-          "named": true
-        },
-        {
-          "type": "return_statement",
-          "named": true
-        },
-        {
-          "type": "struct_declaration",
-          "named": true
-        },
-        {
-          "type": "switch_statement",
-          "named": true
-        },
-        {
-          "type": "ternary_expression",
-          "named": true
-        },
-        {
-          "type": "throw_statement",
-          "named": true
-        },
-        {
-          "type": "try_statement",
-          "named": true
-        },
-        {
-          "type": "type_check_operation",
-          "named": true
-        },
-        {
-          "type": "variable_declaration",
-          "named": true
-        },
-        {
-          "type": "while_statement",
           "named": true
         }
       ]
@@ -17778,6 +17601,10 @@
   },
   {
     "type": "continuation_join",
+    "named": true
+  },
+  {
+    "type": "continuation_line",
     "named": true
   },
   {

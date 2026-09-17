@@ -891,57 +891,29 @@ export default grammar({
       $._single_quote_str_multiline,
     ),
 
-    // Separate recursive rule for continuation section bodies (same reason as _block_body)
-    _continuation_body: $ => seq($._statement, optional($._continuation_body)),
-
+    // The interior is deliberately opaque - see _continuation_interior. A line may not begin
+    // with ')', which always closes the section; a literal one has to be escaped as `) and so
+    // is picked up by the `[^\r\n)]` lead character anyway.
     continuation_section: $ => seq(
       $._continuation_section_start,
-      seq(
-        // Comments always allowed because we can't filter for them in statements :(
-        alias(repeat($._continuation_opt_any), $.continuation_option_sequence),
-        $._continuation_newline,
-        optional($._continuation_body),
-      ),
+      _continuation_interior($, $.continuation_line_sequence, $.continuation_line,
+        /[^\r\n)][^\r\n]*/, /[^\r\n;)][^\r\n;]*/),
       token(prec.left(1, ')')),
     ),
 
     _double_quote_str_multiline: $ => seq(
       '"',
       $._continuation_section_start,
-      choice(
-        seq(
-          // With comments allowed
-          alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence)),
-        ),
-        seq(
-          // Comments not allowed
-          alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence)),
-        ),
-      ),
+      _continuation_interior($, $.multiline_string_line_sequence, $.multiline_string_line,
+        $.anything, /[^\r\n;]+/),
       token(prec.left(1, ')"')),
     ),
 
     _single_quote_str_multiline: $ => seq(
       '\'',
       $._continuation_section_start,
-      choice(
-        seq(
-          // With comments allowed
-          alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence)),
-        ),
-        seq(
-          // Comments not allowed
-          alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence)),
-        ),
-      ),
+      _continuation_interior($, $.multiline_string_line_sequence, $.multiline_string_line,
+        $.anything, /[^\r\n;]+/),
       token(prec.left(1, ')\'')),
     ),
 
@@ -951,38 +923,12 @@ export default grammar({
       repeat($._continuation_opt_except_comments),
     ),
 
-    _continuation_opt_any: $ => choice(
-      $.continuation_join,
-      $.continuation_ltrim,
-      $.continuation_ltrim_off,
-      $.continuation_rtrim_off,
-      $.continuation_no_escape,
-      $.continuation_allow_comments,
-    ),
-
     _continuation_opt_except_comments: $ => choice(
       $.continuation_join,
       $.continuation_ltrim,
       $.continuation_ltrim_off,
       $.continuation_rtrim_off,
       $.continuation_no_escape,
-    ),
-
-    _multiline_str_seq_no_comments: $ => repeat1(
-      seq(
-        optional(alias($.anything, $.multiline_string_line)),
-        $._continuation_newline,
-      ),
-    ),
-
-    _multiline_str_seq_comments: $ => repeat1(
-      seq(
-        // Stop at ";", allow extras to create the comment
-        // !BUG whitespace to the left of the comment is not trimmed - can result in extra nodes for comments on
-        // !    lines without preceding text
-        optional(alias(/[^\r\n;]+/, $.multiline_string_line)),
-        $._continuation_newline,
-      ),
     ),
 
     continuation_join: $ => token(prec(PREC.KEYWORD, /join[^\r\n\s]{0,15}/i)),
@@ -1937,6 +1883,44 @@ function _class_body_members($) {
     // Multiple typed properties can be declared on one line
     repeat1(seq($.typed_property_declaration, optional(','))),
   ));
+}
+
+/**
+ * The interior of a continuation section, shared by the string (`"` ... `)"`) and non-string
+ * (`(` ... `)`) forms: the options that follow the opening parenthesis, then a run of opaque
+ * lines.
+ *
+ * Lines themselves aren't parsed, continuation sections are basically preprocessor macros. We
+ * treat them as opaque, but do handle comments if the comments continuation option is present.
+ *
+ * !BUG whitespace to the left of a comment is not trimmed - can result in extra nodes for
+ * !    comments on lines without preceding text
+ *
+ * @param {GrammarSymbols<string>} $
+ * @param {SymbolRule<string>} seqNode the `*_line_sequence` node the run of lines is aliased to
+ * @param {SymbolRule<string>} lineNode the `*_line` node each individual line is aliased to
+ * @param {RuleOrLiteral} line matches one line when comments are *not* allowed
+ * @param {RuleOrLiteral} lineToComment matches one line when they are (i.e. stops at `;`)
+ */
+function _continuation_interior($, seqNode, lineNode, line, lineToComment) {
+  /** @param {RuleOrLiteral} pattern */
+  const lines = pattern => optional(alias(repeat1(seq(
+    optional(alias(pattern, lineNode)),
+    $._continuation_newline,
+  )), seqNode));
+
+  return choice(
+    seq(
+      alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
+      $._continuation_newline,
+      lines(lineToComment),
+    ),
+    seq(
+      alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
+      $._continuation_newline,
+      lines(line),
+    ),
+  );
 }
 
 /**
