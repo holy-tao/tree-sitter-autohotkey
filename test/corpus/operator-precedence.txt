@@ -9,7 +9,7 @@ result := a + b * c
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (additive_operation
       left: (identifier)
       right: (multiplicative_operation
@@ -27,7 +27,7 @@ result := a - b / c
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (additive_operation
       left: (identifier)
       right: (multiplicative_operation
@@ -45,7 +45,7 @@ result := a > b == c < d
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (equality_operation
       left: (relational_operation
         left: (identifier)
@@ -65,7 +65,7 @@ result := a == b != c
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (inequality_operation
       left: (equality_operation
         left: (identifier)
@@ -83,11 +83,12 @@ result := a != b ~= c
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (regex_match_operation
       left: (inequality_operation
         left: (identifier)
         right: (identifier))
+      operator: (regex_match_operator)
       right: (identifier))))
 
 ================================================================================
@@ -101,7 +102,7 @@ result := a > b && c < d
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (logical_and_operation
       left: (relational_operation
         left: (identifier)
@@ -121,7 +122,7 @@ result := a && b || c && d
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (logical_or_operation
       left: (logical_and_operation
         left: (identifier)
@@ -141,7 +142,7 @@ result := a || b
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (logical_or_operation
       left: (identifier)
       right: (identifier))))
@@ -158,11 +159,11 @@ a := 1, b := 2
   (expression_sequence
     (assignment_operation
       left: (identifier)
-      (assignment_operator)
+      operator: (assignment_operator)
       right: (integer_literal))
     (assignment_operation
       left: (identifier)
-      (assignment_operator)
+      operator: (assignment_operator)
       right: (integer_literal))))
 
 ================================================================================
@@ -176,7 +177,7 @@ result := a & b ^ c
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (bitwise_xor_operation
       left: (bitwise_and_operation
         left: (identifier)
@@ -194,7 +195,7 @@ result := a ^ b | c
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (bitwise_or_operation
       left: (bitwise_xor_operation
         left: (identifier)
@@ -212,8 +213,9 @@ result := not x > 5
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (verbal_not_operation
+      operator: (not)
       operand: (relational_operation
         left: (identifier)
         right: (integer_literal)))))
@@ -229,9 +231,10 @@ result := not x && y
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (logical_and_operation
       left: (verbal_not_operation
+        operator: (not)
         operand: (identifier))
       right: (identifier))))
 
@@ -284,7 +287,7 @@ result := !x > 5
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (relational_operation
       left: (prefix_operation
         operand: (identifier))
@@ -301,7 +304,7 @@ result := a + b * c > d && e || f
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (logical_or_operation
       left: (logical_and_operation
         left: (relational_operation
@@ -325,10 +328,11 @@ result := (a + b) * c
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (multiplicative_operation
-      left: (expression_sequence
-        (additive_operation
-          left: (identifier)
-          right: (identifier)))
+      left: (parenthesized_expression
+        (expression_sequence
+          (additive_operation
+            left: (identifier)
+            right: (identifier))))
       right: (identifier))))

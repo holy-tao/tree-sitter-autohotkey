@@ -129,7 +129,9 @@ Function(arg1, arg2) {
           (explicit_concat_operation
             (explicit_concat_operation
               (identifier)
+              (concat_operator)
               (identifier))
+            (concat_operator)
             (string_literal)))))))
 
 ================================================================================
@@ -158,7 +160,9 @@ Function(params*) {
           (explicit_concat_operation
             (explicit_concat_operation
               (identifier)
+              (concat_operator)
               (identifier))
+            (concat_operator)
             (string_literal)))))))
 
 ================================================================================
@@ -189,12 +193,12 @@ Function(params*) {
             (wildcard))
           (function_body
             (block
-              (assignment_operation
-                (variable_declaration
-                  (scope_identifier)
-                  (identifier))
-                (assignment_operator)
-                (string_literal)))))))))
+              (variable_declaration
+                (scope_identifier)
+                (variable_declarator
+                  (identifier)
+                  (assignment_operator)
+                  (string_literal))))))))))
 
 ================================================================================
 Multiple nested functions
@@ -226,12 +230,12 @@ Function(params*) {
             (wildcard))
           (function_body
             (block
-              (assignment_operation
-                (variable_declaration
-                  (scope_identifier)
-                  (identifier))
-                (assignment_operator)
-                (string_literal)))))
+              (variable_declaration
+                (scope_identifier)
+                (variable_declarator
+                  (identifier)
+                  (assignment_operator)
+                  (string_literal))))))
         (function_declaration
           (identifier)
           (function_head
@@ -406,10 +410,11 @@ Function(arg1, arg2) {
       (block
         (return_statement
           (return)
-          (expression_sequence
-            (additive_operation
-              (identifier)
-              (identifier))))))))
+          (parenthesized_expression
+            (expression_sequence
+              (additive_operation
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Function with optional argument

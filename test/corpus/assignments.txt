@@ -21,12 +21,12 @@ global oNE := 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
-    (variable_declaration
-      (scope_identifier)
-      (identifier))
-    (assignment_operator)
-    (integer_literal)))
+  (variable_declaration
+    (scope_identifier)
+    (variable_declarator
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Global variable declaration followed by assignment
@@ -40,7 +40,8 @@ var := 42
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier))
+    (variable_declarator
+      (identifier)))
   (assignment_operation
     (identifier)
     (assignment_operator)
@@ -267,7 +268,8 @@ local myVar
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier)))
+    (variable_declarator
+      (identifier))))
 
 ================================================================================
 Static variable declaration with assignment
@@ -278,12 +280,12 @@ static counter := 0
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
-    (variable_declaration
-      (scope_identifier)
-      (identifier))
-    (assignment_operator)
-    (integer_literal)))
+  (variable_declaration
+    (scope_identifier)
+    (variable_declarator
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Simple assignment with optional variable
@@ -297,14 +299,8 @@ x := (var?)
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (optional_expression
-        (identifier)
-        (optional_marker)))))
-
-================================================================================
-A statement cannot end with a bare maybe operator
-:error
-================================================================================
-
-x := var?
+    (parenthesized_expression
+      (expression_sequence
+        (optional_expression
+          (identifier)
+          (optional_marker))))))

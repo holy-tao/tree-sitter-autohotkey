@@ -162,14 +162,15 @@ a := (w ?? x?.y)?.z()
     (function_call
       (member_access
         (optional_expression
-          (expression_sequence
-            (or_maybe_operation
-              (identifier)
-              (member_access
-                (optional_expression
-                  (identifier)
-                  (optional_marker))
-                (identifier))))
+          (parenthesized_expression
+            (expression_sequence
+              (or_maybe_operation
+                (identifier)
+                (member_access
+                  (optional_expression
+                    (identifier)
+                    (optional_marker))
+                  (identifier)))))
           (optional_marker))
         (identifier)))))
 
@@ -186,22 +187,24 @@ a := ((b?) < c?.d && f()?) ?? false
     (identifier)
     (assignment_operator)
     (or_maybe_operation
-      (expression_sequence
-        (logical_and_operation
-          (relational_operation
-            (expression_sequence
-              (optional_expression
-                (identifier)
-                (optional_marker)))
-            (member_access
-              (optional_expression
-                (identifier)
-                (optional_marker))
-              (identifier)))
-          (optional_expression
-            (function_call
-              (identifier))
-            (optional_marker))))
+      (parenthesized_expression
+        (expression_sequence
+          (logical_and_operation
+            (relational_operation
+              (parenthesized_expression
+                (expression_sequence
+                  (optional_expression
+                    (identifier)
+                    (optional_marker))))
+              (member_access
+                (optional_expression
+                  (identifier)
+                  (optional_marker))
+                (identifier)))
+            (optional_expression
+              (function_call
+                (identifier))
+              (optional_marker)))))
       (boolean_literal))))
 
 ================================================================================

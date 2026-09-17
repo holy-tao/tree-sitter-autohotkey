@@ -398,7 +398,7 @@ var := ["one", "two", "three"]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (string_literal)
         (string_literal)))))
@@ -420,7 +420,7 @@ var := [
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (assignment_operation
           (identifier)
           (assignment_operator)
@@ -429,16 +429,17 @@ var := [
           (identifier)
           (assignment_operator)
           (integer_literal))
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (additive_operation
+                (integer_literal)
+                (integer_literal)))
             (additive_operation
-              (integer_literal)
-              (integer_literal)))
-          (additive_operation
-            (identifier)
-            (integer_literal)))))))
+              (identifier)
+              (integer_literal))))))))
 
 ================================================================================
 Array literal with numbers
@@ -453,7 +454,7 @@ var := [1, 2, 3]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (integer_literal)
         (integer_literal)
         (integer_literal)))))
@@ -474,7 +475,7 @@ var := [
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (object_literal
           (object_literal_member
             (identifier)
@@ -497,7 +498,7 @@ var := ["one", "two", "three", ]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (string_literal)
         (string_literal)))))
@@ -519,7 +520,7 @@ var := [
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (string_literal)
         (string_literal)))))
@@ -537,7 +538,7 @@ var := ["one", , "three", ]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (empty_arg)
         (string_literal)))))
@@ -559,7 +560,7 @@ var := [
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (empty_arg)
         (string_literal)))))
@@ -582,7 +583,7 @@ var := [
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (empty_arg)
         (empty_arg)
@@ -605,7 +606,7 @@ var := [
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (empty_arg)
         (string_literal)
         (line_comment)
@@ -630,7 +631,7 @@ var := [
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (implicit_concat_operation
           (string_literal)
@@ -649,11 +650,12 @@ var := ["one", "three", others*]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (string_literal)
         (string_literal)
-        (identifier)
-        (array_expansion_marker)))))
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Array literal with single expansion value
@@ -668,9 +670,10 @@ var := [values*]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
-        (identifier)
-        (array_expansion_marker)))))
+      (arg_sequence
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Empty object literal
@@ -814,18 +817,19 @@ obj := {
         (string_literal))
       (object_literal_member
         (identifier)
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (integer_literal))
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (integer_literal))
-          (additive_operation
-            (identifier)
-            (identifier)))))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (integer_literal))
+            (additive_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Object literal with array

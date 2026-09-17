@@ -24,18 +24,19 @@ Nested ternary expression
 --------------------------------------------------------------------------------
 
 (source_file
-  (expression_sequence
-    (ternary_expression
-      (equality_operation
-        (identifier)
-        (integer_literal))
-      (string_literal)
+  (parenthesized_expression
+    (expression_sequence
       (ternary_expression
         (equality_operation
           (identifier)
           (integer_literal))
         (string_literal)
-        (string_literal)))))
+        (ternary_expression
+          (equality_operation
+            (identifier)
+            (integer_literal))
+          (string_literal)
+          (string_literal))))))
 
 ================================================================================
 Simple multiline ternary expression
@@ -170,11 +171,12 @@ a? (b? c : d) : e
 (source_file
   (ternary_expression
     (identifier)
-    (expression_sequence
-      (ternary_expression
-        (identifier)
-        (identifier)
-        (identifier)))
+    (parenthesized_expression
+      (expression_sequence
+        (ternary_expression
+          (identifier)
+          (identifier)
+          (identifier))))
     (identifier)))
 
 ================================================================================
@@ -210,7 +212,7 @@ arr := [x > 5? "big" : "small", other]
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (ternary_expression
           (relational_operation
             (identifier)
@@ -334,11 +336,12 @@ result := 10 + (x? 5 : 3)
     (assignment_operator)
     (additive_operation
       (integer_literal)
-      (expression_sequence
-        (ternary_expression
-          (identifier)
-          (integer_literal)
-          (integer_literal))))))
+      (parenthesized_expression
+        (expression_sequence
+          (ternary_expression
+            (identifier)
+            (integer_literal)
+            (integer_literal)))))))
 
 ================================================================================
 Parenthesized ternary as condition
@@ -350,11 +353,12 @@ Parenthesized ternary as condition
 
 (source_file
   (ternary_expression
-    (expression_sequence
-      (ternary_expression
-        (identifier)
-        (identifier)
-        (identifier)))
+    (parenthesized_expression
+      (expression_sequence
+        (ternary_expression
+          (identifier)
+          (identifier)
+          (identifier))))
     (identifier)
     (identifier)))
 
@@ -407,6 +411,7 @@ result := not condition? "A" : "B"
     (assignment_operator)
     (ternary_expression
       (verbal_not_operation
+        (not)
         (identifier))
       (string_literal)
       (string_literal))))
@@ -426,12 +431,12 @@ result := flag? [1, 2, 3] : [4, 5, 6]
     (ternary_expression
       (identifier)
       (array_literal
-        (expression_sequence
+        (arg_sequence
           (integer_literal)
           (integer_literal)
           (integer_literal)))
       (array_literal
-        (expression_sequence
+        (arg_sequence
           (integer_literal)
           (integer_literal)
           (integer_literal))))))
@@ -472,28 +477,31 @@ result := (x > 5 && y < 10)? (z := a + b) : (w := c * d)
     (identifier)
     (assignment_operator)
     (ternary_expression
-      (expression_sequence
-        (logical_and_operation
-          (relational_operation
+      (parenthesized_expression
+        (expression_sequence
+          (logical_and_operation
+            (relational_operation
+              (identifier)
+              (integer_literal))
+            (relational_operation
+              (identifier)
+              (integer_literal)))))
+      (parenthesized_expression
+        (expression_sequence
+          (assignment_operation
             (identifier)
-            (integer_literal))
-          (relational_operation
+            (assignment_operator)
+            (additive_operation
+              (identifier)
+              (identifier)))))
+      (parenthesized_expression
+        (expression_sequence
+          (assignment_operation
             (identifier)
-            (integer_literal))))
-      (expression_sequence
-        (assignment_operation
-          (identifier)
-          (assignment_operator)
-          (additive_operation
-            (identifier)
-            (identifier))))
-      (expression_sequence
-        (assignment_operation
-          (identifier)
-          (assignment_operator)
-          (multiplicative_operation
-            (identifier)
-            (identifier)))))))
+            (assignment_operator)
+            (multiplicative_operation
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 Ternary with bitshift operators
@@ -555,6 +563,7 @@ result := flag? "Hello" . " World" : "Goodbye"
       (identifier)
       (explicit_concat_operation
         (string_literal)
+        (concat_operator)
         (string_literal))
       (string_literal))))
 

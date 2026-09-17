@@ -278,9 +278,10 @@ class Foo {
           (string_literal)))
       (block_comment)
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Unclosed block comment

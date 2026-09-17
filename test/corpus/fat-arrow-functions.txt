@@ -283,18 +283,19 @@ Fat-arrow function with parenthesized expression sequence
       (param_sequence
         (identifier)))
     (arrow)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
-      (additive_operation
-        (identifier)
-        (identifier)))))
+    (parenthesized_expression
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (additive_operation
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Fat-arrow function with multiline parenthesized expression sequence
@@ -315,18 +316,19 @@ Fat-arrow function with multiline parenthesized expression sequence
         (identifier)
         (identifier)))
     (arrow)
-    (expression_sequence
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (identifier))
-      (assignment_operation
-        (identifier)
-        (assignment_operator)
-        (identifier))
-      (additive_operation
-        (identifier)
-        (identifier)))))
+    (parenthesized_expression
+      (expression_sequence
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (identifier))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (identifier))
+        (additive_operation
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Fat-arrow function nested
@@ -345,16 +347,17 @@ Fat-arrow function nested
         (identifier)
         (identifier)))
     (arrow)
-    (expression_sequence
-      (fat_arrow_function
-        (function_head
-          (param_sequence
+    (parenthesized_expression
+      (expression_sequence
+        (fat_arrow_function
+          (function_head
+            (param_sequence
+              (identifier)
+              (identifier)))
+          (arrow)
+          (additive_operation
             (identifier)
-            (identifier)))
-        (arrow)
-        (additive_operation
-          (identifier)
-          (identifier))))))
+            (identifier)))))))
 
 ================================================================================
 Fat-arrow function with unparenthesized single identifier name
@@ -419,7 +422,7 @@ sumfn := Sum(a, b) => a + b
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (fat_arrow_function
       name: (identifier)
       head: (function_head
@@ -442,7 +445,7 @@ sumfn := Sum(args*) => args.length
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (fat_arrow_function
       name: (identifier)
       head: (function_head

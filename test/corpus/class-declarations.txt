@@ -241,9 +241,10 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with static property initializer
@@ -262,9 +263,10 @@ class Example {
     (class_body
       (property_declaration
         (scope_identifier)
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with getter-only shorthand property
@@ -759,10 +761,11 @@ class Example {
             (function_body
               (additive_operation
                 (identifier)
-                (expression_sequence
-                  (multiplicative_operation
-                    (identifier)
-                    (identifier)))))))))))
+                (parenthesized_expression
+                  (expression_sequence
+                    (multiplicative_operation
+                      (identifier)
+                      (identifier))))))))))))
 
 ================================================================================
 Class property with arguments using getter-only shorthand
@@ -785,10 +788,11 @@ class Example {
           (identifier)
           (identifier))
         (getter
-          (expression_sequence
-            (multiplicative_operation
-              (identifier)
-              (identifier))))))))
+          (parenthesized_expression
+            (expression_sequence
+              (multiplicative_operation
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Class property with an anonymous variadic argument
@@ -1002,9 +1006,10 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (unset))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (unset)))
       (property_declaration
         (identifier)
         (getter
@@ -1046,9 +1051,10 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (unset))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (unset)))
       (method_declaration
         (identifier)
         (function_head
@@ -1374,9 +1380,10 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with numeric property names
@@ -1396,14 +1403,16 @@ class Example {
     name: (identifier)
     body: (class_body
       (property_declaration
-        name: (identifier)
-        (assignment_operator)
-        value: (integer_literal))
+        (property_declarator
+          name: (identifier)
+          operator: (assignment_operator)
+          value: (integer_literal)))
       (property_declaration
-        (scope_identifier)
-        name: (identifier)
-        (assignment_operator)
-        value: (integer_literal))
+        scope: (scope_identifier)
+        (property_declarator
+          name: (identifier)
+          operator: (assignment_operator)
+          value: (integer_literal)))
       (property_declaration
         name: (identifier)
         (getter
@@ -1480,9 +1489,10 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with property initializer named "local"
@@ -1502,9 +1512,10 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with property initializer named "while"
@@ -1524,9 +1535,10 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with static property initializer named "static"
@@ -1545,9 +1557,10 @@ class Example {
     (class_body
       (property_declaration
         (scope_identifier)
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with comma-delimited static property declarations
@@ -1566,12 +1579,14 @@ class Example {
     (class_body
       (property_declaration
         (scope_identifier)
-        (identifier)
-        (assignment_operator)
-        (integer_literal)
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with comma-delimited instance property declarations
@@ -1589,15 +1604,18 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal)
-        (identifier)
-        (assignment_operator)
-        (integer_literal)
-        (identifier)
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Class with comma-delimited properties, trailing bare name
@@ -1616,10 +1634,12 @@ class Example {
     (class_body
       (property_declaration
         (scope_identifier)
-        (identifier)
-        (assignment_operator)
-        (integer_literal)
-        (identifier)))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal))
+        (property_declarator
+          (identifier))))))
 
 ================================================================================
 Static property member initializer
@@ -1638,11 +1658,12 @@ class Example {
     (class_body
       (property_declaration
         (scope_identifier)
-        (member_access
-          (identifier)
-          (identifier))
-        (assignment_operator)
-        (integer_literal)))))
+        (property_declarator
+          (member_access
+            (identifier)
+            (identifier))
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Instance property member initializer with nested chain
@@ -1661,20 +1682,22 @@ class Example {
     (identifier)
     (class_body
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (object_literal
-          (object_literal_member
-            (identifier)
-            (object_literal))))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (object_literal
+            (object_literal_member
+              (identifier)
+              (object_literal)))))
       (property_declaration
-        (member_access
+        (property_declarator
           (member_access
-            (identifier)
+            (member_access
+              (identifier)
+              (identifier))
             (identifier))
-          (identifier))
-        (assignment_operator)
-        (integer_literal)))))
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Comma-delimited declaration with member initializer
@@ -1693,14 +1716,16 @@ class Example {
     (class_body
       (property_declaration
         (scope_identifier)
-        (identifier)
-        (assignment_operator)
-        (object_literal)
-        (member_access
+        (property_declarator
           (identifier)
-          (identifier))
-        (assignment_operator)
-        (integer_literal)))))
+          (assignment_operator)
+          (object_literal))
+        (property_declarator
+          (member_access
+            (identifier)
+            (identifier))
+          (assignment_operator)
+          (integer_literal))))))
 
 ================================================================================
 Property member initializer rejects dynamic member
@@ -1764,9 +1789,10 @@ class Example {
                   (identifier)))))))
       (property_declaration
         (scope_identifier)
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal)))
       (method_declaration
         (identifier)
         (function_head)
@@ -2017,17 +2043,32 @@ class Example {
         (getter
           (integer_literal)))
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal)))
       (property_declaration
         (scope_identifier)
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal)))
       (property_declaration
         (identifier)
         (param_sequence
           (identifier))
         (getter
           (identifier))))))
+
+================================================================================
+Property with parameters rejects a value initializer
+:error
+================================================================================
+
+class Example {
+    Prop[x] := 1
+}
+
+--------------------------------------------------------------------------------
+
+

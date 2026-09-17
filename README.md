@@ -51,22 +51,28 @@ follows:
   - The grammar allows comments in illegal places - for example, block comments
     inline with code.
   - The grammar permits unescaped semicolons in string literals.
-- The grammar can identify [continuation sections] and will parse most simple
-  ones correctly, but it does not do any of the preprocessing that the
-  interpreter does. As a consequence:
-  - The grammar does not correctly trim off whitespace between multiline strings
-    and comments when the [`comments`][continuatioin-section-comments] option is
-    present
-  - The grammar cannot account for [`join`] characters in the statements contained
-    in continuation sections. For example, it will not identify this as a call to
-    `MsgBox`, and will incorrectly produce two call statement nodes instead of one:
+- The interior of a [continuation section] is **not** parsed. A continuation
+  section is spliced into the surrounding line at load time and is under no
+  obligation to be valid AutoHotkey on its own - only the spliced result has to
+  be - so the grammar identifies the section and its options but exposes the body
+  as a flat run of opaque `continuation_line` nodes. The grammar does none of the
+  preprocessing (`LTrim`, [`join`] characters, escape sequences) that the
+  interpreter does, and reconstructing the real statement would require it. For
+  example, this is one call to `MsgBox` after splicing, but the grammar reports
+  only two `continuation_line`s:
 
-    ```autohotkey
-    ( JoinB
-    Msg
-    ox "Hello, World!"
-    )
-    ```
+  ```autohotkey
+  ( JoinB
+  Msg
+  ox "Hello, World!"
+  )
+  ```
+
+  Multiline string literals are treated the same way, as
+  `multiline_string_line` nodes. When the
+  [`comments`][continuatioin-section-comments] option is present, a line stops at
+  the `;` and the comment is reported separately - but the whitespace to the left
+  of the comment is not trimmed off the line.
 
 - `Throw` is treated allowed anywhere a function is, which is correct for v2.1
   but not for v2.0.
@@ -74,7 +80,7 @@ follows:
 [static function]: https://www.autohotkey.com/docs/v2/Functions.htm#static-functions
 [scope modifiers]: https://www.autohotkey.com/docs/v2/Functions.htm#Locals
 [extras]: https://tree-sitter.github.io/tree-sitter/creating-parsers/3-writing-the-grammar.html#using-extras
-[continuation sections]: https://www.autohotkey.com/docs/v2/Scripts.htm#continuation-section
+[continuation section]: https://www.autohotkey.com/docs/v2/Scripts.htm#continuation-section
 [continuatioin-section-comments]: https://www.autohotkey.com/docs/v2/Scripts.htm#CommentOption
 [`join`]: https://www.autohotkey.com/docs/v2/Scripts.htm#Join
 

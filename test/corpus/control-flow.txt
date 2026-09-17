@@ -280,8 +280,9 @@ return("example")
 (source_file
   (return_statement
     (return)
-    (expression_sequence
-      (string_literal))))
+    (parenthesized_expression
+      (expression_sequence
+        (string_literal)))))
 
 ================================================================================
 If statement with braces
@@ -296,10 +297,11 @@ if (x > 5) {
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (block
       (assignment_operation
         (identifier)
@@ -340,12 +342,13 @@ if (2 + 2 == 4)
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (equality_operation
-        (additive_operation
-          (integer_literal)
-          (integer_literal))
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (equality_operation
+          (additive_operation
+            (integer_literal)
+            (integer_literal))
+          (integer_literal))))
     (function_call
       (identifier)
       (arg_sequence
@@ -390,10 +393,11 @@ if (x > 5) {
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (block
       (assignment_operation
         (identifier)
@@ -424,10 +428,11 @@ if (x > 10) {
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (block
       (assignment_operation
         (identifier)
@@ -437,10 +442,11 @@ if (x > 10) {
       (else)
       (if_statement
         (if)
-        (expression_sequence
-          (relational_operation
-            (identifier)
-            (integer_literal)))
+        (parenthesized_expression
+          (expression_sequence
+            (relational_operation
+              (identifier)
+              (integer_literal))))
         (block
           (assignment_operation
             (identifier)
@@ -467,10 +473,11 @@ while (i < 10) {
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (block
       (postfix_operation
         (identifier)))))
@@ -506,8 +513,9 @@ loop (5) {
 (source_file
   (loop_statement
     (loop)
-    (expression_sequence
-      (integer_literal))
+    (parenthesized_expression
+      (expression_sequence
+        (integer_literal)))
     (block
       (postfix_operation
         (identifier)))))
@@ -530,10 +538,11 @@ loop {
     (block
       (if_statement
         (if)
-        (expression_sequence
-          (relational_operation
-            (identifier)
-            (integer_literal)))
+        (parenthesized_expression
+          (expression_sequence
+            (relational_operation
+              (identifier)
+              (integer_literal))))
         (block
           (break_statement
             (break)))))))
@@ -558,10 +567,11 @@ loop 10 {
     (block
       (if_statement
         (if)
-        (expression_sequence
-          (equality_operation
-            (identifier)
-            (integer_literal)))
+        (parenthesized_expression
+          (expression_sequence
+            (equality_operation
+              (identifier)
+              (integer_literal))))
         (block
           (continue_statement
             (continue))))
@@ -616,7 +626,7 @@ myVar := IsInteger(val) ? val : throw(TypeError("Expected a String"))
   (line_comment)
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (ternary_expression
       condition: (function_call
         function: (identifier)
@@ -649,16 +659,17 @@ Cleanup() => (
     name: (identifier)
     head: (function_head)
     body: (function_body
-      (expression_sequence
-        (function_call
-          function: (identifier))
-        (throw_statement
-          (throw)
-          arguments: (arg_sequence
-            (function_call
-              function: (identifier)
-              arguments: (arg_sequence
-                (string_literal)))))))))
+      (parenthesized_expression
+        (expression_sequence
+          (function_call
+            function: (identifier))
+          (throw_statement
+            (throw)
+            arguments: (arg_sequence
+              (function_call
+                function: (identifier)
+                arguments: (arg_sequence
+                  (string_literal))))))))))
 
 ================================================================================
 Throw with an empty argument list
@@ -745,11 +756,12 @@ throw (Error("x"))
   (line_comment)
   (throw_statement
     (throw)
-    (expression_sequence
-      (function_call
-        (identifier)
-        (arg_sequence
-          (string_literal))))))
+    (parenthesized_expression
+      (expression_sequence
+        (function_call
+          (identifier)
+          (arg_sequence
+            (string_literal)))))))
 
 ================================================================================
 Throw with an argument list spanning lines
@@ -828,14 +840,15 @@ Callback(throw, 2)
   (assignment_operation
     (identifier)
     (assignment_operator)
-    (expression_sequence
-      (throw_statement
-        (throw))))
+    (parenthesized_expression
+      (expression_sequence
+        (throw_statement
+          (throw)))))
   (assignment_operation
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (throw_statement
           (throw)))))
   (function_call
@@ -913,8 +926,9 @@ y := 2
 (source_file
   (goto_statement
     (goto)
-    (expression_sequence
-      (identifier)))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier))))
   (assignment_operation
     (identifier)
     (assignment_operator)
@@ -940,8 +954,9 @@ y := 2
 (source_file
   (goto_statement
     (goto)
-    (expression_sequence
-      (string_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (string_literal))))
   (assignment_operation
     (identifier)
     (assignment_operator)
@@ -981,8 +996,9 @@ loop 10 {
         (block
           (if_statement
             (if)
-            (expression_sequence
-              (identifier))
+            (parenthesized_expression
+              (expression_sequence
+                (identifier)))
             (block
               (break_statement
                 (break)
@@ -1894,8 +1910,9 @@ switch (value) {
 (source_file
   (switch_statement
     (switch)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (switch_body
       (case_clause
         (case)
@@ -2032,15 +2049,17 @@ switch (true) {
 (source_file
   (switch_statement
     (switch)
-    (expression_sequence
-      (boolean_literal))
+    (parenthesized_expression
+      (expression_sequence
+        (boolean_literal)))
     (switch_body
       (case_clause
         (case)
-        (expression_sequence
-          (relational_operation
-            (identifier)
-            (integer_literal)))
+        (parenthesized_expression
+          (expression_sequence
+            (relational_operation
+              (identifier)
+              (integer_literal))))
         (return_statement
           (return)
           (identifier))))))
@@ -2064,10 +2083,11 @@ switch {
     (switch_body
       (case_clause
         (case)
-        (expression_sequence
-          (relational_operation
-            (identifier)
-            (integer_literal)))
+        (parenthesized_expression
+          (expression_sequence
+            (relational_operation
+              (identifier)
+              (integer_literal))))
         (return_statement
           (return)
           (identifier)))
@@ -2153,17 +2173,19 @@ if (x > 0) {
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (block
       (if_statement
         (if)
-        (expression_sequence
-          (relational_operation
-            (identifier)
-            (integer_literal)))
+        (parenthesized_expression
+          (expression_sequence
+            (relational_operation
+              (identifier)
+              (integer_literal))))
         (block
           (assignment_operation
             (identifier)
@@ -2197,10 +2219,11 @@ loop 10 {
     (block
       (if_statement
         (if)
-        (expression_sequence
-          (equality_operation
-            (identifier)
-            (integer_literal)))
+        (parenthesized_expression
+          (expression_sequence
+            (equality_operation
+              (identifier)
+              (integer_literal))))
         (block
           (continue_statement
             (continue))))
@@ -2224,8 +2247,9 @@ if (processAll) {
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (block
       (loop_statement
         (loop)
@@ -2251,8 +2275,9 @@ while (running) {
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (block
       (for_statement
         (for)
@@ -2262,10 +2287,11 @@ while (running) {
         (block
           (if_statement
             (if)
-            (expression_sequence
-              (relational_operation
-                (identifier)
-                (integer_literal)))
+            (parenthesized_expression
+              (expression_sequence
+                (relational_operation
+                  (identifier)
+                  (integer_literal))))
             (block
               (assignment_operation
                 (identifier)
@@ -2390,10 +2416,11 @@ until (x > 10)
         (identifier)))
     (until_statement
       (until)
-      (expression_sequence
-        (relational_operation
-          (identifier)
-          (integer_literal))))))
+      (parenthesized_expression
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (integer_literal)))))))
 
 ================================================================================
 Loop with a braceless body followed by until
@@ -2411,14 +2438,16 @@ until (done)
     (loop)
     (if_statement
       (if)
-      (expression_sequence
-        (identifier))
+      (parenthesized_expression
+        (expression_sequence
+          (identifier)))
       (function_call
         (identifier)))
     (until_statement
       (until)
-      (expression_sequence
-        (identifier)))))
+      (parenthesized_expression
+        (expression_sequence
+          (identifier))))))
 
 ================================================================================
 Loop with else (zero-iterations clause)
@@ -2460,10 +2489,11 @@ while (a < 5) {
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (block
       (function_call
         (identifier)))
@@ -2488,12 +2518,14 @@ while (a)
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (while_statement
       (while)
-      (expression_sequence
-        (identifier))
+      (parenthesized_expression
+        (expression_sequence
+          (identifier)))
       (function_call
         (identifier))
       (else_statement
@@ -2515,10 +2547,11 @@ Loop (a - b) + 1 {
   (loop_statement
     (loop)
     (additive_operation
-      (expression_sequence
-        (additive_operation
-          (identifier)
-          (identifier)))
+      (parenthesized_expression
+        (expression_sequence
+          (additive_operation
+            (identifier)
+            (identifier))))
       (integer_literal))
     (block
       (function_call
@@ -2538,12 +2571,13 @@ while (n := f()) = 5 && g()
     (while)
     (logical_and_operation
       (equality_operation
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (function_call
-              (identifier))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)))))
         (integer_literal))
       (function_call
         (identifier)))
@@ -2565,12 +2599,13 @@ while (n := f()) = 5 && g() {
     (while)
     (logical_and_operation
       (equality_operation
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (function_call
-              (identifier))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)))))
         (integer_literal))
       (function_call
         (identifier)))
@@ -2594,12 +2629,13 @@ while (n := f()) = 5 && g()
     (while)
     (logical_and_operation
       (equality_operation
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (function_call
-              (identifier))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)))))
         (integer_literal))
       (function_call
         (identifier)))
@@ -2620,8 +2656,9 @@ while (n) = 5
   (while_statement
     (while)
     (equality_operation
-      (expression_sequence
-        (identifier))
+      (parenthesized_expression
+        (expression_sequence
+          (identifier)))
       (integer_literal))
     (function_call
       (identifier))))
@@ -2640,20 +2677,22 @@ while (a := f()) = 1 && (b := g()) = 2
     (while)
     (logical_and_operation
       (equality_operation
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (function_call
-              (identifier))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)))))
         (integer_literal))
       (equality_operation
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (function_call
-              (identifier))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)))))
         (integer_literal)))
     (function_call
       (identifier))))
@@ -2689,15 +2728,16 @@ class C {
               (while)
               (logical_and_operation
                 (equality_operation
-                  (expression_sequence
-                    (assignment_operation
-                      (identifier)
-                      (assignment_operator)
-                      (function_call
+                  (parenthesized_expression
+                    (expression_sequence
+                      (assignment_operation
                         (identifier)
-                        (arg_sequence
+                        (assignment_operator)
+                        (function_call
                           (identifier)
-                          (identifier)))))
+                          (arg_sequence
+                            (identifier)
+                            (identifier))))))
                   (integer_literal))
                 (relational_operation
                   (identifier)
@@ -2745,12 +2785,13 @@ loop {
     (until_statement
       (until)
       (relational_operation
-        (expression_sequence
-          (assignment_operation
-            (identifier)
-            (assignment_operator)
-            (function_call
-              (identifier))))
+        (parenthesized_expression
+          (expression_sequence
+            (assignment_operation
+              (identifier)
+              (assignment_operator)
+              (function_call
+                (identifier)))))
         (integer_literal)))))
 
 ================================================================================
@@ -2767,18 +2808,21 @@ while ((A_TickCount - startTime) < timeOut) || (timeOut = -1) {
   (while_statement
     (while)
     (logical_or_operation
-      (expression_sequence
-        (relational_operation
-          (expression_sequence
-            (additive_operation
-              (identifier)
-              (identifier)))
-          (identifier)))
-      (expression_sequence
-        (equality_operation
-          (identifier)
-          (prefix_operation
-            (integer_literal)))))
+      (parenthesized_expression
+        (expression_sequence
+          (relational_operation
+            (parenthesized_expression
+              (expression_sequence
+                (additive_operation
+                  (identifier)
+                  (identifier))))
+            (identifier))))
+      (parenthesized_expression
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (prefix_operation
+              (integer_literal))))))
     (block
       (function_call
         (identifier)))))
@@ -2796,15 +2840,17 @@ while (i < 2) || (i = -1)
   (while_statement
     (while)
     (logical_or_operation
-      (expression_sequence
-        (relational_operation
-          (identifier)
-          (integer_literal)))
-      (expression_sequence
-        (equality_operation
-          (identifier)
-          (prefix_operation
-            (integer_literal)))))
+      (parenthesized_expression
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (integer_literal))))
+      (parenthesized_expression
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (prefix_operation
+              (integer_literal))))))
     (function_call
       (identifier))))
 
@@ -2839,18 +2885,21 @@ while ((A_TickCount - startTime) < timeOut) || (timeOut = -1) {
   (while_statement
     (while)
     (logical_or_operation
-      (expression_sequence
-        (relational_operation
-          (expression_sequence
-            (additive_operation
-              (identifier)
-              (identifier)))
-          (identifier)))
-      (expression_sequence
-        (equality_operation
-          (identifier)
-          (prefix_operation
-            (integer_literal)))))
+      (parenthesized_expression
+        (expression_sequence
+          (relational_operation
+            (parenthesized_expression
+              (expression_sequence
+                (additive_operation
+                  (identifier)
+                  (identifier))))
+            (identifier))))
+      (parenthesized_expression
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (prefix_operation
+              (integer_literal))))))
     (block
       (function_call
         (identifier)))))
@@ -2879,15 +2928,17 @@ while (i < 5) || (i = -1)
   (while_statement
     (while)
     (logical_or_operation
-      (expression_sequence
-        (relational_operation
-          (identifier)
-          (integer_literal)))
-      (expression_sequence
-        (equality_operation
-          (identifier)
-          (prefix_operation
-            (integer_literal)))))
+      (parenthesized_expression
+        (expression_sequence
+          (relational_operation
+            (identifier)
+            (integer_literal))))
+      (parenthesized_expression
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (prefix_operation
+              (integer_literal))))))
     (function_call
       (identifier))))
 
@@ -2906,18 +2957,21 @@ else
   (if_statement
     (if)
     (logical_or_operation
-      (expression_sequence
-        (relational_operation
-          (expression_sequence
-            (additive_operation
-              (identifier)
-              (identifier)))
-          (identifier)))
-      (expression_sequence
-        (equality_operation
-          (identifier)
-          (prefix_operation
-            (integer_literal)))))
+      (parenthesized_expression
+        (expression_sequence
+          (relational_operation
+            (parenthesized_expression
+              (expression_sequence
+                (additive_operation
+                  (identifier)
+                  (identifier))))
+            (identifier))))
+      (parenthesized_expression
+        (expression_sequence
+          (equality_operation
+            (identifier)
+            (prefix_operation
+              (integer_literal))))))
     (function_call
       (identifier))
     (else_statement
@@ -2945,15 +2999,17 @@ until (k > 2) || (k = -1)
     (until_statement
       (until)
       (logical_or_operation
-        (expression_sequence
-          (relational_operation
-            (identifier)
-            (integer_literal)))
-        (expression_sequence
-          (equality_operation
-            (identifier)
-            (prefix_operation
-              (integer_literal))))))))
+        (parenthesized_expression
+          (expression_sequence
+            (relational_operation
+              (identifier)
+              (integer_literal))))
+        (parenthesized_expression
+          (expression_sequence
+            (equality_operation
+              (identifier)
+              (prefix_operation
+                (integer_literal)))))))))
 
 ================================================================================
 Loop Reg with key and mode arguments
@@ -3023,10 +3079,11 @@ if (x > 5)
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (assignment_operation
       (identifier)
       (assignment_operator)
@@ -3044,10 +3101,11 @@ while (i < 10)
 (source_file
   (while_statement
     (while)
-    (expression_sequence
-      (relational_operation
-        (identifier)
-        (integer_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (relational_operation
+          (identifier)
+          (integer_literal))))
     (postfix_operation
       (identifier))))
 
@@ -3084,13 +3142,15 @@ loop 5 { }
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (block))
   (while_statement
     (while)
-    (expression_sequence
-      (identifier))
+    (parenthesized_expression
+      (expression_sequence
+        (identifier)))
     (block))
   (loop_statement
     (loop)
@@ -3175,10 +3235,11 @@ if(outCtrlHwnd == "") {
 (source_file
   (if_statement
     (if)
-    (expression_sequence
-      (equality_operation
-        (identifier)
-        (string_literal)))
+    (parenthesized_expression
+      (expression_sequence
+        (equality_operation
+          (identifier)
+          (string_literal))))
     (block
       (function_call
         (identifier)
@@ -3336,8 +3397,9 @@ loop 10 {
     (block
       (if_statement
         (if)
-        (expression_sequence
-          (identifier))
+        (parenthesized_expression
+          (expression_sequence
+            (identifier)))
         (continue_statement
           (continue)
           (identifier))))))
@@ -3386,8 +3448,9 @@ loop 10 {
     body: (block
       (if_statement
         (if)
-        condition: (expression_sequence
-          (identifier))
+        condition: (parenthesized_expression
+          (expression_sequence
+            (identifier)))
         body: (continue_statement
           (continue)
           looplabel: (integer_literal))))))
@@ -3461,8 +3524,9 @@ loop 10 {
     (block
       (if_statement
         (if)
-        (expression_sequence
-          (identifier))
+        (parenthesized_expression
+          (expression_sequence
+            (identifier)))
         (break_statement
           (break)
           (identifier))))))
@@ -3511,8 +3575,9 @@ loop 10 {
     body: (block
       (if_statement
         (if)
-        condition: (expression_sequence
-          (identifier))
+        condition: (parenthesized_expression
+          (expression_sequence
+            (identifier)))
         body: (break_statement
           (break)
           looplabel: (integer_literal))))))
@@ -3539,8 +3604,9 @@ loop 10 {
     (block
       (if_statement
         (if)
-        (expression_sequence
-          (identifier))
+        (parenthesized_expression
+          (expression_sequence
+            (identifier)))
         (break_statement
           (break)))
       (assignment_operation

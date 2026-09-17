@@ -74,7 +74,9 @@ if a
     (logical_or_operation
       (logical_and_operation
         (identifier)
+        (and)
         (identifier))
+      (or)
       (identifier))
     (function_call
       (identifier))))
@@ -162,6 +164,7 @@ ToolTip "Sender: " sender.Dump()
                     (member_access
                       (identifier)
                       (identifier))))
+                (concat_operator)
                 (string_literal))
               (identifier))
             (string_literal))
@@ -293,26 +296,7 @@ x := "a"  ; note
     (explicit_concat_operation
       (string_literal)
       (line_comment)
-      (string_literal))))
-
-================================================================================
-Continuation operator after a whole-line block comment
-:skip
-================================================================================
-
-x := "a"
-    /* note */
-    . "b"
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (explicit_concat_operation
-      (string_literal)
-      (block_comment)
+      (concat_operator)
       (string_literal))))
 
 ================================================================================
@@ -401,10 +385,11 @@ i := (a & 0x1f) << 24
       (bitwise_or_operation
         (bitwise_or_operation
           (bitshift_operation
-            (expression_sequence
-              (bitwise_and_operation
-                (identifier)
-                (hex_literal)))
+            (parenthesized_expression
+              (expression_sequence
+                (bitwise_and_operation
+                  (identifier)
+                  (hex_literal))))
             (bitshift_operator)
             (integer_literal))
           (bitshift_operation

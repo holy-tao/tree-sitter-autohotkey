@@ -81,8 +81,9 @@ val := arr[arg1*]
     (index_access
       (identifier)
       (arg_sequence
-        (identifier)
-        (array_expansion_marker)))))
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Index access with multiple arguments and array expansion
@@ -100,8 +101,9 @@ val := arr[arg1, arg2*]
       (identifier)
       (arg_sequence
         (identifier)
-        (identifier)
-        (array_expansion_marker)))))
+        (array_expansion_operation
+          (identifier)
+          (array_expansion_marker))))))
 
 ================================================================================
 Index access with arg with assignment
@@ -245,7 +247,7 @@ val := ["first", "second", "third"][2]
     (assignment_operator)
     (index_access
       (array_literal
-        (expression_sequence
+        (arg_sequence
           (string_literal)
           (string_literal)
           (string_literal)))
@@ -268,7 +270,7 @@ val := obj[[1, 2, 3]]
       (identifier)
       (arg_sequence
         (array_literal
-          (expression_sequence
+          (arg_sequence
             (integer_literal)
             (integer_literal)
             (integer_literal)))))))
@@ -290,7 +292,7 @@ val := obj["str", [1, 2, 3]]
       (arg_sequence
         (string_literal)
         (array_literal
-          (expression_sequence
+          (arg_sequence
             (integer_literal)
             (integer_literal)
             (integer_literal)))))))

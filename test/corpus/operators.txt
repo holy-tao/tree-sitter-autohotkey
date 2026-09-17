@@ -125,6 +125,7 @@ result := a and b
     (assignment_operator)
     (logical_and_operation
       (identifier)
+      (and)
       (identifier))))
 
 ================================================================================
@@ -157,6 +158,7 @@ result := a or b
     (assignment_operator)
     (logical_or_operation
       (identifier)
+      (or)
       (identifier))))
 
 ================================================================================
@@ -256,6 +258,7 @@ result := a . b
     (assignment_operator)
     (explicit_concat_operation
       (identifier)
+      (concat_operator)
       (identifier))))
 
 ================================================================================
@@ -383,6 +386,7 @@ v := a ~= b
     (assignment_operator)
     (regex_match_operation
       (identifier)
+      (regex_match_operator)
       (identifier))))
 
 ================================================================================
@@ -399,6 +403,7 @@ v := a !~= b
     (assignment_operator)
     (regex_match_operation
       (identifier)
+      (regex_match_operator)
       (identifier))))
 
 ================================================================================
@@ -436,7 +441,9 @@ codeB64 := ""
     (explicit_concat_operation
       (explicit_concat_operation
         (string_literal)
+        (concat_operator)
         (string_literal))
+      (concat_operator)
       (string_literal))))
 
 ================================================================================

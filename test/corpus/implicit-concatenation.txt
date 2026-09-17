@@ -222,20 +222,22 @@ Run(CliEscape(path) ' --port=' this.Port
               (member_access
                 (identifier)
                 (identifier)))
+            (parenthesized_expression
+              (expression_sequence
+                (ternary_expression
+                  (identifier)
+                  (implicit_concat_operation
+                    (string_literal)
+                    (identifier))
+                  (string_literal)))))
+          (parenthesized_expression
             (expression_sequence
               (ternary_expression
                 (identifier)
                 (implicit_concat_operation
                   (string_literal)
                   (identifier))
-                (string_literal))))
-          (expression_sequence
-            (ternary_expression
-              (identifier)
-              (implicit_concat_operation
-                (string_literal)
-                (identifier))
-              (string_literal))))
+                (string_literal)))))
         (identifier))
       (empty_arg)
       (empty_arg)
@@ -257,7 +259,7 @@ x := [a
     (identifier)
     (assignment_operator)
     (array_literal
-      (expression_sequence
+      (arg_sequence
         (implicit_concat_operation
           (implicit_concat_operation
             (identifier)
@@ -299,12 +301,14 @@ z := "a" is b
     (assignment_operator)
     (logical_and_operation
       (string_literal)
+      (and)
       (identifier)))
   (assignment_operation
     (identifier)
     (assignment_operator)
     (logical_or_operation
       (string_literal)
+      (or)
       (identifier)))
   (assignment_operation
     (identifier)

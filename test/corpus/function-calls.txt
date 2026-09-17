@@ -502,6 +502,8 @@ f() {
 
 --------------------------------------------------------------------------------
 
+
+
 ================================================================================
 Bare string literal statement is an error
 :error
@@ -512,6 +514,8 @@ f() {
 }
 
 --------------------------------------------------------------------------------
+
+
 
 ================================================================================
 Multiplication is not confused for array expansion
@@ -638,3 +642,66 @@ Array.Prototype.DefineProp("FirstOrDefault", { Call: (this, condition?, default?
                 (optional_expression
                   (identifier)
                   (optional_marker))))))))))
+
+================================================================================
+Function call with array expansion
+================================================================================
+
+Func(params*)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (array_expansion_operation
+        (identifier)
+        (array_expansion_marker)))))
+
+================================================================================
+Function call with multiple arguments and array expansion
+================================================================================
+
+Func(a, b, rest*)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (identifier)
+      (identifier)
+      (array_expansion_operation
+        (identifier)
+        (array_expansion_marker)))))
+
+================================================================================
+Function call with an expanded expression
+================================================================================
+
+Func(obj.items*)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_call
+    (identifier)
+    (arg_sequence
+      (array_expansion_operation
+        (member_access
+          (identifier)
+          (identifier))
+        (array_expansion_marker)))))
+
+================================================================================
+Array expansion is only allowed on the last argument
+:error
+================================================================================
+
+Func(a*, b)
+
+--------------------------------------------------------------------------------
+
+

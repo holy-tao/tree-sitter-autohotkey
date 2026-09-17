@@ -62,15 +62,15 @@ const STMT_BINARY_OPS = [
   {node: 'relational_operation',      assoc: 'left',  prec: PREC.RELATIONAL,       op: () => choice('<', '>', '<=', '>=')},
   {node: 'equality_operation',        assoc: 'left',  prec: PREC.EQUALITY,         op: () => choice('=', '==')},
   {node: 'inequality_operation',      assoc: 'left',  prec: PREC.INEQUALITY,       op: () => choice('!=', '!==')},
-  {node: 'regex_match_operation',     assoc: 'left',  prec: PREC.REGEX_MATCH,      op: () => token(prec(200, choice('~=', '!~=')))},
+  {node: 'regex_match_operation',     assoc: 'left',  prec: PREC.REGEX_MATCH,      op: $ => $.regex_match_operator},
   {node: 'type_check_operation',      assoc: 'left',  prec: PREC.CASE_INSENSITIVE, op: () => token(prec(PREC.KEYWORD, / is /i))},
-  {node: 'logical_and_operation',     assoc: 'left',  prec: PREC.LOGICAL_AND,      op: () => choice('&&', token(prec(PREC.KEYWORD, /and/i)))},
-  {node: 'logical_or_operation',      assoc: 'left',  prec: PREC.LOGICAL_OR,       op: () => choice('||', token(prec(PREC.KEYWORD, /or/i)))},
+  {node: 'logical_and_operation',     assoc: 'left',  prec: PREC.LOGICAL_AND,      op: $ => choice('&&', $.and)},
+  {node: 'logical_or_operation',      assoc: 'left',  prec: PREC.LOGICAL_OR,       op: $ => choice('||', $.or)},
   {node: 'bitwise_and_operation',     assoc: 'left',  prec: PREC.BITWISE_AND,      op: () => '&'},
   {node: 'bitwise_xor_operation',     assoc: 'left',  prec: PREC.BITWISE_XOR,      op: () => '^'},
   {node: 'bitwise_or_operation',      assoc: 'left',  prec: PREC.BITWISE_OR,       op: () => '|'},
   {node: 'bitshift_operation',        assoc: 'left',  prec: PREC.SHIFT,            op: $ => $.bitshift_operator},
-  {node: 'explicit_concat_operation', assoc: 'left',  prec: PREC.CONCAT,           op: () => token(/\.\s+/)},
+  {node: 'explicit_concat_operation', assoc: 'left',  prec: PREC.CONCAT,           op: $ => $.concat_operator},
   {node: 'exponent_operation',        assoc: 'right', prec: PREC.EXPONENT,         op: () => '**'},
   {node: 'or_maybe_operation',        assoc: 'left',  prec: PREC.OR_MAYBE,         op: () => '??'},
 ];
@@ -149,9 +149,23 @@ export default grammar({
     $.block_comment,
   ],
 
+  // Supertypes collapse the type unions in node-types.json and give consumers a single handle
+  // for a whole category of node instead of an n-way enumeration.
+  //
+  // `_statement` is not eligible: a supertype must be a pure choice of symbols, and it has
+  // `seq(...)` and `prec.dynamic(...)` alternatives. An `expression_statement` wrapper would
+  // unblock it.
+  //
+  // The expression supertypes require `parenthesized_expression` to be visible - a supertype
+  // must contribute exactly one visible child, and a hidden paren rule contributes three
+  // ('(', the sequence, ')').
   supertypes: $ => [
     $._directive,
     $._literal,
+    $._numeric_literal,
+    $._single_expression,
+    $._primary_expression,
+    $._param,
   ],
 
   rules: {
@@ -172,6 +186,9 @@ export default grammar({
       $.class_declaration,
       $.struct_declaration,
       $.export_declaration,
+      // Declarations are statements, not expressions - `static x := 1` may not appear as an
+      // operand. See variable_declaration.
+      seq($.variable_declaration, $._eol),
       // call_statements only at statement level.
       prec.dynamic(-1, $.call_statement),
       // Trailing `_eol` prevents expression statements from running into the next line.
@@ -230,11 +247,10 @@ export default grammar({
     // https://www.autohotkey.com/docs/v2/Language.htm#expression-statements
     _primary_expression: $ => choice(
       $.assignment_operation,
-      $.variable_declaration,
       $.ternary_expression,
       $.prefix_operation,
       $.postfix_operation,
-      $._parenthesized_expression,
+      $.parenthesized_expression,
       $.member_access,
       $.index_access,
       $.continuation_section,
@@ -305,11 +321,33 @@ export default grammar({
       repeat(seq(',', $._single_expression)),
     )),
 
+    // A `local`/`global`/`static` declaration list: `static a := 1, b := 2, c`. Every name in
+    // the list takes the declared scope, so each gets its own declarator rather than the list
+    // decaying into an expression_sequence in which only the first name is marked.
+    //
+    // The list may be empty: a bare `global` or `static` as a function's first line selects
+    // assume-global / assume-static mode. A bare `local` is *not* legal ("Unexpected
+    // declaration"), nor is either keyword anywhere but the first line - both contextual, so
+    // both are permitted here.
+    //
     // FIXME some declarations are contextually illegal - you can't delcare local variables in the auto-execute
     // section, for example. We may not be able to detect those with pure grammar rules
-    variable_declaration: $ => seq(
+    variable_declaration: $ => prec.right(seq(
       field('scope', $.scope_identifier),
+      optional(seq(
+        $.variable_declarator,
+        repeat(seq(',', $.variable_declarator)),
+      )),
+    )),
+
+    // Not restricted to `:=`: `global w += 1` is legal and means "declare w global, then
+    // apply +=" (verified against 2.0.26), so any assignment operator may follow the name.
+    variable_declarator: $ => seq(
       field('name', $.identifier),
+      optional(seq(
+        field('operator', $.assignment_operator),
+        field('value', $._single_expression),
+      )),
     ),
 
     ternary_expression: $ => prec.right(PREC.TERNARY, seq(
@@ -325,7 +363,7 @@ export default grammar({
     //# region Operators
     assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
       field('left', $._single_expression),
-      $.assignment_operator,
+      field('operator', $.assignment_operator),
       field('right', $._single_expression),
     )),
 
@@ -387,7 +425,7 @@ export default grammar({
 
     // Verbal NOT operator (lower precedence than !)
     verbal_not_operation: $ => prec.right(PREC.LOGICAL_NOT, seq(
-      field('operator', token(prec(PREC.KEYWORD, /not/i))),
+      field('operator', $.not),
       field('operand', $._single_expression),
     )),
 
@@ -423,7 +461,7 @@ export default grammar({
 
     regex_match_operation: $ => prec.left(PREC.REGEX_MATCH, seq(
       field('left', $._single_expression),
-      field('operator', token(prec(200, choice('~=', '!~=')))),
+      field('operator', $.regex_match_operator),
       field('right', $._single_expression),
     )),
 
@@ -435,15 +473,30 @@ export default grammar({
 
     is: $ => token(prec(PREC.KEYWORD, / is /i)),
 
+    // Verbal operators are named nodes, like `is`, so that `field('operator', ...)` survives
+    // into node-types.json and highlight queries can capture them. A bare regex token is
+    // neither addressable in a query nor reported as a field.
+    and: $ => kwtok(/and/i),
+    or: $ => kwtok(/or/i),
+    not: $ => kwtok(/not/i),
+
+    // Turns out preceding whitespace is totally irrelevant for disambiguating member access
+    // from concatenation: `obj .prop` is member access, `obj . prop` is concatenation.
+    // (`obj. prop` is a syntax error, and this parses it as concatenation.) The trailing
+    // whitespace is part of the token, so the node spans it.
+    concat_operator: $ => token(/\.\s+/),
+
+    regex_match_operator: $ => token(prec(200, choice('~=', '!~='))),
+
     logical_and_operation: $ => prec.left(PREC.LOGICAL_AND, seq(
       field('left', $._single_expression),
-      field('operator', choice('&&', token(prec(PREC.KEYWORD, /and/i)))),
+      field('operator', choice('&&', $.and)),
       field('right', $._single_expression),
     )),
 
     logical_or_operation: $ => prec.left(PREC.LOGICAL_OR, seq(
       field('left', $._single_expression),
-      field('operator', choice('||', token(prec(PREC.KEYWORD, /or/i)))),
+      field('operator', choice('||', $.or)),
       field('right', $._single_expression),
     )),
 
@@ -473,10 +526,7 @@ export default grammar({
 
     explicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
       field('left', $._single_expression),
-      // Turns out preceding whitespace is totally irrelevant for disambiguating member access from concatenation
-      // `obj .prop` is member access, `obj . prop` is concatenation
-      // Although `obj. prop` is a syntax error, and this parses it as concatenation
-      field('operator', token(/\.\s+/)),
+      field('operator', $.concat_operator),
       field('right', $._single_expression),
     )),
 
@@ -562,14 +612,12 @@ export default grammar({
         $.index_access,
         $.function_call,
         // A parenthesized sub-expression may also be made optional: `(a ?? b)?.c`
-        $._parenthesized_expression,
+        $.parenthesized_expression,
       )),
       $.optional_marker,
     )),
 
-    // Hidden so `(expr)` still surfaces its inner expression_sequence directly,
-    // exactly as before. Shared by _primary_expression and optional_expression.
-    _parenthesized_expression: $ => seq('(', $.expression_sequence, ')'),
+    parenthesized_expression: $ => seq('(', $.expression_sequence, ')'),
 
     assignment_operator: $ =>
       choice( ':=', '+=', '-=', '*=', '/=', '//=', '.=', '|=', '&=', '^=', '>>=', '<<=', '>>>=', '??='),
@@ -577,11 +625,6 @@ export default grammar({
     bitshift_operator: $ => choice('<<', '>>', '>>>'),
 
     arrow: $ => '=>',
-
-    boolean_comparison_operator: $ => token(
-      prec(PREC.KEYWORD,
-        choice('&&', /and/i, '||', /or/i,
-        ))),
 
     //# endregion
 
@@ -640,23 +683,28 @@ export default grammar({
          */
         optional(','),
       ),
+      // Only the *last* argument may be expanded, hence the separate alternatives rather
+      // than admitting array_expansion_operation as an ordinary `_arg`. They share the
+      // `_arg (',' _arg)*` prefix with the branch above so that LALR can defer the decision
+      // to the marker itself.
       // Single arg with expansion
-      seq(
-        prec.right($._single_expression),
-        $.array_expansion_marker,
-      ),
+      $.array_expansion_operation,
       // Multiple args with last one having expansion
       seq(
         $._arg,
         repeat(seq(',', $._arg)),
         ',',
-        $._single_expression,
-        $.array_expansion_marker,
+        $.array_expansion_operation,
       ),
     )),
 
-    // array_expansion_marker is produced by the external scanner, which disambiguates
-    // it from the multiplication operator by looking ahead for ')' or ']'
+    // Postfix `*`, which expands an iterable into the enclosing argument list or array
+    // literal. array_expansion_marker is produced by the external scanner, which
+    // disambiguates it from the multiplication operator by looking ahead for ')' or ']'.
+    array_expansion_operation: $ => prec.right(PREC.POSTFIX, seq(
+      field('operand', $._single_expression),
+      $.array_expansion_marker,
+    )),
 
     //# region Function Declarations
     fat_arrow_function: $ => prec(PREC.FAT_ARROW_FUNCTION, seq(
@@ -736,7 +784,7 @@ export default grammar({
     // $scope_identifier $identifier sequence
     function_declaration: $ => seq(
       $._function_def_marker,
-      optional($.scope_identifier),
+      optional(field('scope', $.scope_identifier)),
       field('name', $.identifier),
       field('head', $.function_head),
       field('body', $.function_body),
@@ -744,7 +792,7 @@ export default grammar({
 
     method_declaration: $ => seq(
       $._method_def_marker,
-      optional($.scope_identifier),
+      optional(field('scope', $.scope_identifier)),
       field('name', choice(
         $.identifier,
         alias($._numeric_property_name, $.identifier),
@@ -794,7 +842,7 @@ export default grammar({
     default_param: $ => seq(field('name', $.identifier), $._initializer),
 
     _initializer: $ => seq(
-      alias(':=', $.assignment_operator),
+      field('operator', alias(':=', $.assignment_operator)),
       field('value', $._single_expression)),
 
     byref_param: $ => seq('&', field('param', $._param)),
@@ -844,9 +892,12 @@ export default grammar({
       token(/'([^'`\r\n]|`[^\r\n\t])*'/),
     ),
 
+    // The elements are an arg_sequence rather than an expression_sequence: an array literal
+    // takes exactly what an argument list takes, including elided elements (`[1,,3]`) and a
+    // trailing array expansion (`[a, rest*]`), neither of which is an expression.
     array_literal: $ => seq(
       '[',
-      optional(alias($.arg_sequence, $.expression_sequence)),
+      field('elements', optional($.arg_sequence)),
       ']'),
 
     object_literal: $ => seq('{', optional($._object_literal_member_sequence), '}'),
@@ -891,57 +942,29 @@ export default grammar({
       $._single_quote_str_multiline,
     ),
 
-    // Separate recursive rule for continuation section bodies (same reason as _block_body)
-    _continuation_body: $ => seq($._statement, optional($._continuation_body)),
-
+    // The interior is deliberately opaque - see _continuation_interior. A line may not begin
+    // with ')', which always closes the section; a literal one has to be escaped as `) and so
+    // is picked up by the `[^\r\n)]` lead character anyway.
     continuation_section: $ => seq(
       $._continuation_section_start,
-      seq(
-        // Comments always allowed because we can't filter for them in statements :(
-        alias(repeat($._continuation_opt_any), $.continuation_option_sequence),
-        $._continuation_newline,
-        optional($._continuation_body),
-      ),
+      _continuation_interior($, $.continuation_line_sequence, $.continuation_line,
+        /[^\r\n)][^\r\n]*/, /[^\r\n;)][^\r\n;]*/),
       token(prec.left(1, ')')),
     ),
 
     _double_quote_str_multiline: $ => seq(
       '"',
       $._continuation_section_start,
-      choice(
-        seq(
-          // With comments allowed
-          alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence)),
-        ),
-        seq(
-          // Comments not allowed
-          alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence)),
-        ),
-      ),
+      _continuation_interior($, $.multiline_string_line_sequence, $.multiline_string_line,
+        $.anything, /[^\r\n;]+/),
       token(prec.left(1, ')"')),
     ),
 
     _single_quote_str_multiline: $ => seq(
       '\'',
       $._continuation_section_start,
-      choice(
-        seq(
-          // With comments allowed
-          alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_comments, $.multiline_string_line_sequence)),
-        ),
-        seq(
-          // Comments not allowed
-          alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
-          $._continuation_newline,
-          optional(alias($._multiline_str_seq_no_comments, $.multiline_string_line_sequence)),
-        ),
-      ),
+      _continuation_interior($, $.multiline_string_line_sequence, $.multiline_string_line,
+        $.anything, /[^\r\n;]+/),
       token(prec.left(1, ')\'')),
     ),
 
@@ -951,38 +974,12 @@ export default grammar({
       repeat($._continuation_opt_except_comments),
     ),
 
-    _continuation_opt_any: $ => choice(
-      $.continuation_join,
-      $.continuation_ltrim,
-      $.continuation_ltrim_off,
-      $.continuation_rtrim_off,
-      $.continuation_no_escape,
-      $.continuation_allow_comments,
-    ),
-
     _continuation_opt_except_comments: $ => choice(
       $.continuation_join,
       $.continuation_ltrim,
       $.continuation_ltrim_off,
       $.continuation_rtrim_off,
       $.continuation_no_escape,
-    ),
-
-    _multiline_str_seq_no_comments: $ => repeat1(
-      seq(
-        optional(alias($.anything, $.multiline_string_line)),
-        $._continuation_newline,
-      ),
-    ),
-
-    _multiline_str_seq_comments: $ => repeat1(
-      seq(
-        // Stop at ";", allow extras to create the comment
-        // !BUG whitespace to the left of the comment is not trimmed - can result in extra nodes for comments on
-        // !    lines without preceding text
-        optional(alias(/[^\r\n;]+/, $.multiline_string_line)),
-        $._continuation_newline,
-      ),
     ),
 
     continuation_join: $ => token(prec(PREC.KEYWORD, /join[^\r\n\s]{0,15}/i)),
@@ -1276,34 +1273,46 @@ export default grammar({
     class_body: $ => seq('{', _class_body_members($), '}'),
 
     property_declaration: $ => seq(
-      optional($.scope_identifier),
-      field('name',
-        choice(
-          $.identifier,
-          alias($._numeric_property_name, $.identifier), // property names may begin with a digit
-          // "static" (and "local"/"global") are valid property names
-          alias($.scope_identifier, $.identifier),
-          alias($._qualified_property_name, $.member_access),
-        )),
-      // Unlike function_head, the brackets may not be empty ("Empty [] not permitted"),
-      // but they may hold a lone anonymous variadic marker (`__Item[*]`).
-      optional(seq('[', choice($.wildcard, $.param_sequence), ']')),
+      optional(field('scope', $.scope_identifier)),
       choice(
+        // Accessor forms, which declare exactly one property.
         seq(
-          $._initializer,
-          // only the first property is *required* to be initialized
-          repeat(seq(',',
-            field('name', choice(
-              $.identifier,
-              alias($._numeric_property_name, $.identifier),
-              alias($._qualified_property_name, $.member_access),
-            )),
-            optional($._initializer))),
+          field('name', $._property_name),
+          // Unlike function_head, the brackets may not be empty ("Empty [] not permitted"),
+          // but they may hold a lone anonymous variadic marker (`__Item[*]`).
+          optional(seq('[', choice($.wildcard, $.param_sequence), ']')),
+          choice(
+            // getter-only shorthand: prop => 42
+            seq('=>', alias($._single_expression, $.getter)),
+            $.property_declaration_block,
+          ),
         ),
-        // getter-only shorthand: prop => 42
-        seq('=>', alias($._single_expression, $.getter)),
-        $.property_declaration_block,
+        // Initializer-list form. One declarator per name, so that `static a := 1, b := 2`
+        // yields a name/value pair per property rather than repeating both fields on the
+        // declaration itself.
+        seq(
+          alias($._first_property_declarator, $.property_declarator),
+          repeat(seq(',', $.property_declarator)),
+        ),
       ),
+    ),
+
+    // Only the *first* declarator is required to be initialized, and only it can have a
+    // scope keyword
+    _first_property_declarator: $ => seq(
+      field('name', choice($._property_name, alias($.scope_identifier, $.identifier))),
+      $._initializer,
+    ),
+
+    property_declarator: $ => seq(
+      field('name', $._property_name),
+      optional($._initializer),
+    ),
+
+    _property_name: $ => choice(
+      $.identifier,
+      alias($._numeric_property_name, $.identifier), // property names may begin with a digit
+      alias($._qualified_property_name, $.member_access),
     ),
 
     // A dotted chain of literal identifiers (`x.y`, `Prototype.sharedValue`,
@@ -1418,15 +1427,14 @@ export default grammar({
           // Note this isn't actually a scope identifier, just required for the interpreter
           // to distinguish between `export` as an export and `export` as a function name
           $.global,
-          alias($._exported_variable, $.variable_declaration),
-          repeat(seq(',', alias($._exported_variable, $.variable_declaration))),
+          // The same declarator node an ordinary declaration list uses. `export_declaration`
+          // is itself the declaration here, so the declarators hang off it directly rather
+          // than off a nested variable_declaration - which would need a `scope` field holding
+          // the `global` keyword node rather than a `scope_identifier`.
+          $.variable_declarator,
+          repeat(seq(',', $.variable_declarator)),
         ),
       ),
-    ),
-
-    _exported_variable: $ => seq(
-      field('name', $.identifier),
-      optional($._initializer),
     ),
 
     // #endregion Exports
@@ -1672,6 +1680,8 @@ export default grammar({
         $.block,
         seq($._single_expression, $._eol),
         seq(alias($.top_level_expression_sequence, $.expression_sequence), $._eol),
+        // `#a::global w += 1, h += 2` - a declaration list is a legal same-line body
+        seq($.variable_declaration, $._eol),
         $.function_declaration,
         $.call_statement,
       ))),
@@ -1757,6 +1767,8 @@ export default grammar({
       field('body', optional(choice(
         seq($._single_expression, $._eol),
         seq(alias($.top_level_expression_sequence, $.expression_sequence), $._eol),
+        // `#a::global w += 1, h += 2` - a declaration list is a legal same-line body
+        seq($.variable_declaration, $._eol),
         $.function_declaration,
         $.block,
         $._hotkey_alttabcommand,
@@ -1937,6 +1949,44 @@ function _class_body_members($) {
     // Multiple typed properties can be declared on one line
     repeat1(seq($.typed_property_declaration, optional(','))),
   ));
+}
+
+/**
+ * The interior of a continuation section, shared by the string (`"` ... `)"`) and non-string
+ * (`(` ... `)`) forms: the options that follow the opening parenthesis, then a run of opaque
+ * lines.
+ *
+ * Lines themselves aren't parsed, continuation sections are basically preprocessor macros. We
+ * treat them as opaque, but do handle comments if the comments continuation option is present.
+ *
+ * !BUG whitespace to the left of a comment is not trimmed - can result in extra nodes for
+ * !    comments on lines without preceding text
+ *
+ * @param {GrammarSymbols<string>} $
+ * @param {SymbolRule<string>} seqNode the `*_line_sequence` node the run of lines is aliased to
+ * @param {SymbolRule<string>} lineNode the `*_line` node each individual line is aliased to
+ * @param {RuleOrLiteral} line matches one line when comments are *not* allowed
+ * @param {RuleOrLiteral} lineToComment matches one line when they are (i.e. stops at `;`)
+ */
+function _continuation_interior($, seqNode, lineNode, line, lineToComment) {
+  /** @param {RuleOrLiteral} pattern */
+  const lines = pattern => optional(alias(repeat1(seq(
+    optional(alias(pattern, lineNode)),
+    $._continuation_newline,
+  )), seqNode));
+
+  return choice(
+    seq(
+      alias($._continuation_opt_seq_comments, $.continuation_option_sequence),
+      $._continuation_newline,
+      lines(lineToComment),
+    ),
+    seq(
+      alias(repeat($._continuation_opt_except_comments), $.continuation_option_sequence),
+      $._continuation_newline,
+      lines(line),
+    ),
+  );
 }
 
 /**
