@@ -234,13 +234,15 @@ struct Example {
         (identifier)
         (class_body
           (property_declaration
-            (identifier)
-            (assignment_operator)
-            (string_literal))
+            (property_declarator
+              (identifier)
+              (assignment_operator)
+              (string_literal)))
           (property_declaration
-            (identifier)
-            (assignment_operator)
-            (string_literal)))))))
+            (property_declarator
+              (identifier)
+              (assignment_operator)
+              (string_literal))))))))
 
 ================================================================================
 Struct with method
@@ -697,12 +699,14 @@ struct Example {
     name: (identifier)
     body: (struct_body
       (property_declaration
-        name: (identifier)
-        (assignment_operator)
-        value: (integer_literal)
-        name: (identifier)
-        (assignment_operator)
-        value: (integer_literal)))))
+        (property_declarator
+          name: (identifier)
+          (assignment_operator)
+          value: (integer_literal))
+        (property_declarator
+          name: (identifier)
+          (assignment_operator)
+          value: (integer_literal))))))
 
 ================================================================================
 Struct with numeric property declarations

@@ -1227,34 +1227,46 @@ export default grammar({
     class_body: $ => seq('{', _class_body_members($), '}'),
 
     property_declaration: $ => seq(
-      optional($.scope_identifier),
-      field('name',
-        choice(
-          $.identifier,
-          alias($._numeric_property_name, $.identifier), // property names may begin with a digit
-          // "static" (and "local"/"global") are valid property names
-          alias($.scope_identifier, $.identifier),
-          alias($._qualified_property_name, $.member_access),
-        )),
-      // Unlike function_head, the brackets may not be empty ("Empty [] not permitted"),
-      // but they may hold a lone anonymous variadic marker (`__Item[*]`).
-      optional(seq('[', choice($.wildcard, $.param_sequence), ']')),
+      optional(field('scope', $.scope_identifier)),
       choice(
+        // Accessor forms, which declare exactly one property.
         seq(
-          $._initializer,
-          // only the first property is *required* to be initialized
-          repeat(seq(',',
-            field('name', choice(
-              $.identifier,
-              alias($._numeric_property_name, $.identifier),
-              alias($._qualified_property_name, $.member_access),
-            )),
-            optional($._initializer))),
+          field('name', $._property_name),
+          // Unlike function_head, the brackets may not be empty ("Empty [] not permitted"),
+          // but they may hold a lone anonymous variadic marker (`__Item[*]`).
+          optional(seq('[', choice($.wildcard, $.param_sequence), ']')),
+          choice(
+            // getter-only shorthand: prop => 42
+            seq('=>', alias($._single_expression, $.getter)),
+            $.property_declaration_block,
+          ),
         ),
-        // getter-only shorthand: prop => 42
-        seq('=>', alias($._single_expression, $.getter)),
-        $.property_declaration_block,
+        // Initializer-list form. One declarator per name, so that `static a := 1, b := 2`
+        // yields a name/value pair per property rather than repeating both fields on the
+        // declaration itself.
+        seq(
+          alias($._first_property_declarator, $.property_declarator),
+          repeat(seq(',', $.property_declarator)),
+        ),
       ),
+    ),
+
+    // Only the *first* declarator is required to be initialized, and only it can have a
+    // scope keyword
+    _first_property_declarator: $ => seq(
+      field('name', choice($._property_name, alias($.scope_identifier, $.identifier))),
+      $._initializer,
+    ),
+
+    property_declarator: $ => seq(
+      field('name', $._property_name),
+      optional($._initializer),
+    ),
+
+    _property_name: $ => choice(
+      $.identifier,
+      alias($._numeric_property_name, $.identifier), // property names may begin with a digit
+      alias($._qualified_property_name, $.member_access),
     ),
 
     // A dotted chain of literal identifiers (`x.y`, `Prototype.sharedValue`,

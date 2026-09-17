@@ -12788,7 +12788,82 @@
     "named": true,
     "fields": {
       "name": {
-        "multiple": true,
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "member_access",
+            "named": true
+          }
+        ]
+      },
+      "scope": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "scope_identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "getter",
+          "named": true
+        },
+        {
+          "type": "param_sequence",
+          "named": true
+        },
+        {
+          "type": "property_declaration_block",
+          "named": true
+        },
+        {
+          "type": "property_declarator",
+          "named": true
+        },
+        {
+          "type": "wildcard",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "property_declaration_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "getter",
+          "named": true
+        },
+        {
+          "type": "setter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "property_declarator",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
         "required": true,
         "types": [
           {
@@ -12965,50 +13040,11 @@
       }
     },
     "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "assignment_operator",
-          "named": true
-        },
-        {
-          "type": "getter",
-          "named": true
-        },
-        {
-          "type": "param_sequence",
-          "named": true
-        },
-        {
-          "type": "property_declaration_block",
-          "named": true
-        },
-        {
-          "type": "scope_identifier",
-          "named": true
-        },
-        {
-          "type": "wildcard",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "property_declaration_block",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
+      "multiple": false,
       "required": false,
       "types": [
         {
-          "type": "getter",
-          "named": true
-        },
-        {
-          "type": "setter",
+          "type": "assignment_operator",
           "named": true
         }
       ]

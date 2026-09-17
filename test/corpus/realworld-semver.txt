@@ -364,29 +364,34 @@ class SemVer {
               (integer_literal)))))
       (block_comment)
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal)))
       (block_comment)
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal)))
       (block_comment)
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (integer_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (integer_literal)))
       (block_comment)
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (string_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
       (block_comment)
       (property_declaration
-        (identifier)
-        (assignment_operator)
-        (string_literal))
+        (property_declarator
+          (identifier)
+          (assignment_operator)
+          (string_literal)))
       (block_comment)
       (property_declaration
         (identifier)

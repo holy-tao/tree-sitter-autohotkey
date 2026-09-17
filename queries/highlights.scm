@@ -73,6 +73,7 @@
 
 ; --- Properties & members ---------------------------------------------------
 (property_declaration name: (identifier) @property)
+(property_declarator name: (identifier) @property)
 (typed_property_declaration name: (identifier) @property)
 (member_access member: (identifier) @property)
 
