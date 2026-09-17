@@ -568,8 +568,10 @@ class SemVer {
                   (explicit_concat_operation
                     (string_literal)
                     (line_comment)
+                    (concat_operator)
                     (string_literal))
                   (line_comment)
+                  (concat_operator)
                   (string_literal))))
             (line_comment)
             (if_statement

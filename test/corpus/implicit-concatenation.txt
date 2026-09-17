@@ -299,12 +299,14 @@ z := "a" is b
     (assignment_operator)
     (logical_and_operation
       (string_literal)
+      (and)
       (identifier)))
   (assignment_operation
     (identifier)
     (assignment_operator)
     (logical_or_operation
       (string_literal)
+      (or)
       (identifier)))
   (assignment_operation
     (identifier)

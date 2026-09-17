@@ -407,6 +407,7 @@ result := not condition? "A" : "B"
     (assignment_operator)
     (ternary_expression
       (verbal_not_operation
+        (not)
         (identifier))
       (string_literal)
       (string_literal))))
@@ -555,6 +556,7 @@ result := flag? "Hello" . " World" : "Goodbye"
       (identifier)
       (explicit_concat_operation
         (string_literal)
+        (concat_operator)
         (string_literal))
       (string_literal))))
 

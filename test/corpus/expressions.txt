@@ -249,6 +249,7 @@ result := %(a := "part", b := "part", a . b)%
           (string_literal))
         (explicit_concat_operation
           (identifier)
+          (concat_operator)
           (identifier))))))
 
 ================================================================================

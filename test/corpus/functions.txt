@@ -129,7 +129,9 @@ Function(arg1, arg2) {
           (explicit_concat_operation
             (explicit_concat_operation
               (identifier)
+              (concat_operator)
               (identifier))
+            (concat_operator)
             (string_literal)))))))
 
 ================================================================================
@@ -158,7 +160,9 @@ Function(params*) {
           (explicit_concat_operation
             (explicit_concat_operation
               (identifier)
+              (concat_operator)
               (identifier))
+            (concat_operator)
             (string_literal)))))))
 
 ================================================================================

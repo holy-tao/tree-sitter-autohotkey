@@ -88,6 +88,7 @@ result := a != b ~= c
       left: (inequality_operation
         left: (identifier)
         right: (identifier))
+      operator: (regex_match_operator)
       right: (identifier))))
 
 ================================================================================
@@ -214,6 +215,7 @@ result := not x > 5
     left: (identifier)
     operator: (assignment_operator)
     right: (verbal_not_operation
+      operator: (not)
       operand: (relational_operation
         left: (identifier)
         right: (integer_literal)))))
@@ -232,6 +234,7 @@ result := not x && y
     operator: (assignment_operator)
     right: (logical_and_operation
       left: (verbal_not_operation
+        operator: (not)
         operand: (identifier))
       right: (identifier))))
 

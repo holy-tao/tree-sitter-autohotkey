@@ -74,7 +74,9 @@ if a
     (logical_or_operation
       (logical_and_operation
         (identifier)
+        (and)
         (identifier))
+      (or)
       (identifier))
     (function_call
       (identifier))))
@@ -162,6 +164,7 @@ ToolTip "Sender: " sender.Dump()
                     (member_access
                       (identifier)
                       (identifier))))
+                (concat_operator)
                 (string_literal))
               (identifier))
             (string_literal))
@@ -293,26 +296,7 @@ x := "a"  ; note
     (explicit_concat_operation
       (string_literal)
       (line_comment)
-      (string_literal))))
-
-================================================================================
-Continuation operator after a whole-line block comment
-:skip
-================================================================================
-
-x := "a"
-    /* note */
-    . "b"
-
---------------------------------------------------------------------------------
-
-(source_file
-  (assignment_operation
-    (identifier)
-    (assignment_operator)
-    (explicit_concat_operation
-      (string_literal)
-      (block_comment)
+      (concat_operator)
       (string_literal))))
 
 ================================================================================

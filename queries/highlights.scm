@@ -41,6 +41,7 @@
   (class) (extends)
   (get) (set)
   (as) (is) (in) (unset)
+  (and) (or) (not)
   (export) (struct) (global)
 ] @keyword
 

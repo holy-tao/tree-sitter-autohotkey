@@ -62,15 +62,15 @@ const STMT_BINARY_OPS = [
   {node: 'relational_operation',      assoc: 'left',  prec: PREC.RELATIONAL,       op: () => choice('<', '>', '<=', '>=')},
   {node: 'equality_operation',        assoc: 'left',  prec: PREC.EQUALITY,         op: () => choice('=', '==')},
   {node: 'inequality_operation',      assoc: 'left',  prec: PREC.INEQUALITY,       op: () => choice('!=', '!==')},
-  {node: 'regex_match_operation',     assoc: 'left',  prec: PREC.REGEX_MATCH,      op: () => token(prec(200, choice('~=', '!~=')))},
+  {node: 'regex_match_operation',     assoc: 'left',  prec: PREC.REGEX_MATCH,      op: $ => $.regex_match_operator},
   {node: 'type_check_operation',      assoc: 'left',  prec: PREC.CASE_INSENSITIVE, op: () => token(prec(PREC.KEYWORD, / is /i))},
-  {node: 'logical_and_operation',     assoc: 'left',  prec: PREC.LOGICAL_AND,      op: () => choice('&&', token(prec(PREC.KEYWORD, /and/i)))},
-  {node: 'logical_or_operation',      assoc: 'left',  prec: PREC.LOGICAL_OR,       op: () => choice('||', token(prec(PREC.KEYWORD, /or/i)))},
+  {node: 'logical_and_operation',     assoc: 'left',  prec: PREC.LOGICAL_AND,      op: $ => choice('&&', $.and)},
+  {node: 'logical_or_operation',      assoc: 'left',  prec: PREC.LOGICAL_OR,       op: $ => choice('||', $.or)},
   {node: 'bitwise_and_operation',     assoc: 'left',  prec: PREC.BITWISE_AND,      op: () => '&'},
   {node: 'bitwise_xor_operation',     assoc: 'left',  prec: PREC.BITWISE_XOR,      op: () => '^'},
   {node: 'bitwise_or_operation',      assoc: 'left',  prec: PREC.BITWISE_OR,       op: () => '|'},
   {node: 'bitshift_operation',        assoc: 'left',  prec: PREC.SHIFT,            op: $ => $.bitshift_operator},
-  {node: 'explicit_concat_operation', assoc: 'left',  prec: PREC.CONCAT,           op: () => token(/\.\s+/)},
+  {node: 'explicit_concat_operation', assoc: 'left',  prec: PREC.CONCAT,           op: $ => $.concat_operator},
   {node: 'exponent_operation',        assoc: 'right', prec: PREC.EXPONENT,         op: () => '**'},
   {node: 'or_maybe_operation',        assoc: 'left',  prec: PREC.OR_MAYBE,         op: () => '??'},
 ];
@@ -411,7 +411,7 @@ export default grammar({
 
     // Verbal NOT operator (lower precedence than !)
     verbal_not_operation: $ => prec.right(PREC.LOGICAL_NOT, seq(
-      field('operator', token(prec(PREC.KEYWORD, /not/i))),
+      field('operator', $.not),
       field('operand', $._single_expression),
     )),
 
@@ -447,7 +447,7 @@ export default grammar({
 
     regex_match_operation: $ => prec.left(PREC.REGEX_MATCH, seq(
       field('left', $._single_expression),
-      field('operator', token(prec(200, choice('~=', '!~=')))),
+      field('operator', $.regex_match_operator),
       field('right', $._single_expression),
     )),
 
@@ -459,15 +459,30 @@ export default grammar({
 
     is: $ => token(prec(PREC.KEYWORD, / is /i)),
 
+    // Verbal operators are named nodes, like `is`, so that `field('operator', ...)` survives
+    // into node-types.json and highlight queries can capture them. A bare regex token is
+    // neither addressable in a query nor reported as a field.
+    and: $ => kwtok(/and/i),
+    or: $ => kwtok(/or/i),
+    not: $ => kwtok(/not/i),
+
+    // Turns out preceding whitespace is totally irrelevant for disambiguating member access
+    // from concatenation: `obj .prop` is member access, `obj . prop` is concatenation.
+    // (`obj. prop` is a syntax error, and this parses it as concatenation.) The trailing
+    // whitespace is part of the token, so the node spans it.
+    concat_operator: $ => token(/\.\s+/),
+
+    regex_match_operator: $ => token(prec(200, choice('~=', '!~='))),
+
     logical_and_operation: $ => prec.left(PREC.LOGICAL_AND, seq(
       field('left', $._single_expression),
-      field('operator', choice('&&', token(prec(PREC.KEYWORD, /and/i)))),
+      field('operator', choice('&&', $.and)),
       field('right', $._single_expression),
     )),
 
     logical_or_operation: $ => prec.left(PREC.LOGICAL_OR, seq(
       field('left', $._single_expression),
-      field('operator', choice('||', token(prec(PREC.KEYWORD, /or/i)))),
+      field('operator', choice('||', $.or)),
       field('right', $._single_expression),
     )),
 
@@ -497,10 +512,7 @@ export default grammar({
 
     explicit_concat_operation: $ => prec.left(PREC.CONCAT, seq(
       field('left', $._single_expression),
-      // Turns out preceding whitespace is totally irrelevant for disambiguating member access from concatenation
-      // `obj .prop` is member access, `obj . prop` is concatenation
-      // Although `obj. prop` is a syntax error, and this parses it as concatenation
-      field('operator', token(/\.\s+/)),
+      field('operator', $.concat_operator),
       field('right', $._single_expression),
     )),
 

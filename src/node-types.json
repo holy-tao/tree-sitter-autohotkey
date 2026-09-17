@@ -5075,6 +5075,16 @@
           }
         ]
       },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "concat_operator",
+            "named": true
+          }
+        ]
+      },
       "right": {
         "multiple": true,
         "required": true,
@@ -9998,6 +10008,10 @@
           {
             "type": "&&",
             "named": false
+          },
+          {
+            "type": "and",
+            "named": true
           }
         ]
       },
@@ -10327,6 +10341,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "or",
+            "named": true
+          },
           {
             "type": "||",
             "named": false
@@ -12993,6 +13011,16 @@
           },
           {
             "type": "verbal_not_operation",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "regex_match_operator",
             "named": true
           }
         ]
@@ -16839,6 +16867,16 @@
             "named": true
           }
         ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "not",
+            "named": true
+          }
+        ]
       }
     }
   },
@@ -17498,6 +17536,10 @@
     "named": false
   },
   {
+    "type": "and",
+    "named": true
+  },
+  {
     "type": "array_expansion_marker",
     "named": true
   },
@@ -17532,6 +17574,10 @@
   },
   {
     "type": "class",
+    "named": true
+  },
+  {
+    "type": "concat_operator",
     "named": true
   },
   {
@@ -17775,7 +17821,15 @@
     "named": true
   },
   {
+    "type": "not",
+    "named": true
+  },
+  {
     "type": "optional_marker",
+    "named": true
+  },
+  {
+    "type": "or",
     "named": true
   },
   {
@@ -17788,6 +17842,10 @@
   },
   {
     "type": "reg",
+    "named": true
+  },
+  {
+    "type": "regex_match_operator",
     "named": true
   },
   {

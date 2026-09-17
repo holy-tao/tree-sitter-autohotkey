@@ -832,24 +832,8 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 200,
-                "content": {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "~="
-                    },
-                    {
-                      "type": "STRING",
-                      "value": "!~="
-                    }
-                  ]
-                }
-              }
+              "type": "SYMBOL",
+              "name": "regex_match_operator"
             }
           },
           {
@@ -929,16 +913,8 @@
                   "value": "&&"
                 },
                 {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 9999,
-                    "content": {
-                      "type": "PATTERN",
-                      "value": "and",
-                      "flags": "i"
-                    }
-                  }
+                  "type": "SYMBOL",
+                  "name": "and"
                 }
               ]
             }
@@ -979,16 +955,8 @@
                   "value": "||"
                 },
                 {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 9999,
-                    "content": {
-                      "type": "PATTERN",
-                      "value": "or",
-                      "flags": "i"
-                    }
-                  }
+                  "type": "SYMBOL",
+                  "name": "or"
                 }
               ]
             }
@@ -1154,11 +1122,8 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "TOKEN",
-              "content": {
-                "type": "PATTERN",
-                "value": "\\.\\s+"
-              }
+              "type": "SYMBOL",
+              "name": "concat_operator"
             }
           },
           {
@@ -1735,16 +1700,8 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 9999,
-                "content": {
-                  "type": "PATTERN",
-                  "value": "not",
-                  "flags": "i"
-                }
-              }
+              "type": "SYMBOL",
+              "name": "not"
             }
           },
           {
@@ -1998,24 +1955,8 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 200,
-                "content": {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "~="
-                    },
-                    {
-                      "type": "STRING",
-                      "value": "!~="
-                    }
-                  ]
-                }
-              }
+              "type": "SYMBOL",
+              "name": "regex_match_operator"
             }
           },
           {
@@ -2074,6 +2015,69 @@
         }
       }
     },
+    "and": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 9999,
+        "content": {
+          "type": "PATTERN",
+          "value": "and",
+          "flags": "i"
+        }
+      }
+    },
+    "or": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 9999,
+        "content": {
+          "type": "PATTERN",
+          "value": "or",
+          "flags": "i"
+        }
+      }
+    },
+    "not": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 9999,
+        "content": {
+          "type": "PATTERN",
+          "value": "not",
+          "flags": "i"
+        }
+      }
+    },
+    "concat_operator": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "\\.\\s+"
+      }
+    },
+    "regex_match_operator": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 200,
+        "content": {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "~="
+            },
+            {
+              "type": "STRING",
+              "value": "!~="
+            }
+          ]
+        }
+      }
+    },
     "logical_and_operation": {
       "type": "PREC_LEFT",
       "value": 40,
@@ -2099,16 +2103,8 @@
                   "value": "&&"
                 },
                 {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 9999,
-                    "content": {
-                      "type": "PATTERN",
-                      "value": "and",
-                      "flags": "i"
-                    }
-                  }
+                  "type": "SYMBOL",
+                  "name": "and"
                 }
               ]
             }
@@ -2149,16 +2145,8 @@
                   "value": "||"
                 },
                 {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 9999,
-                    "content": {
-                      "type": "PATTERN",
-                      "value": "or",
-                      "flags": "i"
-                    }
-                  }
+                  "type": "SYMBOL",
+                  "name": "or"
                 }
               ]
             }
@@ -2324,11 +2312,8 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "TOKEN",
-              "content": {
-                "type": "PATTERN",
-                "value": "\\.\\s+"
-              }
+              "type": "SYMBOL",
+              "name": "concat_operator"
             }
           },
           {

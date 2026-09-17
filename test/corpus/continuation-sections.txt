@@ -262,6 +262,7 @@ some text
       (continuation_section
         (continuation_line_sequence
           (continuation_line)))
+      (concat_operator)
       (string_literal))))
 
 ================================================================================
