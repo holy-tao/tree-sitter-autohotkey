@@ -419,7 +419,7 @@ sumfn := Sum(a, b) => a + b
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (fat_arrow_function
       name: (identifier)
       head: (function_head
@@ -442,7 +442,7 @@ sumfn := Sum(args*) => args.length
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (fat_arrow_function
       name: (identifier)
       head: (function_head

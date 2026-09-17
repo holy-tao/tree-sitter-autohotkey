@@ -349,7 +349,7 @@ export default grammar({
     //# region Operators
     assignment_operation: $ => prec.left(PREC.ASSIGNMENT, seq(
       field('left', $._single_expression),
-      $.assignment_operator,
+      field('operator', $.assignment_operator),
       field('right', $._single_expression),
     )),
 
@@ -602,11 +602,6 @@ export default grammar({
 
     arrow: $ => '=>',
 
-    boolean_comparison_operator: $ => token(
-      prec(PREC.KEYWORD,
-        choice('&&', /and/i, '||', /or/i,
-        ))),
-
     //# endregion
 
     //# region Function-like
@@ -765,7 +760,7 @@ export default grammar({
     // $scope_identifier $identifier sequence
     function_declaration: $ => seq(
       $._function_def_marker,
-      optional($.scope_identifier),
+      optional(field('scope', $.scope_identifier)),
       field('name', $.identifier),
       field('head', $.function_head),
       field('body', $.function_body),
@@ -773,7 +768,7 @@ export default grammar({
 
     method_declaration: $ => seq(
       $._method_def_marker,
-      optional($.scope_identifier),
+      optional(field('scope', $.scope_identifier)),
       field('name', choice(
         $.identifier,
         alias($._numeric_property_name, $.identifier),
@@ -823,7 +818,7 @@ export default grammar({
     default_param: $ => seq(field('name', $.identifier), $._initializer),
 
     _initializer: $ => seq(
-      alias(':=', $.assignment_operator),
+      field('operator', alias(':=', $.assignment_operator)),
       field('value', $._single_expression)),
 
     byref_param: $ => seq('&', field('param', $._param)),

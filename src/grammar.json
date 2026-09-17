@@ -1456,8 +1456,12 @@
             }
           },
           {
-            "type": "SYMBOL",
-            "name": "assignment_operator"
+            "type": "FIELD",
+            "name": "operator",
+            "content": {
+              "type": "SYMBOL",
+              "name": "assignment_operator"
+            }
           },
           {
             "type": "FIELD",
@@ -2781,36 +2785,6 @@
       "type": "STRING",
       "value": "=>"
     },
-    "boolean_comparison_operator": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 9999,
-        "content": {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "&&"
-            },
-            {
-              "type": "PATTERN",
-              "value": "and",
-              "flags": "i"
-            },
-            {
-              "type": "STRING",
-              "value": "||"
-            },
-            {
-              "type": "PATTERN",
-              "value": "or",
-              "flags": "i"
-            }
-          ]
-        }
-      }
-    },
     "index_access": {
       "type": "PREC",
       "value": 500,
@@ -3277,8 +3251,12 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "scope_identifier"
+              "type": "FIELD",
+              "name": "scope",
+              "content": {
+                "type": "SYMBOL",
+                "name": "scope_identifier"
+              }
             },
             {
               "type": "BLANK"
@@ -3322,8 +3300,12 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "scope_identifier"
+              "type": "FIELD",
+              "name": "scope",
+              "content": {
+                "type": "SYMBOL",
+                "name": "scope_identifier"
+              }
             },
             {
               "type": "BLANK"
@@ -3576,13 +3558,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "ALIAS",
+          "type": "FIELD",
+          "name": "operator",
           "content": {
-            "type": "STRING",
-            "value": ":="
-          },
-          "named": true,
-          "value": "assignment_operator"
+            "type": "ALIAS",
+            "content": {
+              "type": "STRING",
+              "value": ":="
+            },
+            "named": true,
+            "value": "assignment_operator"
+          }
         },
         {
           "type": "FIELD",

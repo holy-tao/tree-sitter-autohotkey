@@ -701,11 +701,11 @@ struct Example {
       (property_declaration
         (property_declarator
           name: (identifier)
-          (assignment_operator)
+          operator: (assignment_operator)
           value: (integer_literal))
         (property_declarator
           name: (identifier)
-          (assignment_operator)
+          operator: (assignment_operator)
           value: (integer_literal))))))
 
 ================================================================================

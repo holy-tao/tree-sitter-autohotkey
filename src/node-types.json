@@ -982,6 +982,16 @@
           }
         ]
       },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "assignment_operator",
+            "named": true
+          }
+        ]
+      },
       "right": {
         "multiple": true,
         "required": true,
@@ -1140,16 +1150,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "assignment_operator",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -3919,6 +3919,16 @@
           }
         ]
       },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "assignment_operator",
+            "named": true
+          }
+        ]
+      },
       "value": {
         "multiple": true,
         "required": true,
@@ -4077,16 +4087,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "assignment_operator",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -7176,17 +7176,17 @@
             "named": true
           }
         ]
+      },
+      "scope": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "scope_identifier",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "scope_identifier",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -11221,17 +11221,17 @@
             "named": true
           }
         ]
+      },
+      "scope": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "scope_identifier",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "scope_identifier",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -12672,6 +12672,16 @@
           }
         ]
       },
+      "operator": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "assignment_operator",
+            "named": true
+          }
+        ]
+      },
       "value": {
         "multiple": true,
         "required": false,
@@ -12830,16 +12840,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "assignment_operator",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -15901,6 +15901,16 @@
           }
         ]
       },
+      "operator": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "assignment_operator",
+            "named": true
+          }
+        ]
+      },
       "type": {
         "multiple": false,
         "required": true,
@@ -16069,16 +16079,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "assignment_operator",
-          "named": true
-        }
-      ]
     }
   },
   {

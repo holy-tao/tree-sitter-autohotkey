@@ -99,7 +99,7 @@ if foo := (bar() {
     (if)
     condition: (assignment_operation
       left: (identifier)
-      (assignment_operator)
+      operator: (assignment_operator)
       right: (expression_sequence
         (function_expression
           name: (identifier)
@@ -175,7 +175,7 @@ cb := handler(a, b := 1, &c, rest*) {
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (function_expression
       name: (identifier)
       head: (function_head
@@ -183,7 +183,7 @@ cb := handler(a, b := 1, &c, rest*) {
           (identifier)
           (default_param
             name: (identifier)
-            (assignment_operator)
+            operator: (assignment_operator)
             value: (integer_literal))
           (byref_param
             param: (identifier))
@@ -210,7 +210,7 @@ handlers := [first() {
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (array_literal
       (expression_sequence
         (function_expression
@@ -392,7 +392,7 @@ cb := worker(a)
 (source_file
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (function_call
       function: (identifier)
       arguments: (arg_sequence

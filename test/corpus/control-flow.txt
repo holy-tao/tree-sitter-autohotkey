@@ -616,7 +616,7 @@ myVar := IsInteger(val) ? val : throw(TypeError("Expected a String"))
   (line_comment)
   (assignment_operation
     left: (identifier)
-    (assignment_operator)
+    operator: (assignment_operator)
     right: (ternary_expression
       condition: (function_call
         function: (identifier)
