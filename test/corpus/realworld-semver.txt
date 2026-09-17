@@ -559,18 +559,18 @@ class SemVer {
                     (integer_literal))
                   (integer_literal))))
             (line_comment)
-            (assignment_operation
-              (variable_declaration
-                (scope_identifier)
-                (identifier))
-              (assignment_operator)
-              (explicit_concat_operation
+            (variable_declaration
+              (scope_identifier)
+              (variable_declarator
+                (identifier)
+                (assignment_operator)
                 (explicit_concat_operation
-                  (string_literal)
+                  (explicit_concat_operation
+                    (string_literal)
+                    (line_comment)
+                    (string_literal))
                   (line_comment)
-                  (string_literal))
-                (line_comment)
-                (string_literal)))
+                  (string_literal))))
             (line_comment)
             (if_statement
               (if)

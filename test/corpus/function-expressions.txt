@@ -41,12 +41,12 @@ SetTimer(tick() {
         (identifier)
         (function_head)
         (block
-          (assignment_operation
-            (variable_declaration
-              (scope_identifier)
-              (identifier))
-            (assignment_operator)
-            (integer_literal))
+          (variable_declaration
+            (scope_identifier)
+            (variable_declarator
+              (identifier)
+              (assignment_operator)
+              (integer_literal)))
           (call_statement
             (identifier)
             (arg_sequence
@@ -329,12 +329,12 @@ SetTimer(
         (identifier)
         (function_head)
         (block
-          (assignment_operation
-            (variable_declaration
-              (scope_identifier)
-              (identifier))
-            (assignment_operator)
-            (integer_literal))
+          (variable_declaration
+            (scope_identifier)
+            (variable_declarator
+              (identifier)
+              (assignment_operator)
+              (integer_literal)))
           (call_statement
             (identifier)
             (arg_sequence

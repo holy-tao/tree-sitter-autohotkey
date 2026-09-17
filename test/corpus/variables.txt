@@ -7,12 +7,12 @@ global ONE := 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
-    (variable_declaration
-      (scope_identifier)
-      (identifier))
-    (assignment_operator)
-    (integer_literal)))
+  (variable_declaration
+    (scope_identifier)
+    (variable_declarator
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Case insensitive identifier mixed case
@@ -23,12 +23,12 @@ global oNE := 1
 --------------------------------------------------------------------------------
 
 (source_file
-  (assignment_operation
-    (variable_declaration
-      (scope_identifier)
-      (identifier))
-    (assignment_operator)
-    (integer_literal)))
+  (variable_declaration
+    (scope_identifier)
+    (variable_declarator
+      (identifier)
+      (assignment_operator)
+      (integer_literal))))
 
 ================================================================================
 Global variable declaration
@@ -41,7 +41,8 @@ global myGlobal
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier)))
+    (variable_declarator
+      (identifier))))
 
 ================================================================================
 Global declaration uppercase
@@ -54,7 +55,8 @@ GLOBAL myGlobal
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier)))
+    (variable_declarator
+      (identifier))))
 
 ================================================================================
 Local variable declaration
@@ -67,7 +69,8 @@ local myLocal
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier)))
+    (variable_declarator
+      (identifier))))
 
 ================================================================================
 Local declaration mixed case
@@ -80,7 +83,8 @@ LocAL myLocal
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier)))
+    (variable_declarator
+      (identifier))))
 
 ================================================================================
 Static variable declaration
@@ -93,7 +97,8 @@ static myStatic
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier)))
+    (variable_declarator
+      (identifier))))
 
 ================================================================================
 Static declaration uppercase
@@ -106,7 +111,8 @@ STATIC myStatic
 (source_file
   (variable_declaration
     (scope_identifier)
-    (identifier)))
+    (variable_declarator
+      (identifier))))
 
 ================================================================================
 Identifier with underscore
@@ -150,3 +156,109 @@ VarRef with initializer
       (identifier))
     (assignment_operator)
     (integer_literal)))
+
+================================================================================
+Comma-delimited static declaration list
+================================================================================
+
+Counter() {
+    static a := 1, b := 2, c
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (variable_declaration
+          (scope_identifier)
+          (variable_declarator
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (variable_declarator
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (variable_declarator
+            (identifier)))))))
+
+================================================================================
+Declaration list with compound assignment
+================================================================================
+
+Bump() {
+    global g1 += 1, g2 += 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (variable_declaration
+          (scope_identifier)
+          (variable_declarator
+            (identifier)
+            (assignment_operator)
+            (integer_literal))
+          (variable_declarator
+            (identifier)
+            (assignment_operator)
+            (integer_literal)))))))
+
+================================================================================
+Bare global for assume-global mode
+================================================================================
+
+SetDefaults() {
+    global
+    MyGlobal := 33
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (variable_declaration
+          (scope_identifier))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (integer_literal))))))
+
+================================================================================
+Bare static for assume-static mode
+================================================================================
+
+Counter() {
+    static
+    n := n + 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (function_head)
+    (function_body
+      (block
+        (variable_declaration
+          (scope_identifier))
+        (assignment_operation
+          (identifier)
+          (assignment_operator)
+          (additive_operation
+            (identifier)
+            (integer_literal)))))))

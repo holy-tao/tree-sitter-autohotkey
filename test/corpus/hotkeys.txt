@@ -519,14 +519,13 @@ Hotkey comma-sequence body with a scoped declaration
     (hotkey_trigger
       (hotkey_win)
       (key_identifier))
-    (expression_sequence
-      (assignment_operation
-        (variable_declaration
-          (scope_identifier)
-          (identifier))
+    (variable_declaration
+      (scope_identifier)
+      (variable_declarator
+        (identifier)
         (assignment_operator)
         (integer_literal))
-      (assignment_operation
+      (variable_declarator
         (identifier)
         (assignment_operator)
         (integer_literal)))))
@@ -696,12 +695,12 @@ Down::global h -= 1
   (hotkey
     (hotkey_trigger
       (key_identifier))
-    (assignment_operation
-      (variable_declaration
-        (scope_identifier)
-        (identifier))
-      (assignment_operator)
-      (integer_literal)))
+    (variable_declaration
+      (scope_identifier)
+      (variable_declarator
+        (identifier)
+        (assignment_operator)
+        (integer_literal))))
   (hotkey
     (hotkey_trigger
       (hotkey_ctrl)

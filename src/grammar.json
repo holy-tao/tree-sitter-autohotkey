@@ -59,6 +59,19 @@
           "name": "export_declaration"
         },
         {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "variable_declaration"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_eol"
+            }
+          ]
+        },
+        {
           "type": "PREC_DYNAMIC",
           "value": -1,
           "content": {
@@ -282,10 +295,6 @@
         {
           "type": "SYMBOL",
           "name": "assignment_operation"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "variable_declaration"
         },
         {
           "type": "SYMBOL",
@@ -1300,16 +1309,58 @@
       }
     },
     "variable_declaration": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "scope",
+            "content": {
+              "type": "SYMBOL",
+              "name": "scope_identifier"
+            }
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "variable_declarator"
+                  },
+                  {
+                    "type": "REPEAT",
+                    "content": {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": ","
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "variable_declarator"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "variable_declarator": {
       "type": "SEQ",
       "members": [
-        {
-          "type": "FIELD",
-          "name": "scope",
-          "content": {
-            "type": "SYMBOL",
-            "name": "scope_identifier"
-          }
-        },
         {
           "type": "FIELD",
           "name": "name",
@@ -1317,6 +1368,35 @@
             "type": "SYMBOL",
             "name": "identifier"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "operator",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "assignment_operator"
+                  }
+                },
+                {
+                  "type": "FIELD",
+                  "name": "value",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "_single_expression"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -7084,13 +7164,8 @@
                   "name": "global"
                 },
                 {
-                  "type": "ALIAS",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "_exported_variable"
-                  },
-                  "named": true,
-                  "value": "variable_declaration"
+                  "type": "SYMBOL",
+                  "name": "variable_declarator"
                 },
                 {
                   "type": "REPEAT",
@@ -7102,43 +7177,13 @@
                         "value": ","
                       },
                       {
-                        "type": "ALIAS",
-                        "content": {
-                          "type": "SYMBOL",
-                          "name": "_exported_variable"
-                        },
-                        "named": true,
-                        "value": "variable_declaration"
+                        "type": "SYMBOL",
+                        "name": "variable_declarator"
                       }
                     ]
                   }
                 }
               ]
-            }
-          ]
-        }
-      ]
-    },
-    "_exported_variable": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_initializer"
-            },
-            {
-              "type": "BLANK"
             }
           ]
         }
@@ -8749,6 +8794,19 @@
                       ]
                     },
                     {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "variable_declaration"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_eol"
+                        }
+                      ]
+                    },
+                    {
                       "type": "SYMBOL",
                       "name": "function_declaration"
                     },
@@ -9277,6 +9335,19 @@
                           },
                           "named": true,
                           "value": "expression_sequence"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_eol"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "variable_declaration"
                         },
                         {
                           "type": "SYMBOL",

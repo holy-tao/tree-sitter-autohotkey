@@ -172,6 +172,9 @@ export default grammar({
       $.class_declaration,
       $.struct_declaration,
       $.export_declaration,
+      // Declarations are statements, not expressions - `static x := 1` may not appear as an
+      // operand. See variable_declaration.
+      seq($.variable_declaration, $._eol),
       // call_statements only at statement level.
       prec.dynamic(-1, $.call_statement),
       // Trailing `_eol` prevents expression statements from running into the next line.
@@ -230,7 +233,6 @@ export default grammar({
     // https://www.autohotkey.com/docs/v2/Language.htm#expression-statements
     _primary_expression: $ => choice(
       $.assignment_operation,
-      $.variable_declaration,
       $.ternary_expression,
       $.prefix_operation,
       $.postfix_operation,
@@ -305,11 +307,33 @@ export default grammar({
       repeat(seq(',', $._single_expression)),
     )),
 
+    // A `local`/`global`/`static` declaration list: `static a := 1, b := 2, c`. Every name in
+    // the list takes the declared scope, so each gets its own declarator rather than the list
+    // decaying into an expression_sequence in which only the first name is marked.
+    //
+    // The list may be empty: a bare `global` or `static` as a function's first line selects
+    // assume-global / assume-static mode. A bare `local` is *not* legal ("Unexpected
+    // declaration"), nor is either keyword anywhere but the first line - both contextual, so
+    // both are permitted here.
+    //
     // FIXME some declarations are contextually illegal - you can't delcare local variables in the auto-execute
     // section, for example. We may not be able to detect those with pure grammar rules
-    variable_declaration: $ => seq(
+    variable_declaration: $ => prec.right(seq(
       field('scope', $.scope_identifier),
+      optional(seq(
+        $.variable_declarator,
+        repeat(seq(',', $.variable_declarator)),
+      )),
+    )),
+
+    // Not restricted to `:=`: `global w += 1` is legal and means "declare w global, then
+    // apply +=" (verified against 2.0.26), so any assignment operator may follow the name.
+    variable_declarator: $ => seq(
       field('name', $.identifier),
+      optional(seq(
+        field('operator', $.assignment_operator),
+        field('value', $._single_expression),
+      )),
     ),
 
     ternary_expression: $ => prec.right(PREC.TERNARY, seq(
@@ -1381,15 +1405,14 @@ export default grammar({
           // Note this isn't actually a scope identifier, just required for the interpreter
           // to distinguish between `export` as an export and `export` as a function name
           $.global,
-          alias($._exported_variable, $.variable_declaration),
-          repeat(seq(',', alias($._exported_variable, $.variable_declaration))),
+          // The same declarator node an ordinary declaration list uses. `export_declaration`
+          // is itself the declaration here, so the declarators hang off it directly rather
+          // than off a nested variable_declaration - which would need a `scope` field holding
+          // the `global` keyword node rather than a `scope_identifier`.
+          $.variable_declarator,
+          repeat(seq(',', $.variable_declarator)),
         ),
       ),
-    ),
-
-    _exported_variable: $ => seq(
-      field('name', $.identifier),
-      optional($._initializer),
     ),
 
     // #endregion Exports
@@ -1635,6 +1658,8 @@ export default grammar({
         $.block,
         seq($._single_expression, $._eol),
         seq(alias($.top_level_expression_sequence, $.expression_sequence), $._eol),
+        // `#a::global w += 1, h += 2` - a declaration list is a legal same-line body
+        seq($.variable_declaration, $._eol),
         $.function_declaration,
         $.call_statement,
       ))),
@@ -1720,6 +1745,8 @@ export default grammar({
       field('body', optional(choice(
         seq($._single_expression, $._eol),
         seq(alias($.top_level_expression_sequence, $.expression_sequence), $._eol),
+        // `#a::global w += 1, h += 2` - a declaration list is a legal same-line body
+        seq($.variable_declaration, $._eol),
         $.function_declaration,
         $.block,
         $._hotkey_alttabcommand,

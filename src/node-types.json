@@ -280,10 +280,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -456,10 +452,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -624,10 +616,6 @@
           "named": true
         },
         {
-          "type": "variable_declaration",
-          "named": true
-        },
-        {
           "type": "varref_operation",
           "named": true
         },
@@ -788,10 +776,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -989,10 +973,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -1148,10 +1128,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -1334,10 +1310,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -1503,10 +1475,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -1679,10 +1647,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -1851,10 +1815,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -2016,10 +1976,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -2191,10 +2147,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -2356,10 +2308,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -2528,10 +2476,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -3205,10 +3149,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -4128,10 +4068,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -4303,10 +4239,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -4771,10 +4703,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -4944,10 +4872,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -5141,10 +5065,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -5300,10 +5220,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -5468,10 +5384,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -5643,10 +5555,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -5698,7 +5606,7 @@
           "named": true
         },
         {
-          "type": "variable_declaration",
+          "type": "variable_declarator",
           "named": true
         }
       ]
@@ -5893,10 +5801,6 @@
           "named": true
         },
         {
-          "type": "variable_declaration",
-          "named": true
-        },
-        {
           "type": "varref_operation",
           "named": true
         },
@@ -6057,10 +5961,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -6721,10 +6621,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -6880,10 +6776,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -7067,10 +6959,6 @@
           "named": true
         },
         {
-          "type": "variable_declaration",
-          "named": true
-        },
-        {
           "type": "varref_operation",
           "named": true
         },
@@ -7241,10 +7129,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -7513,10 +7397,6 @@
           "named": true
         },
         {
-          "type": "variable_declaration",
-          "named": true
-        },
-        {
           "type": "varref_operation",
           "named": true
         },
@@ -7677,10 +7557,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -7865,10 +7741,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -8883,10 +8755,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -9071,10 +8939,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -9230,10 +9094,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -9571,10 +9431,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -9736,10 +9592,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -9912,10 +9764,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -10141,10 +9989,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -10313,10 +10157,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -10478,10 +10318,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -10650,10 +10486,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -11061,10 +10893,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -11349,10 +11177,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -11628,10 +11452,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -11805,10 +11625,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -12022,10 +11838,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -12269,10 +12081,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -12441,10 +12249,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -12561,10 +12365,6 @@
           },
           {
             "type": "throw_statement",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           }
         ]
@@ -12735,10 +12535,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -13025,10 +12821,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -13203,10 +12995,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -13362,10 +13150,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -13530,10 +13314,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -13714,10 +13494,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -14040,10 +13816,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -14639,10 +14411,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -14798,10 +14566,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -14979,10 +14743,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -15141,10 +14901,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -15300,10 +15056,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -15478,10 +15230,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -15925,10 +15673,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -16094,10 +15838,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -16320,10 +16060,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -16498,10 +16234,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -16557,6 +16289,32 @@
     "type": "variable_declaration",
     "named": true,
     "fields": {
+      "scope": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "scope_identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "variable_declarator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "variable_declarator",
+    "named": true,
+    "fields": {
       "name": {
         "multiple": false,
         "required": true,
@@ -16567,12 +16325,12 @@
           }
         ]
       },
-      "scope": {
+      "operator": {
         "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "scope_identifier",
+            "type": "assignment_operator",
             "named": true
           }
         ]
@@ -16726,10 +16484,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -16739,16 +16493,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "assignment_operator",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -16930,10 +16674,6 @@
             "named": true
           },
           {
-            "type": "variable_declaration",
-            "named": true
-          },
-          {
             "type": "varref_operation",
             "named": true
           },
@@ -17095,10 +16835,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {
@@ -17509,10 +17245,6 @@
           },
           {
             "type": "type_check_operation",
-            "named": true
-          },
-          {
-            "type": "variable_declaration",
             "named": true
           },
           {

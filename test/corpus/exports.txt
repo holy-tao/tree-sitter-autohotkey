@@ -129,7 +129,7 @@ export global MyVar
   (export_declaration
     (export)
     (global)
-    (variable_declaration
+    (variable_declarator
       (identifier))))
 
 ===============================================================================
@@ -144,9 +144,9 @@ export global MyVar, MyOther := 1
   (export_declaration
     (export)
     (global)
-    (variable_declaration
+    (variable_declarator
       (identifier))
-    (variable_declaration
+    (variable_declarator
       (identifier)
       (assignment_operator)
       (integer_literal))))

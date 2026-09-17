@@ -26,14 +26,13 @@ local one := 1, two := 2
 --------------------------------------------------------------------------------
 
 (source_file
-  (expression_sequence
-    (assignment_operation
-      (variable_declaration
-        (scope_identifier)
-        (identifier))
+  (variable_declaration
+    (scope_identifier)
+    (variable_declarator
+      (identifier)
       (assignment_operator)
       (integer_literal))
-    (assignment_operation
+    (variable_declarator
       (identifier)
       (assignment_operator)
       (integer_literal))))
