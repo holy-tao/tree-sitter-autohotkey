@@ -446085,9 +446085,9 @@ TS_PUBLIC const TSLanguage *tree_sitter_autohotkey(void) {
     .name = "autohotkey",
     .max_reserved_word_set_size = 0,
     .metadata = {
-      .major_version = 0,
-      .minor_version = 5,
-      .patch_version = 7,
+      .major_version = 1,
+      .minor_version = 0,
+      .patch_version = 0,
     },
   };
   return &language;
