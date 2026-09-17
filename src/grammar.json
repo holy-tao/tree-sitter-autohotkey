@@ -10098,7 +10098,9 @@
   "inline": [],
   "supertypes": [
     "_directive",
-    "_literal"
+    "_literal",
+    "_numeric_literal",
+    "_param"
   ],
   "reserved": {}
 }

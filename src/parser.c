@@ -25,7 +25,7 @@
 #define MAX_ALIAS_SEQUENCE_LENGTH 11
 #define MAX_RESERVED_WORD_SET_SIZE 0
 #define PRODUCTION_ID_COUNT 193
-#define SUPERTYPE_COUNT 2
+#define SUPERTYPE_COUNT 4
 
 enum ts_symbol_identifiers {
   sym_identifier = 1,
@@ -2501,6 +2501,7 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
   [sym__param] = {
     .visible = false,
     .named = true,
+    .supertype = true,
   },
   [sym_optional_param] = {
     .visible = true,
@@ -2534,6 +2535,7 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
   [sym__numeric_literal] = {
     .visible = false,
     .named = true,
+    .supertype = true,
   },
   [sym_float_literal] = {
     .visible = true,
@@ -9835,11 +9837,15 @@ static const TSStateId ts_primary_state_ids[STATE_COUNT] = {
 static const TSSymbol ts_supertype_symbols[SUPERTYPE_COUNT] = {
   sym__directive,
   sym__literal,
+  sym__numeric_literal,
+  sym__param,
 };
 
 static const TSMapSlice ts_supertype_map_slices[] = {
   [sym__directive] = {.index = 0, .length = 20},
-  [sym__literal] = {.index = 20, .length = 9},
+  [sym__literal] = {.index = 20, .length = 7},
+  [sym__numeric_literal] = {.index = 27, .length = 3},
+  [sym__param] = {.index = 30, .length = 3},
 };
 
 static const TSSymbol ts_supertype_map_entries[] = {
@@ -9865,15 +9871,21 @@ static const TSSymbol ts_supertype_map_entries[] = {
     sym_use_hook_directive,
     sym_warn_directive,
   [20] =
+    sym__numeric_literal,
     sym_array_literal,
     sym_boolean_literal,
-    sym_float_literal,
-    sym_hex_literal,
-    sym_integer_literal,
     sym_multiline_string_literal,
     sym_object_literal,
     sym_string_literal,
     sym_unset,
+  [27] =
+    sym_float_literal,
+    sym_hex_literal,
+    sym_integer_literal,
+  [30] =
+    sym_default_param,
+    sym_identifier,
+    sym_optional_param,
 };
 
 static const TSCharacterRange sym_file_or_dir_name_character_set_1[] = {

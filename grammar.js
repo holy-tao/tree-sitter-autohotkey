@@ -149,9 +149,19 @@ export default grammar({
     $.block_comment,
   ],
 
+  // Supertypes collapse the type unions in node-types.json and give consumers a single handle
+  // for a whole category of node instead of an n-way enumeration.
+  //
+  // Two obvious candidates are not eligible. `_statement` is not a pure choice of symbols (it
+  // has `seq(...)` and `prec.dynamic(...)` alternatives), and `_single_expression` /
+  // `_primary_expression` reach `_parenthesized_expression`, which is hidden and has three
+  // visible children ('(', the sequence, ')') - a supertype must always have exactly one.
+  // Making parenthesized expressions a visible node would unblock both.
   supertypes: $ => [
     $._directive,
     $._literal,
+    $._numeric_literal,
+    $._param,
   ],
 
   rules: {

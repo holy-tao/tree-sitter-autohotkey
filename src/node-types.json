@@ -90,23 +90,15 @@
     "named": true,
     "subtypes": [
       {
+        "type": "_numeric_literal",
+        "named": true
+      },
+      {
         "type": "array_literal",
         "named": true
       },
       {
         "type": "boolean_literal",
-        "named": true
-      },
-      {
-        "type": "float_literal",
-        "named": true
-      },
-      {
-        "type": "hex_literal",
-        "named": true
-      },
-      {
-        "type": "integer_literal",
         "named": true
       },
       {
@@ -123,6 +115,42 @@
       },
       {
         "type": "unset",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "_numeric_literal",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "float_literal",
+        "named": true
+      },
+      {
+        "type": "hex_literal",
+        "named": true
+      },
+      {
+        "type": "integer_literal",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "_param",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "default_param",
+        "named": true
+      },
+      {
+        "type": "identifier",
+        "named": true
+      },
+      {
+        "type": "optional_param",
         "named": true
       }
     ]
@@ -2741,15 +2769,7 @@
         "required": true,
         "types": [
           {
-            "type": "default_param",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "optional_param",
+            "type": "_param",
             "named": true
           }
         ]
@@ -12280,19 +12300,11 @@
       "required": true,
       "types": [
         {
+          "type": "_param",
+          "named": true
+        },
+        {
           "type": "byref_param",
-          "named": true
-        },
-        {
-          "type": "default_param",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "optional_param",
           "named": true
         },
         {
