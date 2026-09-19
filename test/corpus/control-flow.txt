@@ -2157,6 +2157,70 @@ switch key, "Off" {
           (integer_literal))))))
 
 ================================================================================
+Switch with empty case clause
+================================================================================
+
+switch key {
+    case "a":
+    case "b":
+        result := 1
+    default:
+        result := 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    head: (identifier)
+    body: (switch_body
+      (case_clause
+        (case)
+        value: (string_literal))
+      (case_clause
+        (case)
+        value: (string_literal)
+        body: (assignment_operation
+          left: (identifier)
+          operator: (assignment_operator)
+          right: (integer_literal)))
+      (default_clause
+        (default)
+        body: (assignment_operation
+          left: (identifier)
+          operator: (assignment_operator)
+          right: (integer_literal))))))
+
+================================================================================
+Switch with empty default clause
+================================================================================
+
+switch key {
+    case "a", "b":
+        result := 1
+    default:
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (switch_statement
+    (switch)
+    head: (identifier)
+    body: (switch_body
+      (case_clause
+        (case)
+        value: (string_literal)
+        value: (string_literal)
+        body: (assignment_operation
+          left: (identifier)
+          operator: (assignment_operator)
+          right: (integer_literal)))
+      (default_clause
+        (default)))))
+
+================================================================================
 Nested if statements
 ================================================================================
 

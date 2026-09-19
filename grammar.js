@@ -141,6 +141,7 @@ export default grammar({
     [$.class_body],
     [$._statement, $.try_statement],
     [$._statement, $.finally_clause],
+    [$.default_clause],
   ],
 
   extras: $ => [
@@ -1217,16 +1218,10 @@ export default grammar({
     ),
 
     default_clause: $ => seq(
-      // Use a combined "default:" token (longer than bare identifier) so the lexer
-      // unambiguously prefers this over the `label` rule in switch clause bodies.
-      // The colon is consumed as part of this token. Uses a named hidden rule so the
-      // resulting node range correctly excludes preceding whitespace.
-      alias($._default_clause_kw, $.default),
-      field('body', $._switch_clause_body),
+      $.default,
+      token(':'),
+      field('body', optional($._switch_clause_body)),
     ),
-
-    // Named hidden rule for "default:" — see default_clause comment.
-    _default_clause_kw: $ => /default\s*:/i,
 
     // Control flow keywords
     if: $ => kwtok(/if/i),

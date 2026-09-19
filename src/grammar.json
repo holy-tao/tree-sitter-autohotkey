@@ -5938,20 +5938,30 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "ALIAS",
+          "type": "SYMBOL",
+          "name": "default"
+        },
+        {
+          "type": "TOKEN",
           "content": {
-            "type": "SYMBOL",
-            "name": "_default_clause_kw"
-          },
-          "named": true,
-          "value": "default"
+            "type": "STRING",
+            "value": ":"
+          }
         },
         {
           "type": "FIELD",
           "name": "body",
           "content": {
-            "type": "SYMBOL",
-            "name": "_switch_clause_body"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_switch_clause_body"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         }
       ]
@@ -10026,6 +10036,9 @@
     [
       "_statement",
       "finally_clause"
+    ],
+    [
+      "default_clause"
     ]
   ],
   "precedences": [],
