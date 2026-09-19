@@ -5966,11 +5966,6 @@
         }
       ]
     },
-    "_default_clause_kw": {
-      "type": "PATTERN",
-      "value": "default\\s*:",
-      "flags": "i"
-    },
     "if": {
       "type": "TOKEN",
       "content": {
