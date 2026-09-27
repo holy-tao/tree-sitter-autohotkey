@@ -100,7 +100,9 @@ enum TokenType {
   EXPORT_DEF_MARKER,
   OTB_BRACE,
   VALUE_START,
-  CLASS_DECL_MARKER
+  CLASS_DECL_MARKER,
+  HOTKEY_AND,
+  HOTKEY_UP
 };
 
 void *tree_sitter_autohotkey_external_scanner_create() { return NULL; }
@@ -356,12 +358,13 @@ static bool is_empty_arg(TSLexer *lexer, bool allow_newline) {
 /// @param lexer the lexer
 /// @param allow_newline when true, the whitespace separating the two operands may include
 ///        newlines. For use in continuation-by-enclosure contexts
+/// @param ws_skipped whether the caller already skipped whitespace following the left operand
 /// @return true if implicit concatenation, false otherwise
-static bool is_implicit_concatenation(TSLexer *lexer, bool allow_newline) {
+static bool is_implicit_concatenation(TSLexer *lexer, bool allow_newline, bool ws_skipped) {
 
   // Must be followed by whitespace. When newlines are allowed to separate the operands, they are
   // skipped with advance(false) so the marker still starts right after the left operand.
-  bool skipped = false;
+  bool skipped = ws_skipped;
   while (lexer->lookahead == ' ' || lexer->lookahead == '\t' ||
          (allow_newline && (lexer->lookahead == '\n' || lexer->lookahead == '\r'))) {
     lexer->advance(lexer, false);
@@ -921,6 +924,60 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
+  // Whether horizontal whitespace was skipped below, for is_implicit_concatenation, which requires it
+  bool hspace_skipped = false;
+
+  // Hotkey `&` combinator (`a & b::`) and `up` suffix (`a up::`).
+  if (valid_symbols[HOTKEY_AND] || valid_symbols[HOTKEY_UP]) {
+    while (lexer->lookahead == ' ' || lexer->lookahead == '	') {
+      lexer->advance(lexer, true);
+      hspace_skipped = true;
+    }
+
+    if (hspace_skipped && valid_symbols[HOTKEY_AND] && lexer->lookahead == '&') {
+      lexer->advance(lexer, false);
+      lexer->mark_end(lexer);
+
+      if ((lexer->lookahead == ' ' || lexer->lookahead == '	') && line_defines_hotkey(lexer)) {
+        lexer->result_symbol = HOTKEY_AND;
+        return true;
+      }
+
+      // An ordinary '&' operator, which the internal lexer handles; no external token starts with it
+      return false;
+    }
+
+    if (hspace_skipped && valid_symbols[HOTKEY_UP] &&
+        (lexer->lookahead == 'u' || lexer->lookahead == 'U')) {
+      lexer->mark_end(lexer);  // zero-width, for the implicit concat fallback below
+
+      char word[16];
+      int len = skip_identifier(lexer, word, sizeof(word));
+
+      if (len == 2 && strcaseeq(word, "up")) {
+        lexer->mark_end(lexer);
+        if (line_defines_hotkey(lexer)) {
+          lexer->result_symbol = HOTKEY_UP;
+          return true;
+        }
+
+        // Past the point where a zero-width marker could be emitted.
+        return false;
+      }
+
+      // Some other word - the lexer is already past it, so this has to finish the job of the
+      // implicit concatenation check below. That check can never succeed when EMPTY_ARG is valid,
+      // since is_empty_arg consumes the whitespace it requires.
+      if (valid_symbols[IMPLICIT_CONCAT_MARKER] && !valid_symbols[EMPTY_ARG] &&
+          !(len < (int)sizeof(word) && is_operator_keyword(word))) {
+        lexer->result_symbol = IMPLICIT_CONCAT_MARKER;
+        return true;
+      }
+
+      return false;
+    }
+  }
+
   // OTB ("one true brace") marker: a zero-width token emitted only when the next '{' is on the
   // same line — i.e. reached after skipping only horizontal whitespace, with no intervening
   // newline. It lets the grammar require an unenclosed function-expression body's brace to be
@@ -978,12 +1035,15 @@ bool tree_sitter_autohotkey_external_scanner_scan(void *payload, TSLexer *lexer,
       lexer->result_symbol = EMPTY_ARG;
       return true;
     }
+
+    // is_empty_arg consumed the whitespace, so implicit concatenation can't follow
+    hspace_skipped = false;
   }
 
   if(valid_symbols[IMPLICIT_CONCAT_MARKER]) {
     lexer->mark_end(lexer);
 
-    if(is_implicit_concatenation(lexer, enclosed)) {
+    if(is_implicit_concatenation(lexer, enclosed, hspace_skipped)) {
       lexer->result_symbol = IMPLICIT_CONCAT_MARKER;
       return true;
     }

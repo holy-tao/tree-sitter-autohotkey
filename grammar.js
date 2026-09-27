@@ -63,7 +63,7 @@ const STMT_BINARY_OPS = [
   {node: 'equality_operation',        assoc: 'left',  prec: PREC.EQUALITY,         op: () => choice('=', '==')},
   {node: 'inequality_operation',      assoc: 'left',  prec: PREC.INEQUALITY,       op: () => choice('!=', '!==')},
   {node: 'regex_match_operation',     assoc: 'left',  prec: PREC.REGEX_MATCH,      op: $ => $.regex_match_operator},
-  {node: 'type_check_operation',      assoc: 'left',  prec: PREC.CASE_INSENSITIVE, op: () => token(prec(PREC.KEYWORD, / is /i))},
+  {node: 'type_check_operation',      assoc: 'left',  prec: PREC.CASE_INSENSITIVE, op: $ => $.is},
   {node: 'logical_and_operation',     assoc: 'left',  prec: PREC.LOGICAL_AND,      op: $ => choice('&&', $.and)},
   {node: 'logical_or_operation',      assoc: 'left',  prec: PREC.LOGICAL_OR,       op: $ => choice('||', $.or)},
   {node: 'bitwise_and_operation',     assoc: 'left',  prec: PREC.BITWISE_AND,      op: () => '&'},
@@ -100,8 +100,6 @@ export default grammar({
     $.array_expansion_marker,
     $._hotkey_double_colon,
     $._remap_double_colon,
-    // Zero-width marker the scanner emits before the `export` keyword only when a real
-    // export *declaration* follows (vs. an ordinary use of a name "export"). See scanner.c.
     $._export_def_marker,
     // Zero-width marker emitted only when the next `{` is on the same line (reached after
     // skipping horizontal whitespace, no intervening newline). Used to enforce the OTB
@@ -109,11 +107,9 @@ export default grammar({
     $._otb_brace,
     // Zero-width marker emitted only when a value begins on the same line
     $._value_start,
-    // Zero-width marker emitted at statement start only when a real `class`/`struct`
-    // *declaration* follows (`class`/`struct` <name>), gating class_declaration /
-    // struct_declaration. Without it the keyword lexes as an ordinary identifier
-    // (`Class.ForName()`, `struct := 5`), since neither word is reserved. See scanner.c.
     $._class_decl_marker,
+    $.hotkey_and,
+    $.hotkey_up,
   ],
 
   conflicts: $ => [
@@ -472,7 +468,7 @@ export default grammar({
       field('right', $._single_expression),
     )),
 
-    is: $ => token(prec(PREC.KEYWORD, / is /i)),
+    is: $ => kwtok(/is/i),
 
     // Verbal operators are named nodes, like `is`, so that `field('operator', ...)` survives
     // into node-types.json and highlight queries can capture them. A bare regex token is
@@ -1868,15 +1864,11 @@ export default grammar({
     hotkey_alt: $ => token('!'),
     hotkey_ctrl: $ => token('^'),
     hotkey_shift: $ => token('+'),
-    // Requires space - match before "&" operator
-    hotkey_and: $ => token.immediate(' & '),
     hotkey_left: $ => token('<'),
     hotkey_right: $ => token('>'),
     // Match before bitwise NOT operator ("~")
     hotkey_nonblocking: $ => token(prec.right(PREC.PREFIX, '~')),
     hotkey_usehook: $ => token('$'),
-    // Requires preceding space
-    hotkey_up: $ => token.immediate(prec(PREC.KEYWORD, / [uU][pP]/)),
 
     // These are only valid as hotkey operations and must immediately follow the double-colon
     // See: https://www.autohotkey.com/docs/v2/Hotkeys.htm#alttab

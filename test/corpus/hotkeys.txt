@@ -742,3 +742,68 @@ a := b, f()
       (identifier)
       (arg_sequence
         (string_literal)))))
+
+================================================================================
+Hotkey combinator and up separated by tabs
+================================================================================
+
+LCtrl	&	CapsLock	UP::"no-op"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hotkey
+    (hotkey_trigger
+      (key_identifier)
+      (hotkey_and)
+      (hotkey_trigger
+        (key_identifier)
+        (hotkey_up)))
+    (string_literal)))
+
+================================================================================
+Up is an ordinary identifier outside a hotkey
+================================================================================
+
+MsgBox up
+MsgBox a up
+MsgBox upper
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (identifier)))
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (implicit_concat_operation
+        (identifier)
+        (identifier))))
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (identifier))))
+
+================================================================================
+Ampersand is an operator outside a hotkey
+================================================================================
+
+f() & b
+MsgBox a & b
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (bitwise_and_operation
+    (function_call
+      (identifier))
+    (identifier))
+  (call_statement
+    (identifier)
+    (arg_sequence
+      (bitwise_and_operation
+        (identifier)
+        (identifier)))))

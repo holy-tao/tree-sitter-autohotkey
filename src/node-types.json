@@ -3736,11 +3736,6 @@
     }
   },
   {
-    "type": "is",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "key_identifier",
     "named": true,
     "fields": {}
@@ -5652,7 +5647,7 @@
       },
       "operator": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
           {
             "type": "is",
@@ -6673,6 +6668,10 @@
   },
   {
     "type": "integer_literal",
+    "named": true
+  },
+  {
+    "type": "is",
     "named": true
   },
   {

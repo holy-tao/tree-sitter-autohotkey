@@ -865,16 +865,8 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 9999,
-                "content": {
-                  "type": "PATTERN",
-                  "value": " is ",
-                  "flags": "i"
-                }
-              }
+              "type": "SYMBOL",
+              "name": "is"
             }
           },
           {
@@ -2010,7 +2002,7 @@
         "value": 9999,
         "content": {
           "type": "PATTERN",
-          "value": " is ",
+          "value": "is",
           "flags": "i"
         }
       }
@@ -9810,13 +9802,6 @@
         "value": "+"
       }
     },
-    "hotkey_and": {
-      "type": "IMMEDIATE_TOKEN",
-      "content": {
-        "type": "STRING",
-        "value": " & "
-      }
-    },
     "hotkey_left": {
       "type": "TOKEN",
       "content": {
@@ -9847,17 +9832,6 @@
       "content": {
         "type": "STRING",
         "value": "$"
-      }
-    },
-    "hotkey_up": {
-      "type": "IMMEDIATE_TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 9999,
-        "content": {
-          "type": "PATTERN",
-          "value": " [uU][pP]"
-        }
       }
     },
     "_hotkey_alttabcommand": {
@@ -10101,6 +10075,14 @@
     {
       "type": "SYMBOL",
       "name": "_class_decl_marker"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "hotkey_and"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "hotkey_up"
     }
   ],
   "inline": [],
