@@ -463,71 +463,71 @@ struct BSTR {  ; This type can also be used in a struct.
 (source_file
   (struct_declaration
     (struct)
-    (identifier)
-    (struct_body
+    name: (identifier)
+    body: (struct_body
       (line_comment)
       (typed_property_declaration
-        (identifier)
-        (type_specifier
+        name: (identifier)
+        type: (type_specifier
           (identifier)))
       (property_declaration
-        (identifier)
-        (getter
+        name: (identifier)
+        body: (getter
           (function_call
-            (identifier)
-            (arg_sequence
+            function: (identifier)
+            arguments: (arg_sequence
               (string_literal)
               (string_literal)
               (identifier)
               (string_literal)))))
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (function_call
-                (identifier)
-                (arg_sequence
+                function: (identifier)
+                arguments: (arg_sequence
                   (identifier)))))
-          (setter
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (block
                 (if_statement
                   (if)
-                  (member_access
-                    (identifier)
-                    (identifier))
+                  condition: (member_access
+                    object: (identifier)
+                    member: (identifier))
                   (line_comment)
-                  (function_call
-                    (member_access
-                      (identifier)
-                      (identifier))))
+                  body: (function_call
+                    function: (member_access
+                      object: (identifier)
+                      member: (identifier))))
                 (assignment_operation
-                  (member_access
-                    (identifier)
-                    (identifier))
-                  (assignment_operator)
-                  (function_call
-                    (identifier)
-                    (arg_sequence
+                  left: (member_access
+                    object: (identifier)
+                    member: (identifier))
+                  operator: (assignment_operator)
+                  right: (function_call
+                    function: (identifier)
+                    arguments: (arg_sequence
                       (string_literal)
                       (string_literal)
                       (identifier)
                       (string_literal)
                       (function_call
-                        (identifier)
-                        (arg_sequence
+                        function: (identifier)
+                        arguments: (arg_sequence
                           (identifier)))
                       (string_literal)))))))))
       (method_declaration
-        (identifier)
-        (function_head)
-        (function_body
+        name: (identifier)
+        head: (function_head)
+        body: (function_body
           (function_call
-            (identifier)
-            (arg_sequence
+            function: (identifier)
+            arguments: (arg_sequence
               (string_literal)
               (string_literal)
               (identifier))))))))
@@ -571,25 +571,25 @@ struct LVINSERTMARK {
 (source_file
   (struct_declaration
     (struct)
-    (identifier)
-    (struct_body
+    name: (identifier)
+    body: (struct_body
       (typed_property_declaration
-        (identifier)
-        (type_specifier
+        name: (identifier)
+        type: (type_specifier
           (identifier))
-        (assignment_operator)
-        (member_access
-          (identifier)
-          (identifier)))
+        operator: (assignment_operator)
+        value: (member_access
+          object: (identifier)
+          member: (identifier)))
       (typed_property_declaration
-        (identifier)
-        (type_specifier
+        name: (identifier)
+        type: (type_specifier
           (identifier))
-        (assignment_operator)
-        (integer_literal))
+        operator: (assignment_operator)
+        value: (integer_literal))
       (typed_property_declaration
-        (identifier)
-        (type_specifier
+        name: (identifier)
+        type: (type_specifier
           (identifier))))))
 
 ================================================================================
@@ -839,14 +839,14 @@ struct Example {
     body: (struct_body
       (property_declaration
         name: (identifier)
-        (property_declaration_block
-          (setter
+        body: (property_declaration_block
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (identifier)))
-          (getter
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (identifier))))))))
 
 ================================================================================
@@ -864,9 +864,9 @@ struct Example {
 (source_file
   (struct_declaration
     (struct)
-    (identifier)
-    (struct_body
+    name: (identifier)
+    body: (struct_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
+        name: (identifier)
+        body: (property_declaration_block
           (line_comment))))))

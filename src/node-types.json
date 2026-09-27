@@ -2842,15 +2842,22 @@
   {
     "type": "getter",
     "named": true,
-    "fields": {},
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_body",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
-        {
-          "type": "function_body",
-          "named": true
-        },
         {
           "type": "get",
           "named": true
@@ -4644,6 +4651,46 @@
     "type": "property_declaration",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "=>",
+            "named": false
+          },
+          {
+            "type": "getter",
+            "named": true
+          },
+          {
+            "type": "property_declaration_block",
+            "named": true
+          }
+        ]
+      },
+      "head": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "param_sequence",
+            "named": true
+          },
+          {
+            "type": "wildcard",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": false,
@@ -4671,26 +4718,10 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "getter",
-          "named": true
-        },
-        {
-          "type": "param_sequence",
-          "named": true
-        },
-        {
-          "type": "property_declaration_block",
-          "named": true
-        },
-        {
           "type": "property_declarator",
-          "named": true
-        },
-        {
-          "type": "wildcard",
           "named": true
         }
       ]
@@ -4699,26 +4730,47 @@
   {
     "type": "property_declaration_block",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "getter",
-          "named": true
-        },
-        {
-          "type": "setter",
-          "named": true
-        }
-      ]
+    "fields": {
+      "getter": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "getter",
+            "named": true
+          }
+        ]
+      },
+      "setter": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "setter",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
     "type": "property_declarator",
     "named": true,
     "fields": {
+      "initializer": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "_single_expression",
+            "named": true
+          },
+          {
+            "type": "assignment_operator",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -5026,15 +5078,22 @@
   {
     "type": "setter",
     "named": true,
-    "fields": {},
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_body",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
-        {
-          "type": "function_body",
-          "named": true
-        },
         {
           "type": "set",
           "named": true

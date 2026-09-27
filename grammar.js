@@ -1271,12 +1271,12 @@ export default grammar({
           field('name', $._property_name),
           // Unlike function_head, the brackets may not be empty ("Empty [] not permitted"),
           // but they may hold a lone anonymous variadic marker (`__Item[*]`).
-          optional(seq('[', choice($.wildcard, $.param_sequence), ']')),
-          choice(
+          field('head', optional(seq('[', choice($.wildcard, $.param_sequence), ']'))),
+          field('body', choice(
             // getter-only shorthand: prop => 42
             seq('=>', alias($._single_expression, $.getter)),
             $.property_declaration_block,
-          ),
+          )),
         ),
         // Initializer-list form. One declarator per name, so that `static a := 1, b := 2`
         // yields a name/value pair per property rather than repeating both fields on the
@@ -1292,12 +1292,12 @@ export default grammar({
     // scope keyword
     _first_property_declarator: $ => seq(
       field('name', choice($._property_name, alias($.scope_identifier, $.identifier))),
-      $._initializer,
+      field('initializer', $._initializer),
     ),
 
     property_declarator: $ => seq(
       field('name', $._property_name),
-      optional($._initializer),
+      field('initializer', optional($._initializer)),
     ),
 
     _property_name: $ => choice(
@@ -1325,14 +1325,14 @@ export default grammar({
     property_declaration_block: $ => seq(
       '{',
       optional(choice(
-        seq($.getter, optional($.setter)),
-        seq($.setter, optional($.getter)),
+        seq(field('getter', $.getter), field('setter', optional($.setter))),
+        seq(field('setter', $.setter), field('getter', optional($.getter))),
       )),
       '}',
     ),
 
-    getter: $ => seq($.get, $.function_body),
-    setter: $ => seq($.set, $.function_body),
+    getter: $ => seq($.get, field('body', $.function_body)),
+    setter: $ => seq($.set, field('body', $.function_body)),
 
     // class-related keywords
     class: $ => kwtok(/class/i),

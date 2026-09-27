@@ -238,13 +238,13 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
         (property_declarator
-          (identifier)
-          (assignment_operator)
-          (integer_literal))))))
+          name: (identifier)
+          operator: (assignment_operator)
+          value: (integer_literal))))))
 
 ================================================================================
 Class with static property initializer
@@ -259,14 +259,14 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (scope_identifier)
+        scope: (scope_identifier)
         (property_declarator
-          (identifier)
-          (assignment_operator)
-          (integer_literal))))))
+          name: (identifier)
+          operator: (assignment_operator)
+          value: (integer_literal))))))
 
 ================================================================================
 Class with getter-only shorthand property
@@ -326,18 +326,18 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (block
                 (return_statement
                   (return)
-                  (string_literal))))))))))
+                  value: (string_literal))))))))))
 
 ================================================================================
 Static class property with getter
@@ -356,19 +356,19 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (scope_identifier)
-        (identifier)
-        (property_declaration_block
-          (getter
+        scope: (scope_identifier)
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (block
                 (return_statement
                   (return)
-                  (string_literal))))))))))
+                  value: (string_literal))))))))))
 
 ================================================================================
 Class property with setter
@@ -387,19 +387,19 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (setter
+        name: (identifier)
+        body: (property_declaration_block
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (block
                 (assignment_operation
-                  (identifier)
-                  (assignment_operator)
-                  (identifier))))))))))
+                  left: (identifier)
+                  operator: (assignment_operator)
+                  right: (identifier))))))))))
 
 ================================================================================
 Static Class property with setter
@@ -418,20 +418,20 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (scope_identifier)
-        (identifier)
-        (property_declaration_block
-          (setter
+        scope: (scope_identifier)
+        name: (identifier)
+        body: (property_declaration_block
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (block
                 (assignment_operation
-                  (identifier)
-                  (assignment_operator)
-                  (identifier))))))))))
+                  left: (identifier)
+                  operator: (assignment_operator)
+                  right: (identifier))))))))))
 
 ================================================================================
 Class property with getter and setter
@@ -453,26 +453,26 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (block
                 (return_statement
                   (return)
-                  (identifier)))))
-          (setter
+                  value: (identifier)))))
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (block
                 (assignment_operation
-                  (identifier)
-                  (assignment_operator)
-                  (identifier))))))))))
+                  left: (identifier)
+                  operator: (assignment_operator)
+                  right: (identifier))))))))))
 
 ================================================================================
 Class property with setter before getter
@@ -494,14 +494,14 @@ class Example {
     body: (class_body
       (property_declaration
         name: (identifier)
-        (property_declaration_block
-          (setter
+        body: (property_declaration_block
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (identifier)))
-          (getter
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (identifier))))))))
 
 ================================================================================
@@ -519,11 +519,11 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
+        name: (identifier)
+        body: (property_declaration_block
           (line_comment))))))
 
 ================================================================================
@@ -546,27 +546,27 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (scope_identifier)
-        (identifier)
-        (property_declaration_block
-          (getter
+        scope: (scope_identifier)
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (block
                 (return_statement
                   (return)
-                  (identifier)))))
-          (setter
+                  value: (identifier)))))
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (block
                 (assignment_operation
-                  (identifier)
-                  (assignment_operator)
-                  (identifier))))))))))
+                  left: (identifier)
+                  operator: (assignment_operator)
+                  right: (identifier))))))))))
 
 ================================================================================
 Class property with fat-arrow getter
@@ -583,14 +583,14 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (identifier))))))))
 
 ================================================================================
@@ -608,18 +608,18 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (setter
+        name: (identifier)
+        body: (property_declaration_block
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (assignment_operation
-                (identifier)
-                (assignment_operator)
-                (identifier)))))))))
+                left: (identifier)
+                operator: (assignment_operator)
+                right: (identifier)))))))))
 
 ================================================================================
 Class property with fat-arrow getter and setter
@@ -637,22 +637,22 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (identifier)))
-          (setter
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (assignment_operation
-                (identifier)
-                (assignment_operator)
-                (identifier)))))))))
+                left: (identifier)
+                operator: (assignment_operator)
+                right: (identifier)))))))))
 
 ================================================================================
 Class property with argument
@@ -670,28 +670,28 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (param_sequence
+        name: (identifier)
+        head: (param_sequence
           (identifier))
-        (property_declaration_block
-          (getter
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (additive_operation
-                (identifier)
-                (identifier))))
-          (setter
+                left: (identifier)
+                right: (identifier))))
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (assignment_operation
-                (additive_operation
-                  (identifier)
-                  (identifier))
-                (assignment_operator)
-                (identifier)))))))))
+                left: (additive_operation
+                  left: (identifier)
+                  right: (identifier))
+                operator: (assignment_operator)
+                right: (identifier)))))))))
 
 ================================================================================
 Static class property with argument
@@ -709,29 +709,29 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (scope_identifier)
-        (identifier)
-        (param_sequence
+        scope: (scope_identifier)
+        name: (identifier)
+        head: (param_sequence
           (identifier))
-        (property_declaration_block
-          (getter
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (additive_operation
-                (identifier)
-                (identifier))))
-          (setter
+                left: (identifier)
+                right: (identifier))))
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (assignment_operation
-                (additive_operation
-                  (identifier)
-                  (identifier))
-                (assignment_operator)
-                (identifier)))))))))
+                left: (additive_operation
+                  left: (identifier)
+                  right: (identifier))
+                operator: (assignment_operator)
+                right: (identifier)))))))))
 
 ================================================================================
 Class property with multiple arguments
@@ -748,24 +748,24 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (param_sequence
+        name: (identifier)
+        head: (param_sequence
           (identifier)
           (identifier))
-        (property_declaration_block
-          (getter
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (additive_operation
-                (identifier)
-                (parenthesized_expression
+                left: (identifier)
+                right: (parenthesized_expression
                   (expression_sequence
                     (multiplicative_operation
-                      (identifier)
-                      (identifier))))))))))))
+                      left: (identifier)
+                      right: (identifier))))))))))))
 
 ================================================================================
 Class property with arguments using getter-only shorthand
@@ -780,19 +780,19 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (param_sequence
+        name: (identifier)
+        head: (param_sequence
           (identifier)
           (identifier))
-        (getter
+        body: (getter
           (parenthesized_expression
             (expression_sequence
               (multiplicative_operation
-                (identifier)
-                (identifier)))))))))
+                left: (identifier)
+                right: (identifier)))))))))
 
 ================================================================================
 Class property with an anonymous variadic argument
@@ -810,29 +810,29 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (wildcard)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        head: (wildcard)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (function_call
-                (member_access
-                  (identifier)
-                  (identifier))
-                (arg_sequence
+                function: (member_access
+                  object: (identifier)
+                  member: (identifier))
+                arguments: (arg_sequence
                   (string_literal)))))
-          (setter
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (function_call
-                (member_access
-                  (identifier)
-                  (identifier))
-                (arg_sequence
+                function: (member_access
+                  object: (identifier)
+                  member: (identifier))
+                arguments: (arg_sequence
                   (string_literal))))))))))
 
 ================================================================================
@@ -848,12 +848,12 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (wildcard)
-        (getter
+        name: (identifier)
+        head: (wildcard)
+        body: (getter
           (integer_literal))))))
 
 ================================================================================
@@ -871,16 +871,16 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (scope_identifier)
-        (identifier)
-        (wildcard)
-        (property_declaration_block
-          (getter
+        scope: (scope_identifier)
+        name: (identifier)
+        head: (wildcard)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (integer_literal))))))))
 
 ================================================================================
@@ -898,21 +898,21 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (param_sequence
+        name: (identifier)
+        head: (param_sequence
           (variadic_param
-            (identifier)
+            name: (identifier)
             (wildcard)))
-        (property_declaration_block
-          (getter
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (member_access
-                (identifier)
-                (identifier)))))))))
+                object: (identifier)
+                member: (identifier)))))))))
 
 ================================================================================
 Class property with a trailing wildcard after named arguments
@@ -929,19 +929,19 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (param_sequence
+        name: (identifier)
+        head: (param_sequence
           (identifier)
           (byref_param
-            (identifier))
+            param: (identifier))
           (wildcard))
-        (property_declaration_block
-          (getter
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (identifier))))))))
 
 ================================================================================
@@ -963,23 +963,23 @@ class Example
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (integer_literal)))
-          (setter
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (block
                 (assignment_operation
-                  (identifier)
-                  (assignment_operator)
-                  (integer_literal))))))))))
+                  left: (identifier)
+                  operator: (assignment_operator)
+                  right: (integer_literal))))))))))
 
 ================================================================================
 Class with mixed property declaration styles
@@ -1003,32 +1003,32 @@ class Example {
 (source_file
   (class_declaration
     (class)
-    (identifier)
-    (class_body
+    name: (identifier)
+    body: (class_body
       (property_declaration
         (property_declarator
-          (identifier)
-          (assignment_operator)
-          (unset)))
+          name: (identifier)
+          operator: (assignment_operator)
+          value: (unset)))
       (property_declaration
-        (identifier)
-        (getter
+        name: (identifier)
+        body: (getter
           (string_literal)))
       (property_declaration
-        (identifier)
-        (property_declaration_block
-          (getter
+        name: (identifier)
+        body: (property_declaration_block
+          getter: (getter
             (get)
-            (function_body
+            body: (function_body
               (integer_literal)))
-          (setter
+          setter: (setter
             (set)
-            (function_body
+            body: (function_body
               (block
                 (assignment_operation
-                  (identifier)
-                  (assignment_operator)
-                  (integer_literal))))))))))
+                  left: (identifier)
+                  operator: (assignment_operator)
+                  right: (integer_literal))))))))))
 
 ================================================================================
 Class with property and method
@@ -1126,16 +1126,16 @@ class Outer extends Object {
 (source_file
   (class_declaration
     (class)
-    (identifier)
+    name: (identifier)
     (extends)
-    (identifier)
-    (class_body
+    superclass: (identifier)
+    body: (class_body
       (class_declaration
         (class)
-        (identifier)
+        name: (identifier)
         (extends)
-        (identifier)
-        (class_body)))))
+        superclass: (identifier)
+        body: (class_body)))))
 
 ================================================================================
 Deeply nested classes with properties
@@ -1415,7 +1415,7 @@ class Example {
           value: (integer_literal)))
       (property_declaration
         name: (identifier)
-        (getter
+        body: (getter
           (member_access
             object: (identifier)
             member: (identifier)))))))
